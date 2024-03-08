@@ -2,14 +2,14 @@
 #include <stdio.h>
 #include <stdlib.h> 
 
-void cargar_clientes();
+client cargar_clientes();
 void excepcion (int, char[]);
 
-void cargar_clientes(){
+client cargar_clientes(){
     char filename[] = "../data/Clientes.txt";
     FILE *f_clients;
     int n_clients = 0;                          //Numero de clientes registrados
-    char max_linea[170];                        //Caracteres maximos que puede ocupar una linea en fichero
+    char cad_linea[170];                        //Caracteres maximos que puede ocupar una linea en fichero
     
 
     f_clients = fopen(filename, "r");
@@ -20,15 +20,14 @@ void cargar_clientes(){
         getchar();
         exit(EXIT_FAILURE);
     }
-    while(fgets(max_linea, sizeof(max_linea), f_clients))
-        n_clients++;
-
+    while(fgets(cad_linea, sizeof(cad_linea), f_clients)){
+        int campos = sscanf(cad_linea,"%[^-]/%[^-]/%s" );
+    }
     printf("%d", n_clients);
 
     fclose(f_clients);
 
-}
-
+} 
 
 
 

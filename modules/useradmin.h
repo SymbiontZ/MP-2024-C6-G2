@@ -13,9 +13,16 @@ typedef struct
     char Contrasena[15];
     int Cartera;
 
-}clients[N];
+}client;
+typedef struct
+{ 
+    client *client;
+    int n_clients;
 
-void cargar_clientes();
+}clients;
+
+
+client cargar_clientes();
 
 
 #endif 
