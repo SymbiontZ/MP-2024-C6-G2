@@ -16,7 +16,7 @@ typedef struct
 }client;
 typedef struct
 { 
-    client *client [1];
+    client *clients;
     int n_clients;
 
 }clients;
