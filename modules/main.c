@@ -4,6 +4,8 @@
 int main(){
     printf("###INTERFAZ INICIAL###\n");
     
-    cargar_clientes();
+    clients C = cargar_clientes();
+
+    printf("%d", C.n_clients);
     return 0;
 }

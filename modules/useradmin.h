@@ -16,13 +16,13 @@ typedef struct
 }client;
 typedef struct
 { 
-    client *client;
+    client *client [1];
     int n_clients;
 
 }clients;
 
 
-client cargar_clientes();
+clients cargar_clientes();
 
 
 #endif 
