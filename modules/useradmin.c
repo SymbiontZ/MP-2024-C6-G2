@@ -10,27 +10,29 @@ clients cargar_clientes(){
     int n_clients = 0;                          //Numero de clientes registrados
     char cad_linea[170];                        //Caracteres maximos que puede ocupar una linea en fichero
 
-    clients C;
+    
     FILE *f_clients;
 
     f_clients = fopen(filename, "r");
-
     if(f_clients == NULL){
         perror("No se pudo abrir el archivo de clientes.\n");
         getchar();
         exit(EXIT_FAILURE);
     }
+    
     while(fgets(cad_linea, sizeof(cad_linea), f_clients)){
-        //int campos = sscanf(cad_linea,"%[^-]/%[^-]/%s" );
         n_clients++;
     }
+    rewind(f_clients);                                          //Necesario para volver a leer el fichero
+    
+    clients C; 
+                         
     C.n_clients = n_clients;
+    C.clients = malloc(n_clients * sizeof(client));
     
 
     fclose(f_clients);
-
     return C;
-
 } 
 
 
