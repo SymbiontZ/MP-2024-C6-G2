@@ -3,7 +3,7 @@
 #include <stdlib.h> 
 
 clients cargar_clientes();
-void excepcion (int, char[]);
+clients agregar_cliente(clients C);
 
 clients cargar_clientes(){
     char filename[] = "../data/Clientes.txt";   //Nombre fichero
@@ -31,7 +31,7 @@ clients cargar_clientes(){
     clients C; 
                          
     C.n_clients = n_clients;
-    C.clients = malloc(C.n_clients * sizeof(client));
+    C.clients = malloc(C.n_clients * sizeof(client));           //Asignacion de memoria dinamica "C.clients[n_clients]"
 
 
     //BUCLE PARA RELLENAR LA ESTRUCTURA DE CLIENTES//
@@ -54,11 +54,20 @@ clients cargar_clientes(){
         i++;
     }
     
-
     fclose(f_clients);
     return C;
 }
 
-clients agregar_cliente(){
+clients agregar_cliente(clients C){
+    int new_size = C.n_clients+1;
+
+    C.clients = realloc(C.clients, new_size*sizeof(client));
+
+    C.clients[new_size].Cartera = 1000;
     
+    printf("%d", C.clients[5].Cartera);
+
+
+    C.n_clients = new_size;
+    return C;
 }
