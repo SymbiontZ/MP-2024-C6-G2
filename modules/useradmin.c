@@ -62,14 +62,13 @@ clients agregar_cliente(clients C){
 
     C.clients = realloc(C.clients, new_id*sizeof(client));
     C.clients[new_pos].Id_cliente = new_id;
-    strcpy(C.clients[new_pos].Nom_cliente, "FabioR");
-    strcpy(C.clients[new_pos].Dir_cliente, "Calle Abedul 7");
-    strcpy(C.clients[new_pos].Localidad, "Jerez de la Fra.");
+    strcpy(C.clients[new_pos].Nom_cliente, "LuciaGL");
+    strcpy(C.clients[new_pos].Dir_cliente, "Calle Roble 73");
+    strcpy(C.clients[new_pos].Localidad, "Chiclana");
     strcpy(C.clients[new_pos].Provincia, "Cádiz");
-    strcpy(C.clients[new_pos].email, "frr56exam@uca.es");
-    strcpy(C.clients[new_pos].Contrasena, "contra1234");
+    strcpy(C.clients[new_pos].email, "lgl512exam@uca.es");
+    strcpy(C.clients[new_pos].Contrasena, "contra12345");
     C.clients[new_pos].Cartera = 1000;
-
 
     C.n_clients = new_id;
     return C;
