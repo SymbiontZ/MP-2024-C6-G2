@@ -22,6 +22,7 @@ typedef struct
 }clients;
 
 clients cargar_clientes();
-clients agregar_cliente(clients C);
+clients agregar_cliente(clients );
+void guardar_clientes(clients );
 
 #endif 
