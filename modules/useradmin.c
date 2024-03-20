@@ -6,6 +6,7 @@
 clients cargar_clientes();
 clients agregar_cliente(clients );
 void guardar_clientes(clients );
+void gestionar_cliente(clients, int);
 
 clients cargar_clientes(){
     char filename[] = "../data/Clientes.txt";   //Nombre fichero
@@ -61,8 +62,18 @@ clients agregar_cliente(clients C){
     int new_pos = new_id -1;
 
     C.clients = realloc(C.clients, new_id*sizeof(client));
+    if (C.clients == NULL){
+        printf("No se pudo asignar la estructura de clientes");
+        getchar();
+        exit(EXIT_FAILURE);
+    }
+
     C.clients[new_pos].Id_cliente = new_id;
-    strcpy(C.clients[new_pos].Nom_cliente, "LuciaGL");
+    fflush(stdin);
+    fgets(C.clients[new_pos].Nom_cliente, 20, stdin);
+    printf("%s", C.clients[new_pos].Nom_cliente);
+    printf("hola");
+
     strcpy(C.clients[new_pos].Dir_cliente, "Calle Roble 73");
     strcpy(C.clients[new_pos].Localidad, "Chiclana");
     strcpy(C.clients[new_pos].Provincia, "Cádiz");
@@ -70,7 +81,9 @@ clients agregar_cliente(clients C){
     strcpy(C.clients[new_pos].Contrasena, "contra12345");
     C.clients[new_pos].Cartera = 1000;
 
+    
     C.n_clients = new_id;
+    guardar_clientes(C);
     return C;
 }
 
@@ -92,4 +105,11 @@ void guardar_clientes(clients C){
                 C.clients[i].Cartera);
     }
     fclose(f_clients);
+}
+
+
+void gestionar_cliente(clients C, int id){
+    printf("\nNombre: %s\n", C.clients[id].Nom_cliente);
+
+    guardar_clientes(C);
 }
