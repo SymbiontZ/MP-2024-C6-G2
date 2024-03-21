@@ -1,8 +1,6 @@
-typedef struct{
-    int dia;
-    int mes;
-    int año;
-}fecha;
+
+//ESTRUCTURAS
+//Estructura pedidos.txt
 
 typedef struct{
     int id_pedido;
@@ -18,6 +16,7 @@ typedef struct{
     int lon;
 }pedidos;
 
+//Estructura ProductosPedidos.txt
 typedef struct{
     int id_pedido;
     int id_prod;
@@ -35,6 +34,8 @@ typedef struct{
     prod_pedido *prod_pedidos;
     int lon;
 }prod_pedidos;
+
+
 typedef struct{
     int id_pedido;
     int id_prod;
@@ -49,3 +50,10 @@ typedef struct{
     devolucion *devoluciones;
     int lon;
 }devoluciones;
+
+
+//FUNCIONES
+pedidos cargar_pedidos();
+prod_pedidos cargar_prod_pedidos();
+devoluciones cargar_devoluciones();
+void crear_pedido(int, pedidos);
