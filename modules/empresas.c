@@ -238,6 +238,20 @@ void menu_admin(admin_prov admin){
 	
 	
 	
+void ver_perfil(){}
 
+void admin_ver_clientes(){}
 
+void admin_ver_proveedores(){}
 
+void admin_ver_transportistas(){}
+
+void admin_ver_productos(){}
+ 
+void admin_ver_categorias(){}
+
+void admin_ver_pedidos(){}
+
+void admin_ver_descuentos(){}
+
+void admin_ver_devoluciones(){}

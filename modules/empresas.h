@@ -1,5 +1,5 @@
-#ifndef EMPRESAS_H
-#define EMPRESAS_H
+#ifndef EMPRESAS_H_
+#define EMPRESAS_H_
 
 #define LONG_MAX_ADMINPROV 86
 #define LONG_MAX_TRANSPORT 113
