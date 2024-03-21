@@ -4,6 +4,24 @@
 #include <string.h>
 #include "empresas.h"
 
+void ver_perfil();
+
+void admin_ver_clientes();
+
+void admin_ver_proveedores();
+
+void admin_ver_transportistas();
+
+void admin_ver_productos();
+ 
+void admin_ver_categorias();
+
+void admin_ver_pedidos();
+
+void admin_ver_descuentos();
+
+void admin_ver_devoluciones();
+
 //Precondición: No recibe nada.
 //Postcondición: Devuelve una variable de tipo admin_prov_vect con la información de cada usuario (proveedor o administrador) almacenados en AdminProv.txt.
 
@@ -53,32 +71,32 @@ void cargar_adminprov(){
 }
 
 //Precondición: Recibe una estructura de tipo admin_prov con datos coherentes almacenados.
-//Postcondición: Añade una nueva entrada en AdminProv.txt con los datos de la estructura recibida.
+//Postcondición: Guarda en AdminProv.txt los datos del vector de estructuras recibido.
 
-void agregar_adminprov(admin_prov usuario){
+void agregar_adminprov(admin_prov_vect usuarios){
 	
 	FILE *AdminProv;																							// Puntero al fichero a leer.
 	char ruta[] = "..\\ESIZON-main\\data\\AdminProv.txt";														// Ruta del fichero a leer.
 	char linea[LONG_MAX_ADMINPROV];																				// Línea actual del fichero. Longitud máxima de una línea 86 caracteres.
 	char aux[14];
 	
-	if(usuario.Perfil_usuario == 1)
-		strcpy(aux, "Administrador");
-	else
-		strcpy(aux, "Proveedor");
-		
 	if((AdminProv = fopen(ruta, "a+")) == NULL){
 		printf("Error al abrir el fichero AdminProv.txt en cargar_adminprov.\n");
 		exit(33);
 	}
 	else{
-		fprintf(AdminProv, "%d-%20[^-]-%30[^-]-%15[^-]-%13[^\n]\n", usuario.Id_empresa, usuario.Nombre, usuario.email, usuario.Contrasena, aux);
+		for(int i = 0; i < usuarios.tam; i++){
+			if(usuarios.usuarios[i].Perfil_usuario == 1)
+				strcpy(aux, "Administrador");
+			else
+				strcpy(aux, "Proveedor");
+			fprintf(AdminProv, "%d-%20[^-]-%30[^-]-%15[^-]-%13[^\n]\n", usuarios.usuarios[i].Id_empresa, usuarios.usuarios[i].Nombre, usuarios.usuarios[i].email, usuarios.usuarios[i].Contrasena, aux);
+		}
 	}
 }
 
-
 //Precondición: No recibe nada.
-//Postcondición: Devuelve una variable de tipo trasnport_vect con la información de cada transportista almacenada en Transportistas.txt.
+//Postcondición: Devuelve una variable de tipo transport_vect con la información de cada transportista almacenada en Transportistas.txt.
 
 void cargar_transportistas(){
 	
@@ -115,9 +133,9 @@ void cargar_transportistas(){
 }
 
 //Precondición: Recibe una estructura de tipo transport con datos coherentes almacenados.
-//Postcondición: Añade una nueva entrada en Transportistas.txt con los datos de la estructura recibida.
+//Postcondición: Guarda en Transportistas.txt los datos del vector de estructuras recibido.
 
-void agregar_transportista(transport transportista){
+void agregar_transportista(transport_vect transportistas){
 	
 	FILE *Transportistas;																						// Puntero al fichero a leer.
 	char ruta[] = "..\\ESIZON-main\\data\\Transportistas.txt";													// Ruta del fichero a leer.
@@ -128,7 +146,9 @@ void agregar_transportista(transport transportista){
 		exit(33);
 	}
 	else{
-		fprintf(Transportistas, "%d-%20[^-]-%30[^-]-%15[^-]-%20[^-]-%20[^\n]\n", transportista.Id_transp, transportista.Nombre, transportista.email, transportista.Contrasena, transportista.Nom_Emp, transportista.Ciudad);
+		for(int i = 0; i < transportistas.tam; i++){
+			fprintf(Transportistas, "%d-%20[^-]-%30[^-]-%15[^-]-%20[^-]-%20[^\n]\n", transportistas.transportistas[i].Id_transp, transportistas.transportistas[i].Nombre, transportistas.transportistas[i].email, transportistas.transportistas[i].Contrasena, transportistas.transportistas[i].Nom_Emp, transportistas.transportistas[i].Ciudad);
+		}
 	}
 }
 
@@ -180,11 +200,44 @@ int longitud_vector_transportistas(){
 //Postcondición: No devuelve nada, sustituye el primer carácter ' ' que encuentre en la cadena por el carácter terminador '\0'.
 
 void acortar_cadena(char cadena[]){
-		int i, len = (int) strlen(cadena);
-		for(i=0; i<len; i++){
-    			if(cadena[i]=='\n')
-    				cadena[i]='\0';
-			}
+	int i, len = (int) strlen(cadena);
+	for(i=0; i<len; i++){
+    	if(cadena[i]=='\n')
+    		cadena[i]='\0';
 	}
+}
+
+void menu_admin(admin_prov admin){
+	
+	int op = -1, i = 0;
+	do{
+		printf("\nBienvenido, %s - ¿Qué desea hacer hoy?\n <1> Ver perfil.\n <2> Administrar clientes.\n <3> Administrar proveedores\n <4> Administrar transportistas.\n <5> Administrar productos.\n <6> Ver categorías.\n <7> Ver pedidos.\n <8> Ver descuentos.\n <9> Ver devoluciones.\n <0> Volver.\n Elija una opción: ", admin.Nombre);
+		if(scanf("%i",&op)!=1){
+			fflush(stdin);
+			printf("Error: introduzca una entrada válida.");
+			op=-1;
+		}
+		else{
+			switch(op){
+				case 1: ver_perfil(); break;
+				case 2: admin_ver_clientes(); break;
+				case 3: admin_ver_proveedores; break;
+				case 4: admin_ver_transportistas(); break;
+				case 5: admin_ver_productos(); break;
+				case 6: admin_ver_categorias(); break;
+				case 7: admin_ver_pedidos(); break;
+				case 8: admin_ver_descuentos(); break;
+				case 9: admin_ver_devoluciones(); break;
+				case 0: break;
+				default: printf("Introduzca una entrada dentro de la lista dada."); i++; if(i>5) printf("\nVenga, que no es complicado: introduce 1, 2, 3 o 4 según lo que necesites.\n"); break;
+			}
+		}
+	}while(op!=0);
+	
+}
+	
+	
+	
+
 
 
