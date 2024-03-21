@@ -56,7 +56,7 @@ pedidos cargar_pedidos(){
 }
 //Cabecera: void crear_pedido(int id_cliente, pedidos p)
 //Precondicion: estrcutura pedidos cargada con datos del fichero Pedidos.txt y el id del cliente que ha realizado pedido, lo sabemos cuando ha iniciado sesión en la aplicación
-//Postcondicion: se crea un nuevo pedido realizado por un cliente
+//Postcondicion: se crea un nuevo pedido realizado por un cliente y se guarda en la estructura pedidos
 void crear_pedido(int id_cliente, pedidos p){
     int n_pedidos, i=0, nueva_id, pos, lugar;
     nueva_id=p.lon+1; //id de un nuevo pedido
@@ -82,11 +82,11 @@ void crear_pedido(int id_cliente, pedidos p){
             printf("opcion invalida");
     }
 
-
+    guardar_pedidos();
 }
 
 //Postcondicion: se guarda en el fichero la estructura pedidos
-void guardar_pedido(int id_cliente){
+void guardar_pedido(pedidos p){
 
 }
 
