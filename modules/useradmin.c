@@ -1,3 +1,4 @@
+#include "./complementos.h"
 #include "./useradmin.h"
 #include <stdio.h>
 #include <stdlib.h> 
@@ -7,9 +8,11 @@ clients cargar_clientes();
 clients agregar_cliente(clients );
 void guardar_clientes(clients );
 void gestionar_cliente(clients, int);
+clients cliente_nom(clients , int );
+clients cliente_contr(clients C, int id, int mod);
 
 clients cargar_clientes(){
-    char filename[] = "../data/Clientes.txt";   //Nombre fichero
+    char filename[] = "../data/Clientes.txt";   
     int n_clients = 0;                          //Numero de clientes registrados
     int i = 0;                          
     char cad_linea[170];                        //Caracteres maximos que puede ocupar una linea en fichero
@@ -92,7 +95,7 @@ void guardar_clientes(clients C){
     char filename[] = "../data/Clientes.txt";
     int i;
     f_clients = fopen(filename,"w");
-    //PROCESO DE CONCATENACION DE DATOS DE CADA USUARIO PARA INTRODUCIR AL FICHERO//
+    //PROCESO DE GUARDADO DE DATOS DE CADA USUARIO EN FICHERO//
     for (i = 0; i < C.n_clients; i++){                          
         fprintf(f_clients, "%07d-%s-%s-%s-%s-%s-%s-%d\n",
                 C.clients[i].Id_cliente,
@@ -107,9 +110,66 @@ void guardar_clientes(clients C){
     fclose(f_clients);
 }
 
-
 void gestionar_cliente(clients C, int id){
+    //MOSTRAR INFORMACION//
+    clear();
     printf("\nNombre: %s\n", C.clients[id].Nom_cliente);
+    printf("Direccion: %s, %s, %s\n", C.clients[id].Dir_cliente, C.clients[id].Localidad, C.clients[id].Provincia);
+    printf("Email: %s\n", C.clients[id].email);
+    printf("Cartera: %d\n", C.clients[id].Cartera);
 
+    //CAMBIO DE INFORMACION//
+    int opt;
+    printf("\n### QUE DESEA MODIFICAR: ###\n");
+    printf("1. Nombre\n2. Direccion\n3. Email\n4. Contrasena\n5. Cartera\n0. Salir\n############################\n");
+
+    
+    scanf("%d", &opt);
+    while(opt < 0 || opt > 5) {
+        printf("Opcion invalida. Por favor, seleccione una opcion valida: ");
+        fflush(stdin);
+        scanf("%d", &opt);
+    }
+    switch (opt)
+    {
+    case 1:
+        C = cliente_nom(C, id);
+        break;
+    case 4:
+        C = cliente_contr(C, id, 1);
+    
+    default:
+        break;
+    }
+    
     guardar_clientes(C);
+}
+
+clients cliente_nom(clients C, int id){
+    printf("Ingrese el nombre:\n");
+    fgets(C.clients[id].Nom_cliente, 20, stdin);
+    printf("%s",C.clients[id].Nom_cliente);
+    return C;
+}
+
+clients cliente_contr(clients C, int id, int mod){
+    char cad_contr[21];
+    if(mod == 1){
+        printf("%s", C.clients[id].Contrasena);
+        printf("Para poder cambiar la contrasena es necesario verificar la anterior: ");
+        fflush(stdin);
+        fgets(cad_contr, 21, stdin);
+
+        int len = strlen(cad_contr);
+        if (len > 0 && cad_contr[len - 1] == '\n') {
+            cad_contr[len - 1] = '\0'; // Reemplazar el carácter de salto de linea con el carácter nulo
+        }
+        
+        if(strcmp(cad_contr, C.clients[id].Contrasena) == 0)
+            printf("Iguales\n");
+        else
+            printf("No iguales\n");
+        
+    }
+
 }
