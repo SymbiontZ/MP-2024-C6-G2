@@ -1,5 +1,5 @@
-#ifndef EMPRESAS_H_
-#define EMPRESAS_H_
+#ifndef EMPRESAS_H
+#define EMPRESAS_H
 
 #define LONG_MAX_ADMINPROV 86
 #define LONG_MAX_TRANSPORT 113
@@ -50,7 +50,7 @@ void cargar_adminprov();			// Carga en una estructura de tipo admin_prov_vect to
 
 //Precondición: Recibe una estructura de tipo admin_prov con datos coherentes almacenados.
 //Postcondición: Guarda en AdminProv.txt los datos del vector de estructuras recibido.
-void agregar_adminprov(admin_prov_vect usuarios);
+void guardar_adminprov(admin_prov_vect usuarios);
 
 //Precondición: No recibe nada.
 //Postcondición: Devuelve una variable de tipo trasnport_vect con la información de cada transportista almacenada en Transportistas.txt.
@@ -59,7 +59,7 @@ void cargar_transportistas();		// Carga en una estructura de tipo transport_vect
 //Precondición: Recibe una estructura de tipo transport con datos coherentes almacenados.
 //Postcondición: Guarda en Transportistas.txt los datos del vector de estructuras recibido.
 
-void agregar_transportista(transport_vect transportistas);
+void guardar_transportista(transport_vect transportistas);
 
 //Precondición: No recibe nada.
 //Postcondición: Devuelve el numero de lineas que contiene AdminProv.txt.
