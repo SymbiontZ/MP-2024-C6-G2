@@ -1,5 +1,5 @@
-#ifndef EMPRESAS_H
-#define EMPRESAS_H
+#ifndef EMPRESAS_H_
+#define EMPRESAS_H_
 
 #define LONG_MAX_ADMINPROV 86
 #define LONG_MAX_TRANSPORT 113
@@ -49,16 +49,17 @@ typedef struct{
 void cargar_adminprov();			// Carga en una estructura de tipo admin_prov_vect todos lo usuarios almacenados en AdminProv.txt
 
 //Precondición: Recibe una estructura de tipo admin_prov con datos coherentes almacenados.
-//Postcondición: Añade una nueva entrada en AdminProv.txt con los datos de la estructura recibida.
-void agregar_adminprov(admin_prov usuario);
+//Postcondición: Guarda en AdminProv.txt los datos del vector de estructuras recibido.
+void agregar_adminprov(admin_prov_vect usuarios);
 
 //Precondición: No recibe nada.
 //Postcondición: Devuelve una variable de tipo trasnport_vect con la información de cada transportista almacenada en Transportistas.txt.
 void cargar_transportistas();		// Carga en una estructura de tipo transport_vect todos lo usuarios almacenados en Transportistas.txt
 
 //Precondición: Recibe una estructura de tipo transport con datos coherentes almacenados.
-//Postcondición: Añade una nueva entrada en Transportistas.txt con los datos de la estructura recibida.
-void agregar_transportista(transport transportista);
+//Postcondición: Guarda en Transportistas.txt los datos del vector de estructuras recibido.
+
+void agregar_transportista(transport_vect transportistas);
 
 //Precondición: No recibe nada.
 //Postcondición: Devuelve el numero de lineas que contiene AdminProv.txt.
@@ -71,5 +72,25 @@ int longitud_vector_transportistas();
 //Precondición: Recibe una cadena que necesite ser acortada (no nula, con algún carácter ' ' al final de ella).
 //Postcondición: No devuelve nada, sustituye el primer carácter ' ' que encuentre en la cadena por el carácter terminador '\0'.
 void acortar_cadena(char cad[]);	// Se emplea en casos en los que el espacio desperdiciado es mínimo.
+
+void menu_admin(admin_prov admin);
+
+void ver_perfil();
+
+void admin_ver_clientes();
+
+void admin_ver_proveedores();
+
+void admin_ver_transportistas();
+
+void admin_ver_productos();
+ 
+void admin_ver_categorias();
+
+void admin_ver_pedidos();
+
+void admin_ver_descuentos();
+
+void admin_ver_devoluciones();
 
 #endif
