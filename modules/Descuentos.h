@@ -54,7 +54,7 @@ void Cargar_Descuentos();
 
 
 //Precondición: El fichero DescuentosClientes.txt debe estar relleno
-//Postcondición: Devuelve una estructura con el vector de estructuras Desc y almacena su tamaño
+//Postcondición: Devuelve una estructura con el vector de estructuras DescCli y almacena su tamaño
 void Cargar_DescuentosClientes();
 
 

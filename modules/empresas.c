@@ -73,7 +73,7 @@ void cargar_adminprov(){
 //Precondición: Recibe una estructura de tipo admin_prov con datos coherentes almacenados.
 //Postcondición: Guarda en AdminProv.txt los datos del vector de estructuras recibido.
 
-void agregar_adminprov(admin_prov_vect usuarios){
+void guardar_adminprov(admin_prov_vect usuarios){
 	
 	FILE *AdminProv;																							// Puntero al fichero a leer.
 	char ruta[] = "..\\ESIZON-main\\data\\AdminProv.txt";														// Ruta del fichero a leer.
@@ -135,7 +135,7 @@ void cargar_transportistas(){
 //Precondición: Recibe una estructura de tipo transport con datos coherentes almacenados.
 //Postcondición: Guarda en Transportistas.txt los datos del vector de estructuras recibido.
 
-void agregar_transportista(transport_vect transportistas){
+void guardar_transportista(transport_vect transportistas){
 	
 	FILE *Transportistas;																						// Puntero al fichero a leer.
 	char ruta[] = "..\\ESIZON-main\\data\\Transportistas.txt";													// Ruta del fichero a leer.
@@ -147,7 +147,7 @@ void agregar_transportista(transport_vect transportistas){
 	}
 	else{
 		for(int i = 0; i < transportistas.tam; i++){
-			fprintf(Transportistas, "%d-%20[^-]-%30[^-]-%15[^-]-%20[^-]-%20[^\n]\n", transportistas.transportistas[i].Id_transp, transportistas.transportistas[i].Nombre, transportistas.transportistas[i].email, transportistas.transportistas[i].Contrasena, transportistas.transportistas[i].Nom_Emp, transportistas.transportistas[i].Ciudad);
+			fprintf(Transportistas, "%d-%20[^-]-%30[^-]-%15[^-]-%20[^-]-%20s\n", transportistas.transportistas[i].Id_transp, transportistas.transportistas[i].Nombre, transportistas.transportistas[i].email, transportistas.transportistas[i].Contrasena, transportistas.transportistas[i].Nom_Emp, transportistas.transportistas[i].Ciudad);
 		}
 	}
 }
@@ -235,23 +235,44 @@ void menu_admin(admin_prov admin){
 	}while(op!=0);
 	
 }
+
+void ver_perfil(){
 	
+}
+
+void admin_ver_clientes(){
 	
+}
+
+void admin_ver_proveedores(){
 	
-void ver_perfil(){}
+}
 
-void admin_ver_clientes(){}
+void admin_ver_transportistas(){
 
-void admin_ver_proveedores(){}
+}
 
-void admin_ver_transportistas(){}
+void admin_ver_productos(){
 
-void admin_ver_productos(){}
+}
  
-void admin_ver_categorias(){}
+void admin_ver_categorias(){
 
-void admin_ver_pedidos(){}
+}
 
-void admin_ver_descuentos(){}
+void admin_ver_pedidos(){
 
-void admin_ver_devoluciones(){}
+}
+
+void admin_ver_descuentos(){
+
+}
+
+void admin_ver_devoluciones(){
+
+}
+	
+	
+
+
+

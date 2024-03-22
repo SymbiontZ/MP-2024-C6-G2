@@ -1,27 +1,7 @@
+#include "./productos.h"
 #include <stdio.h>
 #include <string.h>
-#define N 100
-
-typedef struct {
-	int Id_prod[7];		//Identificador del producto
-	char Descrip[50];	//Descripción del producto
-	int Id_categ[4];	//Id de la categoría a la que pertenece el producto
-	int Id_gestor[4];	//Id del gestor del producto
-	int Stock[4];		//Stock del producto
-	int Entrega[3];		//Fecha de compromiso de entrega en días
-	int Importe[4];		//Importe del producto en euros
-	int lleno			//Variable utilizada para diferenciar los productos con todos sus valores rellenados
-}productos;
-
-void vacio (productos []);
-void cambio (char []);
-void rellenar_idprod (productos []);
-void rellenar_descrip (productos []);
-void rellenar_idcateg (productos []);
-void rellenar_idgestor (productos []);
-void rellenar_stock (productos []);
-void rellenar_entrega (productos []);
-void rellenar_importe (productos []);
+#include <stdlib.h>
 
 int main () {
 	productos prod[N];
@@ -30,51 +10,33 @@ int main () {
 	
 	do {
 		do{
-			printf ("Que deseas hacer?\n");
-			printf ("(1) Identificador del producto\n");
-			printf ("(2) Descripción del producto\n");
-			printf ("(3) Id de la categoría a la que pertenece el producto\n");
-			printf ("(4) Id del gestor del producto\n");
-			printf ("(5) Stock del producto\n");
-			printf ("(6) Fecha de compromiso de entrega en días\n");
-			printf ("(7) Importe del producto en euros\n");
+			printf ("Que deseas hacer?\n\n");
+			printf ("(1) Rellenar los datos de un nuevo producto\n");
+			printf ("(2) Mostrar todos los productos ya existentes\n");
+			printf ("(3) Salir del programa\n\n");
 			scanf ("%i", &op);
 			printf ("\n");
-		}while (op < 1 || op > 7);
+		}while (op < 1 || op > 3);
 		
 		switch (op) {
 			case 1:
-				rellenar_idprod (prod);
+				rellenar_produ (prod);
 			break;
 			
 			case 2:
-				rellenar_descrip (prod);
+				//mostrar_produ (prod);
 			break;
 			
 			case 3:
-				rellenar_idcateg (prod);
-			break;
-			
-			case 4:
-				rellenar_idgesor (prod);
-			break;
-			
-			case 5:
-				rellenar_stock (prod);
-			break;
-			
-			case 6:
-				rellenar_entrega (prod);
-			break;
-			
-			case 7:
-				rellenar_importe (prod);
+				printf ("Gracias por su visita, vuelva pronto :)");
+				exit(1);
 			break;
 		}
 		
 		printf ("\nDeseas realizar algun cambio mas? (S/N): ");
 		fflush (stdin);
 		scanf ("%c", &respuesta);
+		printf ("\n");
 	}while (respuesta == 'S' || respuesta == 's');
 	
 	if (respuesta == 'N' || respuesta == 'n') {
@@ -95,21 +57,63 @@ void vacio (productos prod[]) {
 void cambio (char cad[]) {
 	int i;
 	
-	for (i = 0; i < N; i++) {
+	for (i = 0; i < strlen (cad); i++) {
 		if (cad[i] == '\n') {
 			cad[i] = '\0';
 		}
 	}
 }
+
+void rellenar_produ (productos prod[]) {
+	int i, n1, n2, n3, n4, n5, n6, aux = 0;
+	char cad[84];
 	
-void rellenar_idprod (productos prod[]) {
-	int i;
-}
+	FILE *f;
 	
+	f = fopen ("Productos.txt", "a");
 	
+	if (f == NULL) {
+		printf ("No se ha podido acceder al fichero, intentelo de nuevo");
+		exit (1);
+	}
 	
+	for (i = 0; i < N && aux == 0; i++) {
+		if (prod[i].lleno == 0) {
+			printf ("Producto %i/%i: ", i + 1, N);
+			
+			printf ("\n\nPrimero, escribe el id del producto: ");
+			scanf ("%i", &n1);
+		
+			printf ("Segundo, haz una descripcion del producto (maximo 50 caracteres): ");
+			fflush (stdin);
+			fgets (prod[i].descrip, 51, stdin);
+			cambio (prod[i].descrip);
+		
+			printf ("Tercero, escribe el id de la categoria: ");
+			scanf ("%i", &n2);
+		
+			printf ("Cuarto, escribe el id del gestor del producto: ");
+			scanf ("%i", &n3);
+		
+			printf ("Quinto, escribe la cantidad de stock del producto: ");
+			scanf ("%i", &n4);
+		
+			printf ("Sexto, escribe el numero de dias de compromiso de entrega: ");
+			scanf ("%i", &n5);
+		
+			printf ("Por ultimo, escribe el importe del producto en euros: ");
+			scanf ("%i", &n6);
+		
+			fprintf (f, "%07d-%s-%04d-%04d-%i-%i-%i\n\n", n1, prod[i].descrip, n2, n3, n4, n5, n6);
+		
+			fclose (f);
+			
+			prod[i].lleno = 1;
+			aux = 1;
+		}
+	}
 	
-	
-	
-	
-	
+	if (aux == 0) {
+		printf ("\nTodos los productos han sido registrados");
+	}
+}	
