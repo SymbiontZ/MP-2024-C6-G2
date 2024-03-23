@@ -40,54 +40,117 @@ pedidos cargar_pedidos(){
         //funcion sscanf(cadena, campos a separar):
         //campos a separar-> %tipo_campo  separardor
         //cuando es cadena %n_caracteres[hasta donde lee]
-        campo_pedidos=sscanf(cad_aux, "%d-%10[^-]-%d-%10[^-]-%10[^-]-%10[^-]",
+        campo_pedidos=sscanf(cad_aux, "%d-%d/%d/%d-%d-%10[^-]-%10[^-]-%10[^-]",
             &p.pedidos[i].id_pedido,
-            p.pedidos[i].f_pedido,
+            &p.pedidos[i].f_pedido.dia,
+            &p.pedidos[i].f_pedido.mes,
+            &p.pedidos[i].f_pedido.anio,
             &p.pedidos[i].id_cliente,
             p.pedidos[i].lugar,
             p.pedidos[i].id_locker,
             p.pedidos[i].id_cod);
+
+        if(campo_pedidos!=8){
+            printf("error, i=%d", i);
+        }
+
         i++;
+        
     }
-    
     return p;
-
-
 }
+
 //Cabecera: void crear_pedido(int id_cliente, pedidos p)
 //Precondicion: estrcutura pedidos cargada con datos del fichero Pedidos.txt y el id del cliente que ha realizado pedido, lo sabemos cuando ha iniciado sesión en la aplicación
-//Postcondicion: se crea un nuevo pedido realizado por un cliente y se guarda en la estructura pedidos
+//Postcondicion: se crea un nuevo pedido realizado por un cliente y se guarda en la estructura pedidos, ademas de escribirlo en el fichero Pedidos.txt
 void crear_pedido(int id_cliente, pedidos p){
-    int n_pedidos, i=0, nueva_id, pos, lugar;
-    nueva_id=p.lon+1; //id de un nuevo pedido
-    pos=p.lon; //posicion del nuevo pedido en la estructura
+    int n_pedidos=p.lon, i=0, nueva_id, pos, lugar, cheque;
+    char cod_cheque[10];
+    nueva_id=n_pedidos +1; //id de un nuevo pedido, será el numero de pedidos que hay en el fichero +1
+    pos=nueva_id -1; //posicion del nuevo pedido en la estructura, es uno menos que el id ya que el vector empieza en la posicion 0
     p.pedidos=realloc(p.pedidos, nueva_id*sizeof(pedido)); //reasignamos memoria dinámica, el tamaño coincide con nueva_id ya que son los pedidos que habrá en la estructura
     
     p.pedidos[pos].id_pedido=nueva_id;
     p.pedidos[pos].id_cliente=id_cliente;
-    strcopy(p.pedidos[pos].f_pedido, "21/03/2024"); //guarda la fecha del pedido
-    strcopy(p.pedidos[pos].id_cod,"che003");
-    printf("Selecciona un lugar de entrega:\n");
+
+    p.pedidos[pos].f_pedido.dia=21;
+    p.pedidos[pos].f_pedido.mes=3;
+    p.pedidos[pos].f_pedido.anio=2024;
+
+    printf("Selecciona un lugar de entrega: \n");
     printf("1. DOMICILIO\n");
     printf("2. LOCKER\n");
+    printf("su opcion : ");
     scanf("%d", &lugar);
     switch(lugar){
         case 1:
-            strcopy(p.pedidos[pos].lugar, "domicilio");
+            strcpy(p.pedidos[pos].lugar, "Domicilio");
+            strcpy(p.pedidos[pos].id_locker, "00000000");
             break;
         case 2:
-            strcopy(p.pedidos[pos].lugar, "locker");
+            strcpy(p.pedidos[pos].lugar, "Locker");
+            //añadir un id del locker y un codigo del locker
+            //funciones modulo lockers para mirar locker libres
             break;
         default:
-            printf("opcion invalida");
+            printf("opcion no valida");
     }
 
-    guardar_pedidos();
+    printf("Desea utilizar un cheque\n");
+    printf("1. SI\n");
+    printf("2. NO\n");
+    printf("su opcion: ");
+    scanf("%d", &cheque);
+    switch(cheque){
+        case 1:
+            printf("introduce el codigo del cheque:");
+            fflush(stdin);
+            fgets(cod_cheque, 11, stdin);
+            //if cod_cheque existe y es valido lo copia al fichero
+            int len = strlen(cod_cheque);
+            if (len > 0 && cod_cheque[len - 1] == '\n') {
+                cod_cheque[len - 1] = '\0'; // Reemplazar el carácter de salto de linea con el carácter nulo
+            }
+            strcpy(p.pedidos[pos].id_cod, cod_cheque);
+            break;
+        case 2:
+            strcpy(p.pedidos[pos].id_cod, "000000000");
+            break;
+        
+        default:
+            printf("opcion no valida");
+    }
+
+    p.lon=p.lon+1; //actualiza el numero de pedidos que hay 
+
+    guardar_pedido(p);
+    printf("Se han guardado los datos correctamente\n");
 }
 
+
+//Cabecera guardar_pedido(pedidos p, int pos)
+//Precondición: estructura pedidos cargada con los datos del ultimo pedido realizado
 //Postcondicion: se guarda en el fichero la estructura pedidos
 void guardar_pedido(pedidos p){
+    int i;
 
+    FILE *f_ped;
+    f_ped=fopen("../data/Pedidos.txt", "w");
+    if(f_ped==NULL){
+        printf("ERROR");
+    }
+    
+    for(i=0;i<p.lon;i++){
+        fprintf(f_ped,"%d-%d/%d/%d-%d-%s-%s-%s\n", 
+            p.pedidos[i].id_pedido,
+            p.pedidos[i].f_pedido.dia,
+            p.pedidos[i].f_pedido.mes,
+            p.pedidos[i].f_pedido.anio,
+            p.pedidos[i].id_cliente,
+            p.pedidos[i].lugar,
+            p.pedidos[i].id_locker,
+            p.pedidos[i].id_cod);
+    }
 }
 
 //Cabecera: prod_pedidos cargar_prod_pedidos()

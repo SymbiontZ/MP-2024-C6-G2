@@ -3,8 +3,13 @@
 //Estructura pedidos.txt
 
 typedef struct{
+    int dia;
+    int mes;
+    int anio;
+}fecha;
+typedef struct{
     int id_pedido;
-    char f_pedido[10];
+    fecha f_pedido;
     int id_cliente;
     char lugar[10];
     char id_locker[10];
@@ -21,13 +26,13 @@ typedef struct{
     int id_pedido;
     int id_prod;
     int num_unid;
-    char f_entrega[10];
+    fecha f_entrega;
     float importe;
     char estado[20];
     int id_transp;
     int id_locker;
     int cod_locker;
-    char f_devolucion[10];
+    fecha f_devolucion;
 }prod_pedido;
 
 typedef struct{
@@ -39,11 +44,11 @@ typedef struct{
 typedef struct{
     int id_pedido;
     int id_prod;
-    char f_devol[10];
+    fecha f_devol;
     char motivo[50];
     char estado[10];
-    char f_aceptacion[10];
-    char f_caducidad[10];
+    fecha f_aceptacion;
+    fecha f_caducidad;
 }devolucion;
 
 typedef struct{
@@ -57,3 +62,4 @@ pedidos cargar_pedidos();
 prod_pedidos cargar_prod_pedidos();
 devoluciones cargar_devoluciones();
 void crear_pedido(int, pedidos);
+void guardar_pedido(pedidos);

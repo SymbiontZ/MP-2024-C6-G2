@@ -5,8 +5,8 @@
 int main()
 {
     pedidos P=cargar_pedidos();
-    printf("se ha cargado el fichero correctamente");
-    crear_pedido(12,P);
+    printf("se ha cargado el fichero correctamente\n");
+    crear_pedido(3,P);
     
     return 0;
 }
