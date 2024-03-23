@@ -21,9 +21,19 @@ typedef struct
 
 }clients;
 
-clients cargar_clientes();
+//PRECONDICION: Se le
+clients cargar_clientes();          
+
+
 clients agregar_cliente(clients );
 void guardar_clientes(clients );
 void gestionar_cliente(clients, int);
+
+//GESTION DATOS ESPECIFICOS USUARIOS//
+clients cliente_nom(clients , int );
+clients cliente_contr(clients , int , int );
+clients cliente_dir(clients , int ,int );
+clients cliente_email(clients , int , int );
+clients cliente_cart(clients , int , int );
 
 #endif 
