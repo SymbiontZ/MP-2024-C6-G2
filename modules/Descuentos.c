@@ -18,17 +18,17 @@ void Cargar_Descuentos(){
 	}
 	else{
 		vector_descuentos.tam = 0;
-		while(fgets(linea, sizeof(linea), Descuentos) != NULL)												// Contamos el número de usuarios en el fichero...
+		while(fgets(linea, sizeof(linea), Descuentos) != NULL)												// Contamos el nï¿½mero de usuarios en el fichero...
 	    	vector_descuentos.tam++;
 	    printf("Descuentos almacenados en Descuentos.txt: %d \n", vector_descuentos.tam);
-        vector_descuentos.Desc = (Descuentos*)malloc((vector_descuentos.tam + 1) * sizeof(Descuentos));	// ... y reservamos memoria para el vector (más uno por si se necesita añadir algún usuario).
+        vector_descuentos.Desc = (Descuentos*)malloc((vector_descuentos.tam + 1) * sizeof(Descuentos));	// ... y reservamos memoria para el vector (mï¿½s uno por si se necesita aï¿½adir algï¿½n usuario).
 	 	rewind(Descuentos);
 
 		while((fgets(linea, sizeof(linea), Descuentos) != NULL) ){
 			if((m = sscanf(linea, "%10[^-]-%50[^-]-%7[^-]-%8[^-]-%2[^-]-%d[^\n]\n", &vector_descuentos.Desc[i].Id_cod, vector_descuentos.Desc[i].Descrip, vector_descuentos.Desc[i].Tipo, vector_descuentos.Desc[i].Estado, vector_descuentos.Desc[i].Aplicable, vector_descuentos.Desc[i].Importe)) == 6)
 				i++;
 			else{
-				printf("Error leyendo datos del fichero Descuentos.txt. Línea: %d\n", i + 1);
+				printf("Error leyendo datos del fichero Descuentos.txt. Lï¿½nea: %d\n", i + 1);
 				exit(33);
 			}
 		}
@@ -38,7 +38,6 @@ void Cargar_Descuentos(){
 
 
 }
-
 
 void Cargar_DescuentosClientes(){
 
@@ -54,17 +53,17 @@ void Cargar_DescuentosClientes(){
 	}
 	else{
 		vector_descuentosclientes.tam = 0;
-		while(fgets(linea, sizeof(linea), DescuentosClientes) != NULL)												// Contamos el número de usuarios en el fichero...
+		while(fgets(linea, sizeof(linea), DescuentosClientes) != NULL)												// Contamos el nï¿½mero de usuarios en el fichero...
 	    	vector_descuentosclientes.tam++;
 	    printf("Descuentos almacenados en DescuentosClientes.txt: %d \n", vector_descuentosclientes.tam);
-        vector_descuentosclientes.DescCli = (DescuentosClientes*)malloc((vector_descuentosclientes.tam + 1) * sizeof(DescuentosClientes));	// ... y reservamos memoria para el vector (más uno por si se necesita añadir algún usuario).
+        vector_descuentosclientes.DescCli = (DescuentosClientes*)malloc((vector_descuentosclientes.tam + 1) * sizeof(DescuentosClientes));	// ... y reservamos memoria para el vector (mï¿½s uno por si se necesita aï¿½adir algï¿½n usuario).
 	 	rewind(DescuentosClientes);
 
 		while((fgets(linea, sizeof(linea), DescuentosClientes) != NULL) ){
 			if((m = sscanf(linea, "%7[^-]-%d[^-]-%d[^-]-%d[^-]-%d[^-]-%d[^-]-%d[^-]-%d[^-]-%d[^\n]\n", &vector_descuentosclientes.DescCli[i].Id_cod, vector_descuentosclientes.DescCli[i].Id_cliente, vector_descuentosclientes.DescCli[i].dia_asig, vector_descuentosclientes.DescCli[i].mes_asig, vector_descuentosclientes.DescCli[i].anio_asig, vector_descuentosclientes.DescCli[i].dia_cad, vector_descuentosclientes.DescCli[i].mes_cad, vector_descuentosclientes.DescCli[i].anio_cad)) == 6)
 				i++;
 			else{
-				printf("Error leyendo datos del fichero DescuentosClientes.txt. Línea: %d\n", i + 1);
+				printf("Error leyendo datos del fichero DescuentosClientes.txt. Lï¿½nea: %d\n", i + 1);
 				exit(33);
 			}
 		}
