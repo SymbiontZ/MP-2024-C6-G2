@@ -21,7 +21,7 @@ int dia_sist(){
 int mes_sist(){
     tiempo_actual = time(NULL);
     fecha = localtime(&tiempo_actual);
-    int mes = fecha->tm_mon; 
+    int mes = fecha->tm_mon+1; 
 
     return  mes;
 }
@@ -29,7 +29,7 @@ int mes_sist(){
 int anno_sist(){
     tiempo_actual = time(NULL);
     fecha = localtime(&tiempo_actual);
-    int anno = fecha->tm_year; 
+    int anno = fecha->tm_year+1900; 
 
     return  anno;
 }

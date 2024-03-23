@@ -2,6 +2,7 @@
 #include"pedidos.h"
 #include<stdlib.h>
 #include<string.h>
+#include"complementos.h"
 
 pedidos cargar_pedidos();
 prod_pedidos cargar_prod_pedidos();
@@ -73,9 +74,9 @@ void crear_pedido(int id_cliente, pedidos p){
     p.pedidos[pos].id_pedido=nueva_id;
     p.pedidos[pos].id_cliente=id_cliente;
 
-    p.pedidos[pos].f_pedido.dia=21;
-    p.pedidos[pos].f_pedido.mes=3;
-    p.pedidos[pos].f_pedido.anio=2024;
+    p.pedidos[pos].f_pedido.dia=dia_sist();
+    p.pedidos[pos].f_pedido.mes=mes_sist();
+    p.pedidos[pos].f_pedido.anio=anno_sist();
 
     printf("Selecciona un lugar de entrega: \n");
     printf("1. DOMICILIO\n");
@@ -171,27 +172,38 @@ prod_pedidos cargar_prod_pedidos(){
     }
     rewind(f_prod_ped);
 
-    prod_pedidos prod;
+    prod_pedidos prod_p;
 
-    prod.lon=n_prod_ped;
+    prod_p.lon=n_prod_ped;
 
-    prod.prod_pedidos=malloc(n_prod_ped*sizeof(prod_pedido));
+    prod_p.prod_pedidos=malloc(n_prod_ped*sizeof(prod_pedido));
     while(fgets(cad_aux, sizeof(cad_aux), f_prod_ped) && i<n_prod_ped){
         campo_prod_ped=sscanf(cad_aux, "%d-%d-%d-%10[^-]-%d-%10[^-]-%f-%d-%d-%10[^-]",
-            &prod.prod_pedidos[i].id_pedido,
-            &prod.prod_pedidos[i].id_prod,
-            &prod.prod_pedidos[i].num_unid,
-            prod.prod_pedidos[i].f_entrega,
-            &prod.prod_pedidos[i].importe,
-            prod.prod_pedidos[i].estado,
-            &prod.prod_pedidos[i].id_transp,
-            &prod.prod_pedidos[i].id_locker,
-            &prod.prod_pedidos[i].cod_locker,
-            prod.prod_pedidos[i].f_devolucion);
+            &prod_p.prod_pedidos[i].id_pedido,
+            &prod_p.prod_pedidos[i].id_prod,
+            &prod_p.prod_pedidos[i].num_unid,
+            prod_p.prod_pedidos[i].f_entrega,
+            &prod_p.prod_pedidos[i].importe,
+            prod_p.prod_pedidos[i].estado,
+            &prod_p.prod_pedidos[i].id_transp,
+            &prod_p.prod_pedidos[i].id_locker,
+            &prod_p.prod_pedidos[i].cod_locker,
+            prod_p.prod_pedidos[i].f_devolucion);
         
         i++;
     }
 
+}
+
+//Cabecera: guardar_producto_pedido()
+//Precondicion:
+//Postcondicion: rellena la estructura con un nuevo producto pedido y lo escribe en el fichero
+void guarda_producto_pedido(prod_pedidos prod_p){
+    FILE*f_prod_pedidos;
+    f_prod_pedidos=fopen("../data/ProductosPedidos.txt", "rw+");
+    if(f_prod_pedidos==NULL){
+        printf("ERROR");
+    }
 }
 
 //Cabecera: devoluciones cargar_devoluciones()
