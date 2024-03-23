@@ -4,13 +4,6 @@
 #include <stdlib.h> 
 #include <string.h>
 
-clients cargar_clientes();
-clients agregar_cliente(clients );
-void guardar_clientes(clients );
-void gestionar_cliente(clients, int);
-clients cliente_nom(clients , int );
-clients cliente_contr(clients C, int id, int mod);
-
 clients cargar_clientes(){
     char filename[] = "../data/Clientes.txt";   
     int n_clients = 0;                          //Numero de clientes registrados
@@ -61,8 +54,8 @@ clients cargar_clientes(){
 }
 
 clients agregar_cliente(clients C){
-    int new_id = C.n_clients+1;
-    int new_pos = new_id -1;
+    int new_id = C.n_clients+1;         //IDENTIFICADOR DEL NUEVO CLIENTE
+    int new_pos = new_id -1;            //POSICION DEL CLIENTE EN LA ESTRUCTURA
 
     C.clients = realloc(C.clients, new_id*sizeof(client));
     if (C.clients == NULL){
@@ -72,21 +65,16 @@ clients agregar_cliente(clients C){
     }
 
     C.clients[new_pos].Id_cliente = new_id;
-    fflush(stdin);
-    fgets(C.clients[new_pos].Nom_cliente, 20, stdin);
-    printf("%s", C.clients[new_pos].Nom_cliente);
-    printf("hola");
+    C = cliente_nom(C, new_pos);
+    C = cliente_contr(C, new_pos, 0);
+    C = cliente_dir(C, new_pos , 0);
+    C = cliente_email(C, new_pos, 0);
+    C = cliente_cart(C, new_pos, 0);
 
-    strcpy(C.clients[new_pos].Dir_cliente, "Calle Roble 73");
-    strcpy(C.clients[new_pos].Localidad, "Chiclana");
-    strcpy(C.clients[new_pos].Provincia, "Cádiz");
-    strcpy(C.clients[new_pos].email, "lgl512exam@uca.es");
-    strcpy(C.clients[new_pos].Contrasena, "contra12345");
-    C.clients[new_pos].Cartera = 1000;
-
-    
     C.n_clients = new_id;
+
     guardar_clientes(C);
+
     return C;
 }
 
@@ -108,68 +96,190 @@ void guardar_clientes(clients C){
                 C.clients[i].Cartera);
     }
     fclose(f_clients);
+    printf("\n**Estructura guardada con %d clientes\n", C.n_clients);
 }
 
 void gestionar_cliente(clients C, int id){
-    //MOSTRAR INFORMACION//
-    clear();
-    printf("\nNombre: %s\n", C.clients[id].Nom_cliente);
-    printf("Direccion: %s, %s, %s\n", C.clients[id].Dir_cliente, C.clients[id].Localidad, C.clients[id].Provincia);
-    printf("Email: %s\n", C.clients[id].email);
-    printf("Cartera: %d\n", C.clients[id].Cartera);
-
     //CAMBIO DE INFORMACION//
-    int opt;
-    printf("\n### QUE DESEA MODIFICAR: ###\n");
-    printf("1. Nombre\n2. Direccion\n3. Email\n4. Contrasena\n5. Cartera\n0. Salir\n############################\n");
+    int opt = -1;
 
-    
-    scanf("%d", &opt);
-    while(opt < 0 || opt > 5) {
-        printf("Opcion invalida. Por favor, seleccione una opcion valida: ");
-        fflush(stdin);
+    while (opt < 0 || opt > 5){
+        //MOSTRAR INFORMACION//
+        clear();
+        printf("\nNombre: %s\n", C.clients[id].Nom_cliente);
+        printf("Direccion: %s, %s, %s\n", C.clients[id].Dir_cliente, C.clients[id].Localidad, C.clients[id].Provincia);
+        printf("Email: %s\n", C.clients[id].email);
+        printf("Cartera: %d\n", C.clients[id].Cartera);
+
+        printf("\n### QUE DESEA MODIFICAR: ###\n");
+        printf("1. Nombre\n2. Direccion\n3. Email\n4. Contrasena\n5. Cartera\n0. Salir\n############################\n");
         scanf("%d", &opt);
+        switch (opt){
+            case 1:
+                C = cliente_nom(C, id);
+                opt = -1;
+                break;
+            case 2:
+                C = cliente_dir(C, id, 1);
+                opt = -1;
+                break;
+            case 3:
+                C = cliente_email(C, id, 1);
+                opt = -1;
+                break;
+
+            case 4:
+                C = cliente_contr(C, id, 1);
+                opt = -1;
+                break;
+            case 5:
+                C = cliente_cart(C, id, 1);
+                opt = -1;
+                break;
+            case 0:         //CASO DE SALIDA
+                break;
+            default:
+                printf("Seleccione una opcion valida: ");
+                break;
+        }
+        guardar_clientes(C);
     }
-    switch (opt)
-    {
-    case 1:
-        C = cliente_nom(C, id);
-        break;
-    case 4:
-        C = cliente_contr(C, id, 1);
-    
-    default:
-        break;
-    }
-    
-    guardar_clientes(C);
+    printf("Salio correctamente. %d\n", opt);
 }
 
 clients cliente_nom(clients C, int id){
-    printf("Ingrese el nombre:\n");
-    fgets(C.clients[id].Nom_cliente, 20, stdin);
-    printf("%s",C.clients[id].Nom_cliente);
+    char cad_nom[21];
+    int len;
+
+    printf("Ingrese el nombre: ");
+    
+    fflush(stdin);
+    fgets(cad_nom, sizeof(cad_nom), stdin);
+    len = strlen(cad_nom);
+        if (len > 0 && cad_nom[len - 1] == '\n') { cad_nom[len - 1] = '\0'; }
+    strcpy(C.clients[id].Nom_cliente, cad_nom);
+
     return C;
 }
 
 clients cliente_contr(clients C, int id, int mod){
-    char cad_contr[21];
-    if(mod == 1){
-        printf("%s", C.clients[id].Contrasena);
+    char cad_contr[21], verif_contr[21];
+    int len;
+    if(mod == 1){                               //SE DESEA CAMBIAR UNA CONTRASENA EXISTENTE
+        printf("%s\n", C.clients[id].Contrasena);
         printf("Para poder cambiar la contrasena es necesario verificar la anterior: ");
+
         fflush(stdin);
         fgets(cad_contr, 21, stdin);
 
-        int len = strlen(cad_contr);
+        len = strlen(cad_contr);
         if (len > 0 && cad_contr[len - 1] == '\n') {
             cad_contr[len - 1] = '\0'; // Reemplazar el carácter de salto de linea con el carácter nulo
         }
         
-        if(strcmp(cad_contr, C.clients[id].Contrasena) == 0)
-            printf("Iguales\n");
-        else
-            printf("No iguales\n");
-        
-    }
+        while(strcmp(cad_contr, C.clients[id].Contrasena) != 0){
+            printf("Por favor vuelva a intentarlo. Si desea salir escriba [exit]: ");
+            fflush(stdin);
+            fgets(cad_contr, 21, stdin);
 
+            len = strlen(cad_contr);
+            if (len > 0 && cad_contr[len - 1] == '\n') {
+                cad_contr[len - 1] = '\0';
+            }
+
+            if(strcmp(cad_contr, "exit") == 0)  //Salir del bucle
+                return C;
+        }
+
+
+    }
+    printf("Escriba la contrasena a tener: ");
+
+    fflush(stdin);
+    fgets(cad_contr, 21, stdin);
+    len = strlen(cad_contr);
+    if (len > 0 && cad_contr[len - 1] == '\n') { cad_contr[len - 1] = '\0'; }
+
+
+    while (strcmp(cad_contr, verif_contr) != 0){
+        printf("Vuelva a introducir la nueva contrasena: ");
+
+        fflush(stdin);
+        fgets(verif_contr, 21, stdin);
+        len = strlen(verif_contr);
+        if (len > 0 && verif_contr[len - 1] == '\n') { verif_contr[len - 1] = '\0'; }
+    }
+    strcpy(C.clients[id].Contrasena, cad_contr);
+
+    return C;
 }
+
+clients cliente_dir(clients C, int id, int mod){
+    char cad_dir[51], cad_lugar[21];
+    int len;
+    
+    if (mod == 1)
+        printf("\nDireccion actual: %s\n", C.clients[id].Dir_cliente);
+    printf("Ingrese la direccion del hogar (max 50 caracteres): \n");
+    
+    fflush(stdin);
+    fgets(cad_dir, sizeof(cad_dir), stdin);
+    len = strlen(cad_dir);
+        if (len > 0 && cad_dir[len - 1] == '\n') { cad_dir[len - 1] = '\0'; }
+    strcpy(C.clients[id].Dir_cliente, cad_dir);
+
+    if (mod == 1)
+        printf("\nLocalidad actual: %s\n", C.clients[id].Localidad);
+    printf("Introduzca la localidad:");
+    fflush(stdin);
+    fgets(cad_lugar, sizeof(cad_lugar), stdin);
+    len = strlen(cad_lugar);
+        if (len > 0 && cad_lugar[len - 1] == '\n') { cad_lugar[len - 1] = '\0'; }
+    strcpy(C.clients[id].Localidad, cad_lugar);
+
+    if (mod == 1)
+        printf("\nProvincia actual: %s\n", C.clients[id].Provincia);
+    printf("Introduzca la provincia:");
+    fflush(stdin);
+    fgets(cad_lugar, sizeof(cad_lugar), stdin);
+    len = strlen(cad_lugar);
+        if (len > 0 && cad_lugar[len - 1] == '\n') { cad_lugar[len - 1] = '\0'; }
+    strcpy(C.clients[id].Provincia, cad_lugar);
+
+    return C;
+}
+
+clients cliente_email(clients C, int id, int mod){
+    char cad_email[31];
+    int len;
+
+    if(mod == 1)
+        printf("\nEmail actual: %s\n", C.clients[id].email);
+    printf("Ingrese el email: ");
+    
+    fflush(stdin);
+    fgets(cad_email, sizeof(cad_email), stdin);
+    len = strlen(cad_email);
+        if (len > 0 && cad_email[len - 1] == '\n') { cad_email[len - 1] = '\0'; }
+    strcpy(C.clients[id].email, cad_email);
+
+    return C;
+}
+
+clients cliente_cart(clients C, int id, int mod){
+    int cartera = 0;
+    if(mod == 1){
+        printf("Saldo de la cartera actual: %d\n", C.clients[id].Cartera);
+    }
+    printf("Introduzca el saldo disponible: ");
+    scanf("%d", &cartera);
+
+    while(cartera <= 0){
+        printf("Saldo no valido, introduzcalo de nuevo: ");
+        scanf("%d", &cartera);
+    }
+    C.clients[id].Cartera = cartera;
+
+    return C;
+}
+
