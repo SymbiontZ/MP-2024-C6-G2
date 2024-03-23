@@ -193,6 +193,7 @@ prod_pedidos cargar_prod_pedidos(){
         i++;
     }
 
+    return prod_p;
 }
 
 //Cabecera: guardar_producto_pedido()
