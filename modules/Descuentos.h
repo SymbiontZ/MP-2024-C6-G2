@@ -14,7 +14,7 @@ typedef struct {
 
     int  Importe;                   //Importe del descuento en euros
 
-}Descuentos;
+}Descuento;
 
 typedef struct {
 
@@ -29,23 +29,23 @@ typedef struct {
          anio_cad,                  //A�o de la fecha de caducidad
          Estado;                    //El valor 0 indica que el cup�n no ha sido aplicado y el valor 1 que si lo ha sido
 
-}DescuentosClientes;
+}DescCliente;
 
 //Se han separado los campos de las fechas para facilitar el manejo posterior con funciones
 
 typedef struct{
 
-    int tam;                        //Tama�o del vector
-    Descuentos *Desc;               //Vector de tipo Descuentos
+    int tam;                       //Tamano del vector
+    Descuento *Desc;               //Vector de tipo Descuentos
 
-}Vect_Desc;
+}Descuentos;
 
 typedef struct{
 
     int tam;                        //Tama�o del vector
-    DescuentosClientes *DescCli;    //Vector de tipo DescuentosClientes
+    DescCliente *DescCliente;    //Vector de tipo DescuentosClientes
 
-}Vect_DescCli;
+}DescClientes;
 
 
 //Precondicion: El fichero Descuentos.txt debe estar relleno
