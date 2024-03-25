@@ -4,9 +4,10 @@
 
 int main()
 {
-    pedidos P=cargar_pedidos();
-    printf("se ha cargado el fichero correctamente");
-    crear_pedido(12,P);
+    /*pedidos P=cargar_pedidos();
+    printf("se ha cargado el fichero correctamente\n");
+    crear_pedido(3,P);*/
+    prod_pedidos Prod_P=cargar_prod_pedidos();
     
     return 0;
 }
