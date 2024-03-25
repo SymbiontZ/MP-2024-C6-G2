@@ -27,7 +27,7 @@ typedef struct{
     int id_prod;
     int num_unid;
     fecha f_entrega;
-    int importe;
+    float importe;
     char estado[20];
     int id_transp;
     char id_locker[10];
@@ -64,3 +64,4 @@ devoluciones cargar_devoluciones();
 void crear_pedido(int, pedidos);
 void guardar_pedido(pedidos);
 void guardar_productos_pedidos(prod_pedidos prod_p);
+void crear_producto_pedido(pedidos, int, int, prod_pedidos);

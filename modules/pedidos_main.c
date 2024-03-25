@@ -8,6 +8,7 @@ int main()
     printf("se ha cargado el fichero correctamente\n");
     crear_pedido(3,P);*/
     prod_pedidos Prod_P=cargar_prod_pedidos();
+    guardar_productos_pedidos(Prod_P);
     
     return 0;
 }
