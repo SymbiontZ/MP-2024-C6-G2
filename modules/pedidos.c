@@ -159,10 +159,10 @@ void guardar_pedido(pedidos p){
 //Postcondicion: carga en la estructura prod_pedidos los datos del fichero ProductosPedidos.txt
 prod_pedidos cargar_prod_pedidos(){
     int n_prod_ped=0, i, campo_prod_ped;
-    char cad_aux[150];
+    char cad_aux[200];
     
     FILE * f_prod_ped;
-    f_prod_ped=fopen("../data/ProductosPedidos.txt", "rw+");
+    f_prod_ped=fopen("../data/ProductosPedidos.txt", "r");
     if(f_prod_ped==NULL){
         printf("ERROR");
     }
@@ -177,20 +177,43 @@ prod_pedidos cargar_prod_pedidos(){
     prod_p.lon=n_prod_ped;
 
     prod_p.prod_pedidos=malloc(n_prod_ped*sizeof(prod_pedido));
+    
     while(fgets(cad_aux, sizeof(cad_aux), f_prod_ped) && i<n_prod_ped){
-        campo_prod_ped=sscanf(cad_aux, "%d-%d-%d-%10[^-]-%d-%10[^-]-%f-%d-%d-%10[^-]",
+        campo_prod_ped=sscanf(cad_aux, "%d-%d-%d-%d/%d/%d-%d-%10[^-]-%d-%10[^-]-%10[^-]-%d/%d/%d",
             &prod_p.prod_pedidos[i].id_pedido,
             &prod_p.prod_pedidos[i].id_prod,
             &prod_p.prod_pedidos[i].num_unid,
-            prod_p.prod_pedidos[i].f_entrega,
+            &prod_p.prod_pedidos[i].f_entrega.dia,
+            &prod_p.prod_pedidos[i].f_entrega.mes,
+            &prod_p.prod_pedidos[i].f_entrega.anio,
             &prod_p.prod_pedidos[i].importe,
             prod_p.prod_pedidos[i].estado,
             &prod_p.prod_pedidos[i].id_transp,
-            &prod_p.prod_pedidos[i].id_locker,
-            &prod_p.prod_pedidos[i].cod_locker,
-            prod_p.prod_pedidos[i].f_devolucion);
+            prod_p.prod_pedidos[i].id_locker,
+            prod_p.prod_pedidos[i].cod_locker,
+            &prod_p.prod_pedidos[i].f_devolucion.dia,
+            &prod_p.prod_pedidos[i].f_devolucion.mes,
+            &prod_p.prod_pedidos[i].f_devolucion.anio);
         
         i++;
+    }
+
+    printf("productos pedidos: %d", n_prod_ped);
+    for(i=0;i<n_prod_ped;i++){
+        printf("%d-",prod_p.prod_pedidos[i].id_pedido);
+        printf("%d-", prod_p.prod_pedidos[i].id_prod);
+        printf("%d-",prod_p.prod_pedidos[i].num_unid);
+        printf("%d",prod_p.prod_pedidos[i].f_entrega.dia);
+        printf("%d",prod_p.prod_pedidos[i].f_entrega.mes);
+        printf("%d-",prod_p.prod_pedidos[i].f_entrega.anio);
+        printf("%d-",prod_p.prod_pedidos[i].importe);
+        printf("%s-",prod_p.prod_pedidos[i].estado);
+        printf("%d-",prod_p.prod_pedidos[i].id_transp);
+        printf("%s-",prod_p.prod_pedidos[i].id_locker);
+        printf("%s-",prod_p.prod_pedidos[i].cod_locker);
+        printf("%d-",prod_p.prod_pedidos[i].f_devolucion.dia);
+        printf("%d-",prod_p.prod_pedidos[i].f_devolucion.mes);
+        printf("%d-",prod_p.prod_pedidos[i].f_devolucion.anio);
     }
 
     return prod_p;

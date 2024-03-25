@@ -27,11 +27,11 @@ typedef struct{
     int id_prod;
     int num_unid;
     fecha f_entrega;
-    float importe;
+    int importe;
     char estado[20];
     int id_transp;
-    int id_locker;
-    int cod_locker;
+    char id_locker[10];
+    char cod_locker[10];
     fecha f_devolucion;
 }prod_pedido;
 
