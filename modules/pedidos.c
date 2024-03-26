@@ -4,6 +4,7 @@
 #include<string.h>
 #include"complementos.h"
 #include"empresas.h"
+#include"Productos.h"
 
 pedidos cargar_pedidos();
 prod_pedidos cargar_prod_pedidos();
@@ -252,6 +253,9 @@ void guardar_productos_pedidos(prod_pedidos prod_p){
     }
 }
 
+//Cabecera
+//Precondición
+//Postcondicion
 void crear_producto_pedido(pedidos p, int id_producto, int id_pedido, prod_pedidos prod_p){
     int i, pos, nuevo_prod_p, ud,j,k, ocupado=0, id_t;
     transport_vect t; //variable de tipo transportistas 
@@ -264,31 +268,18 @@ void crear_producto_pedido(pedidos p, int id_producto, int id_pedido, prod_pedid
     for(i=0;i<p.lon;i++){
         if(id_pedido==p.pedidos[i].id_pedido){
             printf("el pedido existe");
-            printf("C, uantas unidades desea del producto: ");
+            printf("Cuantas unidades desea del producto: ");
             scanf("%d",&ud);
             //Se comprueba con modulos productos si las unidades son posibles
             prod_p.prod_pedidos[pos].num_unid=ud;
-            //Para la fecha se miraria la fecha del pedido y los dias que tardaria el transportista y se le sumaria y seria la fecha de entrega
-            //el importe se consultaria con la estructura productos y lo que cuesta ese producto
             
-            //ASIGNAR TRANSPORTISTA-> comparar transportistas que hay en la estructura transportistas con los que hay en la estructura de productos pedidos.
-                                     //El transportista que no coincida significa que esta libre por tanto se le asignará a un producto pedido.
-            for(j=0;j<t.tam;j++){
-                for(k=0;k<prod_p.lon;k++){
-                    if(t.transportistas[j].Id_transp==prod_p.prod_pedidos[k].id_transp){
-                        ocupado=1;
-                    }
-                    else{
-                        ocupado=0;
-                        id_t=t.transportistas[j].Id_transp; //almacena la id del transportista que no esta ocupado
-                    }
-                }
-            }
-            if(ocupado==0){
-                printf("transportista esta libre");
-                prod_p.prod_pedidos[pos].id_transp=id_t;
-            }
-            }
+            
+            
+        }
+    }
+    
+}
+
         
     
 
