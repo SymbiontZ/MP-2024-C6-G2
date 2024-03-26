@@ -33,3 +33,7 @@ int anno_sist(){
 
     return  anno;
 }
+
+void titulo(){
+    printf("### ESIZON ###");
+}

@@ -283,3 +283,10 @@ clients cliente_cart(clients C, int id, int mod){
     return C;
 }
 
+
+void menu_cliente(clients C,int id){
+    clear();
+    titulo();
+    
+
+}
