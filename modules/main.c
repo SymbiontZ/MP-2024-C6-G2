@@ -2,9 +2,14 @@
 #include<stdlib.h>
 #include"empresas.h"
 #include"useradmin.h"
+#include"complementos.h"
+
+void iniciar_sesion_email();
+void iniciar_sesion_psw(int , int );
 
 int main(){
-    iniciar_sesion();
+    clear();
+    iniciar_sesion_email();
 
     return 0;
 }
@@ -21,7 +26,7 @@ void iniciar_sesion_email(){
 
     //INTRDUCIR CORREO//
     printf("\nIntroduzca el correo: ");
-
+    fflush(stdin);
     fgets(cad_email, MAX_EMAIL, stdin);
     len = strlen(cad_email);
     if (len > 0 && cad_email[len - 1] == '\n') { cad_email[len - 1] = '\0'; }
@@ -31,39 +36,53 @@ void iniciar_sesion_email(){
         if(strcmp(cad_email, client.clients[i].email) == 0){
             id = i;
             mode = 1;
-
+            iniciar_sesion_psw(id, mode);
         }
     }
     for(i = 0; i < adminprov.tam; i++){
         if(strcmp(cad_email, adminprov.usuarios[i].email) == 0){
             id = 1;
             mode = 2;
+            iniciar_sesion_psw(id, mode);
         }
     }
-    for(i = 0; i<transport.transportistas[i].email;i++){
+    for(i = 0; i<transport.tam;i++){
         if(strcmp(cad_email, transport.transportistas[i].email) == 0){
             id = i;
             mode = 3;
+            iniciar_sesion_psw(id, mode);
         }
     }
 
     //AGREGAR USUARIO//
-    char opt = ''
+    char opt = '0';
     if(mode == 0){
-        printf("No se ha encontrado ese correo, desea registrarse como cliente[s/n]");
+        printf("No se ha encontrado ese correo, desea registrarse como cliente[s/n]: ");
+        scanf(" %c", &opt);
+        while(opt != 's' && opt != 'n'){
+            printf("Elija opcion valida [s/n]: ");
+            scanf(" %c", &opt);
+        }
+        if(opt == 's')
+            client = agregar_cliente(client);
 
+        main();
     }
-
-    
 
 }
 
 void iniciar_sesion_psw(int id, int mode){
     if(mode == 1){
+        clients c = cargar_clientes();
+        printf("perfil cliente\n");
 
     }else if(mode == 2){
+        admin_prov_vect adminprov = cargar_adminprov();
+        printf("perfil adminprov\n");
 
     }else if(mode == 3){
+        transport_vect t = cargar_transportistas();
+        printf("perfil transportista\n");
 
     }else{
         printf("Ha ocurrido un error a la hora de iniciar sesion [ERROR CONTRASENAS]");

@@ -22,7 +22,7 @@ typedef struct {
 produ_vect cargar_productos ();
 void cambio (char []);
 void menu_prod ();
-void rellenar_produ (productos *);
+void rellenar_produ (produ_vect pr);
 void mostrar_produ (productos *);
 
 #endif

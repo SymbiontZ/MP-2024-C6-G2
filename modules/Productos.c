@@ -12,10 +12,10 @@ produ_vect cargar_productos () {
 	
 	FILE *f_prod;
 	
-	f_prod = fopen ("filename", "r");
+	f_prod = fopen (filename, "r");
 	
 	if (f_prod == NULL) {
-		f_prod = fopen ("filename", "w");		//Excepcion si no encuentra fichero
+		f_prod = fopen (filename, "w");		//Excepcion si no encuentra fichero
 		perror ("No se pudo abrir el archivo de productos. Se ha creado un nuevo archivo.\n");
 		getchar ();
 	}
@@ -29,7 +29,7 @@ produ_vect cargar_productos () {
 	produ_vect p;
 	
   	p.num_prod = num_prod;
-  	p.produ = malloc(p.num_prod*sizeof(produ));					//Asignacion de memoria dinamica "p.produ[num_prod]"
+  	p.produ = malloc(p.num_prod*sizeof(productos));					//Asignacion de memoria dinamica "p.produ[num_prod]"
   	
   	if (p.produ == NULL) {
 		printf ("No se ha podido reservar memoria suficiente\n");
@@ -37,9 +37,9 @@ produ_vect cargar_productos () {
 		exit (1);
 	}
   	
-  	//BUCLE PARA RELLENAR LA ESTRUCTURA DE CLIENTES//
+  	//BUCLE PARA RELLENAR LA ESTRUCTURA DE PRODUCTOS//
     while (fgets(cad_linea, sizeof(cad_linea), f_prod) && i < num_prod) {
-        campo_productos = sscanf (cad_linea, "%07d-%s-%s-%04d-%04d-%i-%i-%i",
+        campo_productos = sscanf (cad_linea, "%d-%16[^-]-%21[^-]-%d-%d-%i-%i-%i",
             &p.produ[i].id_prod,
             p.produ[i].nombre,
             p.produ[i].descrip,
@@ -88,11 +88,10 @@ void menu_prod () {
 		
 		switch (op) {
 			case 1:
-				rellenar_produ (prod);
+				
 			break;
 			
 			case 2:
-				mostrar_produ (prod);
 			break;
 			
 			case 3:
@@ -112,7 +111,7 @@ void menu_prod () {
 	}
 }
 
-void rellenar_produ (productos *prod) {
+/*void rellenar_produ (productos *prod) {
 	int i, aux = 0;
 	
 	FILE *f;
@@ -197,4 +196,4 @@ void mostrar_produ (productos *prod) {
 	printf ("\n");
 	
 	fclose (f);
-}	
+}	*/

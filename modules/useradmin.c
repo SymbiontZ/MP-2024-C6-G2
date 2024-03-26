@@ -81,6 +81,9 @@ clients agregar_cliente(clients C){
 
     guardar_clientes(C);
 
+    printf("Se ha creado el cliente %s correctamente", C.clients[new_pos].Nom_cliente);
+    getchar();
+
     return C;
 }
 
@@ -226,7 +229,7 @@ clients cliente_dir(clients C, int id, int mod){
     
     if (mod == 1)
         printf("\nDireccion actual: %s\n", C.clients[id].Dir_cliente);
-    printf("Ingrese la direccion del hogar (max 50 caracteres): \n");
+    printf("Ingrese la direccion del hogar (max 50 caracteres): ");
     
     fflush(stdin);
     fgets(cad_dir, sizeof(cad_dir), stdin);
@@ -236,7 +239,7 @@ clients cliente_dir(clients C, int id, int mod){
 
     if (mod == 1)
         printf("\nLocalidad actual: %s\n", C.clients[id].Localidad);
-    printf("Introduzca la localidad:");
+    printf("Introduzca la localidad: ");
     fflush(stdin);
     fgets(cad_lugar, sizeof(cad_lugar), stdin);
     len = strlen(cad_lugar);
@@ -245,7 +248,7 @@ clients cliente_dir(clients C, int id, int mod){
 
     if (mod == 1)
         printf("\nProvincia actual: %s\n", C.clients[id].Provincia);
-    printf("Introduzca la provincia:");
+    printf("Introduzca la provincia: ");
     fflush(stdin);
     fgets(cad_lugar, sizeof(cad_lugar), stdin);
     len = strlen(cad_lugar);
