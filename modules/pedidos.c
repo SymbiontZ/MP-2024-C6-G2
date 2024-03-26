@@ -3,11 +3,13 @@
 #include<stdlib.h>
 #include<string.h>
 #include"complementos.h"
+#include"empresas.h"
 
 pedidos cargar_pedidos();
 prod_pedidos cargar_prod_pedidos();
 devoluciones cargar_devoluciones();
-
+void crear_pedido(int, pedidos);
+void guardar_pedido(pedidos);
 
 
 //Cabecera: pedidos cargar_pedidos()
@@ -52,7 +54,7 @@ pedidos cargar_pedidos(){
             p.pedidos[i].id_cod);
 
         if(campo_pedidos!=8){
-            printf("error, i=%d", i);
+            printf("error en estructura pedidos, i=%d", i);
         }
 
         i++;
@@ -199,7 +201,7 @@ prod_pedidos cargar_prod_pedidos(){
     }
 
     if(campo_prod_ped!=14){
-            printf("error, i=%d\n", i);
+            printf("error en estructura productos pedidos, i=%d\n", i);
     }
 
     
@@ -238,7 +240,11 @@ void guardar_productos_pedidos(prod_pedidos prod_p){
 }
 
 void crear_producto_pedido(pedidos p, int id_producto, int id_pedido, prod_pedidos prod_p){
-    int i, pos, nuevo_prod_p, ud;
+    int i, pos, nuevo_prod_p, ud,j,k, ocupado=0, id_t;
+    transport_vect t; //variable de tipo transportistas 
+    t=cargar_transportistas(); //carga la estructura transportistas con los datos que hay en el fichero
+
+    
     pos=prod_p.lon; //la posicion en el vector de la estructura de producto pedido
     prod_p.prod_pedidos[pos].id_prod=id_producto; //la id del producto que ha seleccionado el cliente
     prod_p.prod_pedidos[pos].id_pedido=id_pedido; //la id del pedido que se ha creado cuando el cliente decide comprar el producto
@@ -252,13 +258,31 @@ void crear_producto_pedido(pedidos p, int id_producto, int id_pedido, prod_pedid
             //Para la fecha se miraria la fecha del pedido y los dias que tardaria el transportista y se le sumaria y seria la fecha de entrega
             //el importe se consultaria con la estructura productos y lo que cuesta ese producto
             
-        }
-    }
+            //ASIGNAR TRANSPORTISTA-> comparar transportistas que hay en la estructura transportistas con los que hay en la estructura de productos pedidos.
+                                     //El transportista que no coincida significa que esta libre por tanto se le asignará a un producto pedido.
+            for(j=0;j<t.tam;j++){
+                for(k=0;k<prod_p.lon;k++){
+                    if(t.transportistas[j].Id_transp==prod_p.prod_pedidos[k].id_transp){
+                        ocupado=1;
+                    }
+                    else{
+                        ocupado=0;
+                        id_t=t.transportistas[j].Id_transp; //almacena la id del transportista que no esta ocupado
+                    }
+                }
+            }
+            if(ocupado==0){
+                printf("transportista esta libre");
+                prod_p.prod_pedidos[pos].id_transp=id_t;
+            }
+            }
+        
+    
 
 
 
 
-}
+
 //Cabecera: devoluciones cargar_devoluciones()
 //Precondicion:
 //Postcondicion: carga en la estructura devoluciones los datos que hay en el fichero Devoluciones.txt
