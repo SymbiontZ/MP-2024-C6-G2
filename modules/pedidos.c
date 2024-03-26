@@ -3,11 +3,13 @@
 #include<stdlib.h>
 #include<string.h>
 #include"complementos.h"
+#include"empresas.h"
 
 pedidos cargar_pedidos();
 prod_pedidos cargar_prod_pedidos();
 devoluciones cargar_devoluciones();
-
+void crear_pedido(int, pedidos);
+void guardar_pedido(pedidos);
 
 
 //Cabecera: pedidos cargar_pedidos()
@@ -52,7 +54,7 @@ pedidos cargar_pedidos(){
             p.pedidos[i].id_cod);
 
         if(campo_pedidos!=8){
-            printf("error, i=%d", i);
+            printf("error en estructura pedidos, i=%d", i);
         }
 
         i++;
@@ -157,7 +159,7 @@ void guardar_pedido(pedidos p){
 //Precondicion:
 //Postcondicion: carga en la estructura prod_pedidos los datos del fichero ProductosPedidos.txt
 prod_pedidos cargar_prod_pedidos(){
-    int n_prod_ped=0, i=0, campo_prod_ped;
+    int n_prod_ped=0, i, campo_prod_ped;
     char cad_aux[200];
     
     FILE * f_prod_ped;
@@ -178,7 +180,7 @@ prod_pedidos cargar_prod_pedidos(){
     prod_p.prod_pedidos=malloc(n_prod_ped*sizeof(prod_pedido));
     
     while(fgets(cad_aux, sizeof(cad_aux), f_prod_ped) && i<n_prod_ped){
-        campo_prod_ped=sscanf(cad_aux, "%d-%d-%d-%d/%d/%d-%d-%10[^-]-%d-%10[^-]-%10[^-]-%d/%d/%d",
+        campo_prod_ped=sscanf(cad_aux, "%d-%d-%d-%d/%d/%d-%f-%10[^-]-%d-%10[^-]-%10[^-]-%d/%d/%d",
             &prod_p.prod_pedidos[i].id_pedido,
             &prod_p.prod_pedidos[i].id_prod,
             &prod_p.prod_pedidos[i].num_unid,
@@ -212,22 +214,87 @@ prod_pedidos cargar_prod_pedidos(){
         printf("%s-",prod_p.prod_pedidos[i].cod_locker);
         printf("%d-",prod_p.prod_pedidos[i].f_devolucion.dia);
         printf("%d-",prod_p.prod_pedidos[i].f_devolucion.mes);
-        printf("%d",prod_p.prod_pedidos[i].f_devolucion.anio);
+        printf("%d-",prod_p.prod_pedidos[i].f_devolucion.anio);
     }
 
+    
     return prod_p;
 }
 
 //Cabecera: guardar_producto_pedido()
 //Precondicion:
 //Postcondicion: rellena la estructura con un nuevo producto pedido y lo escribe en el fichero
-void guarda_producto_pedido(prod_pedidos prod_p){
-    FILE*f_prod_pedidos;
-    f_prod_pedidos=fopen("../data/ProductosPedidos.txt", "rw+");
-    if(f_prod_pedidos==NULL){
+void guardar_productos_pedidos(prod_pedidos prod_p){
+    int i;
+
+    FILE*f_prod_ped;
+    f_prod_ped=fopen("../data/ProductosPedidos.txt", "rw+");
+    if(f_prod_ped==NULL){
         printf("ERROR");
     }
+
+    for(i=0;i<prod_p.lon;i++){
+        fprintf(f_prod_ped, "%d-%d-%d-%d/%d/%d-%f-%s-%d-%s-%s-%d/%d/%d",
+            prod_p.prod_pedidos[i].id_pedido,
+            prod_p.prod_pedidos[i].id_prod,
+            prod_p.prod_pedidos[i].num_unid,
+            prod_p.prod_pedidos[i].f_entrega.dia,
+            prod_p.prod_pedidos[i].f_entrega.mes,
+            prod_p.prod_pedidos[i].f_entrega.anio,
+            prod_p.prod_pedidos[i].importe,
+            prod_p.prod_pedidos[i].estado,
+            prod_p.prod_pedidos[i].id_transp,
+            prod_p.prod_pedidos[i].id_locker,
+            prod_p.prod_pedidos[i].cod_locker,
+            prod_p.prod_pedidos[i].f_devolucion.dia,
+            prod_p.prod_pedidos[i].f_devolucion.mes,
+            prod_p.prod_pedidos[i].f_devolucion.anio);
+    }
 }
+
+void crear_producto_pedido(pedidos p, int id_producto, int id_pedido, prod_pedidos prod_p){
+    int i, pos, nuevo_prod_p, ud,j,k, ocupado=0, id_t;
+    transport_vect t; //variable de tipo transportistas 
+    t=cargar_transportistas(); //carga la estructura transportistas con los datos que hay en el fichero
+
+    
+    pos=prod_p.lon; //la posicion en el vector de la estructura de producto pedido
+    prod_p.prod_pedidos[pos].id_prod=id_producto; //la id del producto que ha seleccionado el cliente
+    prod_p.prod_pedidos[pos].id_pedido=id_pedido; //la id del pedido que se ha creado cuando el cliente decide comprar el producto
+    for(i=0;i<p.lon;i++){
+        if(id_pedido==p.pedidos[i].id_pedido){
+            printf("el pedido existe");
+            printf("C, uantas unidades desea del producto: ");
+            scanf("%d",&ud);
+            //Se comprueba con modulos productos si las unidades son posibles
+            prod_p.prod_pedidos[pos].num_unid=ud;
+            //Para la fecha se miraria la fecha del pedido y los dias que tardaria el transportista y se le sumaria y seria la fecha de entrega
+            //el importe se consultaria con la estructura productos y lo que cuesta ese producto
+            
+            //ASIGNAR TRANSPORTISTA-> comparar transportistas que hay en la estructura transportistas con los que hay en la estructura de productos pedidos.
+                                     //El transportista que no coincida significa que esta libre por tanto se le asignará a un producto pedido.
+            for(j=0;j<t.tam;j++){
+                for(k=0;k<prod_p.lon;k++){
+                    if(t.transportistas[j].Id_transp==prod_p.prod_pedidos[k].id_transp){
+                        ocupado=1;
+                    }
+                    else{
+                        ocupado=0;
+                        id_t=t.transportistas[j].Id_transp; //almacena la id del transportista que no esta ocupado
+                    }
+                }
+            }
+            if(ocupado==0){
+                printf("transportista esta libre");
+                prod_p.prod_pedidos[pos].id_transp=id_t;
+            }
+            }
+        
+    
+
+
+
+
 
 //Cabecera: devoluciones cargar_devoluciones()
 //Precondicion:

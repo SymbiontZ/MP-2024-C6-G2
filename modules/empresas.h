@@ -1,17 +1,26 @@
 #ifndef EMPRESAS_H
 #define EMPRESAS_H
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <windows.h>
+
 #define LONG_MAX_ADMINPROV 86
 #define LONG_MAX_TRANSPORT 113
+
+
+// --------------- ESTRUCTURAS DE DATOS ---------------
+
 
 // Estructura asociada a cada usuario en AdminProv.txt
 
 typedef struct{
-	int Id_empresa,					// Identificador de la empresa administradora o proveedora (Id_empresa), 4 dígitos.
-		Perfil_usuario;				// Perfil del usuario: 1 para administrador y 0 para proveedor.
+	int Id_empresa;					// Identificador de la empresa administradora o proveedora (Id_empresa), 4 dígitos.
 	char Nombre[21],				// Nombre de la empresa (Nombre), sería ESIZON si es administrador, 20 caracteres máximo.
 		 email[31],					// Email (email), 30 caracteres máximo, será usado como nombre de usuario para el acceso a la plataforma.
-		Contrasena[16];				// Contraseña para acceder al sistema (Contraseña), con 15 caracteres máximo.
+		Contrasena[16],				// Contraseña para acceder al sistema (Contraseña), con 15 caracteres máximo.
+		Perfil_usuario[14];
 } admin_prov;
 
 // Estructura asociada a cada transportista en Transportistas.txt
@@ -44,53 +53,92 @@ typedef struct{
 	
 } transport_vect;
 
-//Precondición: No recibe nada.
-//Postcondición: Devuelve una variable de tipo admin_prov_vect con la información de cada usuario (proveedor o administrador) almacenados en AdminProv.txt.
-void cargar_adminprov();			// Carga en una estructura de tipo admin_prov_vect todos lo usuarios almacenados en AdminProv.txt
 
-//Precondición: Recibe una estructura de tipo admin_prov con datos coherentes almacenados.
-//Postcondición: Guarda en AdminProv.txt los datos del vector de estructuras recibido.
-void guardar_adminprov(admin_prov_vect usuarios);
+// --------------- MENUS DE PROVEEDOR Y TRANSPORTISTA ---------------
 
-//Precondición: No recibe nada.
-//Postcondición: Devuelve una variable de tipo trasnport_vect con la información de cada transportista almacenada en Transportistas.txt.
-void cargar_transportistas();		// Carga en una estructura de tipo transport_vect todos lo usuarios almacenados en Transportistas.txt
 
-//Precondición: Recibe una estructura de tipo transport con datos coherentes almacenados.
-//Postcondición: Guarda en Transportistas.txt los datos del vector de estructuras recibido.
+ //Precondición: Recibe una estructura de tipo admin_prov (en suma, recibe un proveedor).
+ //Postcondición: El usuario habrá realizado las tareas necesarias de gestión en la plataforma (ver y modificar perfil, gestionar productos, pedidos). No devuelve nada.
+ void menu_prov(admin_prov admin);
 
-void guardar_transportista(transport_vect transportistas);
+ //Precondición: Recibe una estructura de tipo transport (en suma, recibe un transportista).
+ //Postcondición: El usuario habrá realizado las tareas necesarias de gestión en la plataforma (ver y modificar perfil, repartos, retornos). No devuelve nada.
+ void menu_transport(transport transportista);
 
-//Precondición: No recibe nada.
-//Postcondición: Devuelve el numero de lineas que contiene AdminProv.txt.
-int longitud_vector_adminprov();
 
-//Precondición: No recibe nada.
-//Postcondición: Devuelve el numero de lineas que contiene Transportistas.txt.
-int longitud_vector_transportistas();
+// --------------- FUNCIONES PARA EL MENU DE PROVEEDOR ---------------
 
-//Precondición: Recibe una cadena que necesite ser acortada (no nula, con algún carácter ' ' al final de ella).
-//Postcondición: No devuelve nada, sustituye el primer carácter ' ' que encuentre en la cadena por el carácter terminador '\0'.
-void acortar_cadena(char cad[]);	// Se emplea en casos en los que el espacio desperdiciado es mínimo.
 
-void menu_admin(admin_prov admin);
+ //Precondición: Recibe una estructura de tipo admin_prov (en suma, recibe un usuario, en este caso proveedor).
+ //Postcondición: El usuario habrá realizado las tareas necesarias de gestión de su cuenta en la plataforma. No devuelve nada.
+ void ver_perfil(admin_prov usu);
 
-void ver_perfil();
+ void ver_productos(admin_prov prov);
 
-void admin_ver_clientes();
+ void ver_pedidos(admin_prov prov);
 
-void admin_ver_proveedores();
+ //Precondición: Recibe un puntero a una estructura de admin_prov.
+ //Postcondición: No devuelve nada. Se habrá cambiado el email del usuario guardado en el puntero.
+ void cambiar_email(admin_prov *usu);
 
-void admin_ver_transportistas();
+ //Precondición: Recibe un puntero a una estructura de admin_prov.
+ //Postcondición: No devuelve nada. Se habrá cambiado la contraseña del usuario guardada en el puntero, o no.
+ void cambiar_contrasena(admin_prov *usu);
 
-void admin_ver_productos();
- 
-void admin_ver_categorias();
 
-void admin_ver_pedidos();
+// --------------- FUNCIONES PARA EL MENU DE TRANSPORTISTA ---------------
 
-void admin_ver_descuentos();
 
-void admin_ver_devoluciones();
+ //Precondición: Recibe una estructura de tipo transport (en suma, recibe un usuario, en este caso transportista).
+ //Postcondición: El usuario habrá realizado las tareas necesarias de gestión de su cuenta en la plataforma. No devuelve nada.
+ void ver_perfil_t(transport usu);
+
+ //Precondición: Recibe un puntero a una estructura de transport.
+ //Postcondición: No devuelve nada. Se habrá cambiado el email del usuario guardado en el puntero.
+ void cambiar_email_t(transport *usu);
+
+ //Precondición: Recibe un puntero a una estructura de transport.
+ //Postcondición: No devuelve nada. Se habrá cambiado la contraseña del usuario guardada en el puntero, o no.
+ void cambiar_contrasena_t(transport *usu);
+
+
+// --------------- FUNCIONES DE LECTURA DE FICHEROS ---------------
+
+
+ //Precondición: No recibe nada.
+ //Postcondición: Devuelve una variable de tipo admin_prov_vect con la información de cada usuario (proveedor o administrador) almacenados en AdminProv.txt.
+ admin_prov_vect cargar_adminprov();			// Carga en una estructura de tipo admin_prov_vect todos lo usuarios almacenados en AdminProv.txt
+
+ //Precondición: No recibe nada.
+ //Postcondición: Devuelve una variable de tipo trasnport_vect con la información de cada transportista almacenada en Transportistas.txt.
+ transport_vect cargar_transportistas();		// Carga en una estructura de tipo transport_vect todos lo usuarios almacenados en Transportistas.txt
+
+
+// --------------- FUNCIONES DE VOLCADO EN FICHEROS ---------------
+
+
+ //Precondición: Recibe una estructura de tipo transport con datos coherentes almacenados.
+ //Postcondición: Guarda en Transportistas.txt los datos del vector de estructuras recibido.
+ void guardar_transportista(transport_vect transportistas);
+
+ //Precondición: Recibe una estructura de tipo admin_prov con datos coherentes almacenados.
+ //Postcondición: Guarda en AdminProv.txt los datos del vector de estructuras recibido.
+ void guardar_adminprov(admin_prov_vect usuarios);
+
+
+// --------------- UTILIDADES VARIAS ---------------
+
+
+ //Precondición: No recibe nada.
+ //Postcondición: Devuelve el numero de lineas que contiene AdminProv.txt.
+ int longitud_vector_adminprov();
+
+ //Precondición: No recibe nada.
+ //Postcondición: Devuelve el numero de lineas que contiene Transportistas.txt.
+ int longitud_vector_transportistas();
+
+ //Precondición: Recibe una cadena que necesite ser acortada (no nula, con algún carácter ' ' al final de ella).
+ //Postcondición: No devuelve nada, sustituye el primer carácter ' ' que encuentre en la cadena por el carácter terminador '\0'.
+ void acortar_cadena(char cad[]);	// Se emplea en casos en los que el espacio desperdiciado es mínimo.
 
 #endif
