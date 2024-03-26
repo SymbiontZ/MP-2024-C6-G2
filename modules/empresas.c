@@ -1,7 +1,6 @@
 #include "complementos.h"
 #include "empresas.h"
 
-
 //	MENÚS DE PROVEEDOR Y TRANSPORTISTA
 
 
@@ -275,36 +274,45 @@ void cambiar_contrasena_t(transport *usu){
 admin_prov_vect cargar_adminprov(){
 	
 	admin_prov_vect adminprov_sistema;
-	FILE *AdminProv;																							// Puntero al fichero a leer.
-	char ruta[] = "..\\ESIZON-main\\data\\AdminProv.txt";														// Ruta del fichero a leer.
+	FILE *f_AdminProv;																							// Puntero al fichero a leer.
+	char ruta[] = "..\\data\\AdminProv.txt";														// Ruta del fichero a leer.
 	char linea[LONG_MAX_ADMINPROV];																				// Línea actual del fichero. Longitud máxima de una línea 86 caracteres.
 	char tipo_usuario[14];																						// Cadena auxiliar a convertir.
 	int i = 0, m;
 
-	if((AdminProv = fopen(ruta, "r+")) == NULL){
+	if((f_AdminProv = fopen(ruta, "r+")) == NULL){
 		printf("Error al abrir el fichero AdminProv.txt en cargar_adminprov.\n");
 		exit(33);
 	}
-	else{
-		adminprov_sistema.tam = 0;
-		while(fgets(linea, sizeof(linea), AdminProv) != NULL)													// Contamos el número de usuarios en el fichero...
-	    	adminprov_sistema.tam++;
-	    printf("Usuarios almacenados en AdminProv.txt: %d \n", adminprov_sistema.tam);
-	 	adminprov_sistema.usuarios = (admin_prov*)malloc((adminprov_sistema.tam + 1) * sizeof(admin_prov));		// ... y reservamos memoria para el vector (más uno por si se necesita añadir algún usuario).
-	 	rewind(AdminProv);																							
-	    
-		while((fgets(linea, sizeof(linea), AdminProv) != NULL) ){	
-			if((m = sscanf(linea, "%d-%20[^-]-%30[^-]-%15[^-]-%13[^\n]\n", &adminprov_sistema.usuarios[i].Id_empresa, adminprov_sistema.usuarios[i].Nombre, adminprov_sistema.usuarios[i].email, adminprov_sistema.usuarios[i].Contrasena, adminprov_sistema.usuarios[i].Perfil_usuario)) == 5){
-				i++;		
-			}
-			else{
-				printf("Error leyendo datos del fichero AdminProv.txt en cargar_adminprov. Línea: %d", i + 1);	
-				exit(33);				
-			}
-		}			
+
+	//COMPROBACION FICHERO VACIO//
+	char verif = fgetc(f_AdminProv);
+	if (verif == EOF){
+		f_AdminProv = fopen(ruta, "w");
+		printf("Se ha cargado nuevo fichero.\n");
+		fprintf(f_AdminProv,"0000-ESIZON-adminadmin@esizon.com-admin000-administrador\n");
+		fclose(f_AdminProv);
+
 	}
+
+	adminprov_sistema.tam = 0;
+	while(fgets(linea, sizeof(linea), f_AdminProv) != NULL)													// Contamos el número de usuarios en el fichero...
+		adminprov_sistema.tam++;
+	printf("Usuarios almacenados en AdminProv.txt: %d \n", adminprov_sistema.tam);
+	adminprov_sistema.usuarios = (admin_prov*)malloc((adminprov_sistema.tam + 1) * sizeof(admin_prov));		// ... y reservamos memoria para el vector (más uno por si se necesita añadir algún usuario).
+	rewind(f_AdminProv);																							
+	
+	while((fgets(linea, sizeof(linea), f_AdminProv) != NULL) ){	
+		if((m = sscanf(linea, "%d-%20[^-]-%30[^-]-%15[^-]-%13[^\n]\n", &adminprov_sistema.usuarios[i].Id_empresa, adminprov_sistema.usuarios[i].Nombre, adminprov_sistema.usuarios[i].email, adminprov_sistema.usuarios[i].Contrasena, adminprov_sistema.usuarios[i].Perfil_usuario)) == 5){
+			i++;		
+		}
+		else{
+			printf("Error leyendo datos del fichero AdminProv.txt en cargar_adminprov. Línea: %d", i + 1);	
+			exit(33);				
+		}
+	}			
 		                                    
-	fclose(AdminProv);  
+	fclose(f_AdminProv);  
 	
 	return adminprov_sistema;                             	                            
 }

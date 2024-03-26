@@ -131,7 +131,6 @@ void crear_pedido(int id_cliente, pedidos p){
     printf("Se han guardado los datos correctamente\n");
 }
 
-
 //Cabecera guardar_pedido(pedidos p, int pos)
 //Precondición: estructura pedidos cargada con los datos del ultimo pedido realizado
 //Postcondicion: se guarda en el fichero la estructura pedidos
@@ -161,8 +160,8 @@ void guardar_pedido(pedidos p){
 //Precondicion:
 //Postcondicion: carga en la estructura prod_pedidos los datos del fichero ProductosPedidos.txt
 prod_pedidos cargar_prod_pedidos(){
-    int n_prod_ped=0, i=0, campo_prod_ped;
-    char cad_aux[250];
+    int n_prod_ped=0, i, campo_prod_ped;
+    char cad_aux[200];
     
     FILE * f_prod_ped;
     f_prod_ped=fopen("../data/ProductosPedidos.txt", "r");
@@ -201,8 +200,22 @@ prod_pedidos cargar_prod_pedidos(){
         i++;
     }
 
-    if(campo_prod_ped!=14){
-            printf("error en estructura productos pedidos, i=%d\n", i);
+    printf("productos pedidos: %d", n_prod_ped);
+    for(i=0;i<n_prod_ped;i++){
+        printf("%d-",prod_p.prod_pedidos[i].id_pedido);
+        printf("%d-", prod_p.prod_pedidos[i].id_prod);
+        printf("%d-",prod_p.prod_pedidos[i].num_unid);
+        printf("%d",prod_p.prod_pedidos[i].f_entrega.dia);
+        printf("%d",prod_p.prod_pedidos[i].f_entrega.mes);
+        printf("%d-",prod_p.prod_pedidos[i].f_entrega.anio);
+        printf("%d-",prod_p.prod_pedidos[i].importe);
+        printf("%s-",prod_p.prod_pedidos[i].estado);
+        printf("%d-",prod_p.prod_pedidos[i].id_transp);
+        printf("%s-",prod_p.prod_pedidos[i].id_locker);
+        printf("%s-",prod_p.prod_pedidos[i].cod_locker);
+        printf("%d-",prod_p.prod_pedidos[i].f_devolucion.dia);
+        printf("%d-",prod_p.prod_pedidos[i].f_devolucion.mes);
+        printf("%d-",prod_p.prod_pedidos[i].f_devolucion.anio);
     }
 
     
