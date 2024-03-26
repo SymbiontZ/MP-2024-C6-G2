@@ -1,8 +1,6 @@
 #include "./complementos.h"
 #include "./useradmin.h"
-#include <stdio.h>
-#include <stdlib.h> 
-#include <string.h>
+
 
 clients cargar_clientes(){
     char filename[] = "../data/Clientes.txt";   
@@ -283,10 +281,47 @@ clients cliente_cart(clients C, int id, int mod){
     return C;
 }
 
-
 void menu_cliente(clients C,int id){
-    clear();
-    titulo();
-    
+    int opt = -1;    //AUXILIAR PARA MANEJO DE OPCIONES EN EL SWITCH
 
+    while(opt<1 || opt>5){
+        clear();
+        titulo();
+        
+        printf("+Usuario: %s\n", C.clients[id].Nom_cliente);
+        printf("1. Perfil\n");
+        printf("2. Productos\n");
+        printf("3. Descuentos\n");
+        printf("4. Pedidos\n");
+        printf("5. Devoluciones\n");
+        printf("0. Salir del sistema\n");
+
+        scanf("%d", &opt);
+
+        switch (opt){
+        case 1:
+            gestionar_cliente(C ,id);
+            opt = -1;
+            break;
+        case 2:
+            opt = -1;
+            break;
+        case 3:
+            opt = -1;
+            break;
+        case 4:
+            opt = -1;
+            break;
+        case 5:
+            opt = -1;
+            break;
+        case 0:
+            exit(EXIT_SUCCESS);
+            break;
+        default:
+            break;
+        }
+    }
+    
 }
+
