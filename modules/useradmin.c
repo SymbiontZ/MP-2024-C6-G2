@@ -12,8 +12,9 @@ clients cargar_clientes(){
     FILE *f_clients;
     f_clients = fopen(filename, "r");
     if(f_clients == NULL){  
-        f_clients = fopen(filename, "w+");                                    //Excepcion si no encuentra fichero
-        perror("No se pudo abrir el archivo de clientes. Se ha creado un nuevo archivo.\n");
+        f_clients = fopen(filename, "w");                                 //Excepcion si no encuentra fichero
+        fclose(f_clients);
+        printf("No se pudo abrir el archivo de clientes. Se ha creado un nuevo archivo.\n");
         getchar();
     }
     
@@ -25,6 +26,13 @@ clients cargar_clientes(){
     clients C;            
     C.n_clients = n_clients;
     C.clients = malloc(C.n_clients * sizeof(client));           //Asignacion de memoria dinamica "C.clients[n_clients]"
+    
+    if(C.clients == NULL){
+        printf("No se ha podido asignar memoria a la estructura clientes");
+        getchar();
+        exit(EXIT_FAILURE);
+    }
+
 
 
     //BUCLE PARA RELLENAR LA ESTRUCTURA DE CLIENTES//

@@ -31,6 +31,7 @@ void iniciar_sesion_email(){
         if(strcmp(cad_email, client.clients[i].email) == 0){
             id = i;
             mode = 1;
+
         }
     }
     for(i = 0; i < adminprov.tam; i++){
@@ -46,6 +47,28 @@ void iniciar_sesion_email(){
         }
     }
 
-    printf("No se ha encontrado ese correo, desea registrarse como cliente[s/n]");
+    //AGREGAR USUARIO//
+    char opt = ''
+    if(mode == 0){
+        printf("No se ha encontrado ese correo, desea registrarse como cliente[s/n]");
+
+    }
+
+    
+
+}
+
+void iniciar_sesion_psw(int id, int mode){
+    if(mode == 1){
+
+    }else if(mode == 2){
+
+    }else if(mode == 3){
+
+    }else{
+        printf("Ha ocurrido un error a la hora de iniciar sesion [ERROR CONTRASENAS]");
+        getchar();
+        exit(EXIT_FAILURE);
+    }
 
 }
