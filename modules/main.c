@@ -47,8 +47,7 @@ void inicsesion_email(){
                 printf("prov");
                 //inicsesion_prov(adminprov, pos);    
             else if(strcmp(adminprov.usuarios[pos].Perfil_usuario, "administrador") == 0)    //ES ADMIN
-                printf("admin");
-                //inicsesion_admin(adminprov, pos);
+                inicsesion_admin(adminprov, pos);
             else{
                 printf("No se pudo encontrar prefil de usuario");
                 getchar();

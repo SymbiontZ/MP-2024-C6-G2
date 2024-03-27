@@ -334,3 +334,26 @@ devoluciones cargar_devoluciones(){
     i++;
     }
 }
+
+fecha fecha_entrega(fecha f, int dia_ent){
+    int d= f.dia + dia_ent, m= f.mes, y= f.anio;    //AUXILIARES PARA MANEJAR LA FECHA DE ENTREGA -> d(DIA)/m(mes)/y(anio)
+    int ndias_mes[]={31,28,31,30,31,30,31,20,31,31,30,31};  //Vector para identificar los dias que tiene un mes
+
+    if((y %4 == 0 && y %100 != 0) || (y % 400 == 0)) //COMPROBACION ANIO BISIESTO
+        ndias_mes[1] = 29;
+    
+    if(d > ndias_mes[m-1]){
+        d = d - ndias_mes[m-1];
+        m++;
+    }
+    if(m > 12){
+        m = m - 12;
+        y++;
+    }
+    
+    f.dia = d;
+    f.mes = m;
+    f.anio = y;
+
+    return f;
+}

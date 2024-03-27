@@ -280,7 +280,7 @@ void menu_cliente(clients C,int pos){
         clear();
         titulo();
         
-        printf("+Usuario: %s\n", C.clients[pos].Nom_cliente);
+        printf("|Usuario: %s\n", C.clients[pos].Nom_cliente);
         printf("1. Perfil\n");
         printf("2. Productos\n");
         printf("3. Descuentos\n");
@@ -313,10 +313,8 @@ void menu_cliente(clients C,int pos){
         default:
             break;
         }
-    }
-    
+    } 
 }
-
 
 void inicsesion_cliente(clients C, int pos){
     char psw_verif[MAX_PSW];            //Variable para almacenar la contrasena inrtroducida por teclado
@@ -345,5 +343,77 @@ void inicsesion_cliente(clients C, int pos){
     menu_cliente(C, pos);
 }
 
+void inicsesion_admin(admin_prov_vect adminprov, int pos){
+    char psw_verif[MAX_PSW];            //Variable para almacenar la contrasena inrtroducida por teclado
+    int exitc = 0;                      //Variable para indicar si el usuario quiere salir del bucle
 
+    clear();
+    printf("Ingrese la contrasena del correo: %s\n", adminprov.usuarios[pos].email);
+    fgets(psw_verif, MAX_PSW, stdin);
+    terminador_cad(psw_verif);
+    
+
+    while( strcmp(psw_verif, adminprov.usuarios[pos].Contrasena) != 0 && exitc != 1){
+        printf("Vuelva a intentarlo, si quiere salir escriba [exit]: ");
+        fflush(stdin);
+        fgets(psw_verif, MAX_PSW, stdin);
+        terminador_cad(psw_verif);
+
+        if(strcmp(psw_verif, "exit") == 0)
+            exitc = 1;
+    }
+    
+    if(exitc == 1){
+        exit(EXIT_SUCCESS);
+    }
+        
+    //menu_admin(adminprov, pos);
+}
+
+void menuadmin(admin_prov_vect admin, int pos){
+    int opt = -1;    //AUXILIAR PARA MANEJO DE OPCIONES EN EL SWITCH
+
+    while(opt<1 || opt>5){
+        clear();
+        titulo();
+        
+        printf("Administrador\n\n");
+        printf("1. Perfil\n");
+        printf("2. Clientes\n");
+        printf("3. Proveedores\n");
+        printf("4. Productos\n");
+        printf("5. Categorias\n");
+        printf("6. Pedidos\n");
+        printf("7. Transportistas\n");
+        printf("8. Descuentos\n");
+        printf("9. Devoluciones\n");
+        printf("0. Salir del sistema\n");
+
+        scanf("%d", &opt);
+
+        switch (opt){
+        case 1:
+            opt = -1;
+            break;
+        case 2:
+            opt = -1;
+            break;
+        case 3:
+            opt = -1;
+            break;
+        case 4:
+            opt = -1;
+            break;
+        case 5:
+            opt = -1;
+            break;
+        case 0:
+            exit(EXIT_SUCCESS);
+            break;
+        default:
+            break;
+        }
+    }
+}
+ 
 
