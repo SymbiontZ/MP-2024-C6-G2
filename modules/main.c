@@ -35,7 +35,7 @@ void inicsesion_email(){
         if(strcmp(cad_email, client.clients[i].email) == 0){
             pos = i;
             verif = 1;
-            inicsesion_cliente(pos);
+            inicsesion_cliente(client ,pos);
         }
     }
     //COMPROBAR EN ADMIN/PROV
@@ -45,10 +45,10 @@ void inicsesion_email(){
             
             if(strcmp(adminprov.usuarios[pos].Perfil_usuario, "proveedor") == 0)             //ES PROV
                 printf("prov");
-                //inicsesion_prov(pos);    
+                //inicsesion_prov(adminprov, pos);    
             else if(strcmp(adminprov.usuarios[pos].Perfil_usuario, "administrador") == 0)    //ES ADMIN
                 printf("admin");
-                //inicsesion_admin(pos);
+                //inicsesion_admin(adminprov, pos);
             else{
                 printf("No se pudo encontrar prefil de usuario");
                 getchar();
@@ -61,7 +61,7 @@ void inicsesion_email(){
     for(i = 0; i<transport.tam;i++){
         if(strcmp(cad_email, transport.transportistas[i].email) == 0){
             pos = i;
-            //inicsesion_transport(pos);
+            //inicsesion_transport(transport, pos);
             verif = 1;
         }
     }

@@ -106,7 +106,7 @@ void guardar_clientes(clients C){
     printf("\n**Estructura guardada con %d clientes\n", C.n_clients);
 }
 
-void gestionar_cliente(clients C, int pos){
+clients gestionar_cliente(clients C, int pos){
     //CAMBIO DE INFORMACION//
     int opt = -1;
 
@@ -152,6 +152,7 @@ void gestionar_cliente(clients C, int pos){
         guardar_clientes(C);
     }
     printf("Salio correctamente. %d\n", opt);
+    return C;
 }
 
 clients cliente_nom(clients C, int pos){
@@ -291,7 +292,7 @@ void menu_cliente(clients C,int pos){
 
         switch (opt){
         case 1:
-            gestionar_cliente(C ,pos);
+            C = gestionar_cliente(C ,pos);
             opt = -1;
             break;
         case 2:
@@ -317,8 +318,7 @@ void menu_cliente(clients C,int pos){
 }
 
 
-void inicsesion_cliente(int pos){
-    clients C = cargar_clientes();
+void inicsesion_cliente(clients C, int pos){
     char psw_verif[MAX_PSW];            //Variable para almacenar la contrasena inrtroducida por teclado
     int exitc = 0;                      //Variable para indicar si el usuario quiere salir del bucle
 

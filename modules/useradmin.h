@@ -28,7 +28,8 @@ typedef struct
 
 }clients;
 
-//GESTION DE USUARIOS//
+
+//### GESTION DE USUARIOS ###//
 
 //PRECONDICION: Ninguna
 //POSCONDICION: Inicializa una estructura tipo clients con datos almacenados de un fichero.
@@ -42,13 +43,20 @@ clients agregar_cliente(clients );
 //POSCONDICION: Vuelca datos en el fichero pero no devuelve nada.
 void guardar_clientes(clients );
 
+//PRECONDICION: Se le pasa la estructura tipo clients cargada y la posicion del cliente en la estructura
+//POSCONDICION: Devuelve la estructura tipo clients actualizada con los nuevos cambios
+clients gestionar_cliente(clients, int);
 
-void gestionar_cliente(clients, int);
+
+//### INTERFACES DEL USUARIO ###//
+
+//PRECONDICION
 void menu_cliente(clients ,int );
 
-//PRECONDICION: Se le pasa la posicion del cliente en la estructura
+//PRECONDICION: Se le pasa la posicion del cliente en la estructura y la misma estructura tipo clients
 //POSCONDICION: Ninguna  
-void inicsesion_cliente(int );
+void inicsesion_cliente(clients ,int );
+
 //GESTION DATOS ESPECIFICOS USUARIOS//
 clients cliente_nom(clients , int );
 clients cliente_contr(clients , int , int );
