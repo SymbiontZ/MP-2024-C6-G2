@@ -23,6 +23,10 @@ void inicsesion_prov(admin_prov_vect provs, int pos){
 			i--;
 		}
 	}while(i > 0);
+	if(i == 0){
+		printf("\nDemasiados intentos fallidos. Cerrando sesion...");
+		exit(0);
+	}
 }
 
 
@@ -47,7 +51,10 @@ void inicsesion_transport(transport_vect transports, int pos){
 			i--;
 		}
 	}while(i > 0);
-	
+	if(i == 0){
+		printf("\nDemasiados intentos fallidos. Cerrando sesion...");
+		exit(0);
+	}
 }
 
 
