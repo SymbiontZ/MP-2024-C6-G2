@@ -241,14 +241,14 @@ clients cliente_dir(clients C, int pos, int mod){
 }
 
 clients cliente_email(clients C, int pos, int mod){
-    char cad_email[31];
+    char cad_email[MAX_EMAIL];
 
     if(mod == 1)
         printf("\nEmail actual: %s\n", C.clients[pos].email);
     printf("Ingrese el email: ");
     
     fflush(stdin);
-    fgets(cad_email, sizeof(cad_email), stdin);
+    fgets(cad_email, MAX_EMAIL, stdin);
     terminador_cad(cad_email);
 
     strcpy(C.clients[pos].email, cad_email);
@@ -367,7 +367,7 @@ void inicsesion_admin(admin_prov_vect adminprov, int pos){
         exit(EXIT_SUCCESS);
     }
         
-    //menu_admin(adminprov, pos);
+    menuadmin(adminprov, pos);
 }
 
 void menuadmin(admin_prov_vect admin, int pos){
@@ -393,6 +393,7 @@ void menuadmin(admin_prov_vect admin, int pos){
 
         switch (opt){
         case 1:
+            admin = gestionar_admin(admin, pos);
             opt = -1;
             break;
         case 2:
@@ -416,4 +417,49 @@ void menuadmin(admin_prov_vect admin, int pos){
     }
 }
  
+admin_prov_vect gestionar_admin (admin_prov_vect admin, int pos){
+    //CAMBIO DE INFORMACION//
+    int opt = -1;
 
+    while (opt < 0 || opt > 5){
+        //MOSTRAR INFORMACION//
+        clear();
+        printf("Email: %s\n", admin.usuarios[pos].email);
+
+        printf("\n### QUE DESEA MODIFICAR: ###\n");
+        printf("1. Email\n2. Contrasena\n0. Salir\n############################\n");
+        scanf("%d", &opt);
+        switch (opt){
+            case 1:
+                admin = admin_email(admin, pos, 1);
+                opt = -1;
+                break;
+            case 2:
+                opt = -1;
+                break;
+            case 0:         //CASO DE SALIDA
+                break;
+            default:
+                printf("Seleccione una opcion valida: ");
+                break;
+        }
+        guardar_adminprov(admin);
+    }
+    printf("Salio correctamente. %d\n", opt);
+    return admin;
+}
+
+admin_prov_vect admin_email(admin_prov_vect admin, int pos, int mod){
+    char cad_email[MAX_EMAIL];
+
+    if(mod == 1)
+        printf("\nEmail actual: %s\n", admin.usuarios[pos].email);
+    printf("Ingrese el email: ");
+    
+    fflush(stdin);
+    fgets(cad_email, MAX_EMAIL, stdin);
+    terminador_cad(cad_email);
+
+    strcpy(admin.usuarios[pos].email, cad_email);
+    return admin;
+}

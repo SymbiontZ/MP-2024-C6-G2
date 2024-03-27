@@ -25,7 +25,6 @@ void inicsesion_email(){
 
     //INTRDUCIR CORREO//
     printf("\nIntroduzca el correo: ");
-    fflush(stdin);
     fgets(cad_email, MAX_EMAIL, stdin);
     len = strlen(cad_email);
     if (len > 0 && cad_email[len - 1] == '\n') { cad_email[len - 1] = '\0'; }
@@ -69,10 +68,12 @@ void inicsesion_email(){
     char opt = '0';
     if(verif == 0){
         printf("No se ha encontrado ese correo, desea registrarse como cliente[s/n]: ");
+        fflush(stdin);
         scanf(" %c", &opt);
         while(opt != 's' && opt != 'n'){
             printf("Elija opcion valida [s/n]: ");
             scanf(" %c", &opt);
+            fflush(stdin);
         }
         if(opt == 's')
             client = agregar_cliente(client);

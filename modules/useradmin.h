@@ -67,8 +67,9 @@ typedef struct
     clients cliente_cart(clients , int , int );
 
 
-///------------------------------- USUARIOS -------------------------------///
+///------------------------------- ADMINS -------------------------------///
     void inicsesion_admin(admin_prov_vect, int);
     void menuadmin(admin_prov_vect , int );
-
-#endif 
+    admin_prov_vect gestionar_admin (admin_prov_vect , int );
+    admin_prov_vect admin_email(admin_prov_vect , int , int );
+#endif  
