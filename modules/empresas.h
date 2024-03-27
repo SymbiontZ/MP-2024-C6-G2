@@ -59,23 +59,24 @@ typedef struct{
 
  //Precondición: Recibe una estructura de tipo admin_prov (en suma, recibe un proveedor).
  //Postcondición: El usuario habrá realizado las tareas necesarias de gestión en la plataforma (ver y modificar perfil, gestionar productos, pedidos). No devuelve nada.
- void menu_prov(admin_prov admin);
+ void menu_prov(admin_prov *prov);
 
  //Precondición: Recibe una estructura de tipo transport (en suma, recibe un transportista).
  //Postcondición: El usuario habrá realizado las tareas necesarias de gestión en la plataforma (ver y modificar perfil, repartos, retornos). No devuelve nada.
- void menu_transport(transport transportista);
+ void menu_transport(transport *transportista);
 
 
 // --------------- FUNCIONES PARA EL MENU DE PROVEEDOR ---------------
 
+ void inicsesion_prov(admin_prov_vect provs, int pos);
 
  //Precondición: Recibe una estructura de tipo admin_prov (en suma, recibe un usuario, en este caso proveedor).
  //Postcondición: El usuario habrá realizado las tareas necesarias de gestión de su cuenta en la plataforma. No devuelve nada.
- void ver_perfil(admin_prov usu);
+ void ver_perfil(admin_prov *usu);
 
- void ver_productos(admin_prov prov);
+ void ver_productos(admin_prov *prov);
 
- void ver_pedidos(admin_prov prov);
+ void ver_pedidos(admin_prov *prov);
 
  //Precondición: Recibe un puntero a una estructura de admin_prov.
  //Postcondición: No devuelve nada. Se habrá cambiado el email del usuario guardado en el puntero.
@@ -88,10 +89,11 @@ typedef struct{
 
 // --------------- FUNCIONES PARA EL MENU DE TRANSPORTISTA ---------------
 
+ void inicsesion_transport(transport_vect transports, int pos);
 
  //Precondición: Recibe una estructura de tipo transport (en suma, recibe un usuario, en este caso transportista).
  //Postcondición: El usuario habrá realizado las tareas necesarias de gestión de su cuenta en la plataforma. No devuelve nada.
- void ver_perfil_t(transport usu);
+ void ver_perfil_t(transport *usu);
 
  //Precondición: Recibe un puntero a una estructura de transport.
  //Postcondición: No devuelve nada. Se habrá cambiado el email del usuario guardado en el puntero.
