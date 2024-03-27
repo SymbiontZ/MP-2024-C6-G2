@@ -3,7 +3,7 @@
 
 
 
-void inicsesion_prov(int pos, admin_prov_vect provs){
+void inicsesion_prov(admin_prov_vect provs, int pos){
 	
 	char validar_contra[16];
 	int i = 3;
@@ -27,7 +27,7 @@ void inicsesion_prov(int pos, admin_prov_vect provs){
 
 
 
-void inicsesion_transport(int pos, transport_vect transports){
+void inicsesion_transport(transport_vect transports, int pos){
 	
 	char validar_contra[16];
 	int i = 3;
@@ -331,10 +331,10 @@ admin_prov_vect cargar_adminprov(){
 	
 	admin_prov_vect adminprov_sistema;
 	FILE *f_AdminProv;																							// Puntero al fichero a leer.
-	char ruta[] = "..\\data\\AdminProv.txt";																	// Ruta del fichero a leer.
+	char ruta[] = ".\\data\\AdminProv.txt";																	// Ruta del fichero a leer.
 	char linea[LONG_MAX_ADMINPROV];																				// Línea actual del fichero. Longitud máxima de una línea 86 caracteres.
 	char tipo_usuario[14];																						// Cadena auxiliar a convertir.
-	int i = 0, m;
+	int i = 0, m; 
 
 	if((f_AdminProv = fopen(ruta, "r+")) == NULL){
 		printf("Error al abrir el fichero AdminProv.txt en cargar_adminprov. Creando uno nuevo...\n");
@@ -345,8 +345,7 @@ admin_prov_vect cargar_adminprov(){
 	//COMPROBACION FICHERO VACIO//
 	char verif = fgetc(f_AdminProv);
 	if (verif == EOF){
-		f_AdminProv = fopen(ruta, "w");
-		printf("Se ha cargado nuevo fichero.\n");
+		f_AdminProv = fopen(ruta, "a+");
 		fprintf(f_AdminProv,"0000-ESIZON-adminadmin@esizon.com-admin000-administrador\n");
 		fclose(f_AdminProv);
 
@@ -355,7 +354,7 @@ admin_prov_vect cargar_adminprov(){
 	adminprov_sistema.tam = 0;
 	while(fgets(linea, sizeof(linea), f_AdminProv) != NULL)														// Contamos el número de usuarios en el fichero...
 		adminprov_sistema.tam++;
-	printf("Usuarios almacenados en AdminProv.txt: %d \n", adminprov_sistema.tam + 1);
+	printf("\nCarga completada.\nUsuarios almacenados en AdminProv.txt: %d \n", adminprov_sistema.tam + 1);
 	adminprov_sistema.usuarios = (admin_prov*)malloc((adminprov_sistema.tam + 1) * sizeof(admin_prov));			// ... y reservamos memoria para el vector (más uno por si se necesita añadir algún usuario).
 	rewind(f_AdminProv);																								
 	
@@ -383,7 +382,7 @@ transport_vect cargar_transportistas(){
 	
 	transport_vect transport_sistema;
 	FILE *Transportistas;																						// Puntero al fichero a leer.
-	char ruta[] = "../data/Transportistas.txt";																	// Ruta del fichero a leer.
+	char ruta[] = "./data/Transportistas.txt";																	// Ruta del fichero a leer.
 	char linea[LONG_MAX_TRANSPORT];																				// Línea actual del fichero. Longitud máxima de una línea 113 caracteres.
 	int i = 0, m;
 
@@ -404,7 +403,7 @@ transport_vect cargar_transportistas(){
 		transport_sistema.tam = 0;
 		while(fgets(linea, sizeof(linea), Transportistas) != NULL)												// Contamos el número de usuarios en el fichero...
 	    	transport_sistema.tam++;
-	    printf("Transportistas almacenados en Transportistas.txt: %d \n", transport_sistema.tam);
+	    printf("\nCarga completada.\nTransportistas almacenados en Transportistas.txt: %d \n", transport_sistema.tam);
 	 	transport_sistema.transportistas = (transport*)malloc((transport_sistema.tam + 1) * sizeof(transport));	// ... y reservamos memoria para el vector (más uno por si se necesita añadir algún usuario).
 	 	rewind(Transportistas);																							
 	    

@@ -68,7 +68,7 @@ typedef struct{
 
 // --------------- FUNCIONES PARA EL MENU DE PROVEEDOR ---------------
 
- void inicsesion_prov(int pos, admin_prov_vect provs);
+ void inicsesion_prov(admin_prov_vect provs, int pos);
 
  //Precondición: Recibe una estructura de tipo admin_prov (en suma, recibe un usuario, en este caso proveedor).
  //Postcondición: El usuario habrá realizado las tareas necesarias de gestión de su cuenta en la plataforma. No devuelve nada.
@@ -89,7 +89,7 @@ typedef struct{
 
 // --------------- FUNCIONES PARA EL MENU DE TRANSPORTISTA ---------------
 
- void inicsesion_transport(int pos, transport_vect transports);
+ void inicsesion_transport(transport_vect transports, int pos);
 
  //Precondición: Recibe una estructura de tipo transport (en suma, recibe un usuario, en este caso transportista).
  //Postcondición: El usuario habrá realizado las tareas necesarias de gestión de su cuenta en la plataforma. No devuelve nada.
