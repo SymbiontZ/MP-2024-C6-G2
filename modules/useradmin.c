@@ -1,6 +1,4 @@
-#include "./complementos.h"
 #include "./useradmin.h"
-
 
 clients cargar_clientes(){
     char filename[] = "../data/Clientes.txt";   
@@ -158,14 +156,13 @@ void gestionar_cliente(clients C, int pos){
 
 clients cliente_nom(clients C, int pos){
     char cad_nom[21];
-    int len;
 
     printf("Ingrese el nombre: ");
     
     fflush(stdin);
     fgets(cad_nom, sizeof(cad_nom), stdin);
-    len = strlen(cad_nom);
-        if (len > 0 && cad_nom[len - 1] == '\n') { cad_nom[len - 1] = '\0'; }
+    terminador_cad(cad_nom);
+
     strcpy(C.clients[pos].Nom_cliente, cad_nom);
 
     return C;
@@ -173,28 +170,19 @@ clients cliente_nom(clients C, int pos){
 
 clients cliente_contr(clients C, int pos, int mod){
     char cad_contr[21], verif_contr[21];
-    int len;
     if(mod == 1){                               //SE DESEA CAMBIAR UNA CONTRASENA EXISTENTE
         printf("%s\n", C.clients[pos].Contrasena);
         printf("Para poder cambiar la contrasena es necesario verificar la anterior: ");
 
         fflush(stdin);
         fgets(cad_contr, 21, stdin);
-
-        len = strlen(cad_contr);
-        if (len > 0 && cad_contr[len - 1] == '\n') {
-            cad_contr[len - 1] = '\0'; // Reemplazar el carácter de salto de linea con el carácter nulo
-        }
+        terminador_cad(cad_contr);
         
         while(strcmp(cad_contr, C.clients[pos].Contrasena) != 0){
             printf("Por favor vuelva a intentarlo. Si desea salir escriba [exit]: ");
             fflush(stdin);
             fgets(cad_contr, 21, stdin);
-
-            len = strlen(cad_contr);
-            if (len > 0 && cad_contr[len - 1] == '\n') {
-                cad_contr[len - 1] = '\0';
-            }
+            terminador_cad(cad_contr);
 
             if(strcmp(cad_contr, "exit") == 0)  //Salir del bucle
                 return C;
@@ -206,17 +194,14 @@ clients cliente_contr(clients C, int pos, int mod){
 
     fflush(stdin);
     fgets(cad_contr, 21, stdin);
-    len = strlen(cad_contr);
-    if (len > 0 && cad_contr[len - 1] == '\n') { cad_contr[len - 1] = '\0'; }
-
+    terminador_cad(cad_contr);
 
     while (strcmp(cad_contr, verif_contr) != 0){
         printf("Vuelva a introducir la nueva contrasena: ");
 
         fflush(stdin);
         fgets(verif_contr, 21, stdin);
-        len = strlen(verif_contr);
-        if (len > 0 && verif_contr[len - 1] == '\n') { verif_contr[len - 1] = '\0'; }
+        terminador_cad(verif_contr);
     }
     strcpy(C.clients[pos].Contrasena, cad_contr);
 
@@ -225,7 +210,6 @@ clients cliente_contr(clients C, int pos, int mod){
 
 clients cliente_dir(clients C, int pos, int mod){
     char cad_dir[51], cad_lugar[21];
-    int len;
     
     if (mod == 1)
         printf("\nDireccion actual: %s\n", C.clients[pos].Dir_cliente);
@@ -233,8 +217,7 @@ clients cliente_dir(clients C, int pos, int mod){
     
     fflush(stdin);
     fgets(cad_dir, sizeof(cad_dir), stdin);
-    len = strlen(cad_dir);
-        if (len > 0 && cad_dir[len - 1] == '\n') { cad_dir[len - 1] = '\0'; }
+    terminador_cad(cad_dir);
     strcpy(C.clients[pos].Dir_cliente, cad_dir);
 
     if (mod == 1)
@@ -242,8 +225,7 @@ clients cliente_dir(clients C, int pos, int mod){
     printf("Introduzca la localidad: ");
     fflush(stdin);
     fgets(cad_lugar, sizeof(cad_lugar), stdin);
-    len = strlen(cad_lugar);
-        if (len > 0 && cad_lugar[len - 1] == '\n') { cad_lugar[len - 1] = '\0'; }
+    terminador_cad(cad_lugar);
     strcpy(C.clients[pos].Localidad, cad_lugar);
 
     if (mod == 1)
@@ -251,8 +233,7 @@ clients cliente_dir(clients C, int pos, int mod){
     printf("Introduzca la provincia: ");
     fflush(stdin);
     fgets(cad_lugar, sizeof(cad_lugar), stdin);
-    len = strlen(cad_lugar);
-        if (len > 0 && cad_lugar[len - 1] == '\n') { cad_lugar[len - 1] = '\0'; }
+    terminador_cad(cad_lugar);
     strcpy(C.clients[pos].Provincia, cad_lugar);
 
     return C;
@@ -260,7 +241,6 @@ clients cliente_dir(clients C, int pos, int mod){
 
 clients cliente_email(clients C, int pos, int mod){
     char cad_email[31];
-    int len;
 
     if(mod == 1)
         printf("\nEmail actual: %s\n", C.clients[pos].email);
@@ -268,8 +248,7 @@ clients cliente_email(clients C, int pos, int mod){
     
     fflush(stdin);
     fgets(cad_email, sizeof(cad_email), stdin);
-    len = strlen(cad_email);
-        if (len > 0 && cad_email[len - 1] == '\n') { cad_email[len - 1] = '\0'; }
+    terminador_cad(cad_email);
 
     strcpy(C.clients[pos].email, cad_email);
 
@@ -340,21 +319,30 @@ void menu_cliente(clients C,int pos){
 
 void inicsesion_cliente(int pos){
     clients C = cargar_clientes();
-    char psw_verif[MAX_PSW];         //Variable para almacenar la contrasena inrtroducida por teclado
-    int exit = 0;               //Variable para indicar si el usuario quiere salir del bucle
-    int len;
+    char psw_verif[MAX_PSW];            //Variable para almacenar la contrasena inrtroducida por teclado
+    int exitc = 0;                      //Variable para indicar si el usuario quiere salir del bucle
 
     clear();
-    printf("Ingrese la contrasena del correo: %s", C.clients[pos].email);
+    printf("Ingrese la contrasena del correo: %s\n", C.clients[pos].email);
     fgets(psw_verif, MAX_PSW, stdin);
+    terminador_cad(psw_verif);
+    
 
-    printf("%s,prueba\n", psw_verif);
+    while( strcmp(psw_verif, C.clients[pos].Contrasena) != 0 && exitc != 1){
+        printf("Vuelva a intentarlo, si quiere salir escriba [exit]: ");
+        fflush(stdin);
+        fgets(psw_verif, MAX_PSW, stdin);
+        terminador_cad(psw_verif);
 
-    /*while(strcmp(psw_verif, C.clients[pos].Contrasena) != 0 || exit != 1){
-        fgets()
-    }*/
-
-
+        if(strcmp(psw_verif, "exit") == 0)
+            exitc = 1;
+    }
+    
+    if(exitc == 1){
+        exit(EXIT_SUCCESS);
+    }
+        
+    menu_cliente(C, pos);
 }
 
 

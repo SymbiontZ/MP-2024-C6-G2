@@ -1,11 +1,10 @@
 #include<stdio.h>
 #include<stdlib.h>
+
 #include"empresas.h"
 #include"useradmin.h"
-#include"complementos.h"
 
 void inicsesion_email();
-void iniciar_sesion_psw(int , int );
 
 int main(){
     clear();
@@ -45,9 +44,11 @@ void inicsesion_email(){
             pos = i;
             
             if(strcmp(adminprov.usuarios[pos].Perfil_usuario, "proveedor") == 0)             //ES PROV
-                inicsesion_prov(pos);    
+                printf("prov");
+                //inicsesion_prov(pos);    
             else if(strcmp(adminprov.usuarios[pos].Perfil_usuario, "administrador") == 0)    //ES ADMIN
-                inicsesion_admin(pos);
+                printf("admin");
+                //inicsesion_admin(pos);
             else{
                 printf("No se pudo encontrar prefil de usuario");
                 getchar();
@@ -60,7 +61,7 @@ void inicsesion_email(){
     for(i = 0; i<transport.tam;i++){
         if(strcmp(cad_email, transport.transportistas[i].email) == 0){
             pos = i;
-            inicsesion_transport(pos);
+            //inicsesion_transport(pos);
             verif = 1;
         }
     }
@@ -78,27 +79,6 @@ void inicsesion_email(){
             client = agregar_cliente(client);
 
         main();
-    }
-
-}
-
-void iniciar_sesion_psw(int id, int mode){
-    if(mode == 1){
-        clients c = cargar_clientes();
-        
-
-    }else if(mode == 2){
-        admin_prov_vect adminprov = cargar_adminprov();
-        printf("perfil adminprov\n");
-
-    }else if(mode == 3){
-        transport_vect t = cargar_transportistas();
-        printf("perfil transportista\n");
-
-    }else{
-        printf("Ha ocurrido un error a la hora de iniciar sesion [ERROR CONTRASENAS]");
-        getchar();
-        exit(EXIT_FAILURE);
     }
 
 }

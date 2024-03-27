@@ -5,6 +5,8 @@
 #include <stdlib.h> 
 #include <string.h>
 
+#include "./complementos.h"
+
 #define MAX_EMAIL 31            //Longitud de email + 1(terminador)
 #define MAX_PSW 16              //Longitud de contrasena + 1(terminador)
 typedef struct
