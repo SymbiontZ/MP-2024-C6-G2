@@ -35,5 +35,5 @@ int anno_sist(){
 }
 
 void titulo(){
-    printf("### ESIZON ###");
+    printf("### ESIZON ###\n");
 }

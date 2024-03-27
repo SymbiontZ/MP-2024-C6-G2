@@ -1,8 +1,6 @@
 #include "./complementos.h"
 #include "./useradmin.h"
-#include <stdio.h>
-#include <stdlib.h> 
-#include <string.h>
+
 
 clients cargar_clientes(){
     char filename[] = "../data/Clientes.txt";   
@@ -14,8 +12,9 @@ clients cargar_clientes(){
     FILE *f_clients;
     f_clients = fopen(filename, "r");
     if(f_clients == NULL){  
-        f_clients = fopen(filename, "w+");                                    //Excepcion si no encuentra fichero
-        perror("No se pudo abrir el archivo de clientes. Se ha creado un nuevo archivo.\n");
+        f_clients = fopen(filename, "w");                                 //Excepcion si no encuentra fichero
+        fclose(f_clients);
+        printf("No se pudo abrir el archivo de clientes. Se ha creado un nuevo archivo.\n");
         getchar();
     }
     
@@ -27,6 +26,13 @@ clients cargar_clientes(){
     clients C;            
     C.n_clients = n_clients;
     C.clients = malloc(C.n_clients * sizeof(client));           //Asignacion de memoria dinamica "C.clients[n_clients]"
+    
+    if(C.clients == NULL){
+        printf("No se ha podido asignar memoria a la estructura clientes");
+        getchar();
+        exit(EXIT_FAILURE);
+    }
+
 
 
     //BUCLE PARA RELLENAR LA ESTRUCTURA DE CLIENTES//
@@ -74,6 +80,9 @@ clients agregar_cliente(clients C){
     C.n_clients = new_id;
 
     guardar_clientes(C);
+
+    printf("Se ha creado el cliente %s correctamente", C.clients[new_pos].Nom_cliente);
+    getchar();
 
     return C;
 }
@@ -220,7 +229,7 @@ clients cliente_dir(clients C, int id, int mod){
     
     if (mod == 1)
         printf("\nDireccion actual: %s\n", C.clients[id].Dir_cliente);
-    printf("Ingrese la direccion del hogar (max 50 caracteres): \n");
+    printf("Ingrese la direccion del hogar (max 50 caracteres): ");
     
     fflush(stdin);
     fgets(cad_dir, sizeof(cad_dir), stdin);
@@ -230,7 +239,7 @@ clients cliente_dir(clients C, int id, int mod){
 
     if (mod == 1)
         printf("\nLocalidad actual: %s\n", C.clients[id].Localidad);
-    printf("Introduzca la localidad:");
+    printf("Introduzca la localidad: ");
     fflush(stdin);
     fgets(cad_lugar, sizeof(cad_lugar), stdin);
     len = strlen(cad_lugar);
@@ -239,7 +248,7 @@ clients cliente_dir(clients C, int id, int mod){
 
     if (mod == 1)
         printf("\nProvincia actual: %s\n", C.clients[id].Provincia);
-    printf("Introduzca la provincia:");
+    printf("Introduzca la provincia: ");
     fflush(stdin);
     fgets(cad_lugar, sizeof(cad_lugar), stdin);
     len = strlen(cad_lugar);
@@ -283,10 +292,47 @@ clients cliente_cart(clients C, int id, int mod){
     return C;
 }
 
-
 void menu_cliente(clients C,int id){
-    clear();
-    titulo();
-    
+    int opt = -1;    //AUXILIAR PARA MANEJO DE OPCIONES EN EL SWITCH
 
+    while(opt<1 || opt>5){
+        clear();
+        titulo();
+        
+        printf("+Usuario: %s\n", C.clients[id].Nom_cliente);
+        printf("1. Perfil\n");
+        printf("2. Productos\n");
+        printf("3. Descuentos\n");
+        printf("4. Pedidos\n");
+        printf("5. Devoluciones\n");
+        printf("0. Salir del sistema\n");
+
+        scanf("%d", &opt);
+
+        switch (opt){
+        case 1:
+            gestionar_cliente(C ,id);
+            opt = -1;
+            break;
+        case 2:
+            opt = -1;
+            break;
+        case 3:
+            opt = -1;
+            break;
+        case 4:
+            opt = -1;
+            break;
+        case 5:
+            opt = -1;
+            break;
+        case 0:
+            exit(EXIT_SUCCESS);
+            break;
+        default:
+            break;
+        }
+    }
+    
 }
+
