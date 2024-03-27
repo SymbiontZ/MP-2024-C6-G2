@@ -60,7 +60,10 @@ void inicsesion_transport(transport_vect transports, int pos){
 			i--;
 		}
 	}while(i > 0);
-	
+	if(i == 0){
+		printf("\nDemasiados intentos fallidos. Cerrando sesion...");
+		exit(0);
+	}
 }
 
 
@@ -87,7 +90,8 @@ void menu_prov(admin_prov_vect provs, int pos){
 		printf("\nBienvenido, %s - ¿Qué desea hacer hoy?\n\n <1> Ver perfil.\n <2> Ver productos.\n <3> Administrar pedidos\n <0> Volver.\n Elija una opción: ", provs.usuarios[pos].email);
 		if(scanf("%i",&op)!=1){
 			fflush(stdin);
-			printf("Error: introduzca una entrada válida.");
+			printf("\nError: introduzca una entrada válida.");
+			Sleep(2000);
 			op=-1;
 		}
 		else{
@@ -124,7 +128,8 @@ void menu_transport(transport_vect transports, int pos){
 		printf("\nBienvenido, %s - ¿Qué desea hacer hoy?\n\n <1> Ver perfil.\n <2> Ver repartos asignados.\n <3> Ver retornos.\n <0> Volver.\n Elija una opción: ", transports.transportistas[pos].email);
 		if(scanf("%i",&op)!=1){
 			fflush(stdin);
-			printf("Error: introduzca una entrada válida.");
+			printf("\nError: introduzca una entrada válida.");
+			Sleep(2000);
 			op=-1;
 		}
 		else{
@@ -163,8 +168,9 @@ void ver_perfil(admin_prov_vect provs, int pos){
 		printf("\n¿Qué desea hacer?\n <1> Cambiar email.\n <2> Cambiar contraseña.\n <0> Volver.\n Elija una opción: ");
 		if(scanf("%i",&op)!=1){
 			fflush(stdin);
-			printf("Error: introduzca una entrada válida.");
-			op=-1;
+			printf("\nError: introduzca una entrada válida.");
+			Sleep(2000);
+			op = -1;
 		}
 		else{
 			switch(op){
@@ -270,21 +276,38 @@ void ver_perfil_t(transport_vect transports, int pos){
 	
 		printf("\nInformación de su perfil:\n ID DEL SISTEMA: %04d\n NOMBRE: %s\n EMAIL: %s\n EMPRESA: %s\n CIUDAD ASIGNADA: %s\n", transports.transportistas[pos].Id_transp, transports.transportistas[pos].Nombre, transports.transportistas[pos].email, transports.transportistas[pos].Nom_Emp, transports.transportistas[pos].Ciudad);
 		
-		printf("\n¿Qué desea hacer?\n <1> Cambiar email.\n <2> Cambiar contraseña.\n <0> Volver.\n Elija una opción: ");
+		printf("\n¿Qué desea hacer?\n <1> Cambiar nombre.\n <2> Cambiar email.\n <3> Cambiar contraseña.\n <0> Volver.\n Elija una opción: ");
 		if(scanf("%i",&op)!=1){
 			fflush(stdin);
-			printf("Error: introduzca una entrada válida.");
+			printf("\nError: introduzca una entrada válida.");
+			Sleep(2000);
 			op=-1;
 		}
 		else{
 			switch(op){
-				case 1: cambiar_email_t(transports, pos); break;
-				case 2: cambiar_contrasena_t(transports, pos); break;
+				case 1: cambiar_nombre_t(transports, pos); break;
+				case 2: cambiar_email_t(transports, pos); break;
+				case 3: cambiar_contrasena_t(transports, pos); break;
 				case 0: break;
 				default: break;
 			}
 		}
 	}while(op!=0);
+}
+
+
+
+//Precondición: Recibe una estructura de tipo admin_prov_vect (el vector de usuarios tipo adminprov), y la posición a utilizar en él.
+//Postcondición: No devuelve nada. Se habrá cambiado el nombre del usuario guardado en el puntero.
+void cambiar_nombre_t(transport_vect transports, int pos){
+	
+	char nuevo_nombre[21];
+	printf("\nIngrese el nombre que debe figurar en el sistema: ");
+	fflush(stdin);
+	fgets(nuevo_nombre, sizeof(nuevo_nombre), stdin);
+	terminador_cad(nuevo_nombre);
+	strcpy(transports.transportistas[pos].Nombre, nuevo_nombre);
+	
 }
 
 
@@ -328,7 +351,7 @@ void cambiar_contrasena_t(transport_vect transports, int pos){
 			if(strcmp(nueva_contra,contra_compr) == 0)							// Si las contraseñas son iguales (el usuario no se ha equivocado), salimos del bucle.
 				valido = 1;
 			else	
-				printf("Contrasenas distintas, inténtelo de nuevo.");			// Solicitamos la nueva contraseña al usuario mientras no verifique que se repitan.
+				printf("\nContrasenas distintas, inténtelo de nuevo.");			// Solicitamos la nueva contraseña al usuario mientras no verifique que se repitan.
 		}while(valido == 0);
 		strcpy_s(transports.transportistas[pos].Contrasena,sizeof(nueva_contra), nueva_contra);
 		printf("\nContraseña cambiada satisfactoriamente.");
@@ -359,7 +382,7 @@ admin_prov_vect cargar_adminprov(){
 	int i = 0, m; 
 
 	if((f_AdminProv = fopen(ruta, "r+")) == NULL){
-		printf("Error al abrir el fichero AdminProv.txt en cargar_adminprov. Creando uno nuevo...\n");
+		printf("\nError al abrir el fichero AdminProv.txt en cargar_adminprov. Creando uno nuevo...\n");
 		f_AdminProv = fopen(ruta, "w");
 		getchar();                     	
 	}	
@@ -385,14 +408,14 @@ admin_prov_vect cargar_adminprov(){
 			i++;		
 		}
 		else{
-			printf("Error leyendo datos del fichero AdminProv.txt en cargar_adminprov. Línea: %d", i + 1);
+			printf("\nError leyendo datos del fichero AdminProv.txt en cargar_adminprov. Línea: %d", i + 1);
 			getchar();	
 			exit(33);				
 		}
 	}			
 		                                    
 	fclose(f_AdminProv);  
-	Sleep(3000);
+	Sleep(2000);
 	return adminprov_sistema;                             	                            
 }
 
@@ -409,7 +432,7 @@ transport_vect cargar_transportistas(){
 	int i = 0, m;
 
 	if((Transportistas = fopen(ruta, "r+")) == NULL){
-		printf("Error al abrir el fichero Transportistas.txt en cargar_transportistas. Creando uno nuevo...\n");
+		printf("\nError al abrir el fichero Transportistas.txt en cargar_transportistas. Creando uno nuevo...\n");
 		Transportistas = fopen(ruta, "w");
 		getchar();
 	}
@@ -417,7 +440,7 @@ transport_vect cargar_transportistas(){
 	//COMPROBACION FICHERO VACIO//
 	char verif = fgetc(Transportistas);
 	if (verif == EOF){
-		printf("El fichero Transportistas.txt esta vacio. Contacte con un administrador.");
+		printf("\nEl fichero Transportistas.txt esta vacio. Contacte con un administrador.");
 		getchar();
 		exit(33);
 	}
@@ -433,7 +456,7 @@ transport_vect cargar_transportistas(){
 			if((m = sscanf(linea, "%d-%20[^-]-%30[^-]-%15[^-]-%20[^-]-%20[^\n]\n", &transport_sistema.transportistas[i].Id_transp, transport_sistema.transportistas[i].Nombre, transport_sistema.transportistas[i].email, transport_sistema.transportistas[i].Contrasena, transport_sistema.transportistas[i].Nom_Emp, transport_sistema.transportistas[i].Ciudad)) == 6)
 				i++;		
 			else{
-				printf("Error leyendo datos del fichero Transportistas.txt en cargar_transportistas. Línea: %d\n", i + 1);
+				printf("\nError leyendo datos del fichero Transportistas.txt en cargar_transportistas. Línea: %d\n", i + 1);
 				getchar();	
 				exit(33);				
 			}
@@ -441,7 +464,7 @@ transport_vect cargar_transportistas(){
 	}	
 		                                    
 	fclose(Transportistas);
-	Sleep(3000); 
+	Sleep(2000); 
 	return transport_sistema;  
 }
 
@@ -462,8 +485,9 @@ void guardar_adminprov(admin_prov_vect usuarios){
 	char aux[14];
 	
 	if((AdminProv = fopen(ruta, "a+")) == NULL){
-		printf("Error al abrir el fichero AdminProv.txt en guardar_adminprov. Creando uno nuevo...\n");
+		printf("\nError al abrir el fichero AdminProv.txt en guardar_adminprov. Creando uno nuevo...\n");
 		AdminProv = fopen(ruta, "w");
+		Sleep(2000);
 	}
 	
 	for(int i = 0; i < usuarios.tam; i++)
@@ -483,8 +507,9 @@ void guardar_transportista(transport_vect transportistas){
 	char linea[LONG_MAX_TRANSPORT];																				// Línea actual del fichero. Longitud máxima de una línea 113 caracteres.
 
 	if((Transportistas = fopen(ruta, "a+")) == NULL){
-		printf("Error al abrir el fichero Transportistas.txt en guardar_transportista. Creando uno nuevo...\n");
+		printf("\nError al abrir el fichero Transportistas.txt en guardar_transportista. Creando uno nuevo...\n");
 		Transportistas = fopen(ruta, "w");
+		Sleep(2000);
 	}
 	
 	for(int i = 0; i < transportistas.tam; i++)
@@ -506,8 +531,10 @@ int longitud_vector_adminprov(){
 	char aux[LONG_MAX_ADMINPROV];
 	int i = 0;
 	
-	if((Admin_Prov_txt = fopen("..\\ESIZON-main\\data\\AdminProv.txt", "r")) == NULL)  
-        printf("Error en la apertura de AdminProv.txt para longitud_vector_adminprov.\n");
+	if((Admin_Prov_txt = fopen("..\\ESIZON-main\\data\\AdminProv.txt", "r")) == NULL){
+        printf("\nError en la apertura de AdminProv.txt para longitud_vector_adminprov.\n");
+        Sleep(2000);
+	}  
 	else{
 		while(fgets(aux, sizeof(aux), Admin_Prov_txt)){
         	i++;
@@ -530,8 +557,10 @@ int longitud_vector_transportistas(){
 	char aux[LONG_MAX_TRANSPORT];
 	int i = 0;
 	
-	if((Transportistas_txt = fopen("..\\ESIZON-main\\data\\Transportistas.txt", "r+")) == NULL)  
-        printf("Error en la apertura de Transportistas.txt para longitud_vector_transportistas.\n");
+	if((Transportistas_txt = fopen("..\\ESIZON-main\\data\\Transportistas.txt", "r+")) == NULL) {
+		printf("\nError en la apertura de Transportistas.txt para longitud_vector_transportistas.\n");
+		Sleep(2000);
+	}  
 	else{
 		while(fgets(aux, sizeof(aux), Transportistas_txt)){
         	i++;

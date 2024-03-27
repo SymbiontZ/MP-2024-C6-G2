@@ -84,6 +84,8 @@ typedef struct{
  //Postcondición: El usuario habrá realizado las tareas necesarias de gestión de su cuenta en la plataforma. No devuelve nada.
  void ver_perfil(admin_prov_vect provs, int pos);
 
+ //Precondición: Recibe una estructura de tipo admin_prov_vect (el vector de usuarios tipo adminprov), y la posición a utilizar en él.
+ //Postcondición: El usuario habrá realizado las tareas de gestión de productos convenientes.
  void ver_productos(admin_prov_vect provs, int pos);
 
  void ver_pedidos(admin_prov_vect provs, int pos);
@@ -104,6 +106,10 @@ typedef struct{
  //Postcondición: El usuario habrá realizado las tareas necesarias de gestión de su cuenta en la plataforma. No devuelve nada.
  void ver_perfil_t(transport_vect transports, int pos);
 
+ //Precondición: Recibe una estructura de tipo admin_prov_vect (el vector de usuarios tipo adminprov), y la posición a utilizar en él.
+ //Postcondición: No devuelve nada. Se habrá cambiado el nombre del usuario guardado en el puntero.
+ void cambiar_nombre_t(transport_vect transports, int pos);
+ 
  //Precondición: Recibe un puntero a una estructura de transport.
  //Postcondición: No devuelve nada. Se habrá cambiado el email del usuario guardado en el puntero.
  void cambiar_email_t(transport_vect transports, int pos);
