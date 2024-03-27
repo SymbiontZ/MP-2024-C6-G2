@@ -2,10 +2,11 @@
 #include"pedidos.h"
 #include<stdlib.h>
 #include<string.h>
-#include"complementos.h"
 #include"empresas.h"
 #include"Productos.h"
 #include"useradmin.h"
+#include<time.h>
+
 
 pedidos cargar_pedidos();
 prod_pedidos cargar_prod_pedidos();
@@ -243,8 +244,10 @@ void guardar_productos_pedidos(prod_pedidos prod_p){
 //Precondición
 //Postcondicion
 void crear_producto_pedido(pedidos p, int id_producto, int id_pedido, prod_pedidos prod_p){
-    int i, pos, nuevo_prod_p, ud,j,k, ocupado=0, id_t;
-    char ciudad[50];
+    int i, pos, nuevo_prod_p, ud,j,k, ocupado=0, id_t, m=0, numero;
+    int disponibles[2]; //vector con los transportistas que pueden encargarse de un producto
+    char ciudad[50]; //variable auxiliar para almacenar la ciudad del cliente
+
     transport_vect t; //variable de tipo transportistas 
     t=cargar_transportistas(); //carga la estructura transportistas con los datos que hay en el fichero
     clients c;
@@ -258,10 +261,10 @@ void crear_producto_pedido(pedidos p, int id_producto, int id_pedido, prod_pedid
             printf("el pedido existe");
             
             //UNIDADES DEL PRODUCTO
-            /*printf("Cuantas unidades desea del producto: ");
+            printf("Cuantas unidades desea del producto: ");
             scanf("%d",&ud);
             //Se comprueba con modulos productos si las unidades son posibles
-            prod_p.prod_pedidos[pos].num_unid=ud;*/
+            prod_p.prod_pedidos[pos].num_unid=ud;
 
             //FECHA DE ENTREGA
             
@@ -275,15 +278,22 @@ void crear_producto_pedido(pedidos p, int id_producto, int id_pedido, prod_pedid
                     strcpy(ciudad, c.clients[j].Localidad); //en una cadena auxiliar guardo la ciudad del cliente
                     for(k=0;k<t.tam;k++){ //bucle para recorrer la estructura transportistas
                         if(strcmp(ciudad, t.transportistas[k].Ciudad)==0){//buscar transportista de la misma ciudad del cliente
-                            printf("transportista puede transportar ese producto");
+                            printf("id transportista %d\n", t.transportistas[k].Id_transp);
+                            disponibles[m]=t.transportistas[k].Id_transp; //rellena el vector con los transportistas de esa ciudad
+                            m++;
+                            }
                         }
                     }
                 }
             }
-            
-            
+            srand (time(NULL));
+            numero=rand() % (m+1);
+            printf("numero aletorio : %d\n", numero);
+            prod_p.prod_pedidos[pos].id_transp=disponibles[numero];
+     
         }
-    }
+
+    
     
 }
 

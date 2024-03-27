@@ -1,12 +1,6 @@
-
+#include"complementos.h"
 //ESTRUCTURAS
 //Estructura pedidos.txt
-
-typedef struct{
-    int dia;
-    int mes;
-    int anio;
-}fecha;
 typedef struct{
     int id_pedido;
     fecha f_pedido;
