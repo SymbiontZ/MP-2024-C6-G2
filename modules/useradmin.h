@@ -42,7 +42,11 @@ void guardar_clientes(clients );
 
 
 void gestionar_cliente(clients, int);
-void menu_cliente(clients ,int i);
+void menu_cliente(clients ,int );
+
+//PRECONDICION: Se le pasa la posicion del cliente en la estructura
+//POSCONDICION: Ninguna  
+void inicsesion_cliente(int );
 //GESTION DATOS ESPECIFICOS USUARIOS//
 clients cliente_nom(clients , int );
 clients cliente_contr(clients , int , int );

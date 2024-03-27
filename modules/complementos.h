@@ -14,4 +14,7 @@ void titulo();
 int dia_sist();
 int mes_sist();
 int anno_sist();
+
+void terminador_cad(char []);
+
 #endif

@@ -37,3 +37,15 @@ int anno_sist(){
 void titulo(){
     printf("### ESIZON ###\n");
 }
+
+void terminador_cad(char cad[]) {
+    int i;
+    int len = strlen(cad);
+
+    for (i = 0; i < len; i++) {
+        if (cad[i] == '\n') {
+            cad[i] = '\0';
+            len = i; // ACABA BUCLE SI CAMBIA EL SALTO DE LINEA POR TERMINADOR
+        }
+    }
+}
