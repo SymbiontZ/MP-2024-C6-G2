@@ -9,7 +9,7 @@ int main()
     //crear_pedido(3,P);
     prod_pedidos Prod_P=cargar_prod_pedidos();
     guardar_productos_pedidos(Prod_P);
-    crear_producto_pedido(P,12, 5,Prod_P);
+    crear_producto_pedido(P,12, 2,Prod_P);
     
     return 0;
 }

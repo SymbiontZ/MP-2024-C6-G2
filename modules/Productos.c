@@ -4,7 +4,7 @@
 #include <stdlib.h>
 
 produ_vect cargar_productos () {
-	char filename[] = "../data/Productos.txt";   
+	char filename[] = "Productos.txt";   
     int num_prod = 0;                           //Numero de productos registrados
     int i = 0;                          		
     char cad_linea[250];                        //Caracteres maximos que puede ocupar una linea en fichero
@@ -15,7 +15,7 @@ produ_vect cargar_productos () {
 	f_prod = fopen (filename, "r");
 	
 	if (f_prod == NULL) {
-		f_prod = fopen (filename, "w");		//Excepcion si no encuentra fichero
+		f_prod = fopen (filename, "w");			//Excepcion si no encuentra fichero
 		perror ("No se pudo abrir el archivo de productos. Se ha creado un nuevo archivo.\n");
 		getchar ();
 	}
@@ -29,7 +29,7 @@ produ_vect cargar_productos () {
 	produ_vect p;
 	
   	p.num_prod = num_prod;
-  	p.produ = malloc(p.num_prod*sizeof(productos));					//Asignacion de memoria dinamica "p.produ[num_prod]"
+  	p.produ = malloc(p.num_prod*sizeof(productos));				//Asignacion de memoria dinamica "p.produ[num_prod]"
   	
   	if (p.produ == NULL) {
 		printf ("No se ha podido reservar memoria suficiente\n");
@@ -49,12 +49,12 @@ produ_vect cargar_productos () {
             &p.produ[i].entrega,
             &p.produ[i].importe);
 
-        if (campo_productos != 8){                                 //Excepcion si fallo en dato de cliente
+        if (campo_productos != 8){                               //Excepcion si fallo en dato de cliente
             printf ("Se produjo un error con datos de un producto. ID_producto: %d\n", i+1);
             getchar();
             exit(EXIT_FAILURE);
         }
-        i++;
+		i++;
     }
     
     fclose (f_prod);
@@ -65,14 +65,91 @@ produ_vect cargar_productos () {
 void cambio (char cad[]) {
 	int i;
 	
-	for (i = 0; i < strlen (cad); i++) {
+	for (i = 0; i < strlen(cad); i++) {
 		if (cad[i] == '\n') {
 			cad[i] = '\0';
 		}
 	}
 }
 
-void menu_prod () {
+void guardar_productos (produ_vect p) {
+	int i;
+	
+	FILE *f_prod;
+	char filename[] = "Productos.txt";
+	f_prod = fopen (filename, "w");
+	
+	if (f_prod == NULL) {
+		perror ("\nHa ocurrido un error, intentelo de nuevo");
+		getchar ();
+	}
+	
+	//PROCESO DE GUARDADO DE DATOS DE CADA PRODUCTO EN FICHERO//
+	for (i = 0; i < p.num_prod; i++){                          
+        fprintf (f_prod, "%07d-%s-%s-%04d-%04d-%d-%d-%d\n",
+                p.produ[i].id_prod,
+                p.produ[i].nombre,
+                p.produ[i].descrip,
+                p.produ[i].id_categ,
+                p.produ[i].id_gestor,
+                p.produ[i].stock,
+                p.produ[i].entrega,
+                p.produ[i].importe);
+    }
+    fclose(f_prod);
+    printf("\n**Estructura guardada con %d poductos\n", p.num_prod);
+}
+
+produ_vect agregar_productos (produ_vect p) {
+	int nuevo_id = p.num_prod + 1;		//IDENTIFICADOR DEL NUEVO PRODUCTO
+	int nueva_pos = nuevo_id - 1;		//POSICION DEL PRODUCTO EN LA ESTRUCTURA
+	
+	p.produ = realloc(p.produ, nuevo_id*sizeof(productos));
+	
+	if (p.produ == NULL) {
+		printf ("No se pudo asignar la estructura de productos");
+        getchar ();
+        exit (EXIT_FAILURE);
+	}
+	
+	p.produ[nueva_pos].id_prod = nuevo_id;
+	
+	printf ("Primero, escribe el nombre del producto: ");
+	fflush (stdin);
+	fgets (p.produ[nueva_pos].nombre, 16, stdin);
+	cambio (p.produ[nueva_pos].nombre);
+	
+	printf ("\nSengundo, escribe la descripcion del producto: ");
+	fflush (stdin);
+	fgets (p.produ[nueva_pos].descrip, 51, stdin);
+	cambio (p.produ[nueva_pos].descrip);
+	
+	printf ("\nTercero, escribe el id de la categoria a la que pertenece: ");
+	scanf ("%i", &p.produ[nueva_pos].id_categ);
+	
+	printf ("\nCuarto, escribe el id del gestor del producto: ");
+	scanf ("%i", &p.produ[nueva_pos].id_gestor);
+	
+	printf ("\nQuinto, escribe el stock del producto: ");
+	scanf ("%i", &p.produ[nueva_pos].stock);
+	
+	printf ("\nSexto, escribe el compromiso de entrega en dias: ");
+	scanf ("%i", &p.produ[nueva_pos].entrega);
+	
+	printf ("\nPor ultimo, escribe el importe del producto en euros: ");
+	scanf ("%i", &p.produ[nueva_pos].importe);
+	
+	p.num_prod = nuevo_id;
+	
+	guardar_productos (p);
+	
+	printf ("Se ha registrado el producto %s correctamente", p.produ[nueva_pos].nombre);
+	getchar ();
+	
+	return p;
+}
+
+void menu_prod (produ_vect p) {
 	int op;
 	char respuesta;
 	
@@ -88,10 +165,11 @@ void menu_prod () {
 		
 		switch (op) {
 			case 1:
-				
+				agregar_productos (p);
 			break;
 			
 			case 2:
+				//Hola :);
 			break;
 			
 			case 3:
@@ -110,90 +188,3 @@ void menu_prod () {
 		printf ("Gracias por su visita, vuelva pronto :)");
 	}
 }
-
-/*void rellenar_produ (productos *prod) {
-	int i, aux = 0;
-	
-	FILE *f;
-	
-	f = fopen ("Productos.txt", "a");
-	
-	if (f == NULL) {
-		printf ("No se ha podido acceder al fichero, intentelo de nuevo");
-		exit (1);
-	}
-	
-	for (i = 0; i < N && aux == 0; i++) {
-		if (prod[i].lleno == 0) {
-			prod = (productos*)realloc(prod, (i + 1)*sizeof(productos));
-			
-			if (prod == NULL) {
-				printf ("No se ha podido reservar la memoria suficiente\n");
-				exit (1);
-			}
-			
-			printf ("Producto %i:", i + 1);
-			
-			printf ("\n\nPrimero, escribe el id del producto: ");
-			scanf ("%i", &prod[i].id_prod);
-			
-			printf ("Segundo, escribe el nombre del producto (maximo 15 caracteres): ");
-			fflush (stdin);
-			fgets (prod[i].nombre, 16, stdin);
-			cambio (prod[i].nombre);
-			
-			printf ("Tercero, haz una descripcion del producto (maximo 50 caracteres): ");
-			fflush (stdin);
-			fgets (prod[i].descrip, 51, stdin);
-			cambio (prod[i].descrip);
-		
-			printf ("Cuarto, escribe el id de la categoria: ");
-			scanf ("%i", &prod[i].id_categ);
-			
-			printf ("Quinto, escribe el id del gestor del producto: ");
-			scanf ("%i", &prod[i].id_gestor);
-			
-			printf ("Sexto, escribe la cantidad de stock del producto: ");
-			scanf ("%i", &prod[i].stock);
-		
-			printf ("Septimo, escribe el numero de dias de compromiso de entrega: ");
-			scanf ("%i", &prod[i].entrega);
-		
-			printf ("Por ultimo, escribe el importe del producto en euros: ");
-			scanf ("%i", &prod[i].importe);
-			
-			fprintf (f, "%07d-%s-%s-%04d-%04d-%i-%i-%i\n\n", prod[i].id_prod, prod[i].nombre, prod[i].descrip, prod[i].id_categ, prod[i].id_gestor, prod[i].stock, prod[i].entrega, prod[i].importe);
-			
-			fclose (f);
-			
-			prod[i].lleno = 1;
-			aux = 1;
-		}
-	}
-		
-	if (aux == 0) {
-		printf ("\nTodos los productos han sido registrados");
-	}
-}
-
-void mostrar_produ (productos *prod) {
-	char aux[10000];
-	
-	FILE *f;
-	
-	f = fopen ("Productos.txt", "r");
-	
-	if (f == NULL) {
-		printf ("No se ha podido acceder al fichero, intentelo de nuevo");
-		exit (1);
-	}
-	
-	while (!feof(f)) {
-		fgets (cad, 10000, f);
-		printf ("%s", cad);
-	}
-	
-	printf ("\n");
-	
-	fclose (f);
-}	*/
