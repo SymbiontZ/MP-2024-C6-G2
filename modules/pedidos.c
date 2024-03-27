@@ -5,12 +5,15 @@
 #include"complementos.h"
 #include"empresas.h"
 #include"Productos.h"
+#include"useradmin.h"
 
 pedidos cargar_pedidos();
 prod_pedidos cargar_prod_pedidos();
 devoluciones cargar_devoluciones();
 void crear_pedido(int, pedidos);
 void guardar_pedido(pedidos);
+void guardar_producto_pedido(prod_pedidos);
+void crear_producto_pedido(pedidos, int, int, prod_pedidos);
 
 
 //Cabecera: pedidos cargar_pedidos()
@@ -160,7 +163,7 @@ void guardar_pedido(pedidos p){
 //Precondicion:
 //Postcondicion: carga en la estructura prod_pedidos los datos del fichero ProductosPedidos.txt
 prod_pedidos cargar_prod_pedidos(){
-    int n_prod_ped=0, i, campo_prod_ped;
+    int n_prod_ped=0, i=0, campo_prod_ped;
     char cad_aux[200];
     
     FILE * f_prod_ped;
@@ -201,23 +204,6 @@ prod_pedidos cargar_prod_pedidos(){
     }
 
     printf("productos pedidos: %d", n_prod_ped);
-    for(i=0;i<n_prod_ped;i++){
-        printf("%d-",prod_p.prod_pedidos[i].id_pedido);
-        printf("%d-", prod_p.prod_pedidos[i].id_prod);
-        printf("%d-",prod_p.prod_pedidos[i].num_unid);
-        printf("%d",prod_p.prod_pedidos[i].f_entrega.dia);
-        printf("%d",prod_p.prod_pedidos[i].f_entrega.mes);
-        printf("%d-",prod_p.prod_pedidos[i].f_entrega.anio);
-        printf("%d-",prod_p.prod_pedidos[i].importe);
-        printf("%s-",prod_p.prod_pedidos[i].estado);
-        printf("%d-",prod_p.prod_pedidos[i].id_transp);
-        printf("%s-",prod_p.prod_pedidos[i].id_locker);
-        printf("%s-",prod_p.prod_pedidos[i].cod_locker);
-        printf("%d-",prod_p.prod_pedidos[i].f_devolucion.dia);
-        printf("%d-",prod_p.prod_pedidos[i].f_devolucion.mes);
-        printf("%d-",prod_p.prod_pedidos[i].f_devolucion.anio);
-    }
-
     
     return prod_p;
 }
@@ -258,9 +244,11 @@ void guardar_productos_pedidos(prod_pedidos prod_p){
 //Postcondicion
 void crear_producto_pedido(pedidos p, int id_producto, int id_pedido, prod_pedidos prod_p){
     int i, pos, nuevo_prod_p, ud,j,k, ocupado=0, id_t;
+    char ciudad[50];
     transport_vect t; //variable de tipo transportistas 
     t=cargar_transportistas(); //carga la estructura transportistas con los datos que hay en el fichero
-
+    clients c;
+    c=cargar_clientes();
     
     pos=prod_p.lon; //la posicion en el vector de la estructura de producto pedido
     prod_p.prod_pedidos[pos].id_prod=id_producto; //la id del producto que ha seleccionado el cliente
@@ -268,11 +256,30 @@ void crear_producto_pedido(pedidos p, int id_producto, int id_pedido, prod_pedid
     for(i=0;i<p.lon;i++){
         if(id_pedido==p.pedidos[i].id_pedido){
             printf("el pedido existe");
-            printf("Cuantas unidades desea del producto: ");
+            
+            //UNIDADES DEL PRODUCTO
+            /*printf("Cuantas unidades desea del producto: ");
             scanf("%d",&ud);
             //Se comprueba con modulos productos si las unidades son posibles
-            prod_p.prod_pedidos[pos].num_unid=ud;
+            prod_p.prod_pedidos[pos].num_unid=ud;*/
+
+            //FECHA DE ENTREGA
             
+
+            //IMPORTE
+
+
+            //ID TRANSPORTISTA
+            for(j=0;j<c.n_clients;j++){ //bucle para recorrer la estructura cliente
+                if(p.pedidos[i].id_cliente==c.clients[j].Id_cliente){ //buscar en el fichero de clientes, el cliente que ha realizado este pedido
+                    strcpy(ciudad, c.clients[j].Localidad); //en una cadena auxiliar guardo la ciudad del cliente
+                    for(k=0;k<t.tam;k++){ //bucle para recorrer la estructura transportistas
+                        if(strcmp(ciudad, t.transportistas[k].Ciudad)==0){//buscar transportista de la misma ciudad del cliente
+                            printf("transportista puede transportar ese producto");
+                        }
+                    }
+                }
+            }
             
             
         }
@@ -281,11 +288,6 @@ void crear_producto_pedido(pedidos p, int id_producto, int id_pedido, prod_pedid
 }
 
         
-    
-
-
-
-
 
 //Cabecera: devoluciones cargar_devoluciones()
 //Precondicion:

@@ -64,3 +64,4 @@ devoluciones cargar_devoluciones();
 void crear_pedido(int, pedidos);
 void guardar_pedido(pedidos);
 void guardar_productos_pedidos(prod_pedidos prod_p);
+void crear_producto_pedido(pedidos, int, int, prod_pedidos);
