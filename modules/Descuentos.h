@@ -57,6 +57,15 @@ void Cargar_Descuentos();
 //Postcondici�n: Devuelve una estructura con el vector de estructuras DescCli y almacena su tama�o
 void Cargar_DescuentosClientes();
 
+//Precondicion: Recibe una estructura de tipo Descuentos con datos coherentes almacenados.
+//Postcondicion: Guarda en Descuentos.txt los datos del vector de estructuras recibido
+void Guardar_Descuentos(Descuentos descuentos);
 
+//Precondicion: Recibe una estructura de tipo DescClientes con datos coherentes almacenados.
+//Postcondicion: Guarda en DescuentosClientes.txt los datos del vector de estructuras recibido
+void Guardar_DescuentosClientes(DescClientes descuentosclientes);
+
+
+void Consultar_Descuentos(Descuentos descuentos, DescClientes descuentosclientes);
 
 #endif // DESCUENTOS_H_INCLUDED
