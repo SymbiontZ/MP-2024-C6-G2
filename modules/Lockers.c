@@ -6,9 +6,9 @@
 void Cargar_Lockers(){
 
     Vect_Lock vector_lock;
-	FILE *f_lockers;																						// Puntero al fichero a leer.
-	char ruta[] = "..\\ESIZON-main\\data\\Lockers.txt";                                                  // Ruta del fichero a leer.
-	char linea[MAX_LOCK];													                                //Linea a leer
+	FILE *f_lockers;																						
+	char ruta[] = "..\\ESIZON-main\\data\\Lockers.txt";                                                
+	char linea[MAX_LOCK];													                             
     int i = 0, m;
 
 	if((f_lockers = fopen(ruta, "r+")) == NULL){
@@ -17,10 +17,10 @@ void Cargar_Lockers(){
 	}
 
 	vector_lock.tam = 0;
-	while(fgets(linea, sizeof(linea), f_lockers) != NULL)												// Contamos el n�mero de usuarios en el fichero...
+	while(fgets(linea, sizeof(linea), f_lockers) != NULL)												
 	    vector_lock.tam++;
 	printf("Descuentos almacenados en Lockers.txt: %d \n", vector_lock.tam);
-    vector_lock.Lock = malloc((vector_lock.tam + 1) * sizeof(Lockers));	// ... y reservamos memoria para el vector (m�s uno por si se necesita a�adir alg�n usuario).
+    vector_lock.Lock = malloc((vector_lock.tam + 1) * sizeof(Lockers));	
 	rewind(f_lockers);
 
 	while((fgets(linea, sizeof(linea), f_lockers) != NULL) ){
@@ -46,9 +46,9 @@ void Cargar_Lockers(){
 void Cargar_CompartimentosLockers(){
 
     Vect_CompLock vector_complock;
-	FILE *f_compartimentoslockers;																						// Puntero al fichero a leer.
-	char ruta[] = "..\\ESIZON-main\\data\\CompartimentosLockers.txt";                                                  // Ruta del fichero a leer.
-	char linea[MAX_COMPLOCK];													                                //Linea a leer
+	FILE *f_compartimentoslockers;																						
+	char ruta[] = "..\\ESIZON-main\\data\\CompartimentosLockers.txt";                                                  
+	char linea[MAX_COMPLOCK];													                               
     int i = 0, m;
 
 	if((f_compartimentoslockers = fopen(ruta, "r+")) == NULL){
@@ -57,10 +57,10 @@ void Cargar_CompartimentosLockers(){
 	}
 
 	vector_complock.tam = 0;
-	while(fgets(linea, sizeof(linea), f_compartimentoslockers) != NULL)												// Contamos el n�mero de usuarios en el fichero...
+	while(fgets(linea, sizeof(linea), f_compartimentoslockers) != NULL)												
 	    vector_complock.tam++;
 	printf("Descuentos almacenados en CompartimentosLockers.txt: %d \n", vector_complock.tam);
-    vector_complock.CompLock = malloc((vector_complock.tam + 1) * sizeof(CompartimentosLockers));	// ... y reservamos memoria para el vector (m�s uno por si se necesita a�adir alg�n usuario).
+    vector_complock.CompLock = malloc((vector_complock.tam + 1) * sizeof(CompartimentosLockers));	
 	rewind(f_compartimentoslockers);
 
 	while((fgets(linea, sizeof(linea), f_compartimentoslockers) != NULL) ){
@@ -90,9 +90,9 @@ void Cargar_CompartimentosLockers(){
 
 void Guardar_Lockers(Vect_Lock lockers){
 
-    FILE *f_lockers;																							// Puntero al fichero a leer.
-	char ruta[] = "..\\ESIZON-main\\data\\Lockers.txt";														// Ruta del fichero a leer.
-	char linea[MAX_LOCK];																				// Línea actual del fichero. Longitud máxima de una línea 86 caracteres.
+    FILE *f_lockers;																							
+	char ruta[] = "..\\ESIZON-main\\data\\Lockers.txt";														
+	char linea[MAX_LOCK];																			
 	char aux[14];
 
 	if((f_lockers = fopen(ruta, "a+")) == NULL){
@@ -117,9 +117,9 @@ void Guardar_Lockers(Vect_Lock lockers){
 
 void Guardar_CompartimentosLockers(Vect_CompLock compartimentoslockers){
 
-    FILE *f_complockers;																							// Puntero al fichero a leer.
-	char ruta[] = "..\\ESIZON-main\\data\\CompartimentosLockers.txt";														// Ruta del fichero a leer.
-	char linea[MAX_COMPLOCK];																				// Línea actual del fichero. Longitud máxima de una línea 86 caracteres.
+    FILE *f_complockers;																							
+	char ruta[] = "..\\ESIZON-main\\data\\CompartimentosLockers.txt";														
+	char linea[MAX_COMPLOCK];																				
 	char aux[14];
 
 	if((f_complockers = fopen(ruta, "a+")) == NULL){
