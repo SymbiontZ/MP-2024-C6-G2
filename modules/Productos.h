@@ -1,6 +1,10 @@
 #ifndef PRODUCTOS_H_
 #define PRODUCTOS_H_
 
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
 typedef struct {
 	int id_prod;		//Identificador del producto
 	char nombre[16];	//Nombre del producto
@@ -18,9 +22,13 @@ typedef struct {
 }produ_vect;
 
 produ_vect cargar_productos ();
+void clear ();
 void cambio (char []);
-void menu_prod (produ_vect p);
-void guardar_productos (produ_vect p);
-produ_vect agregar_productos (produ_vect p);
+void guardar_productos (produ_vect);
+produ_vect agregar_productos (produ_vect);
+produ_vect modificar_productos (produ_vect, int);
+produ_vect eliminar_productos (produ_vect, int);
+produ_vect buscar_productos (produ_vect);
+void menu_prod (produ_vect);
 
 #endif
