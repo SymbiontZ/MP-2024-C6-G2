@@ -7,9 +7,9 @@
 void Cargar_Descuentos(){
 
     Descuentos vector_desc;
-	FILE *f_descuentos;																						// Puntero al fichero a leer.
-	char ruta[] = "..\\ESIZON-main\\data\\Descuentos.txt";                                                  // Ruta del fichero a leer.
-	char linea[MAX_DESC];													                                //Linea a leer
+	FILE *f_descuentos;																						
+	char ruta[] = "..\\ESIZON-main\\data\\Descuentos.txt";                                                  
+	char linea[MAX_DESC];													                               
     int i = 0, m;
 
 	if((f_descuentos = fopen(ruta, "r+")) == NULL){
@@ -18,10 +18,10 @@ void Cargar_Descuentos(){
 	}
 
 	vector_desc.tam = 0;
-	while(fgets(linea, sizeof(linea), f_descuentos) != NULL)												// Contamos el n�mero de usuarios en el fichero...
+	while(fgets(linea, sizeof(linea), f_descuentos) != NULL)												
 	    vector_desc.tam++;
 	printf("Descuentos almacenados en Descuentos.txt: %d \n", vector_desc.tam);
-    vector_desc.Desc = malloc((vector_desc.tam + 1) * sizeof(Descuento));	// ... y reservamos memoria para el vector (m�s uno por si se necesita a�adir alg�n usuario).
+    vector_desc.Desc = malloc((vector_desc.tam + 1) * sizeof(Descuento));	
 	rewind(f_descuentos);
 
 	while((fgets(linea, sizeof(linea), f_descuentos) != NULL) ){
@@ -48,9 +48,9 @@ void Cargar_Descuentos(){
 void Cargar_DescuentosClientes(){
 
     DescClientes vector_descClts;
-	FILE *f_DescClientes;																						// Puntero al fichero a leer.
-	char ruta[] = "..\\ESIZON-main\\data\\DescuentosClientes.txt";                                                  // Ruta del fichero a leer.
-	char linea[MAX_DESCLI];													                                //Linea a leer
+	FILE *f_DescClientes;																						
+	char ruta[] = "..\\ESIZON-main\\data\\DescuentosClientes.txt";                                                 
+	char linea[MAX_DESCLI];													                               
     int i = 0, m;
 
 	if((f_DescClientes = fopen(ruta, "r+")) == NULL){
@@ -58,10 +58,10 @@ void Cargar_DescuentosClientes(){
 		exit(33);
 	}
 	vector_descClts.tam = 0;
-	while(fgets(linea, sizeof(linea), f_DescClientes) != NULL)												// Contamos el n�mero de usuarios en el fichero...
+	while(fgets(linea, sizeof(linea), f_DescClientes) != NULL)												
 	    vector_descClts.tam++;
 	    printf("Descuentos almacenados en DescuentosClientes.txt: %d \n", vector_descClts.tam);
-        vector_descClts.DescCliente = malloc((vector_descClts.tam + 1) * sizeof(DescClientes));	// ... y reservamos memoria para el vector (m�s uno por si se necesita a�adir alg�n usuario).
+        vector_descClts.DescCliente = malloc((vector_descClts.tam + 1) * sizeof(DescClientes));	
 	 	rewind(f_DescClientes);
 
 		while((fgets(linea, sizeof(linea), f_DescClientes) != NULL) ){
@@ -89,9 +89,9 @@ void Cargar_DescuentosClientes(){
 
 void Guardar_Descuentos(Descuentos descuentos){
 
-    FILE *f_descuentos;																							// Puntero al fichero a leer.
-	char ruta[] = "..\\ESIZON-main\\data\\Descuentos.txt";														// Ruta del fichero a leer.
-	char linea[MAX_DESC];																				// Línea actual del fichero. Longitud máxima de una línea 86 caracteres.
+    FILE *f_descuentos;																					
+	char ruta[] = "..\\ESIZON-main\\data\\Descuentos.txt";														
+	char linea[MAX_DESC];																				 
 	char aux[14];
 
 	if((f_descuentos = fopen(ruta, "a+")) == NULL){
@@ -117,9 +117,9 @@ void Guardar_Descuentos(Descuentos descuentos){
 
 void DescuentosClientes(DescClientes descuentosclientes){
 
-    FILE *f_DescClientes;																							// Puntero al fichero a leer.
-	char ruta[] = "..\\ESIZON-main\\data\\DescuentosClientes.txt";														// Ruta del fichero a leer.
-	char linea[MAX_DESCLI];																				// Línea actual del fichero. Longitud máxima de una línea 86 caracteres.
+    FILE *f_DescClientes;																						
+	char ruta[] = "..\\ESIZON-main\\data\\DescuentosClientes.txt";														
+	char linea[MAX_DESCLI];																				
 	char aux[14];
 
 	if((f_DescClientes = fopen(ruta, "a+")) == NULL){
@@ -148,9 +148,9 @@ void DescuentosClientes(DescClientes descuentosclientes){
 
 Consultar_Descuentos(Descuentos descuentos, DescClientes descuentosclientes){
 
-    FILE *f_DescClientes;																							// Puntero al fichero a leer.
-	char ruta[] = "..\\ESIZON-main\\data\\DescuentosClientes.txt";														// Ruta del fichero a leer.
-	char linea[MAX_DESCLI];																				// Línea actual del fichero. Longitud máxima de una línea 86 caracteres.
+    FILE *f_DescClientes;																							
+	char ruta[] = "..\\ESIZON-main\\data\\DescuentosClientes.txt";														
+	char linea[MAX_DESCLI];																				
 	char aux[14];
 
 	if((f_DescClientes = fopen(ruta, "a+")) == NULL){
