@@ -236,4 +236,79 @@ Descuentos nuevo_id(Descuentos D, int pos){
 }
 
 
+Descuentos nueva_desc(Descuentos D, int pos){
+    char new_Descrip[11];
 
+    printf("Ingrese la descripción: \n");
+
+    fflush(stdin);
+    fgets(new_Descrip, sizeof(new_Descrip), stdin);
+
+    strcpy(D.Desc[pos].Descrip, new_Descrip);
+
+    return D;
+}
+
+
+
+Descuentos nuevo_tipo(Descuentos D, int pos){
+
+    int op = 0;
+    char new_Tipo[8];
+
+    while(op != 1 || op != 2){
+        printf("Elija el tipo de descuento: \n");
+        printf("1. Código promocional\n");
+        printf("2. Cheque regalo\n");
+        scanf("%d", &op);
+    }
+
+    if(op == 1){
+        new_Tipo[8] = "codpro";
+        strcpy(D.Desc[pos].Tipo, new_Tipo);
+    }
+    else{
+        new_Tipo[8] = "cheqreg";
+        strcpy(D.Desc[pos].Tipo, new_Tipo);
+    }
+
+    return D;
+}
+
+
+Descuentos nuevo_apl(Descuentos D, int pos){
+
+    int op = 0;
+    char new_Aplicable[7];
+
+    while(op != 1 || op != 2){
+        printf("Seleccione la aplicabilidad: \n");
+        printf("1. Aplicable solo para productos gestionados por ESIZON\n");
+        printf("2. Aplicable para todos los productos\n");
+        scanf("%d", &op);
+    }
+
+    if(op == 1){
+        new_Aplicable[7] = "esizon";
+        strcpy(D.Desc[pos].Aplicable, new_Aplicable);
+    }
+    else{
+        new_Aplicable[7] = "todos";
+        strcpy(D.Desc[pos].Aplicable, new_Aplicable);
+    }
+
+    return D;
+}
+
+
+Descuentos nuevo_imp(Descuentos D, int pos){
+
+    int new_Importe = 0;
+
+        printf("Introduzca el importe: \n");
+        scanf("%d", &new_Importe);
+
+        D.Desc[pos].Importe = new_Importe;
+
+    return D;
+}
