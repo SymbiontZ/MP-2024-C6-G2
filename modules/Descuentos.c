@@ -220,6 +220,8 @@ Descuentos Alta_Descuentos(Descuentos D){
     D = nuevo_apl(D, tam);
     D = nuevo_imp(D, tam);
 
+    return D;
+
 }
 
 Descuentos nuevo_id(Descuentos D, int pos){
@@ -261,15 +263,48 @@ Descuentos nuevo_tipo(Descuentos D, int pos){
         printf("1. Código promocional\n");
         printf("2. Cheque regalo\n");
         scanf("%d", &op);
+
+        switch(op){
+            case 1:
+                new_Tipo[8] = "codpro";
+                strcpy(D.Desc[pos].Tipo, new_Tipo);
+                break;
+            case 2:
+                new_Tipo[8] = "cheqreg";
+                strcpy(D.Desc[pos].Tipo, new_Tipo);
+                break;
+            default:
+                break;
+        }
     }
 
-    if(op == 1){
-        new_Tipo[8] = "codpro";
-        strcpy(D.Desc[pos].Tipo, new_Tipo);
-    }
-    else{
-        new_Tipo[8] = "cheqreg";
-        strcpy(D.Desc[pos].Tipo, new_Tipo);
+    return D;
+}
+
+
+Descuentos nuevo_est(Descuentos D, int pos){
+
+    int op = 0;
+    char new_Estado[9];
+
+    while(op != 1 || op != 2){
+        printf("Seleccione el estado: \n");
+        printf("1. Activo\n");
+        printf("2. Inactivo\n");
+        scanf("%d", &op);
+
+        switch(op){
+            case 1:
+                new_Estado[9] = "activo";
+                strcpy(D.Desc[pos].Estado, new_Estado);
+                break;
+            case 2:
+                new_Estado[9] = "inactivo";
+                strcpy(D.Desc[pos].Estado, new_Estado);
+                break;
+            default:
+                break;
+        }
     }
 
     return D;
@@ -286,15 +321,19 @@ Descuentos nuevo_apl(Descuentos D, int pos){
         printf("1. Aplicable solo para productos gestionados por ESIZON\n");
         printf("2. Aplicable para todos los productos\n");
         scanf("%d", &op);
-    }
 
-    if(op == 1){
-        new_Aplicable[7] = "esizon";
-        strcpy(D.Desc[pos].Aplicable, new_Aplicable);
-    }
-    else{
-        new_Aplicable[7] = "todos";
-        strcpy(D.Desc[pos].Aplicable, new_Aplicable);
+        switch(op){
+            case 1:
+                new_Aplicable[7] = "esizon";
+                strcpy(D.Desc[pos].Aplicable, new_Aplicable);
+                break;
+            case 2:
+                new_Aplicable[7] = "todos";
+                strcpy(D.Desc[pos].Aplicable, new_Aplicable);
+                break;
+            default:
+                break;
+        }
     }
 
     return D;
@@ -311,4 +350,15 @@ Descuentos nuevo_imp(Descuentos D, int pos){
         D.Desc[pos].Importe = new_Importe;
 
     return D;
+}
+
+
+Descuentos Baja_Descuentos(Descuentos D){
+    int tam = D.tam, i;
+
+    printf("Introduzca el identificador del descuento que quiere eliminar\n");
+
+    for(i=0; i<tam; i++){
+
+    }
 }
