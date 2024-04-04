@@ -1,4 +1,6 @@
-#include "./useradmin.h"
+#include "useradmin.h"
+#include "complementos.h"
+#include "empresas.h"
 
 clients cargar_clientes(){
     char filename[] = "../data/Clientes.txt";   
@@ -106,7 +108,7 @@ void guardar_clientes(clients C){
     printf("\n**Estructura guardada con %d clientes\n", C.n_clients);
 }
 
-clients gestionar_cliente(clients C, int pos){
+clients gestionar_cliente(clients C, int pos, int mode){
     //CAMBIO DE INFORMACION//
     int opt = -1;
 
@@ -127,20 +129,20 @@ clients gestionar_cliente(clients C, int pos){
                 opt = -1;
                 break;
             case 2:
-                C = cliente_dir(C, pos, 1);
+                C = cliente_dir(C, pos, mode);
                 opt = -1;
                 break;
             case 3:
-                C = cliente_email(C, pos, 1);
+                C = cliente_email(C, pos, mode);
                 opt = -1;
                 break;
 
             case 4:
-                C = cliente_contr(C, pos, 1);
+                C = cliente_contr(C, pos, mode);
                 opt = -1;
                 break;
             case 5:
-                C = cliente_cart(C, pos, 1);
+                C = cliente_cart(C, pos, mode);
                 opt = -1;
                 break;
             case 0:         //CASO DE SALIDA
@@ -188,8 +190,6 @@ clients cliente_contr(clients C, int pos, int mod){
             if(strcmp(cad_contr, "exit") == 0)  //Salir del bucle
                 return C;
         }
-
-
     }
     printf("Escriba la contrasena a tener: ");
 
@@ -280,7 +280,7 @@ void menu_cliente(clients C,int pos){
         clear();
         titulo();
         
-        printf("|Usuario: %s\n", C.clients[pos].Nom_cliente);
+        printf("Usuario: %s\n", C.clients[pos].Nom_cliente);
         printf("1. Perfil\n");
         printf("2. Productos\n");
         printf("3. Descuentos\n");
@@ -292,7 +292,7 @@ void menu_cliente(clients C,int pos){
 
         switch (opt){
         case 1:
-            C = gestionar_cliente(C ,pos);
+            C = gestionar_cliente(C ,pos, 1);
             opt = -1;
             break;
         case 2:
@@ -320,8 +320,7 @@ void inicsesion_cliente(clients C, int pos){
     char psw_verif[MAX_PSW];            //Variable para almacenar la contrasena inrtroducida por teclado
     int exitc = 0;                      //Variable para indicar si el usuario quiere salir del bucle
 
-    clear();
-    printf("Ingrese la contrasena del correo: %s\n", C.clients[pos].email);
+    printf("Ingrese la contrasena del correo [ %s ]: ", C.clients[pos].email);
     fgets(psw_verif, MAX_PSW, stdin);
     terminador_cad(psw_verif);
     
@@ -347,17 +346,18 @@ void inicsesion_admin(admin_prov_vect adminprov, int pos){
     char psw_verif[MAX_PSW];            //Variable para almacenar la contrasena inrtroducida por teclado
     int exitc = 0;                      //Variable para indicar si el usuario quiere salir del bucle
 
-    clear();
-    printf("Ingrese la contrasena del correo: %s\n", adminprov.usuarios[pos].email);
+    printf("Ingrese la contrasena del correo [ %s ]: ", adminprov.usuarios[pos].email);
     fgets(psw_verif, MAX_PSW, stdin);
+    fflush(stdin);
     terminador_cad(psw_verif);
     
 
     while( strcmp(psw_verif, adminprov.usuarios[pos].Contrasena) != 0 && exitc != 1){
         printf("Vuelva a intentarlo, si quiere salir escriba [exit]: ");
-        fflush(stdin);
+        
         fgets(psw_verif, MAX_PSW, stdin);
         terminador_cad(psw_verif);
+        fflush(stdin);
 
         if(strcmp(psw_verif, "exit") == 0)
             exitc = 1;
@@ -393,10 +393,11 @@ void menuadmin(admin_prov_vect admin, int pos){
 
         switch (opt){
         case 1:
-            admin = gestionar_admin(admin, pos);
+            admin = gestionar_admin(admin, pos, 1);
             opt = -1;
             break;
         case 2:
+            menuadmin_cliente();
             opt = -1;
             break;
         case 3:
@@ -417,7 +418,7 @@ void menuadmin(admin_prov_vect admin, int pos){
     }
 }
  
-admin_prov_vect gestionar_admin (admin_prov_vect admin, int pos){
+admin_prov_vect gestionar_admin (admin_prov_vect admin, int pos, int mod){
     //CAMBIO DE INFORMACION//
     int opt = -1;
 
@@ -431,10 +432,11 @@ admin_prov_vect gestionar_admin (admin_prov_vect admin, int pos){
         scanf("%d", &opt);
         switch (opt){
             case 1:
-                admin = admin_email(admin, pos, 1);
+                admin = admin_email(admin, pos, mod);
                 opt = -1;
                 break;
             case 2:
+                admin = admin_psw(admin, pos, mod);
                 opt = -1;
                 break;
             case 0:         //CASO DE SALIDA
@@ -462,4 +464,151 @@ admin_prov_vect admin_email(admin_prov_vect admin, int pos, int mod){
 
     strcpy(admin.usuarios[pos].email, cad_email);
     return admin;
+}
+
+admin_prov_vect admin_psw(admin_prov_vect admin, int pos, int mod){
+    char cad_contr[21], verif_contr[21];
+    if(mod == 1){                               //SE DESEA CAMBIAR UNA CONTRASENA EXISTENTE
+        printf("%s\n", admin.usuarios[pos].Contrasena);
+        printf("Para poder cambiar la contrasena es necesario verificar la anterior: ");
+
+        fflush(stdin);
+        fgets(cad_contr, 21, stdin);
+        terminador_cad(cad_contr);
+        
+        while(strcmp(cad_contr, admin.usuarios[pos].Contrasena) != 0){
+            printf("Por favor vuelva a intentarlo. Si desea salir escriba [exit]: ");
+            fflush(stdin);
+            fgets(cad_contr, 21, stdin);
+            terminador_cad(cad_contr);
+
+            if(strcmp(cad_contr, "exit") == 0)  //Salir del bucle
+                return admin;
+        }
+    }
+    printf("Escriba la contrasena a tener: ");
+
+    fflush(stdin);
+    fgets(cad_contr, 21, stdin);
+    terminador_cad(cad_contr);
+
+    while (strcmp(cad_contr, verif_contr) != 0){
+        printf("Vuelva a introducir la nueva contrasena: ");
+
+        fflush(stdin);
+        fgets(verif_contr, 21, stdin);
+        terminador_cad(verif_contr);
+    }
+    strcpy(admin.usuarios[pos].Contrasena, cad_contr);
+
+    return admin;
+}
+
+void menuadmin_cliente(){
+    clients C = cargar_clientes();
+    int opt = -1;
+    char resp = '0';
+    int pos;                            //Posicion del cliente al que se le realizan los cambios.
+
+    char mensaje[] = "Seguro que quiere agregar un cliente [s/n]: ";
+
+    while (opt < 0 || opt > 5){
+        //MOSTRAR INFORMACION//
+        clear();
+
+        printf("\n### QUE DESEA REALIZAR: ###\n");
+        printf(" 1. Mostrar listado clientes.\n 2. Dar de alta cliente\n 3. Dar de baja cliente.\n 4. Modificar cliente\n 0. Salir\n############################\n");
+        scanf("%d", &opt);
+        fflush(stdin);
+        switch (opt){
+            case 1:
+                mostrar_clientes(C);
+                opt = -1;   
+                break;
+            case 2:
+                resp = confirmacion(mensaje);
+                if(resp == 'S', resp == 's')
+                    C = agregar_cliente(C);
+                opt = -1;
+                break;
+            case 3:
+                C = eliminar_cliente(C, 1);
+                opt = -1;
+                break;
+            case 4:
+                pos = busqueda_cliente(C);
+                C = gestionar_cliente(C, pos, 0);
+                opt = -1;
+                break;
+            
+            case 0:         //CASO DE SALIDA
+                break;
+            default:
+                printf("Seleccione una opcion valida: ");
+                break;
+        }
+        guardar_clientes(C);
+    }
+}
+
+int busqueda_cliente(clients C){
+    int pos = -1;
+    while (pos == -1){    //Solo va a salir del bucle cuando se selecciona la posicion de un cliente valido
+        
+
+
+    }
+    return pos;
+}
+void mostrar_clientes(clients C){
+    int i;
+    clear();
+    printf("LISTADO DE CLIENTES\n---------------------------------------------\n");
+    printf("Nombre | Localidad  | Email\n---------------------------------------------\n");
+    for(i=0;i<C.n_clients;i++){
+        printf("%s - %s - %s\n",C.clients[i].Nom_cliente, C.clients[i].Localidad, C.clients[i].email);
+    }
+
+    printf("---------------------------------------\nPresione enter para salir");
+    getchar();
+}
+
+
+clients eliminar_cliente(clients C, int pos){
+    int i;
+    char resp;      //Variable para responder preguntas si/no.
+    clear();
+    printf("Estas seguro de eliminar al usuario [ %s ]? [s/n]: ", C.clients[pos].Nom_cliente);
+    
+    scanf("%c", &resp);
+    fflush(stdin);
+    while (resp != 'S' && resp != 's' && resp != 'N' && resp != 'n'){
+        printf("Introduzca una respuesta valida: ");
+        scanf("%c", &resp);
+        fflush(stdin);
+    }
+
+    if (resp == 'S' || resp == 's'){
+        for (i = pos; i < C.n_clients - 1; i++) {	//Desplazar la posicion de los clientes
+			C.clients[i] = C.clients[i + 1];
+			C.clients[i].Id_cliente = i + 1;				//Reasignar id clientes
+		}
+
+        C.n_clients --;
+
+        C.clients = realloc(C.clients, C.n_clients*sizeof(client));
+        if (C.clients == NULL) {
+			printf ("\nNo se pudo reasignar estructuras clientes.");
+        	getchar ();
+        	exit (EXIT_FAILURE);
+		}
+
+        guardar_clientes(C);                        //Volcado de datos a fichero
+
+        printf("Se ha eliminado al usuario [ %s ] correctamente", C.clients[pos].Nom_cliente);
+    }else{
+        printf("Se cancelo la eliminacion del cliente.");
+    }
+    Sleep(2000);
+    return C;
 }

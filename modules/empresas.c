@@ -353,7 +353,7 @@ void cambiar_contrasena_t(transport_vect transports, int pos){
 			else	
 				printf("\nContrasenas distintas, inténtelo de nuevo.");			// Solicitamos la nueva contraseña al usuario mientras no verifique que se repitan.
 		}while(valido == 0);
-		strcpy_s(transports.transportistas[pos].Contrasena,sizeof(nueva_contra), nueva_contra);
+		strcpy(transports.transportistas[pos].Contrasena, nueva_contra);
 		printf("\nContraseña cambiada satisfactoriamente.");
 		Sleep(3000);															// Esperamos tres segundos antes de limpiar la pantalla para poder leer el mensaje anterior.
 	}else{
@@ -376,7 +376,7 @@ admin_prov_vect cargar_adminprov(){
 	
 	admin_prov_vect adminprov_sistema;
 	FILE *f_AdminProv;																							// Puntero al fichero a leer.
-	char ruta[] = ".\\data\\AdminProv.txt";																	// Ruta del fichero a leer.
+	char ruta[] = "..\\data\\AdminProv.txt";																	// Ruta del fichero a leer.
 	char linea[LONG_MAX_ADMINPROV];																				// Línea actual del fichero. Longitud máxima de una línea 86 caracteres.
 	char tipo_usuario[14];																						// Cadena auxiliar a convertir.
 	int i = 0, m; 
@@ -415,7 +415,7 @@ admin_prov_vect cargar_adminprov(){
 	}			
 		                                    
 	fclose(f_AdminProv);  
-	Sleep(2000);
+	Sleep(300);
 	return adminprov_sistema;                             	                            
 }
 
@@ -427,7 +427,7 @@ transport_vect cargar_transportistas(){
 	
 	transport_vect transport_sistema;
 	FILE *Transportistas;																						// Puntero al fichero a leer.
-	char ruta[] = "./data/Transportistas.txt";																	// Ruta del fichero a leer.
+	char ruta[] = "../data/Transportistas.txt";																	// Ruta del fichero a leer.
 	char linea[LONG_MAX_TRANSPORT];																				// Línea actual del fichero. Longitud máxima de una línea 113 caracteres.
 	int i = 0, m;
 
@@ -464,8 +464,8 @@ transport_vect cargar_transportistas(){
 	}	
 		                                    
 	fclose(Transportistas);
-	Sleep(2000); 
-	return transport_sistema;  
+	Sleep(300); 
+	return transport_sistema;
 }
 
 
@@ -480,11 +480,12 @@ transport_vect cargar_transportistas(){
 void guardar_adminprov(admin_prov_vect usuarios){
 	
 	FILE *AdminProv;																							// Puntero al fichero a leer.
-	char ruta[] = "..\\ESIZON-main\\data\\AdminProv.txt";														// Ruta del fichero a leer.
+	char ruta[] = "..\\data\\AdminProv.txt";														// Ruta del fichero a leer.
 	char linea[LONG_MAX_ADMINPROV];																				// Línea actual del fichero. Longitud máxima de una línea 86 caracteres.
 	char aux[14];
+	AdminProv = fopen(ruta, "w");
 	
-	if((AdminProv = fopen(ruta, "a+")) == NULL){
+	if(AdminProv == NULL){
 		printf("\nError al abrir el fichero AdminProv.txt en guardar_adminprov. Creando uno nuevo...\n");
 		AdminProv = fopen(ruta, "w");
 		Sleep(2000);

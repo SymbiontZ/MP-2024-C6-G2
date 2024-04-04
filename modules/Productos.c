@@ -1,7 +1,8 @@
 #include "./productos.h"
+#include "complementos.h"
 
 produ_vect cargar_productos () {
-	char filename[] = "Productos.txt";   
+	char filename[] = "Productos.txt";   		//Ruta del fichero
     int num_prod = 0;                           //Numero de productos registrados
     int i = 0;                          		
     char cad_linea[250];                        //Caracteres maximos que puede ocupar una linea en fichero
@@ -57,10 +58,6 @@ produ_vect cargar_productos () {
     fclose (f_prod);
     
     return p;
-}
-
-void clear () {
-	system ("cls");
 }
 
 void cambio (char cad[]) {
