@@ -14,7 +14,7 @@ typedef struct {
     char Id_cod[11],                //Identificador del codigo promocional
          Descrip[51],               //Descripcion del codigo promocional
          Tipo[8],                  //"codpro" (codigo promocional) o "cheqreg" (cheque regalo)
-         Estado[9],                 //Estado del cheque ("acctivo" o "inactivo")
+         Estado[9],                 //Estado del cheque ("activo" o "inactivo")
          Aplicable[7];              //"todos" (si es aplicable a todos los productos) o "esizon" (si solo esaplicable a los gestionados por ESIZON)
 
     int  Importe;                   //Importe del descuento en euros
