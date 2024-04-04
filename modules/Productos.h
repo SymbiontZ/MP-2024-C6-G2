@@ -22,13 +22,12 @@ typedef struct {
 }produ_vect;
 
 produ_vect cargar_productos ();
-void clear ();
-void cambio (char []);
 void guardar_productos (produ_vect);
 produ_vect agregar_productos (produ_vect);
 produ_vect modificar_productos (produ_vect, int);
 produ_vect eliminar_productos (produ_vect, int);
 produ_vect buscar_productos (produ_vect);
+produ_vect listar_productos (produ_vect);
 void menu_prod (produ_vect);
 
 #endif
