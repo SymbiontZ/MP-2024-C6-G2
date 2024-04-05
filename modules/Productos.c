@@ -2,7 +2,7 @@
 #include "complementos.h"
 
 produ_vect cargar_productos () {
-	char filename[] = "Productos.txt";   
+	char filename[] = "../data/Productos.txt";   
     int num_prod = 0;                           //Numero de productos registrados
     int i = 0;                          		
     char cad_linea[250];                        //Caracteres maximos que puede ocupar una linea en fichero
@@ -60,29 +60,12 @@ produ_vect cargar_productos () {
     return p;
 }
 
-void clear () {
-	system ("cls");
-}
-
-void terminador_cad (char cad[]) {
-	int i;
-	int len = strlen(cad);
-	
-	for (i = 0; i < len; i++) {
-		if (cad[i] == '\n') {
-			cad[i] = '\0';
-			len = i;	//ACABA BUCLE SI CAMBIA EL SALTO DE LINEA POR TERMINADOR
-		}
-	}
-}
-
 void guardar_productos (produ_vect p) {
 	int i;
 	
 	FILE *f_prod;
-	char filename[] = "Productos.txt";
-	f_prod = fopen (filename, "a+");
-	
+	char filename[] = "../data/Productos.txt";
+	f_prod = fopen (filename, "w");
 	if (f_prod == NULL) {
 		perror ("\nHa ocurrido un error, intentelo de nuevo");
 		getchar ();
@@ -238,13 +221,19 @@ produ_vect modificar_productos (produ_vect p, int pos) {
 
 produ_vect eliminar_productos (produ_vect p, int pos) {
 	int i, resp1, resp2;
-	char respuesta;
+	char resp;
 	
 	printf ("\nEstas seguro que deseas eliminar el producto (S/N)?");
 	fflush (stdin);
-	scanf ("%c", &respuesta);
+	scanf ( " %c", &resp);
+	fflush(stdin);
+	while (resp != 'S' && resp != 's' && resp != 'N' && resp != 'n'){
+        printf("Introduzca una respuesta valida: ");
+        scanf(" %c", &resp);
+        fflush(stdin);
+    }
 	
-	if (respuesta == 'S' || respuesta == 's') {
+	if (resp == 'S' || resp == 's') {
 		for (i = pos; i < p.num_prod - 1; i++) {	//Desplazar elementos hacia atras
 			p.produ[i] = p.produ[i + 1];
 			p.produ[i].id_prod = i + 1;				//Reasignar las id de los productos
@@ -255,7 +244,7 @@ produ_vect eliminar_productos (produ_vect p, int pos) {
 		p.produ = realloc(p.produ, p.num_prod*sizeof(productos));	//Reasignar el tamaño del vector
 	
 		if (p.produ == NULL) {
-			printf ("\nNo se pudo asignar la estructura de productos");
+			printf ("\nNo se pudo reasignar la estructura de productos");
         	getchar ();
         	exit (EXIT_FAILURE);
 		}
@@ -264,12 +253,10 @@ produ_vect eliminar_productos (produ_vect p, int pos) {
 	
 		printf ("\n\nProducto eliminado correctamente\n");
 	}
-	
-	if (respuesta == 'N' || respuesta == 'n') {
+	else{
 		printf ("\n\nVolviendo al menu anterior...\n");
-		getchar ();
 	}
-	
+	getchar();
 	return p;
 }
 
@@ -731,8 +718,8 @@ produ_vect listar_productos (produ_vect p) {
 	
 	printf ("\n---> LISTA DE PRODUCTOS: <---\n\n");
 	
-	for (i = 0; i < p.num_prod; i++) {
-		printf ("(%i) %07d-%s-%s-%04d-%04d-%d-%d-%d\n", i + 1, p.produ[i].id_prod, p.produ[i].nombre, p.produ[i].descrip, p.produ[i].id_categ, p.produ[i].id_gestor, p.produ[i].stock, p.produ[i].entrega, p.produ[i].importe);
+	for (i = 1; i < p.num_prod; i++) {
+		printf ("(%i) %07d-%s-%s-%04d-%04d-%d-%d-%d\n", i, p.produ[i].id_prod, p.produ[i].nombre, p.produ[i].descrip, p.produ[i].id_categ, p.produ[i].id_gestor, p.produ[i].stock, p.produ[i].entrega, p.produ[i].importe);
 	}
 	
 	return p;
@@ -750,7 +737,6 @@ void menu_prod (produ_vect p) {
 			printf ("(3) Listar los productos existentes\n");
 			printf ("(0) Salir del menu\n\n");
 			scanf ("%d", &op);
-			getchar ();
 		}while (op < 0 || op > 3);
 		
 		switch (op) {

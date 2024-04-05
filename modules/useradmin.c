@@ -526,17 +526,20 @@ void menuadmin_cliente(){
                 break;
             case 2:
                 resp = confirmacion(mensaje);
-                if(resp == 'S', resp == 's')
+                if(resp == 'S'|| resp == 's')
                     C = agregar_cliente(C);
                 opt = -1;
                 break;
             case 3:
-                C = eliminar_cliente(C, 1);
+                pos = busqueda_cliente(C);
+                if (pos != -1)
+                    C = eliminar_cliente(C, pos);
                 opt = -1;
                 break;
             case 4:
                 pos = busqueda_cliente(C);
-                C = gestionar_cliente(C, pos, 0);
+                if (pos != -1)
+                    C = gestionar_cliente(C, pos, 0);
                 opt = -1;
                 break;
             
@@ -551,14 +554,62 @@ void menuadmin_cliente(){
 }
 
 int busqueda_cliente(clients C){
-    int pos = -1;
-    while (pos == -1){    //Solo va a salir del bucle cuando se selecciona la posicion de un cliente valido
+    int pos = -2, opt = -1;             //Elijo -2 como pos predeter. ya que -1 es para cancelar la busqueda
+    while (pos == -2){    //Solo va a salir del bucle cuando se selecciona la posicion de un cliente valido
+        clear();
+        printf("Para poder realizar esta accion tiene que seleccionar un cliente.\n");
+        printf("Como quieres buscar\n");
+        printf("1. Por nombre.\n");
+        printf("2. Por localidad.\n");
+        printf("3. Por email.\n");
+        printf("0. Cancelar.\n");
         
-
+        while(opt > 3 || opt < 0){ //Selecciona un filtro valido
+            scanf(" %d", &opt);
+            switch (opt)
+            {
+            case 1:
+            pos = busqueda_clientenom(C, pos);
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            case 0:
+                pos = -1;
+                printf("Se ha cancelado la busqueda.\n");
+                Sleep(2000);
+            default:
+                printf("Introduce una opcion valida: ");
+                break;
+            }
+        }
 
     }
     return pos;
 }
+
+int busqueda_clientenom(clients C, int pos){
+    int len = 0, i;
+    char cad_nom[MAX_NOM];
+
+    fgets(cad_nom, MAX_NOM, stdin);
+    fflush(stdin);
+    terminador_cad(cad_nom);
+
+    len = strlen(cad_nom);
+    
+
+    for(i=0; i<C.n_clients; i++){
+       if(strncmp(cad_nom, C.clients[i].Nom_cliente, len))
+        printf("%s - %s - %s", C.clients[i].Nom_cliente, C.clients[i].email, C.clients[i].Dir_cliente);
+    }
+    getchar();
+    pos = 2;
+    return pos;
+}
+
+
 void mostrar_clientes(clients C){
     int i;
     clear();
@@ -571,7 +622,6 @@ void mostrar_clientes(clients C){
     printf("---------------------------------------\nPresione enter para salir");
     getchar();
 }
-
 
 clients eliminar_cliente(clients C, int pos){
     int i;
