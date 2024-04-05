@@ -1,8 +1,8 @@
-#include "./productos.h"
+#include "Productos.h"
 #include "complementos.h"
 
 produ_vect cargar_productos () {
-	char filename[] = "Productos.txt";   		//Ruta del fichero
+	char filename[] = "Productos.txt";   
     int num_prod = 0;                           //Numero de productos registrados
     int i = 0;                          		
     char cad_linea[250];                        //Caracteres maximos que puede ocupar una linea en fichero
@@ -18,7 +18,7 @@ produ_vect cargar_productos () {
 		getchar ();
 	}
 	
-	while (fgets (cad_linea, sizeof(cad_linea), f_prod)){		//Contador de clientes en el programa a partir de fichero 
+	while (fgets (cad_linea, sizeof(cad_linea), f_prod)){		//Contador de productos en el programa a partir de fichero 
         num_prod++;
     }
 	
@@ -47,8 +47,8 @@ produ_vect cargar_productos () {
             &p.produ[i].entrega,
             &p.produ[i].importe);
 
-        if (campo_productos != 8){                               //Excepcion si fallo en dato de cliente
-            printf ("Se produjo un error con datos de un producto. ID_producto: %d\n", i+1);
+        if (campo_productos != 8){                               //Excepcion si fallo en dato de producto
+            printf ("Se produjo un error con los datos de un producto. ID_producto: %d\n", i + 1);
             getchar();
             exit(EXIT_FAILURE);
         }
@@ -60,7 +60,11 @@ produ_vect cargar_productos () {
     return p;
 }
 
-void cambio (char cad[]) {
+void clear () {
+	system ("cls");
+}
+
+void terminador_cad (char cad[]) {
 	int i;
 	int len = strlen(cad);
 	
@@ -86,7 +90,7 @@ void guardar_productos (produ_vect p) {
 	}
 	
 	//PROCESO DE GUARDADO DE DATOS DE CADA PRODUCTO EN FICHERO//
-	for (i = 0; i < p.num_prod; i++){                          
+	for (i = 0; i < p.num_prod; i++) {                          
         fprintf (f_prod, "%07d-%s-%s-%04d-%04d-%d-%d-%d\n",
                 p.produ[i].id_prod,
                 p.produ[i].nombre,
@@ -119,12 +123,12 @@ produ_vect agregar_productos (produ_vect p) {
 	printf ("\nPrimero, escribe el nombre del producto: ");
 	fflush (stdin);
 	fgets (p.produ[nueva_pos].nombre, 16, stdin);
-	cambio (p.produ[nueva_pos].nombre);
+	terminador_cad (p.produ[nueva_pos].nombre);
 	
 	printf ("\nSengundo, escribe la descripcion del producto: ");
 	fflush (stdin);
 	fgets (p.produ[nueva_pos].descrip, 51, stdin);
-	cambio (p.produ[nueva_pos].descrip);
+	terminador_cad (p.produ[nueva_pos].descrip);
 	
 	printf ("\nTercero, escribe el id de la categoria a la que pertenece: ");
 	scanf ("%d", &p.produ[nueva_pos].id_categ);
@@ -176,7 +180,7 @@ produ_vect modificar_productos (produ_vect p, int pos) {
 				printf ("Ingrese el nuevo nombre (maximo 15 caracteres): ");
 				fflush (stdin);
 				fgets (p.produ[pos].nombre, 16, stdin);
-				cambio (p.produ[pos].nombre);
+				terminador_cad (p.produ[pos].nombre);
 			break;
 			
 			case 2:
@@ -184,7 +188,7 @@ produ_vect modificar_productos (produ_vect p, int pos) {
 				printf ("Ingrese la nueva descripcion (maximo 50 caracteres): ");
 				fflush (stdin);
 				fgets (p.produ[pos].descrip, 51, stdin);
-				cambio (p.produ[pos].descrip);
+				terminador_cad (p.produ[pos].descrip);
 			break;
 			
 			case 3:
@@ -325,7 +329,7 @@ produ_vect buscar_productos (produ_vect p) {
 				printf ("\nEscriba el nombre del producto que desee buscar (maximo 15 caracteres): ");
 				fflush (stdin);
 				fgets (saux, 16, stdin);
-				cambio (saux);
+				terminador_cad (saux);
 				
 				for (i = 0; i < p.num_prod; i++) {
 					if (strcmp(saux, p.produ[i].nombre) == 0) {
@@ -382,7 +386,7 @@ produ_vect buscar_productos (produ_vect p) {
 				printf ("\nEscriba la descripcion del producto que desee buscar (maximo 50 caracteres): ");
 				fflush (stdin);
 				fgets (saux, 51, stdin);
-				cambio (saux);
+				terminador_cad (saux);
 				
 				for (i = 0; i < p.num_prod; i++) {
 					if (strcmp(saux, p.produ[i].descrip) == 0) {
@@ -718,6 +722,20 @@ produ_vect buscar_productos (produ_vect p) {
 			break;
 		}
 	}while (op1 < 0 || op1 > 8);
+	
+	return p;
+}
+
+produ_vect listar_productos (produ_vect p) {
+	int i;
+	
+	printf ("\n---> LISTA DE PRODUCTOS: <---\n\n");
+	
+	for (i = 0; i < p.num_prod; i++) {
+		printf ("(%i) %07d-%s-%s-%04d-%04d-%d-%d-%d\n", i + 1, p.produ[i].id_prod, p.produ[i].nombre, p.produ[i].descrip, p.produ[i].id_categ, p.produ[i].id_gestor, p.produ[i].stock, p.produ[i].entrega, p.produ[i].importe);
+	}
+	
+	return p;
 }
 
 void menu_prod (produ_vect p) {
@@ -729,17 +747,23 @@ void menu_prod (produ_vect p) {
 			printf ("Que desea hacer?\n\n");
 			printf ("(1) Rellenar los datos de un nuevo producto\n");
 			printf ("(2) Buscar un producto (modificar/eliminar)\n");
+			printf ("(3) Listar los productos existentes\n");
 			printf ("(0) Salir del menu\n\n");
 			scanf ("%d", &op);
-		}while (op < 0 || op > 2);
+			getchar ();
+		}while (op < 0 || op > 3);
 		
 		switch (op) {
 			case 1:
-				agregar_productos (p);
+				p = agregar_productos (p);
 			break;
 			
 			case 2:
-				buscar_productos (p);
+				p = buscar_productos (p);
+			break;
+			
+			case 3:
+				listar_productos (p);
 			break;
 			
 			case 0:		//Caso de salida
