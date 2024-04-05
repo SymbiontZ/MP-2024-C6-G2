@@ -90,5 +90,6 @@ CAMBIOS PENDIENTES
 > no cambiar contraseña por la misma
 > cambiar interfaces
 > agregar opciones superadmin
-> Verificacion eliminar cliente
+> mejorar busqueda_cliente (por localidad, nombre usar strcmpn)
+
 */

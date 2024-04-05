@@ -390,7 +390,7 @@ admin_prov_vect cargar_adminprov(){
 	//COMPROBACION FICHERO VACIO//
 	char verif = fgetc(f_AdminProv);
 	if (verif == EOF){
-		f_AdminProv = fopen(ruta, "a+");
+		f_AdminProv = fopen(ruta, "w");
 		fprintf(f_AdminProv,"0000-ESIZON-adminadmin@esizon.com-admin000-administrador\n");
 		fclose(f_AdminProv);
 
@@ -408,7 +408,7 @@ admin_prov_vect cargar_adminprov(){
 			i++;		
 		}
 		else{
-			printf("\nError leyendo datos del fichero AdminProv.txt en cargar_adminprov. Línea: %d", i + 1);
+			printf("\nError leyendo datos del fichero AdminProv.txt en cargar_adminprov. Linea: %d", i + 1);
 			getchar();	
 			exit(33);				
 		}
@@ -485,14 +485,12 @@ void guardar_adminprov(admin_prov_vect usuarios){
 	char aux[14];
 	AdminProv = fopen(ruta, "w");
 	
-	if(AdminProv == NULL){
-		printf("\nError al abrir el fichero AdminProv.txt en guardar_adminprov. Creando uno nuevo...\n");
-		AdminProv = fopen(ruta, "w");
-		Sleep(2000);
-	}
-	
 	for(int i = 0; i < usuarios.tam; i++)
-		fprintf(AdminProv, "%d-%20[^-]-%30[^-]-%15[^-]-%13[^\n]\n", usuarios.usuarios[i].Id_empresa, usuarios.usuarios[i].Nombre, usuarios.usuarios[i].email, usuarios.usuarios[i].Contrasena, usuarios.usuarios[i].Perfil_usuario);
+		fprintf(AdminProv, "%04d-%s-%s-%s-%s\n", usuarios.usuarios[i].Id_empresa, usuarios.usuarios[i].Nombre, usuarios.usuarios[i].email, usuarios.usuarios[i].Contrasena, usuarios.usuarios[i].Perfil_usuario);
+
+	fclose(AdminProv);
+	printf("\n**Estructura guardada con %d usuarios\n", usuarios.tam);
+	getchar();
 	
 }
 

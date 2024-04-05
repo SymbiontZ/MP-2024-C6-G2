@@ -33,8 +33,6 @@ clients cargar_clientes(){
         exit(EXIT_FAILURE);
     }
 
-
-
     //BUCLE PARA RELLENAR LA ESTRUCTURA DE CLIENTES//
     while(fgets(cad_linea, sizeof(cad_linea), f_clients) && i < n_clients){
         campo_cliente = sscanf(cad_linea, "%d-%19[^-]-%49[^-]-%19[^-]-%19[^-]-%29[^-]-%14[^-]-%d",
@@ -448,6 +446,7 @@ admin_prov_vect gestionar_admin (admin_prov_vect admin, int pos, int mod){
         guardar_adminprov(admin);
     }
     printf("Salio correctamente. %d\n", opt);
+    Sleep(2000);
     return admin;
 }
 
@@ -580,11 +579,11 @@ clients eliminar_cliente(clients C, int pos){
     clear();
     printf("Estas seguro de eliminar al usuario [ %s ]? [s/n]: ", C.clients[pos].Nom_cliente);
     
-    scanf("%c", &resp);
+    scanf(" %c", &resp);
     fflush(stdin);
     while (resp != 'S' && resp != 's' && resp != 'N' && resp != 'n'){
         printf("Introduzca una respuesta valida: ");
-        scanf("%c", &resp);
+        scanf(" %c", &resp);
         fflush(stdin);
     }
 
