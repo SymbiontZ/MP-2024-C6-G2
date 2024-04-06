@@ -1,7 +1,4 @@
-0000001-Jaime-Plaza San Francisco 1 11100-San Fernando-Cadiz-juanperez@gmail.com-psw1234-1000
-0000002-Lucia Gutierrez-C/Acacias 138 11011-Chiclana-Cadiz-luciagl1205@uca.es-listillo-122
-0000003-Marcos VR-Garaje de la ESI-Puerto Real-Cadiz-marcosvr1@uca.es-vr3-2
-0000004-Adri Garcia-C/ Higuero 12-Algeciras-Cadiz-agb12@esizon.com-agb12-50
-0000005-FabioRR-C/ejemplo 2-Jerez-Cadiz-fabiorrojas56@gmail.com-fabiorr1-1000
-0000006-Albert-Camino Majada de los Chivos-Chiclana-Cadiz-albertogl@bio.es-derivadas-300
-0000007-Adrian Gb-C/ Juan Comba-Jerez-Cadiz-agb123@gmail.com-pollon123-20
+0000000-userdefault-defaultdir-defaultloc-defaultprov-defaultemail-defpsw-0
+0000001-Fabio Rojas-C/ejemplo 1-Jerez-Cadiz-fabiorrojas56@gmail.com-fabiorr1-30
+0000002-Lucia-C/ejemplo 2-Chiclana-Cadiz-luciagl512@gmail.comm-lucygl125-30
+0000003-Adrian Garcia-C/ejemplo 23-Jerez-Cadiz-adriangb156@gmail.com-medaigual-1

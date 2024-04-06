@@ -34,7 +34,7 @@ void inicsesion_email(){
     terminador_cad(cad_email);
 
     //COMPROBAR EN USUARIOS
-    for(i = 0; i < client.n_clients; i++){
+    for(i = 1; i < client.n_clients; i++){
         if(strcmp(cad_email, client.clients[i].email) == 0){
             pos = i;
             verif = 1;
@@ -59,7 +59,7 @@ void inicsesion_email(){
         }
     }
     //COMPROBAR EN TRANSPORTISTAS
-    for(i = 0; i<transport.tam;i++){
+    for(i = 1; i<transport.tam;i++){
         if(strcmp(cad_email, transport.transportistas[i].email) == 0){
             pos = i;
             inicsesion_transport(transport, pos);
