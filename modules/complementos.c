@@ -23,7 +23,7 @@ int mes_sist(){
     return  mes;
 }
 
-int anno_sist(){
+int anio_sist(){
     tiempo_actual = time(NULL);
     fechasys = localtime(&tiempo_actual);
     int anno = fechasys->tm_year+1900; 

@@ -83,7 +83,7 @@ void crear_pedido(int id_cliente, pedidos p){
 
     p.pedidos[pos].f_pedido.dia=dia_sist();
     p.pedidos[pos].f_pedido.mes=mes_sist();
-    p.pedidos[pos].f_pedido.anio=anno_sist();
+    p.pedidos[pos].f_pedido.anio=anio_sist();
 
     printf("Selecciona un lugar de entrega: \n");
     printf("1. DOMICILIO\n");
@@ -395,7 +395,7 @@ void crear_devolucion(devoluciones d, pedidos p, prod_pedidos prod_p){
         }
     }
     
-    d.devoluciones[pos].f_devol.dia=dis_sist(); //fecha en la que se realiza la solicitud de la devolucion, es la fecha del dia que se rellena la devolucion
+    d.devoluciones[pos].f_devol.dia=dia_sist(); //fecha en la que se realiza la solicitud de la devolucion, es la fecha del dia que se rellena la devolucion
     d.devoluciones[pos].f_devol.mes=mes_sist();
     d.devoluciones[pos].f_devol.anio=anio_sist();
     
