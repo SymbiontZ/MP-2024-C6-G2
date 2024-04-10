@@ -1,12 +1,80 @@
 #include "complementos.h"
+#include "Productos.h"
 #include "empresas.h"
+
+
+
+//	FUNCIONES DE INICIO DE SESION
+
+
+
+//Precondición: Recibe una estructura de tipo admin_prov_vect (el vector de usuarios tipo adminprov), y la posición a utilizar en él.
+//Postcondición: El usuario habrá iniciado sesión como proveedor en el sistema, o se habrá cerrado la sesión por fallar la contraseña muchas veces. No devuelve nada.
+void inicsesion_prov(admin_prov_vect provs, int pos){
+	
+	char validar_contra[16];
+	int i = 3;
+	
+	printf("\nIntroduzca su contrasena: ");
+	scanf("%s", validar_contra);
+	terminador_cad(validar_contra);
+	do{
+		if(strcmp(provs.usuarios[pos].Contrasena, validar_contra) == 0){
+			menu_prov(provs, pos);
+			i = -1;
+		}
+		else{
+			printf("\nContrasena incorrecta, intentos restantes: %d\nVuelva a intentarlo: ", i);
+			scanf("%s", validar_contra);
+			terminador_cad(validar_contra);
+			i--;
+		}
+	}while(i > 0);
+	if(i == 0){
+		printf("\nDemasiados intentos fallidos. Cerrando sesion...");
+		exit(0);
+	}
+}
+
+
+
+//Precondición: Recibe una estructura de tipo transport_vect (el vector de usuarios tipo transport), y la posición a utilizar en él.
+//Postcondición: El usuario habrá iniciado sesión como transportista en el sistema, o se habrá cerrado la sesión por fallar la contraseña muchas veces. No devuelve nada.
+void inicsesion_transport(transport_vect transports, int pos){
+	
+	char validar_contra[16];
+	int i = 3;
+	
+	printf("\nIntroduzca su contrasena: ");
+	scanf("%s", validar_contra);
+	terminador_cad(validar_contra);
+	do{
+		if(strcmp(transports.transportistas[pos].Contrasena, validar_contra) == 0){
+			menu_transport(transports, pos);
+			i = -1;
+		}
+		else{
+			printf("\nContrasena incorrecta, intentos restantes: %d\nVuelva a intentarlo: ", i);
+			scanf("%s", validar_contra);
+			terminador_cad(validar_contra);
+			i--;
+		}
+	}while(i > 0);
+	if(i == 0){
+		printf("\nDemasiados intentos fallidos. Cerrando sesion...");
+		exit(0);
+	}
+}
+
+
 
 //	MENÚS DE PROVEEDOR Y TRANSPORTISTA
 
 
-//Precondición: Recibe una estructura de tipo admin_prov (en suma, recibe un proveedor).
+
+//Precondición: Recibe una estructura de tipo admin_prov_vect (el vector de usuarios tipo adminprov), y la posición a utilizar en él.
 //Postcondición: El usuario habrá realizado las tareas necesarias de gestión en la plataforma (ver y modificar perfil, gestionar productos, pedidos). No devuelve nada.
-void menu_prov(admin_prov prov){
+void menu_prov(admin_prov_vect provs, int pos){
 	
 	int op = -1, i = 0;
 	
@@ -17,19 +85,20 @@ void menu_prov(admin_prov prov){
 		printf("	## MENU DE PROVEEDOR ##\n");
 		printf("	#######################\n");
 		
-		printf("\n	   EMPRESA: %s\n", prov.Nombre);
+		printf("\n	   EMPRESA: %s\n", provs.usuarios[pos].Nombre);
 		
-		printf("\nBienvenido, %s - ¿Qué desea hacer hoy?\n\n <1> Ver perfil.\n <2> Ver productos.\n <3> Administrar pedidos\n <0> Volver.\n Elija una opción: ", prov.email);
+		printf("\nBienvenido, %s - ¿Qué desea hacer hoy?\n\n <1> Ver perfil.\n <2> Ver productos.\n <3> Administrar pedidos\n <0> Volver.\n Elija una opción: ", provs.usuarios[pos].email);
 		if(scanf("%i",&op)!=1){
 			fflush(stdin);
-			printf("Error: introduzca una entrada válida.");
+			printf("\nError: introduzca una entrada válida.");
+			Sleep(2000);
 			op=-1;
 		}
 		else{
 			switch(op){
-				case 1: ver_perfil(prov); break;
-				case 2: ver_productos(prov); break;
-				case 3: ver_pedidos(prov); break;
+				case 1: ver_perfil(provs, pos); break;
+				case 2: ver_productos(provs, pos); break;
+				case 3: ver_pedidos(provs, pos); break;
 				case 0: break;
 				default: break;
 			}
@@ -40,9 +109,9 @@ void menu_prov(admin_prov prov){
 
 
 
-//Precondición: Recibe una estructura de tipo transport (en suma, recibe un transportista).
+//Precondición: Recibe una estructura de tipo transport_vect (el vector de usuarios tipo transport), y la posición a utilizar en él.
 //Postcondición: El usuario habrá realizado las tareas necesarias de gestión en la plataforma (ver y modificar perfil, repartos, retornos). No devuelve nada.
-void menu_transport(transport transportista){
+void menu_transport(transport_vect transports, int pos){
 	
 	int op = -1, i = 0;
 	
@@ -53,18 +122,19 @@ void menu_transport(transport transportista){
 		printf("	## MENU DE TRANSPORTISTA ##\n");
 		printf("	###########################\n");
 		
-		printf("\n	   NOMBRE: %s\n", transportista.Nombre);
-		printf("\n	   EMPRESA: %s\n", transportista.Nom_Emp);
+		printf("\n	   NOMBRE: %s\n", transports.transportistas[pos].Nombre);
+		printf("\n	   EMPRESA: %s\n", transports.transportistas[pos].Nom_Emp);
 		
-		printf("\nBienvenido, %s - ¿Qué desea hacer hoy?\n\n <1> Ver perfil.\n <2> Ver repartos asignados.\n <3> Ver retornos.\n <0> Volver.\n Elija una opción: ", transportista.email);
+		printf("\nBienvenido, %s - ¿Qué desea hacer hoy?\n\n <1> Ver perfil.\n <2> Ver repartos asignados.\n <3> Ver retornos.\n <0> Volver.\n Elija una opción: ", transports.transportistas[pos].email);
 		if(scanf("%i",&op)!=1){
 			fflush(stdin);
-			printf("Error: introduzca una entrada válida.");
+			printf("\nError: introduzca una entrada válida.");
+			Sleep(2000);
 			op=-1;
 		}
 		else{
 			switch(op){
-				case 1: ver_perfil_t(transportista); break;
+				case 1: ver_perfil_t(transports, pos); break;
 				case 2: break;
 				case 3: break;
 				case 0: break;
@@ -80,9 +150,9 @@ void menu_transport(transport transportista){
 
 
 
-//Precondición: Recibe una estructura de tipo admin_prov (en suma, recibe un usuario, en este caso proveedor).
+//Precondición: Recibe una estructura de tipo admin_prov_vect (el vector de usuarios tipo adminprov), y la posición a utilizar en él.
 //Postcondición: El usuario habrá realizado las tareas necesarias de gestión de su cuenta en la plataforma. No devuelve nada.
-void ver_perfil(admin_prov usu){
+void ver_perfil(admin_prov_vect provs, int pos){
 
 	int op = -1;
 	
@@ -93,18 +163,19 @@ void ver_perfil(admin_prov usu){
 		printf("	## PERFIL ##\n");
 		printf("	############\n");
 	
-		printf("\nInformación de su perfil:\n ID DEL SISTEMA: %04d\n EMPRESA: %s\n EMAIL: %s\n PRIVILEGIOS: %s\n", usu.Id_empresa, usu.Nombre, usu.email, usu.Perfil_usuario);
+		printf("\nInformación de su perfil:\n ID DEL SISTEMA: %04d\n EMPRESA: %s\n EMAIL: %s\n PRIVILEGIOS: %s\n", provs.usuarios[pos].Id_empresa, provs.usuarios[pos].Nombre, provs.usuarios[pos].email, provs.usuarios[pos].Perfil_usuario);
 		
 		printf("\n¿Qué desea hacer?\n <1> Cambiar email.\n <2> Cambiar contraseña.\n <0> Volver.\n Elija una opción: ");
 		if(scanf("%i",&op)!=1){
 			fflush(stdin);
-			printf("Error: introduzca una entrada válida.");
-			op=-1;
+			printf("\nError: introduzca una entrada válida.");
+			Sleep(2000);
+			op = -1;
 		}
 		else{
 			switch(op){
-				case 1: cambiar_email(&usu); break;
-				case 2: cambiar_contrasena(&usu); break;
+				case 1: cambiar_email(provs, pos); break;
+				case 2: cambiar_contrasena(provs, pos); break;
 				case 0: break;
 				default: break;
 			}
@@ -114,36 +185,44 @@ void ver_perfil(admin_prov usu){
 
 
 
-void ver_productos(admin_prov prov){
+//Precondición: Recibe una estructura de tipo admin_prov_vect (el vector de usuarios tipo adminprov), y la posición a utilizar en él.
+//Postcondición: El usuario habrá realizado las tareas de gestión de productos convenientes.
+void ver_productos(admin_prov_vect provs, int pos){
+	
+	produ_vect prods = cargar_productos();	//Creamos el vector de productos
+	menu_prod(prods);						//Accedemos al menú de gestión de productos
+	guardar_productos(prods);				//Guardamos cambios
 	
 }
 
 
 
-void ver_pedidos(admin_prov prov){
+//Precondición: Recibe una estructura de tipo admin_prov_vect (el vector de usuarios tipo adminprov), y la posición a utilizar en él.
+//Postcondición: El usuario habrá realizado las tareas de gestión de pedidos convenientes.
+void ver_pedidos(admin_prov_vect provs, int pos){
 	
 }
 
 
 
-//Precondición: Recibe un puntero a una estructura de admin_prov.
+//Precondición: Recibe una estructura de tipo admin_prov_vect (el vector de usuarios tipo adminprov), y la posición a utilizar en él.
 //Postcondición: No devuelve nada. Se habrá cambiado el email del usuario guardado en el puntero.
-void cambiar_email(admin_prov *usu){
+void cambiar_email(admin_prov_vect provs, int pos){
 	
 	char nuevo_email[31];
 	printf("\nIngrese el nuevo email: ");
 	fflush(stdin);
 	fgets(nuevo_email, sizeof(nuevo_email), stdin);
-	acortar_cadena(nuevo_email);
-	strcpy(usu->email, nuevo_email);
+	terminador_cad(nuevo_email);
+	strcpy(provs.usuarios[pos].email, nuevo_email);
 	
 }
 
 
 
-//Precondición: Recibe un puntero a una estructura de admin_prov.
+//Precondición: Recibe una estructura de tipo admin_prov_vect (el vector de usuarios tipo adminprov), y la posición a utilizar en él.
 //Postcondición: No devuelve nada. Se habrá cambiado la contraseña del usuario guardada en el puntero, o no.
-void cambiar_contrasena(admin_prov *usu){
+void cambiar_contrasena(admin_prov_vect provs, int pos){
 	
 	char nueva_contra[21], contra_compr[21];									// Cadenas donde guardamos la contraseña nueva, y su repetición.
 	int valido = 0;
@@ -151,28 +230,28 @@ void cambiar_contrasena(admin_prov *usu){
 	printf("\nIntroduzca la contrasena actual: ");
 	fflush(stdin);
 	fgets(contra_compr, sizeof(contra_compr), stdin);
-	acortar_cadena(contra_compr);
-	if(strcmp(contra_compr, usu->Contrasena) == 0){							
+	terminador_cad(contra_compr);
+	if(strcmp(contra_compr, provs.usuarios[pos].Contrasena) == 0){							
 		do{
 			printf("\nIndique la nueva contrasena: ");						
 			fflush(stdin);
 			fgets(nueva_contra, sizeof(nueva_contra), stdin);
-			acortar_cadena(nueva_contra);
+			terminador_cad(nueva_contra);
 			printf("\nIndiquela de nuevo de nuevo: ");
 			fflush(stdin);
 			fgets(contra_compr, sizeof(contra_compr), stdin);	
-			acortar_cadena(contra_compr);
+			terminador_cad(contra_compr);
 			if(strcmp(nueva_contra,contra_compr) == 0)							// Si las contraseñas son iguales (el usuario no se ha equivocado), salimos del bucle.
 				valido = 1;
 			else	
 				printf("Contrasenas distintas, inténtelo de nuevo.");			// Solicitamos la nueva contraseña al usuario mientras no verifique que se repitan.
 		}while(valido == 0);
 		printf("\nContraseña cambiada satisfactoriamente.");
-		strcpy(usu->Contrasena, nueva_contra);
+		strcpy(provs.usuarios[pos].Contrasena, nueva_contra);
 		Sleep(3000);															// Esperamos tres segundos antes de limpiar la pantalla para poder leer el mensaje anterior.
 	}else{
 		printf("\nContrasena errónea. Pruebe otra vez o contacte con un administrador.\n");
-		Sleep(3000);															// Esperamos diez segundos antes de limpiar la pantalla para poder leer el mensaje anterior.		
+		Sleep(3000);															// Esperamos tres segundos antes de limpiar la pantalla para poder leer el mensaje anterior.		
 	}
 }
 
@@ -182,9 +261,9 @@ void cambiar_contrasena(admin_prov *usu){
 
 
 
-//Precondición: Recibe una estructura de tipo transport (en suma, recibe un usuario, en este caso transportista).
+//Precondición: Recibe una estructura de tipo admin_prov_vect (el vector de usuarios tipo adminprov), y la posición a utilizar en él.
 //Postcondición: El usuario habrá realizado las tareas necesarias de gestión de su cuenta en la plataforma. No devuelve nada.
-void ver_perfil_t(transport usu){
+void ver_perfil_t(transport_vect transports, int pos){
 
 	int op = -1;
 		
@@ -195,18 +274,20 @@ void ver_perfil_t(transport usu){
 		printf("	## PERFIL ##\n");
 		printf("	############\n");
 	
-		printf("\nInformación de su perfil:\n ID DEL SISTEMA: %04d\n NOMBRE: %s\n EMAIL: %s\n EMPRESA: %s\n CIUDAD ASIGNADA: %s\n", usu.Id_transp, usu.Nombre, usu.email, usu.Nom_Emp, usu.Ciudad);
+		printf("\nInformación de su perfil:\n ID DEL SISTEMA: %04d\n NOMBRE: %s\n EMAIL: %s\n EMPRESA: %s\n CIUDAD ASIGNADA: %s\n", transports.transportistas[pos].Id_transp, transports.transportistas[pos].Nombre, transports.transportistas[pos].email, transports.transportistas[pos].Nom_Emp, transports.transportistas[pos].Ciudad);
 		
-		printf("\n¿Qué desea hacer?\n <1> Cambiar email.\n <2> Cambiar contraseña.\n <0> Volver.\n Elija una opción: ");
+		printf("\n¿Qué desea hacer?\n <1> Cambiar nombre.\n <2> Cambiar email.\n <3> Cambiar contraseña.\n <0> Volver.\n Elija una opción: ");
 		if(scanf("%i",&op)!=1){
 			fflush(stdin);
-			printf("Error: introduzca una entrada válida.");
+			printf("\nError: introduzca una entrada válida.");
+			Sleep(2000);
 			op=-1;
 		}
 		else{
 			switch(op){
-				case 1: cambiar_email_t(&usu); break;
-				case 2: cambiar_contrasena_t(&usu); break;
+				case 1: cambiar_nombre_t(transports, pos); break;
+				case 2: cambiar_email_t(transports, pos); break;
+				case 3: cambiar_contrasena_t(transports, pos); break;
 				case 0: break;
 				default: break;
 			}
@@ -214,21 +295,41 @@ void ver_perfil_t(transport usu){
 	}while(op!=0);
 }
 
-//Precondición: Recibe un puntero a una estructura de transport.
+
+
+//Precondición: Recibe una estructura de tipo admin_prov_vect (el vector de usuarios tipo adminprov), y la posición a utilizar en él.
+//Postcondición: No devuelve nada. Se habrá cambiado el nombre del usuario guardado en el puntero.
+void cambiar_nombre_t(transport_vect transports, int pos){
+	
+	char nuevo_nombre[21];
+	printf("\nIngrese el nombre que debe figurar en el sistema: ");
+	fflush(stdin);
+	fgets(nuevo_nombre, sizeof(nuevo_nombre), stdin);
+	terminador_cad(nuevo_nombre);
+	strcpy(transports.transportistas[pos].Nombre, nuevo_nombre);
+	
+}
+
+
+
+//Precondición: Recibe una estructura de tipo admin_prov_vect (el vector de usuarios tipo adminprov), y la posición a utilizar en él.
 //Postcondición: No devuelve nada. Se habrá cambiado el email del usuario guardado en el puntero.
-void cambiar_email_t(transport *usu){
+void cambiar_email_t(transport_vect transports, int pos){
 	
 	char nuevo_email[31];
 	printf("\nIngrese el nuevo email: ");
 	fflush(stdin);
 	fgets(nuevo_email, sizeof(nuevo_email), stdin);
-	acortar_cadena(nuevo_email);
-	strcpy(usu->email, nuevo_email);
+	terminador_cad(nuevo_email);
+	strcpy(transports.transportistas[pos].email, nuevo_email);
+	
 }
 
-//Precondición: Recibe un puntero a una estructura de transport.
+
+
+//Precondición: Recibe una estructura de tipo admin_prov_vect (el vector de usuarios tipo adminprov), y la posición a utilizar en él.
 //Postcondición: No devuelve nada. Se habrá cambiado la contraseña del usuario guardada en el puntero, o no.
-void cambiar_contrasena_t(transport *usu){
+void cambiar_contrasena_t(transport_vect transports, int pos){
 	
 	char nueva_contra[21], contra_compr[21];									// Cadenas donde guardamos la contraseña nueva, y su repetición.
 	int valido = 0;
@@ -236,28 +337,28 @@ void cambiar_contrasena_t(transport *usu){
 	printf("\nIntroduzca la contrasena actual: ");
 	fflush(stdin);
 	fgets(contra_compr, sizeof(contra_compr), stdin);
-	acortar_cadena(contra_compr);
-	if(strcmp(contra_compr, usu->Contrasena) == 0){							
+	terminador_cad(contra_compr);
+	if(strcmp(contra_compr, transports.transportistas[pos].Contrasena) == 0){							
 		do{
 			printf("\nIndique la nueva contrasena: ");						
 			fflush(stdin);
 			fgets(nueva_contra, sizeof(nueva_contra), stdin);
-			acortar_cadena(nueva_contra);
+			terminador_cad(nueva_contra);
 			printf("\nIndiquela de nuevo de nuevo: ");
 			fflush(stdin);
 			fgets(contra_compr, sizeof(contra_compr), stdin);	
-			acortar_cadena(contra_compr);
+			terminador_cad(contra_compr);
 			if(strcmp(nueva_contra,contra_compr) == 0)							// Si las contraseñas son iguales (el usuario no se ha equivocado), salimos del bucle.
 				valido = 1;
 			else	
-				printf("Contrasenas distintas, inténtelo de nuevo.");			// Solicitamos la nueva contraseña al usuario mientras no verifique que se repitan.
+				printf("\nContrasenas distintas, inténtelo de nuevo.");			// Solicitamos la nueva contraseña al usuario mientras no verifique que se repitan.
 		}while(valido == 0);
-		strcpy_s(usu->Contrasena,sizeof(nueva_contra), nueva_contra);
+		strcpy_s(transports.transportistas[pos].Contrasena,sizeof(nueva_contra), nueva_contra);
 		printf("\nContraseña cambiada satisfactoriamente.");
 		Sleep(3000);															// Esperamos tres segundos antes de limpiar la pantalla para poder leer el mensaje anterior.
 	}else{
 		printf("\nContrasena errónea. Pruebe otra vez o contacte con un administrador.\n");
-		Sleep(3000);															// Esperamos diez segundos antes de limpiar la pantalla para poder leer el mensaje anterior.		
+		Sleep(3000);															// Esperamos tres segundos antes de limpiar la pantalla para poder leer el mensaje anterior.		
 	}
 	
 }
@@ -275,45 +376,46 @@ admin_prov_vect cargar_adminprov(){
 	
 	admin_prov_vect adminprov_sistema;
 	FILE *f_AdminProv;																							// Puntero al fichero a leer.
-	char ruta[] = "..\\data\\AdminProv.txt";														// Ruta del fichero a leer.
+	char ruta[] = ".\\data\\AdminProv.txt";																	// Ruta del fichero a leer.
 	char linea[LONG_MAX_ADMINPROV];																				// Línea actual del fichero. Longitud máxima de una línea 86 caracteres.
 	char tipo_usuario[14];																						// Cadena auxiliar a convertir.
-	int i = 0, m;
+	int i = 0, m; 
 
 	if((f_AdminProv = fopen(ruta, "r+")) == NULL){
-		printf("Error al abrir el fichero AdminProv.txt en cargar_adminprov.\n");
-		exit(33);
-	}
+		printf("\nError al abrir el fichero AdminProv.txt en cargar_adminprov. Creando uno nuevo...\n");
+		f_AdminProv = fopen(ruta, "w");
+		getchar();                     	
+	}	
 
 	//COMPROBACION FICHERO VACIO//
 	char verif = fgetc(f_AdminProv);
 	if (verif == EOF){
-		f_AdminProv = fopen(ruta, "w");
-		printf("Se ha cargado nuevo fichero.\n");
+		f_AdminProv = fopen(ruta, "a+");
 		fprintf(f_AdminProv,"0000-ESIZON-adminadmin@esizon.com-admin000-administrador\n");
 		fclose(f_AdminProv);
 
 	}
 
 	adminprov_sistema.tam = 0;
-	while(fgets(linea, sizeof(linea), f_AdminProv) != NULL)													// Contamos el número de usuarios en el fichero...
+	while(fgets(linea, sizeof(linea), f_AdminProv) != NULL)														// Contamos el número de usuarios en el fichero...
 		adminprov_sistema.tam++;
-	printf("Usuarios almacenados en AdminProv.txt: %d \n", adminprov_sistema.tam);
-	adminprov_sistema.usuarios = (admin_prov*)malloc((adminprov_sistema.tam + 1) * sizeof(admin_prov));		// ... y reservamos memoria para el vector (más uno por si se necesita añadir algún usuario).
-	rewind(f_AdminProv);																							
+	printf("\nCarga completada.\nUsuarios almacenados en AdminProv.txt: %d \n", adminprov_sistema.tam + 1);
+	adminprov_sistema.usuarios = (admin_prov*)malloc((adminprov_sistema.tam + 1) * sizeof(admin_prov));			// ... y reservamos memoria para el vector (más uno por si se necesita añadir algún usuario).
+	rewind(f_AdminProv);																								
 	
 	while((fgets(linea, sizeof(linea), f_AdminProv) != NULL) ){	
 		if((m = sscanf(linea, "%d-%20[^-]-%30[^-]-%15[^-]-%13[^\n]\n", &adminprov_sistema.usuarios[i].Id_empresa, adminprov_sistema.usuarios[i].Nombre, adminprov_sistema.usuarios[i].email, adminprov_sistema.usuarios[i].Contrasena, adminprov_sistema.usuarios[i].Perfil_usuario)) == 5){
 			i++;		
 		}
 		else{
-			printf("Error leyendo datos del fichero AdminProv.txt en cargar_adminprov. Línea: %d", i + 1);	
+			printf("\nError leyendo datos del fichero AdminProv.txt en cargar_adminprov. Línea: %d", i + 1);
+			getchar();	
 			exit(33);				
 		}
 	}			
 		                                    
 	fclose(f_AdminProv);  
-	
+	Sleep(2000);
 	return adminprov_sistema;                             	                            
 }
 
@@ -325,19 +427,28 @@ transport_vect cargar_transportistas(){
 	
 	transport_vect transport_sistema;
 	FILE *Transportistas;																						// Puntero al fichero a leer.
-	char ruta[] = "../data/Transportistas.txt";													// Ruta del fichero a leer.
+	char ruta[] = "./data/Transportistas.txt";																	// Ruta del fichero a leer.
 	char linea[LONG_MAX_TRANSPORT];																				// Línea actual del fichero. Longitud máxima de una línea 113 caracteres.
 	int i = 0, m;
 
 	if((Transportistas = fopen(ruta, "r+")) == NULL){
-		printf("Error al abrir el fichero Transportistas.txt en cargar_transportistas.\n");
+		printf("\nError al abrir el fichero Transportistas.txt en cargar_transportistas. Creando uno nuevo...\n");
+		Transportistas = fopen(ruta, "w");
+		getchar();
+	}
+	
+	//COMPROBACION FICHERO VACIO//
+	char verif = fgetc(Transportistas);
+	if (verif == EOF){
+		printf("\nEl fichero Transportistas.txt esta vacio. Contacte con un administrador.");
+		getchar();
 		exit(33);
 	}
 	else{
 		transport_sistema.tam = 0;
 		while(fgets(linea, sizeof(linea), Transportistas) != NULL)												// Contamos el número de usuarios en el fichero...
 	    	transport_sistema.tam++;
-	    printf("Transportistas almacenados en Transportistas.txt: %d \n", transport_sistema.tam);
+	    printf("\nCarga completada.\nTransportistas almacenados en Transportistas.txt: %d \n", transport_sistema.tam);
 	 	transport_sistema.transportistas = (transport*)malloc((transport_sistema.tam + 1) * sizeof(transport));	// ... y reservamos memoria para el vector (más uno por si se necesita añadir algún usuario).
 	 	rewind(Transportistas);																							
 	    
@@ -345,15 +456,16 @@ transport_vect cargar_transportistas(){
 			if((m = sscanf(linea, "%d-%20[^-]-%30[^-]-%15[^-]-%20[^-]-%20[^\n]\n", &transport_sistema.transportistas[i].Id_transp, transport_sistema.transportistas[i].Nombre, transport_sistema.transportistas[i].email, transport_sistema.transportistas[i].Contrasena, transport_sistema.transportistas[i].Nom_Emp, transport_sistema.transportistas[i].Ciudad)) == 6)
 				i++;		
 			else{
-				printf("Error leyendo datos del fichero Transportistas.txt en cargar_transportistas. Línea: %d\n", i + 1);	
+				printf("\nError leyendo datos del fichero Transportistas.txt en cargar_transportistas. Línea: %d\n", i + 1);
+				getchar();	
 				exit(33);				
 			}
 		}			
-	}
+	}	
 		                                    
-	fclose(Transportistas); 
+	fclose(Transportistas);
+	Sleep(2000); 
 	return transport_sistema;  
-	
 }
 
 
@@ -373,13 +485,14 @@ void guardar_adminprov(admin_prov_vect usuarios){
 	char aux[14];
 	
 	if((AdminProv = fopen(ruta, "a+")) == NULL){
-		printf("Error al abrir el fichero AdminProv.txt en cargar_adminprov.\n");
-		exit(33);
+		printf("\nError al abrir el fichero AdminProv.txt en guardar_adminprov. Creando uno nuevo...\n");
+		AdminProv = fopen(ruta, "w");
+		Sleep(2000);
 	}
-	else{
-			for(int i = 0; i < usuarios.tam; i++)
-				fprintf(AdminProv, "%d-%20[^-]-%30[^-]-%15[^-]-%13[^\n]\n", usuarios.usuarios[i].Id_empresa, usuarios.usuarios[i].Nombre, usuarios.usuarios[i].email, usuarios.usuarios[i].Contrasena, usuarios.usuarios[i].Perfil_usuario);
-		}
+	
+	for(int i = 0; i < usuarios.tam; i++)
+		fprintf(AdminProv, "%d-%20[^-]-%30[^-]-%15[^-]-%13[^\n]\n", usuarios.usuarios[i].Id_empresa, usuarios.usuarios[i].Nombre, usuarios.usuarios[i].email, usuarios.usuarios[i].Contrasena, usuarios.usuarios[i].Perfil_usuario);
+	
 }
 
 
@@ -394,13 +507,13 @@ void guardar_transportista(transport_vect transportistas){
 	char linea[LONG_MAX_TRANSPORT];																				// Línea actual del fichero. Longitud máxima de una línea 113 caracteres.
 
 	if((Transportistas = fopen(ruta, "a+")) == NULL){
-		printf("Error al abrir el fichero AdminProv.txt en cargar_adminprov.\n");
-		exit(33);
+		printf("\nError al abrir el fichero Transportistas.txt en guardar_transportista. Creando uno nuevo...\n");
+		Transportistas = fopen(ruta, "w");
+		Sleep(2000);
 	}
-	else{
-		for(int i = 0; i < transportistas.tam; i++)
-			fprintf(Transportistas, "%d-%20[^-]-%30[^-]-%15[^-]-%20[^-]-%20s\n", transportistas.transportistas[i].Id_transp, transportistas.transportistas[i].Nombre, transportistas.transportistas[i].email, transportistas.transportistas[i].Contrasena, transportistas.transportistas[i].Nom_Emp, transportistas.transportistas[i].Ciudad);
-	}
+	
+	for(int i = 0; i < transportistas.tam; i++)
+		fprintf(Transportistas, "%d-%20[^-]-%30[^-]-%15[^-]-%20[^-]-%20s\n", transportistas.transportistas[i].Id_transp, transportistas.transportistas[i].Nombre, transportistas.transportistas[i].email, transportistas.transportistas[i].Contrasena, transportistas.transportistas[i].Nom_Emp, transportistas.transportistas[i].Ciudad);
 }
 
 
@@ -418,8 +531,10 @@ int longitud_vector_adminprov(){
 	char aux[LONG_MAX_ADMINPROV];
 	int i = 0;
 	
-	if((Admin_Prov_txt = fopen("..\\ESIZON-main\\data\\AdminProv.txt", "r")) == NULL)  
-        printf("Error en la apertura de AdminProv.txt para longitud_vector_adminprov.\n");
+	if((Admin_Prov_txt = fopen("..\\ESIZON-main\\data\\AdminProv.txt", "r")) == NULL){
+        printf("\nError en la apertura de AdminProv.txt para longitud_vector_adminprov.\n");
+        Sleep(2000);
+	}  
 	else{
 		while(fgets(aux, sizeof(aux), Admin_Prov_txt)){
         	i++;
@@ -442,8 +557,10 @@ int longitud_vector_transportistas(){
 	char aux[LONG_MAX_TRANSPORT];
 	int i = 0;
 	
-	if((Transportistas_txt = fopen("..\\ESIZON-main\\data\\Transportistas.txt", "r+")) == NULL)  
-        printf("Error en la apertura de Transportistas.txt para longitud_vector_transportistas.\n");
+	if((Transportistas_txt = fopen("..\\ESIZON-main\\data\\Transportistas.txt", "r+")) == NULL) {
+		printf("\nError en la apertura de Transportistas.txt para longitud_vector_transportistas.\n");
+		Sleep(2000);
+	}  
 	else{
 		while(fgets(aux, sizeof(aux), Transportistas_txt)){
         	i++;
@@ -455,15 +572,18 @@ int longitud_vector_transportistas(){
     return i;	
 }
 
-
+/*
 
 //Precondición: Recibe una cadena que necesite ser acortada (no nula, con algún carácter ' ' al final de ella).
 //Postcondición: No devuelve nada, sustituye el primer carácter ' ' que encuentre en la cadena por el carácter terminador '\0'.
 
-void acortar_cadena(char cadena[]){
+void terminador_cad(char cadena[]){
 	int i, len = strlen(cadena);
 	for(i = 0; i < len; i++){
-    	if(cadena[i] == '\n')
-    		cadena[i] = '\0';
+    	if(cadena[i] == '\n'){
+     		cadena[i] = '\0';
+			i = len;   		
+		}
 	}
 }
+*/

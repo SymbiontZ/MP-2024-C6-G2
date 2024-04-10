@@ -5,6 +5,9 @@
 #include <stdlib.h> 
 #include <string.h>
 
+#include "./complementos.h"
+#include "empresas.h"
+
 #define MAX_EMAIL 31            //Longitud de email + 1(terminador)
 #define MAX_PSW 16              //Longitud de contrasena + 1(terminador)
 typedef struct
@@ -26,28 +29,47 @@ typedef struct
 
 }clients;
 
-//GESTION DE USUARIOS//
+///------------------------------- USUARIOS -------------------------------///
 
-//PRECONDICION: Ninguna
-//POSCONDICION: Inicializa una estructura tipo clients con datos almacenados de un fichero.
-clients cargar_clientes();          
+    //### GESTION DE USUARIOS ###//
 
-//PRECONDICION: Se le pasa una estructura tipo clients ya iniciada.
-//POSCONDICION: Almacena un nuevo cliente en la estructura y la guarda en el fichero.
-clients agregar_cliente(clients );
+    //PRECONDICION: Ninguna
+    //POSCONDICION: Inicializa una estructura tipo clients con datos almacenados de un fichero.
+    clients cargar_clientes();          
 
-//PRECONDICION: Se le pasa una estructura tipo clients.
-//POSCONDICION: Vuelca datos en el fichero pero no devuelve nada.
-void guardar_clientes(clients );
+    //PRECONDICION: Se le pasa una estructura tipo clients ya iniciada.
+    //POSCONDICION: Almacena un nuevo cliente en la estructura y la guarda en el fichero.
+    clients agregar_cliente(clients );
+
+    //PRECONDICION: Se le pasa una estructura tipo clients.
+    //POSCONDICION: Vuelca datos en el fichero pero no devuelve nada.
+    void guardar_clientes(clients );
+
+    //PRECONDICION: Se le pasa la estructura tipo clients cargada y la posicion del cliente en la estructura
+    //POSCONDICION: Devuelve la estructura tipo clients actualizada con los nuevos cambios
+    clients gestionar_cliente(clients, int);
 
 
-void gestionar_cliente(clients, int);
-void menu_cliente(clients ,int i);
-//GESTION DATOS ESPECIFICOS USUARIOS//
-clients cliente_nom(clients , int );
-clients cliente_contr(clients , int , int );
-clients cliente_dir(clients , int ,int );
-clients cliente_email(clients , int , int );
-clients cliente_cart(clients , int , int );
+    //### INTERFACES DEL USUARIO ###//
 
-#endif 
+    //PRECONDICION
+    void menu_cliente(clients ,int );
+
+    //PRECONDICION: Se le pasa la posicion del cliente en la estructura y la misma estructura tipo clients
+    //POSCONDICION: Ninguna  
+    void inicsesion_cliente(clients ,int );
+
+    //GESTION DATOS ESPECIFICOS USUARIOS//
+    clients cliente_nom(clients , int );
+    clients cliente_contr(clients , int , int );
+    clients cliente_dir(clients , int ,int );
+    clients cliente_email(clients , int , int );
+    clients cliente_cart(clients , int , int );
+
+
+///------------------------------- ADMINS -------------------------------///
+    void inicsesion_admin(admin_prov_vect, int);
+    void menuadmin(admin_prov_vect , int );
+    admin_prov_vect gestionar_admin (admin_prov_vect , int );
+    admin_prov_vect admin_email(admin_prov_vect , int , int );
+#endif  

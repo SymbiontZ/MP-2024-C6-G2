@@ -41,7 +41,7 @@ produ_vect cargar_productos () {
     while (fgets(cad_linea, sizeof(cad_linea), f_prod) && i < num_prod) {
         campo_productos = sscanf (cad_linea, "%d-%16[^-]-%21[^-]-%d-%d-%i-%i-%i",
             &p.produ[i].id_prod,
-            p.produ[i].nombre,
+            p.produ[i].nombre,	
             p.produ[i].descrip,
             &p.produ[i].id_categ,
             &p.produ[i].id_gestor,

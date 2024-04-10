@@ -53,17 +53,28 @@ typedef struct{
 	
 } transport_vect;
 
+// --------------- FUNCIONES DE INICIO DE SESION ---------------
+
+
+ //Precondición: Recibe una estructura de tipo admin_prov_vect (el vector de usuarios tipo adminprov), y la posición a utilizar en él.
+ //Postcondición: El usuario habrá iniciado sesión como proveedor en el sistema, o se habrá cerrado la sesión por fallar la contraseña muchas veces. No devuelve nada.
+ void inicsesion_prov(admin_prov_vect provs, int pos);
+
+ //Precondición: Recibe una estructura de tipo transport_vect (el vector de usuarios tipo transport), y la posición a utilizar en él.
+ //Postcondición: El usuario habrá iniciado sesión como transportista en el sistema, o se habrá cerrado la sesión por fallar la contraseña muchas veces. No devuelve nada.
+ void inicsesion_transport(transport_vect transports, int pos);
+
 
 // --------------- MENUS DE PROVEEDOR Y TRANSPORTISTA ---------------
 
 
  //Precondición: Recibe una estructura de tipo admin_prov (en suma, recibe un proveedor).
  //Postcondición: El usuario habrá realizado las tareas necesarias de gestión en la plataforma (ver y modificar perfil, gestionar productos, pedidos). No devuelve nada.
- void menu_prov(admin_prov admin);
+ void menu_prov(admin_prov_vect provs, int pos);
 
  //Precondición: Recibe una estructura de tipo transport (en suma, recibe un transportista).
  //Postcondición: El usuario habrá realizado las tareas necesarias de gestión en la plataforma (ver y modificar perfil, repartos, retornos). No devuelve nada.
- void menu_transport(transport transportista);
+ void menu_transport(transport_vect transports, int pos);
 
 
 // --------------- FUNCIONES PARA EL MENU DE PROVEEDOR ---------------
@@ -71,19 +82,21 @@ typedef struct{
 
  //Precondición: Recibe una estructura de tipo admin_prov (en suma, recibe un usuario, en este caso proveedor).
  //Postcondición: El usuario habrá realizado las tareas necesarias de gestión de su cuenta en la plataforma. No devuelve nada.
- void ver_perfil(admin_prov usu);
+ void ver_perfil(admin_prov_vect provs, int pos);
 
- void ver_productos(admin_prov prov);
+ //Precondición: Recibe una estructura de tipo admin_prov_vect (el vector de usuarios tipo adminprov), y la posición a utilizar en él.
+ //Postcondición: El usuario habrá realizado las tareas de gestión de productos convenientes.
+ void ver_productos(admin_prov_vect provs, int pos);
 
- void ver_pedidos(admin_prov prov);
+ void ver_pedidos(admin_prov_vect provs, int pos);
 
  //Precondición: Recibe un puntero a una estructura de admin_prov.
  //Postcondición: No devuelve nada. Se habrá cambiado el email del usuario guardado en el puntero.
- void cambiar_email(admin_prov *usu);
+ void cambiar_email(admin_prov_vect provs, int pos);
 
  //Precondición: Recibe un puntero a una estructura de admin_prov.
  //Postcondición: No devuelve nada. Se habrá cambiado la contraseña del usuario guardada en el puntero, o no.
- void cambiar_contrasena(admin_prov *usu);
+ void cambiar_contrasena(admin_prov_vect provs, int pos);
 
 
 // --------------- FUNCIONES PARA EL MENU DE TRANSPORTISTA ---------------
@@ -91,15 +104,19 @@ typedef struct{
 
  //Precondición: Recibe una estructura de tipo transport (en suma, recibe un usuario, en este caso transportista).
  //Postcondición: El usuario habrá realizado las tareas necesarias de gestión de su cuenta en la plataforma. No devuelve nada.
- void ver_perfil_t(transport usu);
+ void ver_perfil_t(transport_vect transports, int pos);
 
+ //Precondición: Recibe una estructura de tipo admin_prov_vect (el vector de usuarios tipo adminprov), y la posición a utilizar en él.
+ //Postcondición: No devuelve nada. Se habrá cambiado el nombre del usuario guardado en el puntero.
+ void cambiar_nombre_t(transport_vect transports, int pos);
+ 
  //Precondición: Recibe un puntero a una estructura de transport.
  //Postcondición: No devuelve nada. Se habrá cambiado el email del usuario guardado en el puntero.
- void cambiar_email_t(transport *usu);
+ void cambiar_email_t(transport_vect transports, int pos);
 
  //Precondición: Recibe un puntero a una estructura de transport.
  //Postcondición: No devuelve nada. Se habrá cambiado la contraseña del usuario guardada en el puntero, o no.
- void cambiar_contrasena_t(transport *usu);
+ void cambiar_contrasena_t(transport_vect transports, int pos);
 
 
 // --------------- FUNCIONES DE LECTURA DE FICHEROS ---------------
@@ -136,9 +153,9 @@ typedef struct{
  //Precondición: No recibe nada.
  //Postcondición: Devuelve el numero de lineas que contiene Transportistas.txt.
  int longitud_vector_transportistas();
-
+ /*
  //Precondición: Recibe una cadena que necesite ser acortada (no nula, con algún carácter ' ' al final de ella).
  //Postcondición: No devuelve nada, sustituye el primer carácter ' ' que encuentre en la cadena por el carácter terminador '\0'.
  void acortar_cadena(char cad[]);	// Se emplea en casos en los que el espacio desperdiciado es mínimo.
-
+ */
 #endif
