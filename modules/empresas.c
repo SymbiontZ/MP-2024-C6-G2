@@ -1,3 +1,8 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <windows.h>
+
 #include "complementos.h"
 #include "Productos.h"
 #include "empresas.h"
@@ -15,6 +20,7 @@ void inicsesion_prov(admin_prov_vect provs, int pos){
 	char validar_contra[16];
 	int i = 3;
 	
+	clear();
 	printf("\nIntroduzca su contrasena: ");
 	scanf("%s", validar_contra);
 	terminador_cad(validar_contra);
@@ -45,8 +51,10 @@ void inicsesion_transport(transport_vect transports, int pos){
 	char validar_contra[16];
 	int i = 3;
 	
+	clear();
 	printf("\nIntroduzca su contrasena: ");
-	scanf("%s", validar_contra);
+	fflush(stdin);
+	fgets(validar_contra, sizeof(validar_contra), stdin);
 	terminador_cad(validar_contra);
 	do{
 		if(strcmp(transports.transportistas[pos].Contrasena, validar_contra) == 0){
@@ -76,7 +84,7 @@ void inicsesion_transport(transport_vect transports, int pos){
 //Postcondición: El usuario habrá realizado las tareas necesarias de gestión en la plataforma (ver y modificar perfil, gestionar productos, pedidos). No devuelve nada.
 void menu_prov(admin_prov_vect provs, int pos){
 	
-	int op = -1, i = 0;
+	int op = -1;
 	
 	do{
 		clear();
@@ -153,7 +161,7 @@ void menu_transport(transport_vect transports, int pos){
 //Precondición: Recibe una estructura de tipo admin_prov_vect (el vector de usuarios tipo adminprov), y la posición a utilizar en él.
 //Postcondición: El usuario habrá realizado las tareas necesarias de gestión de su cuenta en la plataforma. No devuelve nada.
 void ver_perfil(admin_prov_vect provs, int pos){
-
+	
 	int op = -1;
 	
 	do{
@@ -192,6 +200,7 @@ void ver_productos(admin_prov_vect provs, int pos){
 	produ_vect prods = cargar_productos();	//Creamos el vector de productos
 	menu_prod(prods);						//Accedemos al menú de gestión de productos
 	guardar_productos(prods);				//Guardamos cambios
+	Sleep(2000);
 	
 }
 
@@ -233,13 +242,15 @@ void cambiar_contrasena(admin_prov_vect provs, int pos){
 	terminador_cad(contra_compr);
 	if(strcmp(contra_compr, provs.usuarios[pos].Contrasena) == 0){							
 		do{
-			printf("\nIndique la nueva contrasena: ");						
-			fflush(stdin);
+			printf("\nIndique la nueva contrasena: ");	
+			fflush(stdin);					
 			fgets(nueva_contra, sizeof(nueva_contra), stdin);
+			fflush(stdin);
 			terminador_cad(nueva_contra);
 			printf("\nIndiquela de nuevo de nuevo: ");
 			fflush(stdin);
 			fgets(contra_compr, sizeof(contra_compr), stdin);	
+			fflush(stdin);
 			terminador_cad(contra_compr);
 			if(strcmp(nueva_contra,contra_compr) == 0)							// Si las contraseñas son iguales (el usuario no se ha equivocado), salimos del bucle.
 				valido = 1;
@@ -305,6 +316,7 @@ void cambiar_nombre_t(transport_vect transports, int pos){
 	printf("\nIngrese el nombre que debe figurar en el sistema: ");
 	fflush(stdin);
 	fgets(nuevo_nombre, sizeof(nuevo_nombre), stdin);
+	fflush(stdin);
 	terminador_cad(nuevo_nombre);
 	strcpy(transports.transportistas[pos].Nombre, nuevo_nombre);
 	
@@ -320,6 +332,7 @@ void cambiar_email_t(transport_vect transports, int pos){
 	printf("\nIngrese el nuevo email: ");
 	fflush(stdin);
 	fgets(nuevo_email, sizeof(nuevo_email), stdin);
+	fflush(stdin);
 	terminador_cad(nuevo_email);
 	strcpy(transports.transportistas[pos].email, nuevo_email);
 	
@@ -337,16 +350,19 @@ void cambiar_contrasena_t(transport_vect transports, int pos){
 	printf("\nIntroduzca la contrasena actual: ");
 	fflush(stdin);
 	fgets(contra_compr, sizeof(contra_compr), stdin);
+	fflush(stdin);
 	terminador_cad(contra_compr);
 	if(strcmp(contra_compr, transports.transportistas[pos].Contrasena) == 0){							
 		do{
 			printf("\nIndique la nueva contrasena: ");						
 			fflush(stdin);
 			fgets(nueva_contra, sizeof(nueva_contra), stdin);
+			fflush(stdin);
 			terminador_cad(nueva_contra);
 			printf("\nIndiquela de nuevo de nuevo: ");
 			fflush(stdin);
 			fgets(contra_compr, sizeof(contra_compr), stdin);	
+			fflush(stdin);
 			terminador_cad(contra_compr);
 			if(strcmp(nueva_contra,contra_compr) == 0)							// Si las contraseñas son iguales (el usuario no se ha equivocado), salimos del bucle.
 				valido = 1;
@@ -376,30 +392,27 @@ admin_prov_vect cargar_adminprov(){
 	
 	admin_prov_vect adminprov_sistema;
 	FILE *f_AdminProv;																							// Puntero al fichero a leer.
-	char ruta[] = ".\\data\\AdminProv.txt";																	// Ruta del fichero a leer.
+	char ruta[] = ".\\data\\AdminProv.txt";																		// Ruta del fichero a leer.
 	char linea[LONG_MAX_ADMINPROV];																				// Línea actual del fichero. Longitud máxima de una línea 86 caracteres.
 	char tipo_usuario[14];																						// Cadena auxiliar a convertir.
 	int i = 0, m; 
 
-	if((f_AdminProv = fopen(ruta, "r+")) == NULL){
+	if((f_AdminProv = fopen(ruta, "w+")) == NULL){																// w+ permite leer y escribir, y crea el archivo si no existe.
 		printf("\nError al abrir el fichero AdminProv.txt en cargar_adminprov. Creando uno nuevo...\n");
-		f_AdminProv = fopen(ruta, "w");
 		getchar();                     	
 	}	
 
 	//COMPROBACION FICHERO VACIO//
 	char verif = fgetc(f_AdminProv);
 	if (verif == EOF){
-		f_AdminProv = fopen(ruta, "a+");
 		fprintf(f_AdminProv,"0000-ESIZON-adminadmin@esizon.com-admin000-administrador\n");
-		fclose(f_AdminProv);
-
 	}
 
+	rewind(f_AdminProv);																								
 	adminprov_sistema.tam = 0;
 	while(fgets(linea, sizeof(linea), f_AdminProv) != NULL)														// Contamos el número de usuarios en el fichero...
 		adminprov_sistema.tam++;
-	printf("\nCarga completada.\nUsuarios almacenados en AdminProv.txt: %d \n", adminprov_sistema.tam + 1);
+	printf("\nCarga completada.\nUsuarios almacenados en AdminProv.txt: %d \n", adminprov_sistema.tam);
 	adminprov_sistema.usuarios = (admin_prov*)malloc((adminprov_sistema.tam + 1) * sizeof(admin_prov));			// ... y reservamos memoria para el vector (más uno por si se necesita añadir algún usuario).
 	rewind(f_AdminProv);																								
 	
@@ -431,36 +444,32 @@ transport_vect cargar_transportistas(){
 	char linea[LONG_MAX_TRANSPORT];																				// Línea actual del fichero. Longitud máxima de una línea 113 caracteres.
 	int i = 0, m;
 
-	if((Transportistas = fopen(ruta, "r+")) == NULL){
+	if((Transportistas = fopen(ruta, "w+")) == NULL){															// w+ permite leer y escribir, y crea el archivo si no existe.
 		printf("\nError al abrir el fichero Transportistas.txt en cargar_transportistas. Creando uno nuevo...\n");
-		Transportistas = fopen(ruta, "w");
 		getchar();
 	}
-	
 	//COMPROBACION FICHERO VACIO//
 	char verif = fgetc(Transportistas);
 	if (verif == EOF){
-		printf("\nEl fichero Transportistas.txt esta vacio. Contacte con un administrador.");
-		getchar();
-		exit(33);
-	}
-	else{
-		transport_sistema.tam = 0;
-		while(fgets(linea, sizeof(linea), Transportistas) != NULL)												// Contamos el número de usuarios en el fichero...
-	    	transport_sistema.tam++;
-	    printf("\nCarga completada.\nTransportistas almacenados en Transportistas.txt: %d \n", transport_sistema.tam);
-	 	transport_sistema.transportistas = (transport*)malloc((transport_sistema.tam + 1) * sizeof(transport));	// ... y reservamos memoria para el vector (más uno por si se necesita añadir algún usuario).
-	 	rewind(Transportistas);																							
-	    
-		while((fgets(linea, sizeof(linea), Transportistas) != NULL) ){	
-			if((m = sscanf(linea, "%d-%20[^-]-%30[^-]-%15[^-]-%20[^-]-%20[^\n]\n", &transport_sistema.transportistas[i].Id_transp, transport_sistema.transportistas[i].Nombre, transport_sistema.transportistas[i].email, transport_sistema.transportistas[i].Contrasena, transport_sistema.transportistas[i].Nom_Emp, transport_sistema.transportistas[i].Ciudad)) == 6)
-				i++;		
-			else{
-				printf("\nError leyendo datos del fichero Transportistas.txt en cargar_transportistas. Línea: %d\n", i + 1);
-				getchar();	
-				exit(33);				
-			}
-		}			
+		fprintf(Transportistas, "0000-defaultnombre-defaultemail-defaultcontra-defaultempresa-defaultciudad\n");
+	}                                                                                                        
+	
+	rewind(Transportistas);
+	transport_sistema.tam = 0;
+	while(fgets(linea, sizeof(linea), Transportistas) != NULL)													// Contamos el número de usuarios en el fichero...
+    	transport_sistema.tam++;
+    printf("\nCarga completada.\nTransportistas almacenados en Transportistas.txt: %d \n", transport_sistema.tam);
+ 	transport_sistema.transportistas = (transport*)malloc((transport_sistema.tam + 1) * sizeof(transport));		// ... y reservamos memoria para el vector (más uno por si se necesita añadir algún usuario).
+ 	rewind(Transportistas);																							
+    
+	while(fgets(linea, sizeof(linea), Transportistas) != NULL){	
+		if((m = sscanf(linea, "%d-%20[^-]-%30[^-]-%15[^-]-%20[^-]-%20[^\n]\n", &transport_sistema.transportistas[i].Id_transp, transport_sistema.transportistas[i].Nombre, transport_sistema.transportistas[i].email, transport_sistema.transportistas[i].Contrasena, transport_sistema.transportistas[i].Nom_Emp, transport_sistema.transportistas[i].Ciudad)) == 6)
+			i++;		
+		else{
+			printf("\nError leyendo datos del fichero Transportistas.txt en cargar_transportistas. Línea: %d\n", i);
+			getchar();	
+			exit(33);				
+		}		
 	}	
 		                                    
 	fclose(Transportistas);
@@ -484,15 +493,11 @@ void guardar_adminprov(admin_prov_vect usuarios){
 	char linea[LONG_MAX_ADMINPROV];																				// Línea actual del fichero. Longitud máxima de una línea 86 caracteres.
 	char aux[14];
 	
-	if((AdminProv = fopen(ruta, "a+")) == NULL){
-		printf("\nError al abrir el fichero AdminProv.txt en guardar_adminprov. Creando uno nuevo...\n");
-		AdminProv = fopen(ruta, "w");
-		Sleep(2000);
-	}
+	AdminProv = fopen(ruta, "w");
 	
 	for(int i = 0; i < usuarios.tam; i++)
 		fprintf(AdminProv, "%d-%20[^-]-%30[^-]-%15[^-]-%13[^\n]\n", usuarios.usuarios[i].Id_empresa, usuarios.usuarios[i].Nombre, usuarios.usuarios[i].email, usuarios.usuarios[i].Contrasena, usuarios.usuarios[i].Perfil_usuario);
-	
+	fclose(AdminProv);
 }
 
 
@@ -506,14 +511,11 @@ void guardar_transportista(transport_vect transportistas){
 	char ruta[] = "..\\ESIZON-main\\data\\Transportistas.txt";													// Ruta del fichero a leer.
 	char linea[LONG_MAX_TRANSPORT];																				// Línea actual del fichero. Longitud máxima de una línea 113 caracteres.
 
-	if((Transportistas = fopen(ruta, "a+")) == NULL){
-		printf("\nError al abrir el fichero Transportistas.txt en guardar_transportista. Creando uno nuevo...\n");
-		Transportistas = fopen(ruta, "w");
-		Sleep(2000);
-	}
+	Transportistas = fopen(ruta, "w");
 	
 	for(int i = 0; i < transportistas.tam; i++)
 		fprintf(Transportistas, "%d-%20[^-]-%30[^-]-%15[^-]-%20[^-]-%20s\n", transportistas.transportistas[i].Id_transp, transportistas.transportistas[i].Nombre, transportistas.transportistas[i].email, transportistas.transportistas[i].Contrasena, transportistas.transportistas[i].Nom_Emp, transportistas.transportistas[i].Ciudad);
+	fclose(Transportistas);
 }
 
 

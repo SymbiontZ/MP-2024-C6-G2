@@ -3,6 +3,7 @@
 
 #include"empresas.h"
 #include"useradmin.h"
+#include"complementos.h"
 
 void inicsesion_email();
 
@@ -18,16 +19,19 @@ void inicsesion_email(){
     transport_vect transport = cargar_transportistas();
     clients client = cargar_clientes();
 
+    Sleep(1000);
+    clear();
+    titulo();
+
     char cad_email[MAX_EMAIL], cad_pasw[MAX_PSW];
-    int len, i;
+    int i;
     int verif = 0;                  //Comprueba existe email | 0 -> NO EXISTE / 1 -> EXISTE
     int pos;                         //Guarda la posicion relacionado con email
 
     //INTRDUCIR CORREO//
     printf("\nIntroduzca el correo: ");
     fgets(cad_email, MAX_EMAIL, stdin);
-    len = strlen(cad_email);
-    if (len > 0 && cad_email[len - 1] == '\n') { cad_email[len - 1] = '\0'; }
+    terminador_cad(cad_email);
 
     //COMPROBAR EN USUARIOS
     for(i = 0; i < client.n_clients; i++){
@@ -43,8 +47,7 @@ void inicsesion_email(){
             pos = i;
             
             if(strcmp(adminprov.usuarios[pos].Perfil_usuario, "proveedor") == 0)             //ES PROV
-                printf("prov");
-                //inicsesion_prov(adminprov, pos);    
+                inicsesion_prov(adminprov, pos);    
             else if(strcmp(adminprov.usuarios[pos].Perfil_usuario, "administrador") == 0)    //ES ADMIN
                 inicsesion_admin(adminprov, pos);
             else{
@@ -59,7 +62,7 @@ void inicsesion_email(){
     for(i = 0; i<transport.tam;i++){
         if(strcmp(cad_email, transport.transportistas[i].email) == 0){
             pos = i;
-            //inicsesion_transport(transport, pos);
+            inicsesion_transport(transport, pos);
             verif = 1;
         }
     }
@@ -68,8 +71,9 @@ void inicsesion_email(){
     char opt = '0';
     if(verif == 0){
         printf("No se ha encontrado ese correo, desea registrarse como cliente[s/n]: ");
-        fflush(stdin);
+        
         scanf(" %c", &opt);
+        fflush(stdin);
         while(opt != 's' && opt != 'n'){
             printf("Elija opcion valida [s/n]: ");
             scanf(" %c", &opt);
@@ -82,3 +86,7 @@ void inicsesion_email(){
     }
 
 }
+
+//COMPILAR FLUJO PRINCIPAL VIA CMD
+// >gcc -o maintest empresas.c useradmin.c Productos.c complementos.c main.c
+// >.\maintest
