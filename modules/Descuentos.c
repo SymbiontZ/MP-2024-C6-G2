@@ -2,14 +2,15 @@
 #include <stdlib.h>
 #include <string.h>
 #include "Descuentos.h"
+#include "useradmin.h"
 
 
 void Cargar_Descuentos(){
 
     Descuentos vector_desc;
-	FILE *f_descuentos;																						// Puntero al fichero a leer.
-	char ruta[] = "..\\ESIZON-main\\data\\Descuentos.txt";                                                  // Ruta del fichero a leer.
-	char linea[MAX_DESC];													                                //Linea a leer
+	FILE *f_descuentos;																	// Puntero al fichero
+	char ruta[] = "..\\ESIZON-main\\data\\Descuentos.txt";                                                  						// Ruta del fichero a leer
+	char linea[MAX_DESC];													                                // Línea a leer
     int i = 0, m;
 
 	if((f_descuentos = fopen(ruta, "r+")) == NULL){
@@ -18,14 +19,14 @@ void Cargar_Descuentos(){
 	}
 
 	vector_desc.tam = 0;
-	while(fgets(linea, sizeof(linea), f_descuentos) != NULL)												// Contamos el n�mero de usuarios en el fichero...
+	while(fgets(linea, sizeof(linea), f_descuentos) != NULL)												// Contamos el número de líneas del fichero
 	    vector_desc.tam++;
 	printf("Descuentos almacenados en Descuentos.txt: %d \n", vector_desc.tam);
-    vector_desc.Desc = malloc((vector_desc.tam + 1) * sizeof(Descuento));	// ... y reservamos memoria para el vector (m�s uno por si se necesita a�adir alg�n usuario).
+    vector_desc.Desc = malloc((vector_desc.tam + 1) * sizeof(Descuento));											// Se reserva memoria para el vector
 	rewind(f_descuentos);
 
 	while((fgets(linea, sizeof(linea), f_descuentos) != NULL) ){
-		m = sscanf(linea, "%10[^-]-%50[^-]-%7[^-]-%8[^-]-%d[^-]-%6[^\n]\n",
+		m = sscanf(linea, "%10[^-]-%50[^-]-%7[^-]-%8[^-]-%d[^-]-%6[^\n]\n",										// Se cargan los datos del fichero a la estructura
             &vector_desc.Desc[i].Id_cod,
 			vector_desc.Desc[i].Descrip,
 			vector_desc.Desc[i].Tipo,
@@ -39,7 +40,7 @@ void Cargar_Descuentos(){
 			exit(EXIT_FAILURE);
 		}
 	}
-	fclose(f_descuentos);
+	fclose(f_descuentos); 																	// Se cirra el fichero
 
 
 }
@@ -48,9 +49,9 @@ void Cargar_Descuentos(){
 void Cargar_DescuentosClientes(){
 
     DescClientes vector_descClts;
-	FILE *f_DescClientes;																						// Puntero al fichero a leer.
-	char ruta[] = "..\\ESIZON-main\\data\\DescuentosClientes.txt";                                                  // Ruta del fichero a leer.
-	char linea[MAX_DESCLI];													                                //Linea a leer
+	FILE *f_DescClientes;																	// Puntero al fichero a leer
+	char ruta[] = "..\\ESIZON-main\\data\\DescuentosClientes.txt";                                                  					// Ruta del fichero a leer
+	char linea[MAX_DESCLI];													                                // Linea a leer
     int i = 0, m;
 
 	if((f_DescClientes = fopen(ruta, "r+")) == NULL){
@@ -58,14 +59,14 @@ void Cargar_DescuentosClientes(){
 		exit(33);
 	}
 	vector_descClts.tam = 0;
-	while(fgets(linea, sizeof(linea), f_DescClientes) != NULL)												// Contamos el n�mero de usuarios en el fichero...
+	while(fgets(linea, sizeof(linea), f_DescClientes) != NULL)												// Contamos el numero de lineas del fichero
 	    vector_descClts.tam++;
 	    printf("Descuentos almacenados en DescuentosClientes.txt: %d \n", vector_descClts.tam);
-        vector_descClts.DescCliente = malloc((vector_descClts.tam + 1) * sizeof(DescClientes));	// ... y reservamos memoria para el vector (m�s uno por si se necesita a�adir alg�n usuario).
+        vector_descClts.DescCliente = malloc((vector_descClts.tam + 1) * sizeof(DescClientes));									// Se reserva memoria para el vector
 	 	rewind(f_DescClientes);
 
 		while((fgets(linea, sizeof(linea), f_DescClientes) != NULL) ){
-			if((m = sscanf(linea, "%d[^-]-%10[^-]-%d[^-]-%d[^-]-%d[^-]-%d[^-]-%d[^-]-%d[^-]-%d[^\n]\n",
+			if((m = sscanf(linea, "%d[^-]-%10[^-]-%d[^-]-%d[^-]-%d[^-]-%d[^-]-%d[^-]-%d[^-]-%d[^\n]\n",						// Se cargan los datos del fichero a la estructura
                   &vector_descClts.DescCliente[i].Id_cliente,
                   vector_descClts.DescCliente[i].Id_cod,
                   vector_descClts.DescCliente[i].dia_asig,
@@ -81,7 +82,7 @@ void Cargar_DescuentosClientes(){
 			}
 		}
 
-	fclose(f_DescClientes);
+	fclose(f_DescClientes);																	// Se cierra el fichero
 
 
 }
@@ -89,9 +90,9 @@ void Cargar_DescuentosClientes(){
 
 void Guardar_Descuentos(Descuentos descuentos){
 
-    FILE *f_descuentos;																							// Puntero al fichero a leer.
-	char ruta[] = "..\\ESIZON-main\\data\\Descuentos.txt";														// Ruta del fichero a leer.
-	char linea[MAX_DESC];																				// Línea actual del fichero. Longitud máxima de una línea 86 caracteres.
+    FILE *f_descuentos;																		// Puntero al fichero a leer
+	char ruta[] = "..\\ESIZON-main\\data\\Descuentos.txt";													// Ruta del fichero a leer
+	char linea[MAX_DESC];																	// Línea actual del fichero
 	char aux[14];
 
 	if((f_descuentos = fopen(ruta, "a+")) == NULL){
@@ -101,7 +102,7 @@ void Guardar_Descuentos(Descuentos descuentos){
 	}
 
 	for(int i = 0; i < descuentos.tam; i++)
-		fprintf(f_descuentos, "%10[^-]-%50[^-]-%7[^-]-%8[^-]-%d[^-]-%6[^\n]\n",
+		fprintf(f_descuentos, "%10[^-]-%50[^-]-%7[^-]-%8[^-]-%d[^-]-%6[^\n]\n",										// Se escribe el contenido de la estructura en el fichero
             descuentos.Desc[i].Id_cod,
             descuentos.Desc[i].Descrip,
 			descuentos.Desc[i].Tipo,
@@ -110,16 +111,16 @@ void Guardar_Descuentos(Descuentos descuentos){
 			descuentos.Desc[i].Aplicable);
 
 
-        fclose(f_descuentos);
+        fclose(f_descuentos);																	// Se cierra el fichero
 
 }
 
 
-void DescuentosClientes(DescClientes descuentosclientes){
+void Guardar_DescuentosClientes(DescClientes descuentosclientes){
 
-    FILE *f_DescClientes;																							// Puntero al fichero a leer.
-	char ruta[] = "..\\ESIZON-main\\data\\DescuentosClientes.txt";														// Ruta del fichero a leer.
-	char linea[MAX_DESCLI];																				// Línea actual del fichero. Longitud máxima de una línea 86 caracteres.
+    FILE *f_DescClientes;																	// Puntero al fichero 
+	char ruta[] = "..\\ESIZON-main\\data\\DescuentosClientes.txt";												// Ruta del fichero 
+	char linea[MAX_DESCLI];																	// Línea actual del fichero
 	char aux[14];
 
 	if((f_DescClientes = fopen(ruta, "a+")) == NULL){
@@ -129,7 +130,7 @@ void DescuentosClientes(DescClientes descuentosclientes){
 	}
 
 	for(int i = 0; i < descuentosclientes.tam; i++)
-		fprintf(f_DescClientes, "%d[^-]-%10[^-]-%d[^-]-%d[^-]-%d[^-]-%d[^-]-%d[^-]-%d[^-]-%d[^\n]\n",
+		fprintf(f_DescClientes, "%d[^-]-%10[^-]-%d[^-]-%d[^-]-%d[^-]-%d[^-]-%d[^-]-%d[^-]-%d[^\n]\n",							// Se escribe el contenido de la estructura en el fichero
             descuentosclientes.DescCliente[i].Id_cliente,
             descuentosclientes.DescCliente[i].Id_cod,
             descuentosclientes.DescCliente[i].dia_asig,
@@ -140,7 +141,7 @@ void DescuentosClientes(DescClientes descuentosclientes){
             descuentosclientes.DescCliente[i].anio_cad);
 
 
-        fclose(f_DescClientes);
+        fclose(f_DescClientes);																	// Se cierra el fichero
 
 
 }
@@ -152,8 +153,8 @@ void Consultar_Descuentos(clients cliente, DescClientes descuentosclientes){
 
 	for(int i = 0; i < cliente.n_clients; i++){
           for(int j = 0; j < descuentosclientes.tam; j++){
-            if ((descuentosclientes.DescCliente[j].Id_cliente == cliente.clients[i].Id_cliente) && descuentosclientes.DescCliente[j].Estado == 0)
-                printf("Descuento disponible: %s \n", &descuentosclientes.DescCliente[j].Id_cod);
+            if ((descuentosclientes.DescCliente[j].Id_cliente == cliente.clients[i].Id_cliente) && descuentosclientes.DescCliente[j].Estado == 0)		// Se comprueba que el identificador del cliente buscado esta asociado con algun descuento
+                printf("Descuento disponible: %s \n", &descuentosclientes.DescCliente[j].Id_cod);								// Lista los descuentos disponibles para el usuario en concreto
 
         }
 
@@ -166,7 +167,7 @@ void Gestionar_Descuentos(Descuentos D){
 
     int op;
 
-    printf("###¿Qué desea hacer?###\n\n");
+    printf("###¿Qué desea hacer?###\n\n");															// Menu de seleccion de funciones relacionadas a descuentos
     printf("1. Dar de alta\n");
     printf("2. Dar de baja\n");
     printf("3. Realizar búsqueda\n");
@@ -205,15 +206,15 @@ void Gestionar_Descuentos(Descuentos D){
 
 Descuentos Alta_Descuentos(Descuentos D){
     int tam = D.tam;
-
-    D.Desc = realloc(D.Desc, D.tam+1*sizeof(Descuento));
+	
+    D.Desc = realloc(D.Desc, D.tam+1*sizeof(Descuento));											// Se amplia la longitud del vector para añadir un descuento en la estructura
     if (D.Desc == NULL){
         printf("No se pudo asignar la estructura de descuentos");
         getchar();
         exit(EXIT_FAILURE);
     }
 
-    D = nuevo_id(D, tam);
+    D = nuevo_id(D, tam);															// Conjunto de funciones para recopilar datos del nuevo descuento
     D = nueva_desc(D, tam);
     D = nuevo_tipo(D, tam);
     D = nuevo_est(D, tam);
@@ -225,28 +226,28 @@ Descuentos Alta_Descuentos(Descuentos D){
 }
 
 Descuentos nuevo_id(Descuentos D, int pos){
-    char new_Id_cod[11];
+    char new_Id_cod[11];															// Variable que guardara la id del nuevo descuento		
 
     printf("Ingrese el identificador: \n");
 
     fflush(stdin);
     fgets(new_Id_cod, sizeof(new_Id_cod), stdin);
 
-    strcpy(D.Desc[pos].Id_cod, new_Id_cod);
+    strcpy(D.Desc[pos].Id_cod, new_Id_cod);													// Se escribe en la nueva posicion de la estructura la nueva id
 
     return D;
 }
 
 
 Descuentos nueva_desc(Descuentos D, int pos){
-    char new_Descrip[11];
+    char new_Descrip[11];															// Variable que guardara la descripcion del nuevo descuento
 
     printf("Ingrese la descripción: \n");
 
     fflush(stdin);
     fgets(new_Descrip, sizeof(new_Descrip), stdin);
 
-    strcpy(D.Desc[pos].Descrip, new_Descrip);
+    strcpy(D.Desc[pos].Descrip, new_Descrip);													// Se escribe en la nueva posicion de la estructura la nueva descripcion
 
     return D;
 }
@@ -256,7 +257,7 @@ Descuentos nueva_desc(Descuentos D, int pos){
 Descuentos nuevo_tipo(Descuentos D, int pos){
 
     int op = 0;
-    char new_Tipo[8];
+    char new_Tipo[8];																// Variable que guardara el tipo del nuevo descuento
 
     while(op != 1 || op != 2){
         printf("Elija el tipo de descuento: \n");
@@ -267,11 +268,11 @@ Descuentos nuevo_tipo(Descuentos D, int pos){
         switch(op){
             case 1:
                 new_Tipo[8] = "codpro";
-                strcpy(D.Desc[pos].Tipo, new_Tipo);
+                strcpy(D.Desc[pos].Tipo, new_Tipo);												// Se escribe en la nueva posicion de la estructura el tipo "codpro"
                 break;
             case 2:
                 new_Tipo[8] = "cheqreg";
-                strcpy(D.Desc[pos].Tipo, new_Tipo);
+                strcpy(D.Desc[pos].Tipo, new_Tipo);												// Se escribe en la nueva posicion de la estructura el tipo "cheqreg"
                 break;
             default:
                 break;
@@ -285,7 +286,7 @@ Descuentos nuevo_tipo(Descuentos D, int pos){
 Descuentos nuevo_est(Descuentos D, int pos){
 
     int op = 0;
-    char new_Estado[9];
+    char new_Estado[9];																// Variable que guardara el estado del nuevo descuento
 
     while(op != 1 || op != 2){
         printf("Seleccione el estado: \n");
@@ -296,11 +297,11 @@ Descuentos nuevo_est(Descuentos D, int pos){
         switch(op){
             case 1:
                 new_Estado[9] = "activo";
-                strcpy(D.Desc[pos].Estado, new_Estado);
+                strcpy(D.Desc[pos].Estado, new_Estado);												// Se escribe en la nueva posicion de la estructura el estado "activo"
                 break;
             case 2:
                 new_Estado[9] = "inactivo";
-                strcpy(D.Desc[pos].Estado, new_Estado);
+                strcpy(D.Desc[pos].Estado, new_Estado);												// Se escribe en la nueva posicion de la estructura el estado "inactivo"
                 break;
             default:
                 break;
@@ -314,7 +315,7 @@ Descuentos nuevo_est(Descuentos D, int pos){
 Descuentos nuevo_apl(Descuentos D, int pos){
 
     int op = 0;
-    char new_Aplicable[7];
+    char new_Aplicable[7];															// Variable que guardara la aplicabilidad del nuevo descuento
 
     while(op != 1 || op != 2){
         printf("Seleccione la aplicabilidad: \n");
@@ -325,11 +326,11 @@ Descuentos nuevo_apl(Descuentos D, int pos){
         switch(op){
             case 1:
                 new_Aplicable[7] = "esizon";
-                strcpy(D.Desc[pos].Aplicable, new_Aplicable);
+                strcpy(D.Desc[pos].Aplicable, new_Aplicable);											// Se escribe en la nueva posicion de la estructura la aplicabilidad "esizon"
                 break;
             case 2:
                 new_Aplicable[7] = "todos";
-                strcpy(D.Desc[pos].Aplicable, new_Aplicable);
+                strcpy(D.Desc[pos].Aplicable, new_Aplicable);											// Se escribe en la nueva posicion de la estructura la aplicabilidad "todos"
                 break;
             default:
                 break;
@@ -342,12 +343,12 @@ Descuentos nuevo_apl(Descuentos D, int pos){
 
 Descuentos nuevo_imp(Descuentos D, int pos){
 
-    int new_Importe = 0;
+    int new_Importe = 0;															// Variable que guardara el importe del nuevo descuentos
 
         printf("Introduzca el importe: \n");
         scanf("%d", &new_Importe);
 
-        D.Desc[pos].Importe = new_Importe;
+        D.Desc[pos].Importe = new_Importe;													// Se escribe en la nueva posicion de la estructura el importe introducido
 
     return D;
 }
@@ -355,14 +356,14 @@ Descuentos nuevo_imp(Descuentos D, int pos){
 
 Descuentos Baja_Descuentos(Descuentos D){
     int tam = D.tam, i;
-    char Id_cod_busqueda[11], new_Aplicable[7] = "inactivo";
+    char Id_cod_busqueda[11], new_Estado[9] = "inactivo";											// Variables que serviran como filtro a la hora de buscar el descuento que se dara de baja
 
     printf("Introduzca el identificador del descuento que quiere dar de baja\n");
     scanf("%s", &Id_cod_busqueda);
 
     for(i=0; i<tam; i++){
         if(strcmp(Id_cod_busqueda, D.Desc[i].Id_cod) == 0)
-            strcpy(D.Desc[i].Aplicable, new_Aplicable);
+            strcpy(D.Desc[i].Estado, new_Estado);												// Se actualiza el del descuento encontrado, dejandolo "inactivo" en caso de querer darlo de alta en el futuro
     }
 
     return D;
@@ -372,14 +373,14 @@ Descuentos Baja_Descuentos(Descuentos D){
 Descuentos Busqueda_Descuentos(Descuentos D){
 
     int tam = D.tam, i;
-    char Id_cod_busqueda[11];
+    char Id_cod_busqueda[11];															// Variable que servira como filtro a la hora de buscar el descuento deseado
 
     printf("Introduzca el identificador del descuento que quiere buscar\n");
     scanf("%s", &Id_cod_busqueda);
 
     for(i=0; i<tam; i++){
         if(strcmp(Id_cod_busqueda, D.Desc[i].Id_cod) == 0)
-            printf("Descuento encontrado %i: %s\n", &i, &Id_cod_busqueda);
+            printf("Descuento encontrado %i: %s\n", &i, &Id_cod_busqueda);									// Se muestra el descuento(s) encontrado
     }
 
     return D;
@@ -389,9 +390,9 @@ Descuentos Busqueda_Descuentos(Descuentos D){
 
 Descuentos Listar_Descuentos(Descuentos D){
 
-    int tam = D.tam, i;
+    int tam = D.tam, i;																// Variables para controlar el bucle
     for(i=0; i<tam; i++){
-        printf("Código de descuento %i: %s\n", &i, &D.Desc[i].Id_cod);
+        printf("Código de descuento %i: %s\n", &i, &D.Desc[i].Id_cod);										// Se muestra en cada iteracion el contenido de cada linea del fichero
     }
 
     return D;
@@ -400,13 +401,13 @@ Descuentos Listar_Descuentos(Descuentos D){
 
 Descuentos Modificar_Descuentos(Descuentos D){
     int tam = D.tam, i, op;
-    char Id_cod_busqueda[11];
+    char Id_cod_busqueda[11];															// Variable en la que se almacena el codigo del descuento a modificar
 
     printf("Introduzca el identificador del descuento que quiere modificar\n");
     scanf("%s", &Id_cod_busqueda);
 
     for(i=0; i<tam; i++){
-        if(strcmp(Id_cod_busqueda, D.Desc[i].Id_cod) == 0){
+        if(strcmp(Id_cod_busqueda, D.Desc[i].Id_cod) == 0){											// Cuando exista una coincidencia se despliega un menu con las distintas opciones de modificacion
 
             printf("Indique que quiere modificar:\n\n");
             printf("1. ID\n");
@@ -438,7 +439,7 @@ Descuentos Modificar_Descuentos(Descuentos D){
                     D = nuevo_imp(D, tam);
                     break;
                 default:
-                    break;
+                    break;														
             }
         }
     }
