@@ -9,6 +9,7 @@
 #define MAX_EMAIL 31            //Longitud de email + 1(terminador)
 #define MAX_PSW 16              //Longitud de contrasena + 1(terminador)
 #define MAX_NOM 21              //Longitud de nombre + 1(terminador)
+#define MAX_LOC 21              //Longitud de localidad + 1(terminador)
 typedef struct
 {
     int Id_cliente;
@@ -80,7 +81,7 @@ typedef struct
     admin_prov_vect admin_psw(admin_prov_vect , int , int );
 
     int busqueda_cliente(clients );
-    int busqueda_clientenom(clients , int );
+    int busqueda_clientetipo(clients , int ,int );
 
 #endif  
 
@@ -88,10 +89,7 @@ typedef struct
 
 /*
 CAMBIOS PENDIENTES
-> cambio correo admin solo prefijo
-> no cambiar contraseña por la misma
 > cambiar interfaces
 > agregar opciones superadmin
-> mejorar busqueda_cliente (por localidad, nombre usar strcmpn)
 
 */
