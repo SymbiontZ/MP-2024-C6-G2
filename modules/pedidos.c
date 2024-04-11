@@ -8,14 +8,6 @@
 #include<time.h>
 
 
-pedidos cargar_pedidos();
-prod_pedidos cargar_prod_pedidos();
-devoluciones cargar_devoluciones();
-void crear_pedido(int, pedidos);
-void guardar_pedido(pedidos);
-void guardar_producto_pedido(prod_pedidos);
-void crear_producto_pedido(pedidos, int, int, prod_pedidos);
-
 
 //Cabecera: pedidos cargar_pedidos()
 //Precondición: el fichero debe existir y la estructura de cada pedido
@@ -398,9 +390,20 @@ void crear_devolucion(devoluciones d, pedidos p, prod_pedidos prod_p){
     d.devoluciones[pos].f_devol.dia=dia_sist(); //fecha en la que se realiza la solicitud de la devolucion, es la fecha del dia que se rellena la devolucion
     d.devoluciones[pos].f_devol.mes=mes_sist();
     d.devoluciones[pos].f_devol.anio=anio_sist();
-    
 
+    printf("Introduce el motivo de la devolución: "); //usuario introduce el motivo de la devolucion
+    fflush(stdin);
+    fgets(d.devoluciones[pos].motivo, 50, stdin);
 
+    strcpy(d.devoluciones[pos].estado, "pendiente");
+
+    d.devoluciones[pos].f_aceptacion.dia=0;
+    d.devoluciones[pos].f_aceptacion.mes=0;
+    d.devoluciones[pos].f_aceptacion.anio=0;
+
+    d.devoluciones[pos].f_caducidad.dia=0;
+    d.devoluciones[pos].f_caducidad.mes=0;
+    d.devoluciones[pos].f_caducidad.anio=0;
 
 }
 
