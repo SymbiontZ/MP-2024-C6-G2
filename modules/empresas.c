@@ -7,7 +7,7 @@
 #include "Productos.h"
 #include "empresas.h"
 
-// listar, buscar, alta, baja, modificar
+
 
 //	FUNCIONES DE INICIO DE SESION
 
