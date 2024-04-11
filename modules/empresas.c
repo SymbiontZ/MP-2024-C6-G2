@@ -7,7 +7,7 @@
 #include "Productos.h"
 #include "empresas.h"
 
-
+// listar, buscar, alta, baja, modificar
 
 //	FUNCIONES DE INICIO DE SESION
 
@@ -133,7 +133,7 @@ void menu_transport(transport_vect transports, int pos){
 		printf("\n	   NOMBRE: %s\n", transports.transportistas[pos].Nombre);
 		printf("\n	   EMPRESA: %s\n", transports.transportistas[pos].Nom_Emp);
 		
-		printf("\nBienvenido, %s - ¿Qué desea hacer hoy?\n\n <1> Ver perfil.\n <2> Ver repartos asignados.\n <3> Ver retornos.\n <0> Volver.\n Elija una opción: ", transports.transportistas[pos].email);
+		printf("\nBienvenido, %s - ¿Qué desea hacer hoy?\n\n <1> Ver perfil.\n <2> Ver repartos asignados.\n <3> Ver retornos.\n <0> Salir.\n Elija una opción: ", transports.transportistas[pos].email);
 		if(scanf("%i",&op)!=1){
 			fflush(stdin);
 			printf("\nError: introduzca una entrada válida.");
@@ -377,6 +377,93 @@ void cambiar_contrasena_t(transport_vect transports, int pos){
 		Sleep(3000);															// Esperamos tres segundos antes de limpiar la pantalla para poder leer el mensaje anterior.		
 	}
 	
+}
+
+
+
+// FUNCIONES PARA LA GESTIÓN DE PROVEEDORES
+
+
+
+void listar_prov(admin_prov_vect provs){
+	
+	clear();
+	
+	printf("	#########################################\n");
+	printf("	# PROVEEDORES REGISTRADOS EN EL SISTEMA #\n");
+	printf("	#########################################\n\n");
+	
+	printf("		    Empresa | Email");
+	
+	for(int i = 1; i < provs.tam; i++)
+		printf("%s | %s", provs.usuarios[i].Nombre, provs.usuarios[i].email);
+	
+	printf("\n\n Presione cualquier tecla para continuar...");
+	getchar();
+}
+
+
+
+int buscar_prov(admin_prov_vect provs){
+}
+
+
+
+admin_prov_vect alta_prov(admin_prov_vect provs){
+}
+
+
+
+admin_prov_vect baja_prov(admin_prov_vect provs){
+}
+
+
+
+admin_prov_vect modificar_prov(admin_prov_vect provs){
+}
+
+
+
+// FUNCIONES PARA LA GESTIÓN DE TRANSPORTISTAS
+
+
+
+void listar_transport(transport_vect transports){
+	
+	clear();
+	
+	printf("	############################################\n");
+	printf("	# TRANSPORTISTAS REGISTRADOS EN EL SISTEMA #\n");
+	printf("	############################################\n\n");
+	
+	printf("	     Ciudad | Email | Nombre | Empresa  ");
+	
+	for(int i = 1; i < transports.tam; i++)
+		printf("%s | %s | %s | %s ", transports.transportistas[i].Ciudad, transports.transportistas[i].email, transports.transportistas[i].Nombre, transports.transportistas[i].Nom_Emp);
+	
+	printf("\n\n Presione cualquier tecla para continuar...");
+	getchar();
+
+}
+
+
+
+int buscar_transport(transport_vect transports){
+}
+
+
+
+transport_vect alta_transport(transport_vect transports){
+}
+
+
+
+transport_vect baja_transport(transport_vect transports){
+}
+
+
+
+transport_vect modificar_transport(transport_vect transports){
 }
 
 

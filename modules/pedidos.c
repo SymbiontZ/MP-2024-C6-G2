@@ -8,14 +8,6 @@
 #include<time.h>
 
 
-pedidos cargar_pedidos();
-prod_pedidos cargar_prod_pedidos();
-devoluciones cargar_devoluciones();
-void crear_pedido(int, pedidos);
-void guardar_pedido(pedidos);
-void guardar_producto_pedido(prod_pedidos);
-void crear_producto_pedido(pedidos, int, int, prod_pedidos);
-
 
 //Cabecera: pedidos cargar_pedidos()
 //Precondición: el fichero debe existir y la estructura de cada pedido
@@ -24,14 +16,23 @@ void crear_producto_pedido(pedidos, int, int, prod_pedidos);
 pedidos cargar_pedidos(){
     
     int n_pedidos=0, i=0, campo_pedidos;
+    char default_pedido[]="0-0/0/0-0-default-default-default";
     char cad_aux[150]; //cadena auxiliar en la que se guarda cada linea del fichero
     
     FILE * f_ped;
     f_ped=fopen("../data/Pedidos.txt", "r"); //abre el fichero Pedidos.txt
     if(f_ped==NULL){ //si no existe el fichero o esta vacio lo crea
+        f_ped=fopen("../data/Pedidos.txt","w");
+        fclose(f_ped);
         printf("ERROR");
     }
 
+    rewind(f_ped);
+    if(fgetc(f_ped)==EOF){
+        f_ped=fopen("../data/Pedidos.txt", "w");
+        fprintf(f_ped, default_pedido);
+        fclose(f_ped);
+    }   
     while(fgets(cad_aux, sizeof(cad_aux), f_ped)){ //lee cada linea del fichero y la almacena en la variable cad_aux, para contar las lineas del fichero
         //printf("%s", cad_aux);
         n_pedidos++; //numero de pedidos (numero de lineas del fichero)
@@ -72,11 +73,11 @@ pedidos cargar_pedidos(){
 //Precondicion: estrcutura pedidos cargada con datos del fichero Pedidos.txt y el id del cliente que ha realizado pedido, lo sabemos cuando ha iniciado sesión en la aplicación
 //Postcondicion: se crea un nuevo pedido realizado por un cliente y se guarda en la estructura pedidos, ademas de escribirlo en el fichero Pedidos.txt
 void crear_pedido(int id_cliente, pedidos p){
-    int n_pedidos=p.lon, i=0, nueva_id, pos, lugar, cheque;
+    int n_pedidos=p.lon-1, i=0, nueva_id, pos, lugar, cheque;
     char cod_cheque[10];
     nueva_id=n_pedidos +1; //id de un nuevo pedido, será el numero de pedidos que hay en el fichero +1
-    pos=nueva_id -1; //posicion del nuevo pedido en la estructura, es uno menos que el id ya que el vector empieza en la posicion 0
-    p.pedidos=realloc(p.pedidos, nueva_id*sizeof(pedido)); //reasignamos memoria dinámica, el tamaño coincide con nueva_id ya que son los pedidos que habrá en la estructura
+    pos=nueva_id; //posicion del nuevo pedido es la id ya que la nueva id sera un nuevo pedido por tanto el numero de pedidos que hay
+    p.pedidos=realloc(p.pedidos, (pos+1)*sizeof(pedido)); //reasignamos memoria dinámica, el tamaño sera la pos mas uno ya que la estructura tendra una posicion
     
     p.pedidos[pos].id_pedido=nueva_id;
     p.pedidos[pos].id_cliente=id_cliente;
@@ -166,13 +167,23 @@ void guardar_pedido(pedidos p){
 prod_pedidos cargar_prod_pedidos(){
     int n_prod_ped=0, i=0, campo_prod_ped;
     char cad_aux[200];
+    char default_prod_ped[]="0-0-0-0/0/0-0-default-0-default-default-0/0/0";
     
     FILE * f_prod_ped;
     f_prod_ped=fopen("../data/ProductosPedidos.txt", "r");
     if(f_prod_ped==NULL){
+        f_prod_ped = fopen("../data/ProductosPedidos.txt", "w");
+        fclose(f_prod_ped);
         printf("ERROR");
     }
 
+    rewind(f_prod_ped);
+
+    if(fgetc(f_prod_ped) == EOF){
+        f_prod_ped=fopen("../data/ProductosPedidos.txt", "w");
+        fprintf(f_prod_ped, default_prod_ped);
+        fclose(f_prod_ped);
+    }
     while(fgets(cad_aux, sizeof(cad_aux), f_prod_ped)){
         n_prod_ped++; //numero de productos pedidos
     }
@@ -254,7 +265,8 @@ void crear_producto_pedido(pedidos p, int pos_product, int id_pedido, prod_pedid
     c=cargar_clientes();
     produ_vect productos;
     productos=cargar_productos();
-    
+
+    prod_p.prod_pedidos=realloc(prod_p.prod_pedidos,(prod_p.lon+1)*sizeof(prod_pedido));
     pos=prod_p.lon; //la posicion en el vector de la estructura de producto pedido
     prod_p.prod_pedidos[pos].id_prod=productos.produ[pos_product].id_prod; //la id del producto que ha seleccionado el cliente
     prod_p.prod_pedidos[pos].id_pedido=id_pedido; //la id del pedido que se ha creado cuando el cliente decide comprar el producto
@@ -315,13 +327,23 @@ void crear_producto_pedido(pedidos p, int pos_product, int id_pedido, prod_pedid
 devoluciones cargar_devoluciones(){
     int n_dev=0, i=0, campo_devoluciones;
     char cad_aux[150];
+    char default_dev[]="0-0-0/0/0-default-default-0/0/0-0/0/0";
 
     FILE * f_dev;
     f_dev=fopen("../data/Devoluciones.txt", "r"); //Abrir fichero
     if(f_dev==NULL){
+        f_dev=fopen("../data/Devoluciones.txt", "w");
+        fclose(f_dev);
         printf("ERROR");
     }
 
+    rewind(f_dev);
+
+    if(fgetc(f_dev) == EOF){
+        f_dev=fopen("../data/Devoluciones.txt", "w");
+        fprintf(f_dev, default_dev);
+        fclose(f_dev);
+    }
     while(fgets(cad_aux, sizeof(cad_aux), f_dev)){
         n_dev++; //numero de devoluciones que hay, es decir, las líneas del fichero
     }
@@ -384,9 +406,13 @@ void guardar_devoluciones(devoluciones d){
 void crear_devolucion(devoluciones d, pedidos p, prod_pedidos prod_p){
     int i, pos, id_ped;
     pos=d.lon;
+    d.devoluciones=realloc(d.devoluciones, (pos+1)*sizeof(devolucion));
 
-    printf("Introduce el id del pedido que desea devolver");
+    fflush(stdin);
+
+    printf("Introduce el id del pedido que desea devolver: ");
     scanf("%d", &id_ped);
+    fflush(stdin);
     d.devoluciones[pos].id_pedido=id_ped; 
     
     for(i=0;i<p.lon;i++){//bucle para buscar el producto que corresponde a ese pedido que desea devolver el cliente
@@ -395,11 +421,29 @@ void crear_devolucion(devoluciones d, pedidos p, prod_pedidos prod_p){
         }
     }
     
-    d.devoluciones[pos].f_devol.dia=dia_sist(); //fecha en la que se realiza la solicitud de la devolucion, es la fecha del dia que se rellena la devolucion
-    d.devoluciones[pos].f_devol.mes=mes_sist();
-    d.devoluciones[pos].f_devol.anio=anio_sist();
-    
+    d.devoluciones[pos].f_devol.dia=3; //fecha en la que se realiza la solicitud de la devolucion, es la fecha del dia que se rellena la devolucion
+    d.devoluciones[pos].f_devol.mes=4;
+    d.devoluciones[pos].f_devol.anio=2024;
 
+    printf("Introduce el motivo de la devolución: "); //usuario introduce el motivo de la devolucion
+    fflush(stdin);
+    fgets(d.devoluciones[pos].motivo, 50, stdin);
+
+    strcpy(d.devoluciones[pos].estado, "pendiente");
+
+    d.devoluciones[pos].f_aceptacion.dia=0;
+    d.devoluciones[pos].f_aceptacion.mes=0;
+    d.devoluciones[pos].f_aceptacion.anio=0;
+
+    d.devoluciones[pos].f_caducidad.dia=0;
+    d.devoluciones[pos].f_caducidad.mes=0;
+    d.devoluciones[pos].f_caducidad.anio=0;
+
+    d.lon=d.lon+1;
+    printf("Se ha creado la devolucion correctamente");
+
+    guardar_devoluciones(d);
+    printf("Se han guardado los datos correctamente");
 
 
 }

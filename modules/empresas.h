@@ -116,6 +116,31 @@ typedef struct{
  void cambiar_contrasena_t(transport_vect transports, int pos);
 
 
+// --------------- FUNCIONES PARA LA GESTIÓN DE PROVEEDORES ---------------
+
+
+void listar_prov(admin_prov_vect provs);
+
+int buscar_prov(admin_prov_vect provs);
+
+admin_prov_vect alta_prov(admin_prov_vect provs);
+
+admin_prov_vect baja_prov(admin_prov_vect provs);
+
+admin_prov_vect modificar_prov(admin_prov_vect provs);
+
+// --------------- FUNCIONES PARA LA GESTIÓN DE TRANSPORTISTAS ---------------
+
+void listar_transport(transport_vect transports);
+
+int buscar_transport(transport_vect transports);
+
+transport_vect alta_transport(transport_vect transports);
+
+transport_vect baja_transport(transport_vect transports);
+
+transport_vect modificar_transport(transport_vect transports);
+
 // --------------- FUNCIONES DE LECTURA DE FICHEROS ---------------
 
 
@@ -124,7 +149,7 @@ typedef struct{
  admin_prov_vect cargar_adminprov();			// Carga en una estructura de tipo admin_prov_vect todos lo usuarios almacenados en AdminProv.txt
 
  //Precondición: No recibe nada.
- //Postcondición: Devuelve una variable de tipo trasnport_vect con la información de cada transportista almacenada en Transportistas.txt.
+ //Postcondición: Devuelve una variable de tipo transport_vect con la información de cada transportista almacenada en Transportistas.txt.
  transport_vect cargar_transportistas();		// Carga en una estructura de tipo transport_vect todos lo usuarios almacenados en Transportistas.txt
 
 
