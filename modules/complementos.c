@@ -11,7 +11,8 @@ void clear(){
 int dia_sist(){
     tiempo_actual = time(NULL);
     fechasys = localtime(&tiempo_actual);
-    int dia = fechasys->tm_mday;    
+    int dia = fechasys->tm_mday;
+    printf("\n DIA: %d \n", dia); 
     return  dia;
 }
 
