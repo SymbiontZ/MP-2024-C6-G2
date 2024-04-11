@@ -1,6 +1,4 @@
 #include "useradmin.h"
-#include "complementos.h"
-#include "empresas.h"
 
 clients cargar_clientes(){
     char filename[] = "../data/Clientes.txt";
@@ -37,7 +35,7 @@ clients cargar_clientes(){
     C.n_clients = n_clients;
     C.clients = malloc(C.n_clients * sizeof(client));           //Asignacion de memoria dinamica "C.clients[n_clients]"
     
-    if(C.clients == NULL){
+    if(C.clients == NULL){  
         printf("No se ha podido asignar memoria a la estructura clientes");
         getchar();
         exit(EXIT_FAILURE);
@@ -74,7 +72,7 @@ clients agregar_cliente(clients C){
     /***DEBIDO AL USUARIO POR DEFECTO LA ID Y LA POSICION EN LA ESTRUCTURA DEL CLIENTE ES LA MISMA***/
     int new_id = C.n_clients;           //IDENTIFICADOR DEL NUEVO CLIENTE   
 
-    C.clients = realloc(C.clients, (new_id+1)*sizeof(client));
+    C.clients = realloc(C.clients, (new_id+1)*sizeof(client));  //Reasignar numero de clientes
     if (C.clients == NULL){
         printf("No se pudo asignar la estructura de clientes");
         getchar();
@@ -82,11 +80,11 @@ clients agregar_cliente(clients C){
     }
 
     C.clients[new_id].Id_cliente = new_id;
-    C = cliente_nom(C, new_id);
-    C = cliente_email(C, new_id, 0);
-    C = cliente_contr(C, new_id, 0);
-    C = cliente_dir(C, new_id , 0);
-    C = cliente_cart(C, new_id, 0);
+    C = cliente_nom(C, new_id);                 //Crear nombre
+    C = cliente_email(C, new_id, 0);            //      correo      
+    C = cliente_contr(C, new_id, 0);            //      contrasena
+    C = cliente_dir(C, new_id , 0);             //      direccion
+    C = cliente_cart(C, new_id, 0);             //      cartera
 
     C.n_clients++;
 

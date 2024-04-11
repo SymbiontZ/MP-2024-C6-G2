@@ -369,7 +369,7 @@ void cambiar_contrasena_t(transport_vect transports, int pos){
 			else	
 				printf("\nContrasenas distintas, inténtelo de nuevo.");			// Solicitamos la nueva contraseña al usuario mientras no verifique que se repitan.
 		}while(valido == 0);
-		strcpy_s(transports.transportistas[pos].Contrasena,sizeof(nueva_contra), nueva_contra);
+		strcpy(transports.transportistas[pos].Contrasena, nueva_contra);
 		printf("\nContraseña cambiada satisfactoriamente.");
 		Sleep(3000);															// Esperamos tres segundos antes de limpiar la pantalla para poder leer el mensaje anterior.
 	}else{

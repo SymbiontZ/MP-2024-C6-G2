@@ -1,10 +1,13 @@
 #ifndef USERADMIN_H_
 #define USERADMIN_H_
 
+#include "complementos.h"
 #include"empresas.h"
+
 #include <stdio.h>
 #include <stdlib.h> 
 #include <string.h>
+#include <windows.h>
 
 #define MAX_EMAIL 31            //Longitud de email + 1(terminador)
 #define MAX_PSW 16              //Longitud de contrasena + 1(terminador)
