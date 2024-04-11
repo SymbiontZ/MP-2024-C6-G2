@@ -355,10 +355,96 @@ Descuentos nuevo_imp(Descuentos D, int pos){
 
 Descuentos Baja_Descuentos(Descuentos D){
     int tam = D.tam, i;
+    char Id_cod_busqueda[11], new_Aplicable[7] = "inactivo";
 
-    printf("Introduzca el identificador del descuento que quiere eliminar\n");
+    printf("Introduzca el identificador del descuento que quiere dar de baja\n");
+    scanf("%s", &Id_cod_busqueda);
 
     for(i=0; i<tam; i++){
-
+        if(strcmp(Id_cod_busqueda, D.Desc[i].Id_cod) == 0)
+            strcpy(D.Desc[i].Aplicable, new_Aplicable);
     }
+
+    return D;
+}
+
+
+Descuentos Busqueda_Descuentos(Descuentos D){
+
+    int tam = D.tam, i;
+    char Id_cod_busqueda[11];
+
+    printf("Introduzca el identificador del descuento que quiere buscar\n");
+    scanf("%s", &Id_cod_busqueda);
+
+    for(i=0; i<tam; i++){
+        if(strcmp(Id_cod_busqueda, D.Desc[i].Id_cod) == 0)
+            printf("Descuento encontrado %i: %s\n", &i, &Id_cod_busqueda);
+    }
+
+    return D;
+}
+
+
+
+Descuentos Listar_Descuentos(Descuentos D){
+
+    int tam = D.tam, i;
+    for(i=0; i<tam; i++){
+        printf("Código de descuento %i: %s\n", &i, &D.Desc[i].Id_cod);
+    }
+
+    return D;
+}
+
+
+Descuentos Modificar_Descuentos(Descuentos D){
+    int tam = D.tam, i, op;
+    char Id_cod_busqueda[11];
+
+    printf("Introduzca el identificador del descuento que quiere modificar\n");
+    scanf("%s", &Id_cod_busqueda);
+
+    for(i=0; i<tam; i++){
+        if(strcmp(Id_cod_busqueda, D.Desc[i].Id_cod) == 0){
+
+            printf("Indique que quiere modificar:\n\n");
+            printf("1. ID\n");
+            printf("2. Descripcion\n");
+            printf("3. Tipo\n");
+            printf("4. Estado\n");
+            printf("5. Aplicabilidad\n");
+            printf("6. Importe\n");
+            printf("0. Cancelar");
+            scanf("%i", &op);
+
+            switch(op){
+                case 1:
+                    D = nuevo_id(D, tam);
+                    break;
+                case 2:
+                    D = nueva_desc(D, tam);
+                    break;
+                case 3:
+                    D = nuevo_tipo(D, tam);
+                    break;
+                case 4:
+                    D = nuevo_est(D, tam);
+                    break;
+                case 5:
+                    D = nuevo_apl(D, tam);
+                    break;
+                case 6:
+                    D = nuevo_imp(D, tam);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    return D;
+}
+
+Descuentos Asignar_Descuentos(Descuentos D){
 }

@@ -83,7 +83,7 @@ void crear_pedido(int id_cliente, pedidos p){
 
     p.pedidos[pos].f_pedido.dia=dia_sist();
     p.pedidos[pos].f_pedido.mes=mes_sist();
-    p.pedidos[pos].f_pedido.anio=anno_sist();
+    p.pedidos[pos].f_pedido.anio=anio_sist();
 
     printf("Selecciona un lugar de entrega: \n");
     printf("1. DOMICILIO\n");
@@ -243,7 +243,7 @@ void guardar_productos_pedidos(prod_pedidos prod_p){
 //Cabecera
 //Precondición
 //Postcondicion
-void crear_producto_pedido(pedidos p, int id_producto, int id_pedido, prod_pedidos prod_p){
+void crear_producto_pedido(pedidos p, int pos_product, int id_pedido, prod_pedidos prod_p){
     int i, pos, nuevo_prod_p, ud,j,k, ocupado=0, id_t, m=0, numero;
     int disponibles[2]; //vector con los transportistas que pueden encargarse de un producto
     char ciudad[50]; //variable auxiliar para almacenar la ciudad del cliente
@@ -252,10 +252,14 @@ void crear_producto_pedido(pedidos p, int id_producto, int id_pedido, prod_pedid
     t=cargar_transportistas(); //carga la estructura transportistas con los datos que hay en el fichero
     clients c;
     c=cargar_clientes();
+    produ_vect productos;
+    productos=cargar_productos();
     
     pos=prod_p.lon; //la posicion en el vector de la estructura de producto pedido
-    prod_p.prod_pedidos[pos].id_prod=id_producto; //la id del producto que ha seleccionado el cliente
+    prod_p.prod_pedidos[pos].id_prod=productos.produ[pos_product].id_prod; //la id del producto que ha seleccionado el cliente
     prod_p.prod_pedidos[pos].id_pedido=id_pedido; //la id del pedido que se ha creado cuando el cliente decide comprar el producto
+    
+
     for(i=0;i<p.lon;i++){
         if(id_pedido==p.pedidos[i].id_pedido){
             printf("el pedido existe");
@@ -263,40 +267,45 @@ void crear_producto_pedido(pedidos p, int id_producto, int id_pedido, prod_pedid
             //UNIDADES DEL PRODUCTO
             printf("Cuantas unidades desea del producto: ");
             scanf("%d",&ud);
-            //Se comprueba con modulos productos si las unidades son posibles
-            prod_p.prod_pedidos[pos].num_unid=ud;
+            if(ud<productos.produ[pos_product].stock && ud>0){
+                prod_p.prod_pedidos[pos].num_unid=ud;
+            }
+            else{
+                printf("ERROR");
+                printf("ha introducido un numero de unidades incorrecto");
+            }
 
             //FECHA DE ENTREGA
             
 
             //IMPORTE
-
-
+            prod_p.prod_pedidos[pos].importe=productos.produ[pos_product].importe; 
+            
+            //ESTADO
+            strcpy(prod_p.prod_pedidos[pos].estado, "En preparacion");
             //ID TRANSPORTISTA
             for(j=0;j<c.n_clients;j++){ //bucle para recorrer la estructura cliente
                 if(p.pedidos[i].id_cliente==c.clients[j].Id_cliente){ //buscar en el fichero de clientes, el cliente que ha realizado este pedido
                     strcpy(ciudad, c.clients[j].Localidad); //en una cadena auxiliar guardo la ciudad del cliente
-                    for(k=0;k<t.tam;k++){ //bucle para recorrer la estructura transportistas
-                        if(strcmp(ciudad, t.transportistas[k].Ciudad)==0){//buscar transportista de la misma ciudad del cliente
-                            printf("id transportista %d\n", t.transportistas[k].Id_transp);
-                            disponibles[m]=t.transportistas[k].Id_transp; //rellena el vector con los transportistas de esa ciudad
-                            m++;
-                            }
-                        }
-                    }
+                }
+            }
+            for(k=0;k<t.tam;k++){ //bucle para recorrer la estructura transportistas
+                if(strcmp(ciudad, t.transportistas[k].Ciudad)==0){//buscar transportista de la misma ciudad del cliente
+                    printf("id transportista %d\n", t.transportistas[k].Id_transp);
+                    disponibles[m]=t.transportistas[k].Id_transp; //rellena el vector con los transportistas de esa ciudad
+                    m++;
                 }
             }
             srand (time(NULL));
-            numero=rand() % (m+1);
-            printf("numero aletorio : %d\n", numero);
+            numero=rand() % (m+1); //numero aleatorio para asignar un transportista de los que hay en esa ciudad
             prod_p.prod_pedidos[pos].id_transp=disponibles[numero];
-     
+            //añadir excepcion si no hay transportistas en esa ciudad
+
+            //LOCKERS
+            //igual que con asignar un transportista
         }
-
-    
-    
+    }
 }
-
         
 
 //Cabecera: devoluciones cargar_devoluciones()
@@ -304,11 +313,11 @@ void crear_producto_pedido(pedidos p, int id_producto, int id_pedido, prod_pedid
 //Postcondicion: carga en la estructura devoluciones los datos que hay en el fichero Devoluciones.txt
 
 devoluciones cargar_devoluciones(){
-    int n_dev=0, i, campo_devoluciones;
+    int n_dev=0, i=0, campo_devoluciones;
     char cad_aux[150];
 
     FILE * f_dev;
-    f_dev=fopen("../data/Devoluciones.txt", "wr+"); //Abrir fichero
+    f_dev=fopen("../data/Devoluciones.txt", "r"); //Abrir fichero
     if(f_dev==NULL){
         printf("ERROR");
     }
@@ -323,16 +332,76 @@ devoluciones cargar_devoluciones(){
 
     dev.devoluciones=malloc(n_dev*sizeof(devolucion));
     while(fgets(cad_aux, sizeof(cad_aux), f_dev) && i<n_dev){
-        campo_devoluciones=sscanf(cad_aux, "%d-%d-%10[^-]-%50[^-]-%10[^-]-%10[^-]-%10[^-]",
+        campo_devoluciones=sscanf(cad_aux, "%d-%d-%d/%d/%d-%50[^-]-%10[^-]-%d/%d/%d-%d/%d/%d",
         &dev.devoluciones[i].id_pedido,
         &dev.devoluciones[i].id_prod,
-        dev.devoluciones[i].f_devol,
+        &dev.devoluciones[i].f_devol.dia,
+        &dev.devoluciones[i].f_devol.mes,
+        &dev.devoluciones[i].f_devol.anio,
+        dev.devoluciones[i].motivo,
         dev.devoluciones[i].estado,
-        dev.devoluciones[i].f_aceptacion,
-        dev.devoluciones[i].f_caducidad);
+        &dev.devoluciones[i].f_aceptacion.dia,
+        &dev.devoluciones[i].f_aceptacion.mes,
+        &dev.devoluciones[i].f_aceptacion.anio,
+        &dev.devoluciones[i].f_caducidad.dia,
+        &dev.devoluciones[i].f_caducidad.mes,
+        &dev.devoluciones[i].f_caducidad.anio);
     
     i++;
     }
+
+    return dev;
+
+}
+
+void guardar_devoluciones(devoluciones d){
+    int i;
+
+    FILE*f_dev;
+    f_dev=fopen("../data/Devoluciones.txt", "w");
+    if(f_dev==NULL){
+        printf("ERROR");
+    }
+
+    for(i=0;i<d.lon;i++){
+        fprintf(f_dev,"%d-%d-%d/%d/%d-%s-%s-%d/%d/%d-%d/%d/%d",
+        d.devoluciones[i].id_pedido,
+        d.devoluciones[i].id_prod,
+        d.devoluciones[i].f_devol.dia,
+        d.devoluciones[i].f_devol.mes,
+        d.devoluciones[i].f_devol.anio,
+        d.devoluciones[i].motivo,
+        d.devoluciones[i].estado,
+        d.devoluciones[i].f_aceptacion.dia,
+        d.devoluciones[i].f_aceptacion.mes,
+        d.devoluciones[i].f_aceptacion.anio,
+        d.devoluciones[i].f_caducidad.dia,
+        d.devoluciones[i].f_caducidad.mes,
+        d.devoluciones[i].f_caducidad.anio);
+    }
+}
+
+void crear_devolucion(devoluciones d, pedidos p, prod_pedidos prod_p){
+    int i, pos, id_ped;
+    pos=d.lon;
+
+    printf("Introduce el id del pedido que desea devolver");
+    scanf("%d", &id_ped);
+    d.devoluciones[pos].id_pedido=id_ped; 
+    
+    for(i=0;i<p.lon;i++){//bucle para buscar el producto que corresponde a ese pedido que desea devolver el cliente
+        if(id_ped==prod_p.prod_pedidos[i].id_pedido){
+            d.devoluciones[pos].id_prod=prod_p.prod_pedidos[i].id_prod;
+        }
+    }
+    
+    d.devoluciones[pos].f_devol.dia=dia_sist(); //fecha en la que se realiza la solicitud de la devolucion, es la fecha del dia que se rellena la devolucion
+    d.devoluciones[pos].f_devol.mes=mes_sist();
+    d.devoluciones[pos].f_devol.anio=anio_sist();
+    
+
+
+
 }
 
 fecha fecha_entrega(fecha f, int dia_ent){

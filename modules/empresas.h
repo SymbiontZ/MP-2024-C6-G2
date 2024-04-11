@@ -1,11 +1,6 @@
 #ifndef EMPRESAS_H
 #define EMPRESAS_H
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <windows.h>
-
 #define LONG_MAX_ADMINPROV 86
 #define LONG_MAX_TRANSPORT 113
 
@@ -87,6 +82,8 @@ typedef struct{
  //Precondición: Recibe una estructura de tipo admin_prov_vect (el vector de usuarios tipo adminprov), y la posición a utilizar en él.
  //Postcondición: El usuario habrá realizado las tareas de gestión de productos convenientes.
  void ver_productos(admin_prov_vect provs, int pos);
+
+
 
  void ver_pedidos(admin_prov_vect provs, int pos);
 

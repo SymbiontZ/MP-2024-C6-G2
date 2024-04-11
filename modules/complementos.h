@@ -18,7 +18,7 @@ void titulo();
 
 int dia_sist();
 int mes_sist();
-int anno_sist();
+int anio_sist();
 
 //PRECONDICION: Se le pasa una cadena
 //POSCONDICION: Se le cambia el caracter salto de linea por terminador
