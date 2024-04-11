@@ -133,7 +133,7 @@ void menu_transport(transport_vect transports, int pos){
 		printf("\n	   NOMBRE: %s\n", transports.transportistas[pos].Nombre);
 		printf("\n	   EMPRESA: %s\n", transports.transportistas[pos].Nom_Emp);
 		
-		printf("\nBienvenido, %s - ¿Qué desea hacer hoy?\n\n <1> Ver perfil.\n <2> Ver repartos asignados.\n <3> Ver retornos.\n <0> Volver.\n Elija una opción: ", transports.transportistas[pos].email);
+		printf("\nBienvenido, %s - ¿Qué desea hacer hoy?\n\n <1> Ver perfil.\n <2> Ver repartos asignados.\n <3> Ver retornos.\n <0> Salir.\n Elija una opción: ", transports.transportistas[pos].email);
 		if(scanf("%i",&op)!=1){
 			fflush(stdin);
 			printf("\nError: introduzca una entrada válida.");
