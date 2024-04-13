@@ -16,7 +16,7 @@
 pedidos cargar_pedidos(){
     
     int n_pedidos=0, i=0, campo_pedidos;
-    char default_pedido[]="0-0/0/0-0-default-default-default";
+    char default_pedido[]="0-0/0/0-0-default-default-default\n";
     char cad_aux[150]; //cadena auxiliar en la que se guarda cada linea del fichero
     
     FILE * f_ped;
@@ -66,6 +66,9 @@ pedidos cargar_pedidos(){
         i++;
         
     }
+
+    printf("pedidos: %d\n", n_pedidos);
+
     return p;
 }
 
@@ -116,10 +119,7 @@ void crear_pedido(int id_cliente, pedidos p){
             fflush(stdin);
             fgets(cod_cheque, 11, stdin);
             //if cod_cheque existe y es valido lo copia al fichero
-            int len = strlen(cod_cheque);
-            if (len > 0 && cod_cheque[len - 1] == '\n') {
-                cod_cheque[len - 1] = '\0'; // Reemplazar el carácter de salto de linea con el carácter nulo
-            }
+            terminador_cad(cod_cheque);
             strcpy(p.pedidos[pos].id_cod, cod_cheque);
             break;
         case 2:
@@ -167,7 +167,7 @@ void guardar_pedido(pedidos p){
 prod_pedidos cargar_prod_pedidos(){
     int n_prod_ped=0, i=0, campo_prod_ped;
     char cad_aux[200];
-    char default_prod_ped[]="0-0-0-0/0/0-0-default-0-default-default-0/0/0";
+    char default_prod_ped[]="0-0-0-0/0/0-0-default-0-default-default-0/0/0\n";
     
     FILE * f_prod_ped;
     f_prod_ped=fopen("../data/ProductosPedidos.txt", "r");
@@ -211,11 +211,15 @@ prod_pedidos cargar_prod_pedidos(){
             &prod_p.prod_pedidos[i].f_devolucion.dia,
             &prod_p.prod_pedidos[i].f_devolucion.mes,
             &prod_p.prod_pedidos[i].f_devolucion.anio);
-        
+
+        if(campo_prod_ped != 14){
+            printf("error en la estructura productos pedidos, i=%d", i);
+        }
+
         i++;
     }
 
-    printf("productos pedidos: %d", n_prod_ped);
+    printf("productos pedidos: %d\n", n_prod_ped);
     
     return prod_p;
 }
@@ -233,7 +237,7 @@ void guardar_productos_pedidos(prod_pedidos prod_p){
     }
 
     for(i=0;i<prod_p.lon;i++){
-        fprintf(f_prod_ped, "%d-%d-%d-%d/%d/%d-%f-%s-%d-%s-%s-%d/%d/%d",
+        fprintf(f_prod_ped, "%d-%d-%d-%d/%d/%d-%f-%s-%d-%s-%s-%d/%d/%d\n",
             prod_p.prod_pedidos[i].id_pedido,
             prod_p.prod_pedidos[i].id_prod,
             prod_p.prod_pedidos[i].num_unid,
@@ -327,7 +331,7 @@ void crear_producto_pedido(pedidos p, int pos_product, int id_pedido, prod_pedid
 devoluciones cargar_devoluciones(){
     int n_dev=0, i=0, campo_devoluciones;
     char cad_aux[150];
-    char default_dev[]="0-0-0/0/0-default-default-0/0/0-0/0/0";
+    char default_dev[]="0-0-0/0/0-default-default-0/0/0-0/0/0\n";
 
     FILE * f_dev;
     f_dev=fopen("../data/Devoluciones.txt", "r"); //Abrir fichero
@@ -350,9 +354,10 @@ devoluciones cargar_devoluciones(){
     rewind(f_dev);
 
     devoluciones dev;
-    dev.lon=n_dev;
 
+    dev.lon=n_dev;
     dev.devoluciones=malloc(n_dev*sizeof(devolucion));
+
     while(fgets(cad_aux, sizeof(cad_aux), f_dev) && i<n_dev){
         campo_devoluciones=sscanf(cad_aux, "%d-%d-%d/%d/%d-%50[^-]-%10[^-]-%d/%d/%d-%d/%d/%d",
         &dev.devoluciones[i].id_pedido,
@@ -368,10 +373,15 @@ devoluciones cargar_devoluciones(){
         &dev.devoluciones[i].f_caducidad.dia,
         &dev.devoluciones[i].f_caducidad.mes,
         &dev.devoluciones[i].f_caducidad.anio);
+
+        if(campo_devoluciones!=13){
+            printf("error en estructura devoluciones, i=%d", i);
+        }
     
     i++;
     }
 
+    printf("devoluciones: %d\n", n_dev);
     return dev;
 
 }
@@ -386,7 +396,7 @@ void guardar_devoluciones(devoluciones d){
     }
 
     for(i=0;i<d.lon;i++){
-        fprintf(f_dev,"%d-%d-%d/%d/%d-%s-%s-%d/%d/%d-%d/%d/%d",
+        fprintf(f_dev,"%d-%d-%d/%d/%d-%s-%s-%d/%d/%d-%d/%d/%d\n",
         d.devoluciones[i].id_pedido,
         d.devoluciones[i].id_prod,
         d.devoluciones[i].f_devol.dia,
@@ -404,7 +414,8 @@ void guardar_devoluciones(devoluciones d){
 }
 
 void crear_devolucion(devoluciones d, pedidos p, prod_pedidos prod_p){
-    int i, pos, id_ped;
+    int i, pos, id_ped, producto;
+    char motivo[50];
     pos=d.lon;
     d.devoluciones=realloc(d.devoluciones, (pos+1)*sizeof(devolucion));
 
@@ -417,19 +428,23 @@ void crear_devolucion(devoluciones d, pedidos p, prod_pedidos prod_p){
     
     for(i=0;i<p.lon;i++){//bucle para buscar el producto que corresponde a ese pedido que desea devolver el cliente
         if(id_ped==prod_p.prod_pedidos[i].id_pedido){
-            d.devoluciones[pos].id_prod=prod_p.prod_pedidos[i].id_prod;
+            producto=prod_p.prod_pedidos[i].id_prod; //saca el producto al que corresponde el pedido
         }
     }
+    d.devoluciones[pos].id_prod=producto;
+    printf("el producto que corresponde a ese pedido es: %d\n", producto);
     
-    d.devoluciones[pos].f_devol.dia=3; //fecha en la que se realiza la solicitud de la devolucion, es la fecha del dia que se rellena la devolucion
-    d.devoluciones[pos].f_devol.mes=4;
-    d.devoluciones[pos].f_devol.anio=2024;
+    d.devoluciones[pos].f_devol.dia=dia_sist(); //fecha en la que se realiza la solicitud de la devolucion, es la fecha del dia que se rellena la devolucion
+    d.devoluciones[pos].f_devol.mes=mes_sist();
+    d.devoluciones[pos].f_devol.anio=anio_sist();
 
     printf("Introduce el motivo de la devolución: "); //usuario introduce el motivo de la devolucion
     fflush(stdin);
-    fgets(d.devoluciones[pos].motivo, 50, stdin);
+    fgets(motivo, 50, stdin);
+    terminador_cad(motivo);
+    strcpy(d.devoluciones[pos].motivo, motivo);
 
-    strcpy(d.devoluciones[pos].estado, "pendiente");
+    strcpy(d.devoluciones[pos].estado, "pendiente");//estado original de la devolucion
 
     d.devoluciones[pos].f_aceptacion.dia=0;
     d.devoluciones[pos].f_aceptacion.mes=0;
@@ -440,10 +455,10 @@ void crear_devolucion(devoluciones d, pedidos p, prod_pedidos prod_p){
     d.devoluciones[pos].f_caducidad.anio=0;
 
     d.lon=d.lon+1;
-    printf("Se ha creado la devolucion correctamente");
+    printf("Se ha creado la devolucion correctamente\n");
 
     guardar_devoluciones(d);
-    printf("Se han guardado los datos correctamente");
+    printf("Se han guardado los datos correctamente\n");
 
 
 }
