@@ -273,9 +273,7 @@ void menuadmin_cliente(){
     clients C = cargar_clientes();
     int opt = -1;
     char resp = '0';
-    int pos;                            //Posicion del cliente al que se le realizan los cambios.
-
-    char mensaje[] = "Seguro que quiere agregar un cliente [s/n]: ";
+    int pos;                            //Posicion del cliente al que se le realizan los cambios. 
 
     while (opt < 0 || opt > 5){
         //MOSTRAR INFORMACION//
@@ -291,7 +289,8 @@ void menuadmin_cliente(){
                 opt = -1;   
                 break;
             case 2:
-                resp = confirmacion(mensaje);
+                printf("Seguro que quiere agregar un cliente [s/n]: ");
+                resp = confirmacion();
                 if(resp == 'S'|| resp == 's')
                     C = agregar_cliente(C);
                 opt = -1;
@@ -324,7 +323,7 @@ void menuadmin_admin(admin_prov_vect admin){
     char resp;
     int pos;                            //Posicion del admin al que se le realizan los cambios.
 
-    char mensaje[] = "Seguro que quiere agregar un administrador [s/n]: ";
+    
 
     while (opt < 0 || opt > 5){
         //MOSTRAR INFORMACION//
@@ -347,7 +346,8 @@ void menuadmin_admin(admin_prov_vect admin){
                 opt = -1;   
                 break;
             case 2:
-                resp = confirmacion(mensaje);
+                printf("Seguro que quiere agregar un administrador [s/n]: ");
+                resp = confirmacion();
                 if(resp == 'S'|| resp == 's')
                     admin = agregar_admin(admin);
                 opt = -1;
@@ -392,6 +392,10 @@ void mostrar_admin(admin_prov_vect admin){
 }
 /*** GESTIONAR ADMIN ***/
 
+int buscar_admin(admin_prov_vect admin){
+    
+}
+
 admin_prov_vect agregar_admin(admin_prov_vect admin){
     /***DEBIDO AL USUARIO POR DEFECTO LA ID Y LA POSICION EN LA ESTRUCTURA DEL CLIENTE ES LA MISMA***/
     int new_id = admin.tam;           //IDENTIFICADOR DEL NUEVO CLIENTE   
@@ -425,39 +429,33 @@ admin_prov_vect eliminar_admin(admin_prov_vect admin, int pos){
     char resp;      //Variable para responder preguntas si/no.
     clear();
     printf("Estas seguro de eliminar al cliente [ %s ]? [s/n]: ", admin.usuarios[pos].email);
-    
-    scanf(" %c", &resp);
-    fflush(stdin);
-    while (resp != 'S' && resp != 's' && resp != 'N' && resp != 'n'){
-        printf("Introduzca una respuesta valida: ");
-        scanf(" %c", &resp);
-        fflush(stdin);
-    }
+    resp = confirmacion();
 
     if (resp == 'S' || resp == 's'){
-        for (i = pos; i < C.n_clients - 1; i++) {	//Desplazar la posicion de los clientes
-			C.clients[i] = C.clients[i + 1];
-			C.clients[i].Id_cliente = i + 1;				//Reasignar id clientes
+        for (i = pos; i < admin.tam - 1; i++) {	//Desplazar la posicion de los clientes
+			admin.usuarios[i] = admin.usuarios[i + 1];
+			admin.usuarios[i].Id_empresa = i + 1;				//Reasignar id clientes
 		}
 
-        C.n_clients --;
+        admin.tam --;
 
-        C.clients = realloc(C.clients, C.n_clients*sizeof(client));
-        if (C.clients == NULL) {
+        admin.usuarios = realloc(admin.usuarios, admin.tam*sizeof(admin_prov));
+        if (admin.usuarios == NULL) {
 			printf ("\nNo se pudo reasignar estructuras clientes.");
         	getchar ();
         	exit (EXIT_FAILURE);
 		}
 
-        guardar_clientes(C);                        //Volcado de datos a fichero
+        guardar_adminprov(admin);                        //Volcado de datos a fichero
 
         printf("Se ha eliminado al usuario correctamente");
     }else{
         printf("Se cancelo la eliminacion del cliente.");
     }
     Sleep(2000);
-    return C;
+    return admin;
 }
+
 admin_prov_vect gestionar_admin (admin_prov_vect admin, int pos, int mod){
     //CAMBIO DE INFORMACION//
     int opt = -1;
