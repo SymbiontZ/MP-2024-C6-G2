@@ -75,9 +75,10 @@ pedidos cargar_pedidos(){
 //Cabecera: void crear_pedido(int id_cliente, pedidos p)
 //Precondicion: estrcutura pedidos cargada con datos del fichero Pedidos.txt y el id del cliente que ha realizado pedido, lo sabemos cuando ha iniciado sesión en la aplicación
 //Postcondicion: se crea un nuevo pedido realizado por un cliente y se guarda en la estructura pedidos, ademas de escribirlo en el fichero Pedidos.txt
-void crear_pedido(int id_cliente, pedidos p){
+void crear_pedido(int id_cliente, pedidos p, int id_producto){
     int n_pedidos=p.lon-1, i=0, nueva_id, pos, lugar, cheque;
     char cod_cheque[10];
+    int v_prod[1], v_uds[1];//vectores auxiliares con los id de los productos que realiza el cliente ese pedido y las unidades de cada producto
     nueva_id=n_pedidos +1; //id de un nuevo pedido, será el numero de pedidos que hay en el fichero +1
     pos=nueva_id; //posicion del nuevo pedido es la id ya que la nueva id sera un nuevo pedido por tanto el numero de pedidos que hay
     p.pedidos=realloc(p.pedidos, (pos+1)*sizeof(pedido)); //reasignamos memoria dinámica, el tamaño sera la pos mas uno ya que la estructura tendra una posicion
