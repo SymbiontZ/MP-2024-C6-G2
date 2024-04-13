@@ -6,7 +6,13 @@ int main()
 {
     pedidos P=cargar_pedidos();
     printf("se ha cargado el fichero Pedidos.txt correctamente\n");
-    crear_pedido(3,P);
+    int confirmacion=crear_pedido(3,P);
+    if(confirmacion==-1){
+        printf("se ha cancelado la compra\n");
+    }
+    else{
+        printf("se ha realizado el pedido correctamente\n");
+    }
     /*prod_pedidos Prod_P=cargar_prod_pedidos();*/
     printf("Se ha cargado el fichero ProductosPedidos.txt correctamente\n");
     //guardar_productos_pedidos(Prod_P);
