@@ -12,7 +12,6 @@ int dia_sist(){
     tiempo_actual = time(NULL);
     fechasys = localtime(&tiempo_actual);
     int dia = fechasys->tm_mday;
-    printf("\n DIA: %d \n", dia); 
     return  dia;
 }
 
@@ -48,10 +47,8 @@ void terminador_cad(char cad[]) {
     }
 }
 
-char confirmacion(char mensaje[]){
+char confirmacion(){
     char resp = '0';
-
-    printf("%s", mensaje);
 
     fflush(stdin);
     scanf("%c", &resp);

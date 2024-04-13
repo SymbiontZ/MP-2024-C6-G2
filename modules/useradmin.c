@@ -11,11 +11,9 @@ clients cargar_clientes(){
     int campo_cliente;                          //Entero que verifica no. campos de la estructura cliente.       
 
     FILE *f_clients;
-    f_clients = fopen(filename, "r");
+    f_clients = fopen(filename, "a+");
 
     if(f_clients == NULL){                          //Excepcion si no encuentra fichero
-        f_clients = fopen(filename, "w");                                
-        fclose(f_clients);
         printf("No se pudo abrir el archivo de clientes. Se ha creado un nuevo archivo.\n");
         Sleep(2000);
     }
@@ -212,19 +210,19 @@ void menuadmin(admin_prov_vect admin, int pos){
             printf("| Administrador          |\n");
 
         printf("+------------------------+\n");
-        printf("1. Perfil\n");
-        printf("2. Clientes\n");
-        printf("3. Proveedores\n");
-        printf("4. Productos\n");
-        printf("5. Categorias\n");
-        printf("6. Pedidos\n");
-        printf("7. Transportistas\n");
-        printf("8. Descuentos\n");
-        printf("9. Devoluciones\n");
+        printf("| <1. Perfil\n");
+        printf("| <2. Clientes\n");
+        printf("| <3. Proveedores\n");
+        printf("| <4. Productos\n");
+        printf("| <5. Categorias\n");
+        printf("| <6. Pedidos\n");
+        printf("| <7. Transportistas\n");
+        printf("| <8. Descuentos\n");
+        printf("| <9. Devoluciones\n");
         if (pos == 0)
-            printf("10. Administradores\n");
-        printf("0. Salir del sistema\n");
-
+            printf("| <10. Administradores\n");
+        printf("| <0. Salir del sistema\n");
+        printf("+------------------------+\n");
         scanf("%d", &opt);
         fflush(stdin);
 
@@ -244,6 +242,22 @@ void menuadmin(admin_prov_vect admin, int pos){
             opt = -1;
             break;
         case 5:
+            opt = -1;
+            break;
+        case 6:
+            opt = -1;
+            break;
+        case 7:
+            opt = -1;
+            break;
+        case 8:
+            opt = -1;
+            break;
+        case 9:
+            opt = -1;
+            break;
+        case 10:
+            menuadmin_admin(admin);
             opt = -1;
             break;
         case 0:
@@ -305,7 +319,145 @@ void menuadmin_cliente(){
     }
 }
 
+void menuadmin_admin(admin_prov_vect admin){
+    int opt = -1;
+    char resp;
+    int pos;                            //Posicion del admin al que se le realizan los cambios.
 
+    char mensaje[] = "Seguro que quiere agregar un administrador [s/n]: ";
+
+    while (opt < 0 || opt > 5){
+        //MOSTRAR INFORMACION//
+        clear();
+        printf("+----------------------------+\n");
+        printf("| QUE DESEA REALIZAR:        |\n");
+        printf("+----------------------------+\n");
+        printf("| <1> Mostrar listado admin  |\n");
+        printf("| <2> Dar de alta admin      |\n");
+        printf("| <3> Dar de baja admin      |\n");
+        printf("| <4> Modificar admin        |\n");
+        printf("| <0> Salir                  |\n");
+        printf("+----------------------------+\n");
+
+        scanf("%d", &opt);
+        fflush(stdin);
+        switch (opt){
+            case 1:
+                mostrar_admin(admin);
+                opt = -1;   
+                break;
+            case 2:
+                resp = confirmacion(mensaje);
+                if(resp == 'S'|| resp == 's')
+                    admin = agregar_admin(admin);
+                opt = -1;
+                break;
+            case 3:
+                    //buscar admin
+                if (pos != -1)
+                    //eliminar admin
+                opt = -1;
+                break;
+            case 4:
+                    //buscar admin
+                if (pos != -1)
+                    //eliminar admin
+                opt = -1;
+                break;
+            
+            case 0:         //CASO DE SALIDA
+                break;
+            default:
+                printf("Seleccione una opcion valida: ");
+                break;
+        }
+        guardar_adminprov(admin);
+    }
+}
+
+void mostrar_admin(admin_prov_vect admin){
+    int i;
+    clear();
+    printf("+-----------------------------------+\n");
+    printf("+--------- LISTA DE ADMINS ---------+\n");
+    printf("+-----------------------------------+\n");
+
+    for(i=1;i<admin.tam;i++){
+        if(strcmp(admin.usuarios[i].Perfil_usuario, "administrador") == 0)
+            printf("| %-33s |\n",admin.usuarios[i].email);
+    }
+    printf("+-----------------------------------+\n");
+    printf("Presione [ENTER] para salir");
+    getchar();
+}
+/*** GESTIONAR ADMIN ***/
+
+admin_prov_vect agregar_admin(admin_prov_vect admin){
+    /***DEBIDO AL USUARIO POR DEFECTO LA ID Y LA POSICION EN LA ESTRUCTURA DEL CLIENTE ES LA MISMA***/
+    int new_id = admin.tam;           //IDENTIFICADOR DEL NUEVO CLIENTE   
+
+    admin.usuarios = realloc(admin.usuarios, (new_id+1)*sizeof(client));  //Reasignar numero de clientes
+    if (admin.usuarios == NULL){
+        printf("No se pudo asignar la estructura de clientes");
+        getchar();
+        exit(EXIT_FAILURE);
+    }
+
+    admin.usuarios[new_id].Id_empresa = new_id;
+    strcpy(admin.usuarios[new_id].Nombre, "ESIZON");
+    admin = admin_email(admin, new_id, 0);
+    admin = admin_psw(admin, new_id, 0);
+    strcpy(admin.usuarios[new_id].Perfil_usuario, "administrador");
+
+    admin.tam++;
+
+    guardar_adminprov(admin);
+
+    printf("Se ha creado un administrador correctamente");
+    Sleep(2000);
+
+    
+    return admin;
+}
+
+admin_prov_vect eliminar_admin(admin_prov_vect admin, int pos){
+    int i;
+    char resp;      //Variable para responder preguntas si/no.
+    clear();
+    printf("Estas seguro de eliminar al cliente [ %s ]? [s/n]: ", admin.usuarios[pos].email);
+    
+    scanf(" %c", &resp);
+    fflush(stdin);
+    while (resp != 'S' && resp != 's' && resp != 'N' && resp != 'n'){
+        printf("Introduzca una respuesta valida: ");
+        scanf(" %c", &resp);
+        fflush(stdin);
+    }
+
+    if (resp == 'S' || resp == 's'){
+        for (i = pos; i < C.n_clients - 1; i++) {	//Desplazar la posicion de los clientes
+			C.clients[i] = C.clients[i + 1];
+			C.clients[i].Id_cliente = i + 1;				//Reasignar id clientes
+		}
+
+        C.n_clients --;
+
+        C.clients = realloc(C.clients, C.n_clients*sizeof(client));
+        if (C.clients == NULL) {
+			printf ("\nNo se pudo reasignar estructuras clientes.");
+        	getchar ();
+        	exit (EXIT_FAILURE);
+		}
+
+        guardar_clientes(C);                        //Volcado de datos a fichero
+
+        printf("Se ha eliminado al usuario correctamente");
+    }else{
+        printf("Se cancelo la eliminacion del cliente.");
+    }
+    Sleep(2000);
+    return C;
+}
 admin_prov_vect gestionar_admin (admin_prov_vect admin, int pos, int mod){
     //CAMBIO DE INFORMACION//
     int opt = -1;
@@ -409,6 +561,8 @@ admin_prov_vect admin_psw(admin_prov_vect admin, int pos, int mod){
     return admin;
 }
 
+
+/*** GESTIONAR USUARIO ***/
 
 int busqueda_cliente(clients C){
     int pos = -2, opt = -1;             //Elijo -2 como pos predeter. ya que -1 es para cancelar la busqueda
@@ -801,6 +955,6 @@ clients cliente_cart(clients C, int pos, int mod){
     return C;
 }
 
-void menuadmin_admin();
+
 
 

@@ -484,15 +484,16 @@ admin_prov_vect cargar_adminprov(){
 	char tipo_usuario[14];																						// Cadena auxiliar a convertir.
 	int i = 0, m; 
 
-	if((f_AdminProv = fopen(ruta, "w+")) == NULL){																// w+ permite leer y escribir, y crea el archivo si no existe.
+	if((f_AdminProv = fopen(ruta, "a+")) == NULL){	 // w+ permite leer y escribir, y crea el archivo si no existe.
 		printf("\nError al abrir el fichero AdminProv.txt en cargar_adminprov. Creando uno nuevo...\n");
 		getchar();                     	
 	}	
 
 	//COMPROBACION FICHERO VACIO//
-	char verif = fgetc(f_AdminProv);
-	if (verif == EOF){
+	if (fgetc(f_AdminProv) == EOF){
+		f_AdminProv = fopen(ruta, "w");
 		fprintf(f_AdminProv,"0000-ESIZON-adminadmin@esizon.com-admin000-administrador\n");
+		fclose(f_AdminProv);
 	}
 
 	rewind(f_AdminProv);																								
@@ -575,15 +576,16 @@ transport_vect cargar_transportistas(){
 
 void guardar_adminprov(admin_prov_vect usuarios){
 	
-	FILE *AdminProv;																							// Puntero al fichero a leer.
-	char ruta[] = "..\\ESIZON-main\\data\\AdminProv.txt";														// Ruta del fichero a leer.
-	char linea[LONG_MAX_ADMINPROV];																				// Línea actual del fichero. Longitud máxima de una línea 86 caracteres.
+	FILE *AdminProv;																				// Puntero al fichero a leer.
+	char ruta[] = "..\\data\\AdminProv.txt";														// Ruta del fichero a leer.
+	char linea[LONG_MAX_ADMINPROV];																	// Línea actual del fichero. Longitud máxima de una línea 86 caracteres.
 	char aux[14];
 	
 	AdminProv = fopen(ruta, "w");
 	
 	for(int i = 0; i < usuarios.tam; i++)
-		fprintf(AdminProv, "%d-%20[^-]-%30[^-]-%15[^-]-%13[^\n]\n", usuarios.usuarios[i].Id_empresa, usuarios.usuarios[i].Nombre, usuarios.usuarios[i].email, usuarios.usuarios[i].Contrasena, usuarios.usuarios[i].Perfil_usuario);
+		fprintf(AdminProv, "%04d-%s-%s-%s-%s\n", usuarios.usuarios[i].Id_empresa, usuarios.usuarios[i].Nombre, usuarios.usuarios[i].email, usuarios.usuarios[i].Contrasena, usuarios.usuarios[i].Perfil_usuario);
+
 	fclose(AdminProv);
 }
 
@@ -601,7 +603,7 @@ void guardar_transportista(transport_vect transportistas){
 	Transportistas = fopen(ruta, "w");
 	
 	for(int i = 0; i < transportistas.tam; i++)
-		fprintf(Transportistas, "%d-%20[^-]-%30[^-]-%15[^-]-%20[^-]-%20s\n", transportistas.transportistas[i].Id_transp, transportistas.transportistas[i].Nombre, transportistas.transportistas[i].email, transportistas.transportistas[i].Contrasena, transportistas.transportistas[i].Nom_Emp, transportistas.transportistas[i].Ciudad);
+		fprintf(Transportistas, "%d-%s-%s-%s-%s-%20s\n", transportistas.transportistas[i].Id_transp, transportistas.transportistas[i].Nombre, transportistas.transportistas[i].email, transportistas.transportistas[i].Contrasena, transportistas.transportistas[i].Nom_Emp, transportistas.transportistas[i].Ciudad);
 	fclose(Transportistas);
 }
 

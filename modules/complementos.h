@@ -24,6 +24,6 @@ int anio_sist();
 //POSCONDICION: Se le cambia el caracter salto de linea por terminador
 void terminador_cad(char []);
 
-char confirmacion(char []);
+char confirmacion();
 
 #endif

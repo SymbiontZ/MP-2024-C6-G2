@@ -78,6 +78,11 @@ typedef struct
     void inicsesion_admin(admin_prov_vect, int);
     void menuadmin(admin_prov_vect , int );
     void menuadmin_cliente();
+    void menuadmin_admin(admin_prov_vect );
+    void mostrar_admin(admin_prov_vect );
+
+    admin_prov_vect agregar_admin(admin_prov_vect );
+    admin_prov_vect eliminar_admin(admin_prov_vect , int );
     admin_prov_vect gestionar_admin (admin_prov_vect , int , int);
 
     admin_prov_vect admin_email(admin_prov_vect , int , int );
@@ -91,8 +96,9 @@ typedef struct
 
 /*
 CAMBIOS PENDIENTES
+
 > cambiar interfaces
 > agregar opciones superadmin
 > agregar comprobacion de enteros
-
+> corregir correos no iguales
 */
