@@ -89,10 +89,10 @@ typedef struct
 #endif  
 
 
-
 /*
 CAMBIOS PENDIENTES
 > cambiar interfaces
 > agregar opciones superadmin
+> agregar comprobacion de enteros
 
 */
