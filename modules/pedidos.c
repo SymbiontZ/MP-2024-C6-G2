@@ -16,7 +16,7 @@
 pedidos cargar_pedidos(){
     
     int n_pedidos=0, i=0, campo_pedidos;
-    char default_pedido[]="0-0/0/0-0-default-default-default\n";
+    char default_pedido[]="0-0/0/0-0-default-default-default";
     char cad_aux[150]; //cadena auxiliar en la que se guarda cada linea del fichero
     
     FILE * f_ped;
@@ -75,14 +75,61 @@ pedidos cargar_pedidos(){
 //Cabecera: void crear_pedido(int id_cliente, pedidos p)
 //Precondicion: estrcutura pedidos cargada con datos del fichero Pedidos.txt y el id del cliente que ha realizado pedido, lo sabemos cuando ha iniciado sesión en la aplicación
 //Postcondicion: se crea un nuevo pedido realizado por un cliente y se guarda en la estructura pedidos, ademas de escribirlo en el fichero Pedidos.txt
-void crear_pedido(int id_cliente, pedidos p, int id_producto){
-    int n_pedidos=p.lon-1, i=0, nueva_id, pos, lugar, cheque;
+void crear_pedido(int id_cliente, pedidos p){
+    int n_pedidos=p.lon-1, i=0, nueva_id, pos, lugar, cheque, n_products=1, n_uds=0, compra=1, pos_product, j, id_producto; //n_products es la longitud de los vectores dinamicos
     char cod_cheque[10];
-    int v_prod[1], v_uds[1];//vectores auxiliares con los id de los productos que realiza el cliente ese pedido y las unidades de cada producto
+    int *v_prod, *v_uds;//vectores auxiliares con los id de los productos que realiza el cliente ese pedido y las unidades de cada producto
+    
+    v_prod=malloc(n_products*sizeof(int)); 
+    v_uds=malloc(n_products*sizeof(int));
+
     nueva_id=n_pedidos +1; //id de un nuevo pedido, será el numero de pedidos que hay en el fichero +1
     pos=nueva_id; //posicion del nuevo pedido es la id ya que la nueva id sera un nuevo pedido por tanto el numero de pedidos que hay
     p.pedidos=realloc(p.pedidos, (pos+1)*sizeof(pedido)); //reasignamos memoria dinámica, el tamaño sera la pos mas uno ya que la estructura tendra una posicion
     
+    produ_vect productos;
+    productos=cargar_productos();
+    
+    //SELECCIONAR PRODUCTO
+    
+    while(compra==1){ //bucle para seleccionar todos los productos y rellenar los vectores dinámicos
+        printf("AGREGAR PRODUCTO AL PEDIDO\n");
+        n_uds=0;
+        fflush(stdin);
+        id_producto=buscar_productos(productos); //la posicion de un producto es la misma que su id
+        printf("id producto seleccionado: %d\n",id_producto);
+
+        v_prod=(int*)realloc(v_prod, n_products*sizeof(int));
+        v_prod[n_products-1]=id_producto;
+        
+        printf("introduce el numero de unidades que desea del producto: \n");
+        scanf("%d", &n_uds);
+        v_uds=(int*)realloc(v_uds, n_products*sizeof(int));
+        v_uds[n_products-1]=n_uds;
+        //comprobar unidades del producto validas
+    
+        printf("desea agregar mas productos: \n");
+        printf("1. si\n");
+        printf("2. no\n");
+        scanf("%d", &compra);
+
+        if(compra==1){
+            n_products++;
+            id_producto++;
+        }
+        else{
+            printf("no desea añadir mas productos al pedido\n");
+            printf("continuamos con el pedido\n");
+        }
+        
+    }
+
+    //RESUMEN DE LOS PRODUCTOS QUE HA PEDIDO Y EL IMPORTE TOTAL
+    for(j=0;j<n_products;j++){
+        printf("id producto: %d\n", v_prod[j]);
+        printf("unidades de ese producto: %d\n", v_uds[j]);
+    }
+
     p.pedidos[pos].id_pedido=nueva_id;
     p.pedidos[pos].id_cliente=id_cliente;
 
