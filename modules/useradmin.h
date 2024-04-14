@@ -44,6 +44,10 @@ typedef struct
     //POSCONDICION: Vuelca datos en el fichero pero no devuelve nada.
     void guardar_clientes(clients );
 
+
+    int busqueda_cliente(clients );
+    int busqueda_clientetipo(clients , int ,int );
+
     //PRECONDICION: Se le pasa la estructura tipo clients cargada y la posicion del cliente en la estructura
     //POSCONDICION: Devuelve la estructura tipo clients actualizada con los nuevos cambios
     clients gestionar_cliente(clients, int, int);
@@ -57,12 +61,14 @@ typedef struct
     
     //### INTERFACES DEL USUARIO ###//
 
-    //PRECONDICION
-    void menu_cliente(clients ,int );
-
     //PRECONDICION: Se le pasa la posicion del cliente en la estructura y la misma estructura tipo clients
     //POSCONDICION: Ninguna  
     void inicsesion_cliente(clients ,int );
+
+    //PRECONDICION: Se le pasa la posicion del cliente en la estructura y la estructura tipo clients cargada
+    //POSCONDICION: Ninguna
+    void menucliente(clients ,int );
+
 
     //GESTION DATOS ESPECIFICOS USUARIOS//
     clients cliente_nom(clients , int );
@@ -79,7 +85,10 @@ typedef struct
     void menuadmin(admin_prov_vect , int );
     void menuadmin_cliente();
     void menuadmin_admin(admin_prov_vect );
+
+
     void mostrar_admin(admin_prov_vect );
+    int buscar_admin(admin_prov_vect );
 
     admin_prov_vect agregar_admin(admin_prov_vect );
     admin_prov_vect eliminar_admin(admin_prov_vect , int );
@@ -88,8 +97,7 @@ typedef struct
     admin_prov_vect admin_email(admin_prov_vect , int , int );
     admin_prov_vect admin_psw(admin_prov_vect , int , int );
 
-    int busqueda_cliente(clients );
-    int busqueda_clientetipo(clients , int ,int );
+
 
 #endif  
 
@@ -98,7 +106,7 @@ typedef struct
 CAMBIOS PENDIENTES
 
 > cambiar interfaces
-> agregar opciones superadmin
+> no permitir campos vacios
 > agregar comprobacion de enteros
-> corregir correos no iguales
+> corregir correos no iguales (FALTA CLIENTES)
 */
