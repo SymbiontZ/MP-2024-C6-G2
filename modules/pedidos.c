@@ -73,7 +73,7 @@ pedidos cargar_pedidos(){
 //Precondicion: estrcutura pedidos cargada con datos del fichero Pedidos.txt y el id del cliente que ha realizado pedido, lo sabemos cuando ha iniciado sesión en la aplicación
 //Postcondicion: se crea un nuevo pedido realizado por un cliente y se guarda en la estructura pedidos, ademas de escribirlo en el fichero Pedidos.txt
 int crear_pedido(int id_cliente, pedidos p){
-    int n_pedidos=p.lon-1, i=0, nueva_id, pos, lugar, n_products=1, n_uds=0, compra=1, pos_product, j=0, id_producto, importe_total=0,id, importe_uds=0; //n_products es la longitud de los vectores dinamicos
+    int n_pedidos=p.lon-1, i=0, nueva_id, pos, lugar, n_products=1, n_uds=0, compra=1, pos_product, j=0, id_producto, importe_total=0,id, importe_uds=0,cantidad=0,importe_cant=0; //n_products es la longitud de los vectores dinamicos
     char cod_cheque[10],nombre[16];
     char op,cheque;
     int *v_prod, *v_uds;//vectores auxiliares con los id de los productos que realiza el cliente ese pedido y las unidades de cada producto
@@ -118,10 +118,11 @@ int crear_pedido(int id_cliente, pedidos p){
         
 
         importe_uds=productos.produ[id_producto].importe*n_uds; //importe de cada producto
-        
+        printf("el importe es: %d\n", importe_uds);
+        printf("el credito del cliente es: %d\n",credito_c);
         //Comprobamos importe del pedido es menor que credito del cliente
         
-        if(importe_uds>credito_c){
+        if(importe_uds>=credito_c){
             printf("ERROR: el importe es superior al credito que tiene el cliente\n");
             printf("OPCIONES DISPONIBLES: \n");
             printf("1. Modificar unidades\n");
@@ -135,20 +136,31 @@ int crear_pedido(int id_cliente, pedidos p){
 
             switch(resp){
                 case 1:
-                int cantidad=1,importe_cant=0; //numero de unidades que puede comprar el cliente hasta superar su credito
-                while(importe_uds<credito_c){
+                 //numero de unidades que puede comprar el cliente hasta superar su credito
+                cantidad=0;
+                importe_cant=0;
+                while(importe_cant<credito_c-importe_cant){
                     importe_cant=cantidad*productos.produ[id_producto].importe;
                     cantidad++;
                 }
-                printf("puede comprar %d unidades del producto\n", cantidad);
-                printf("desea añadir el producto [s/n]: \n");
-                char aux=confirmacion();
-                if(aux=='s' || aux=='S'){
-                    v_prod[n_products-1]=id_producto;
-                    printf("cuantas unidades desea introducir: \n");
-                    scanf("%d", &n_uds);
-                    v_uds[n_products-1]=n_uds;
-
+                cantidad=cantidad-1;
+                if(cantidad==0){
+                    printf("no puede comprar ninguna unidad de este producto\n");
+                }
+                else{
+                    printf("puede comprar %d unidades del producto\n", cantidad);
+                    printf("desea añadir el producto [s/n]: \n");
+                    fflush(stdin);
+                    char aux=confirmacion();
+                    if(aux=='s' || aux=='S'){
+                        v_prod[n_products-1]=id_producto;
+                        printf("cuantas unidades desea introducir: \n");
+                        scanf("%d", &n_uds);
+                        v_uds[n_products-1]=n_uds;
+                    }
+                    else{
+                        n_uds=0;
+                    }
                 }
                 break;
 
@@ -157,13 +169,23 @@ int crear_pedido(int id_cliente, pedidos p){
 
                 case 3:
                 compra=0;
+                
             }
 
         }
         else{
             credito_c=credito_c-importe_uds; //le resto al credito del cliente el import
             printf("el importe es menor que el credito del cliente\n");
+
             
+        }
+
+        importe_total=importe_total + (productos.produ[id_producto].importe * n_uds); //cada vez que se incluye un producto en la lista se añade al importe total del pedido
+        printf("el importe total del pedido es: %d\n", importe_total);
+
+        fflush(stdin);
+        printf("Desea agregar mas productos al pedido [s/n]: \n");
+        op=confirmacion();
         if(op=='s'){
             n_products++;
             id_producto++;
@@ -173,11 +195,11 @@ int crear_pedido(int id_cliente, pedidos p){
             printf("no desea agregar mas productos al pedido\n");
             printf("continuamos con el pedido\n");
         }
+        
 
-        importe_total=importe_total + (productos.produ[id_producto].importe * n_uds); //cada vez que se incluye un producto en la lista se añade al importe total del pedido
+        
         
     }
-
     //RESUMEN DE LOS PRODUCTOS QUE HA PEDIDO Y EL IMPORTE TOTAL
     
     for(j=0;j<n_products;j++){
@@ -187,7 +209,7 @@ int crear_pedido(int id_cliente, pedidos p){
         printf("unidades de ese producto: %d\n", v_uds[j]);
     }
     
-    }
+    
 
     p.pedidos[pos].id_pedido=nueva_id;
     p.pedidos[pos].id_cliente=id_cliente;
