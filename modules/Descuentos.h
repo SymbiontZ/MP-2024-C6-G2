@@ -73,7 +73,7 @@ void Guardar_DescuentosClientes(DescClientes);
 //Postcondición: Lista los descuentos disponibles para el usuario en concreto
 void Consultar_Descuentos(clients, DescClientes);
 
-void Gestionar_Descuentos(Descuentos);
+void Gestionar_Descuentos(Descuentos, DescClientes, clients);
 
 Descuentos Alta_Descuentos(Descuentos);
 
@@ -85,7 +85,7 @@ Descuentos Listar_Descuentos(Descuentos);
 
 Descuentos Modificar_Descuentos(Descuentos);
 
-Descuentos Asignar_Descuentos(Descuentos);
+Descuentos Asignar_Descuentos(clients, Descuentos, DescClientes);
 
 Descuentos nuevo_id(Descuentos, int);
 

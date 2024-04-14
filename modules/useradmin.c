@@ -92,7 +92,33 @@ void guardar_clientes(clients C){
 
 /*** MENU CLIENTES ***/
 
-void menu_cliente(clients C,int pos){
+void inicsesion_cliente(clients C, int pos){
+    char psw_verif[MAX_PSW];            //Variable para almacenar la contrasena inrtroducida por teclado
+    int exitc = 0;                      //Variable para indicar si el usuario quiere salir del bucle
+
+    printf("Ingrese la contrasena del correo [ %s ]: ", C.clients[pos].email);
+    fgets(psw_verif, MAX_PSW, stdin);
+    terminador_cad(psw_verif);
+    
+
+    while( strcmp(psw_verif, C.clients[pos].Contrasena) != 0 && exitc != 1){
+        printf("Vuelva a intentarlo, si quiere salir escriba [exit]: ");
+        fflush(stdin);
+        fgets(psw_verif, MAX_PSW, stdin);
+        terminador_cad(psw_verif);
+
+        if(strcmp(psw_verif, "exit") == 0)
+            exitc = 1;
+    }
+    
+    if(exitc == 1){
+        exit(EXIT_SUCCESS);
+    }
+        
+    menucliente(C, pos);
+}
+
+void menucliente(clients C,int pos){
     int opt = -1;    //AUXILIAR PARA MANEJO DE OPCIONES EN EL SWITCH
 
     while(opt<1 || opt>5){
@@ -137,32 +163,6 @@ void menu_cliente(clients C,int pos){
             break;
         }
     } 
-}
-
-void inicsesion_cliente(clients C, int pos){
-    char psw_verif[MAX_PSW];            //Variable para almacenar la contrasena inrtroducida por teclado
-    int exitc = 0;                      //Variable para indicar si el usuario quiere salir del bucle
-
-    printf("Ingrese la contrasena del correo [ %s ]: ", C.clients[pos].email);
-    fgets(psw_verif, MAX_PSW, stdin);
-    terminador_cad(psw_verif);
-    
-
-    while( strcmp(psw_verif, C.clients[pos].Contrasena) != 0 && exitc != 1){
-        printf("Vuelva a intentarlo, si quiere salir escriba [exit]: ");
-        fflush(stdin);
-        fgets(psw_verif, MAX_PSW, stdin);
-        terminador_cad(psw_verif);
-
-        if(strcmp(psw_verif, "exit") == 0)
-            exitc = 1;
-    }
-    
-    if(exitc == 1){
-        exit(EXIT_SUCCESS);
-    }
-        
-    menu_cliente(C, pos);
 }
 
 
@@ -323,8 +323,6 @@ void menuadmin_admin(admin_prov_vect admin){
     char resp;
     int pos;                            //Posicion del admin al que se le realizan los cambios.
 
-    
-
     while (opt < 0 || opt > 5){
         //MOSTRAR INFORMACION//
         clear();
@@ -353,15 +351,15 @@ void menuadmin_admin(admin_prov_vect admin){
                 opt = -1;
                 break;
             case 3:
-                    //buscar admin
+                pos = buscar_admin(admin);
                 if (pos != -1)
-                    //eliminar admin
+                    admin = eliminar_admin(admin, pos);
                 opt = -1;
                 break;
             case 4:
-                    //buscar admin
+                pos = buscar_admin(admin);
                 if (pos != -1)
-                    //eliminar admin
+                    admin = gestionar_admin(admin, pos, 0);
                 opt = -1;
                 break;
             
@@ -393,7 +391,49 @@ void mostrar_admin(admin_prov_vect admin){
 /*** GESTIONAR ADMIN ***/
 
 int buscar_admin(admin_prov_vect admin){
+    int len = 0, i, opt = -1, pos;
+    char cad_busq[MAX_EMAIL]; 
+    int n_coinc = 0;                      //Contador de coincidencias encontradas
+    int *vect_coinc;                    //Vector que contiene las ids de las coincidencias
+
+    vect_coinc = (int*)malloc(1*sizeof(int)); 
+    printf("Introduzca su busqueda de correo: ");
+
+    fflush(stdin);
+    fgets(cad_busq, MAX_EMAIL, stdin);         //Cadena por la que se va a buscar el nombre
+    fflush(stdin);
+    terminador_cad(cad_busq);
+
+    len = strlen(cad_busq);
+    for(i=1; i<admin.tam; i++){           //Busqueda de coincidencias nombre.
+        if(strncmp(cad_busq, admin.usuarios[i].email, len) == 0){
+            printf("<%d> %s\n",n_coinc+1, admin.usuarios[i].email);
+            n_coinc++;
+            vect_coinc = (int*)realloc(vect_coinc, n_coinc*sizeof(int));
+            vect_coinc[n_coinc-1] = admin.usuarios[i].Id_empresa;
+        }
+    }
+    if(n_coinc == 0){
+        printf("No se ha encontrado ninguna coincidencia.\nSe cancela la accion deseada, disculpe las molestias.");
+        getchar();
+        return(-1);
+    }
+
+    printf("\nPor favor introduzca el numero <n> del que desea seleccionar o introduzca '0' para salir.\n");   //Elegir una opcion de coincidencia
+    scanf(" %d", &opt);
+    if(opt == 0){
+        return -1;
+    }
     
+    while(opt < 0 || opt > n_coinc){
+        printf("Introduzca una opcion valida: ");
+        scanf(" %d", &opt);
+    }
+    fflush(stdin);
+    pos = vect_coinc[opt-1];
+    free(vect_coinc);
+
+    return pos;
 }
 
 admin_prov_vect agregar_admin(admin_prov_vect admin){
@@ -491,7 +531,9 @@ admin_prov_vect gestionar_admin (admin_prov_vect admin, int pos, int mod){
 }
 
 admin_prov_vect admin_email(admin_prov_vect admin, int pos, int mod){
-    int lensuf;
+    int i,
+        lensuf,         //Longitud del sufijo '@esizon.com'
+        emailvalid = 0;     //Variable para verificar si correo en uso o no
     char sufijo[] = "@esizon.com";
     lensuf = strlen(sufijo);
     char cad_email[MAX_EMAIL-lensuf];
@@ -501,10 +543,25 @@ admin_prov_vect admin_email(admin_prov_vect admin, int pos, int mod){
         printf("\nEmail actual: %s\n", admin.usuarios[pos].email);
     printf("Ingrese el identificador de su correo 'identificador@esizon.com' (MAX 19 CARACTERES): ");
     
+    do{
+    emailvalid = 1;
     fflush(stdin);
     fgets(cad_email, MAX_EMAIL, stdin);
     terminador_cad(cad_email);
     strcat(cad_email, sufijo);
+
+    for(i=1;i<admin.tam;i++){
+        if(strcmp(cad_email, admin.usuarios[i].email) == 0){
+            printf("Se ha encontrado un admin usando ese correo.\n");
+            printf("Vuelva a introducir el identificador: ");
+            emailvalid = 0;
+        }
+    }
+    if(strcmp(cad_email, sufijo) == 0)            //Si email vacio se intenta de nuevo
+        emailvalid = 0;
+
+    }while(emailvalid != 1);
+    
 
     strcpy(admin.usuarios[pos].email, cad_email);
     return admin;
@@ -560,7 +617,7 @@ admin_prov_vect admin_psw(admin_prov_vect admin, int pos, int mod){
 }
 
 
-/*** GESTIONAR USUARIO ***/
+/*** GESTIONAR CLIENTE ***/
 
 int busqueda_cliente(clients C){
     int pos = -2, opt = -1;             //Elijo -2 como pos predeter. ya que -1 es para cancelar la busqueda
@@ -952,7 +1009,3 @@ clients cliente_cart(clients C, int pos, int mod){
 
     return C;
 }
-
-
-
-
