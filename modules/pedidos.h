@@ -61,3 +61,5 @@ void guardar_productos_pedidos(prod_pedidos prod_p);
 void crear_producto_pedido(pedidos, int, int, prod_pedidos);
 void guardar_devoluciones(devoluciones);
 void crear_devolucion(devoluciones, pedidos, prod_pedidos);
+
+void listapedidos_cliente(prod_pedidos ,pedidos , int);

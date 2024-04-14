@@ -1,0 +1,10 @@
+>   idped               
+>   idprod
+>   nuds                
+>   fech entrega        YA
+>   importe
+>   estado              YA
+>   id trans
+>   id locker
+>   cod locker
+>   fecha dev/entrega transportista

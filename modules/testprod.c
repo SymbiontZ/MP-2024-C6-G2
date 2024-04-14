@@ -1,16 +1,14 @@
 #include "complementos.h"
-#include "Productos.h"
+#include "pedidos.h"
 
 
 
 int main(){
+    pedidos p = cargar_pedidos();
+    prod_pedidos prods_p = cargar_prod_pedidos();
+    int id_cliente = 1;
 
-    produ_vect prods = cargar_productos(prods);
-
+    listapedidos_cliente(prods_p,p,id_cliente);
     
-    int pos = buscar_productos(prods);
-
-    printf("\n\nSe ha seleccionado la posicion producto: %d\n\n", pos);
-
     return 0;
 }

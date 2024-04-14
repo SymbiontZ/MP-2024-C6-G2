@@ -318,7 +318,7 @@ prod_pedidos cargar_prod_pedidos(){
     prod_p.prod_pedidos=malloc(n_prod_ped*sizeof(prod_pedido));
     
     while(fgets(cad_aux, sizeof(cad_aux), f_prod_ped) && i<n_prod_ped){
-        campo_prod_ped=sscanf(cad_aux, "%d-%d-%d-%d/%d/%d-%f-%10[^-]-%d-%10[^-]-%10[^-]-%d/%d/%d",
+        campo_prod_ped=sscanf(cad_aux, "%d-%d-%d-%d/%d/%d-%d-%15[^-]-%d-%10[^-]-%10[^-]-%d/%d/%d",
             &prod_p.prod_pedidos[i].id_pedido,
             &prod_p.prod_pedidos[i].id_prod,
             &prod_p.prod_pedidos[i].num_unid,
@@ -606,4 +606,41 @@ fecha fecha_entrega(fecha f, int dia_ent){
     f.anio = y;
 
     return f;
+}
+
+void listapedidos_cliente(prod_pedidos prods_p,pedidos p, int id_cliente){
+    int i,k,
+        id_ped,
+        id_produ;
+    char nom_produ[16];
+    produ_vect prods = cargar_productos();
+
+    clear();
+    printf("+---------------+\n");
+    printf("|  TUS PEDIDOS  |\n");
+    printf("+---------------+-----------------------------------------------------------------------+\n");
+
+    for(i=1;i< p.lon; i++){
+        if(id_cliente == p.pedidos[i].id_cliente){  //Mostrar pedidos solo del cliente
+            printf("| <%d> FECHA: %d / %d / %d LUGAR:%-9s                                               |\n", i,
+                                                                            p.pedidos[i].f_pedido.dia,
+                                                                            p.pedidos[i].f_pedido.mes,
+                                                                            p.pedidos[i].f_pedido.anio, 
+                                                                            p.pedidos[i].lugar);
+            id_ped = p.pedidos[i].id_pedido;        //Guardo temporalmente la id pedido para manejar mas facil
+
+            for(k=1;k<prods_p.lon;k++){             //Mostrar productos de un pedido
+                if(id_ped == prods_p.prod_pedidos[k].id_pedido){
+                    id_produ = prods_p.prod_pedidos[k].id_prod;         //Guardo temporalmente la id producto para manejar mas facil
+                    strcpy(nom_produ,prods.produ[id_produ].nombre);
+
+                    printf("|  +-> ARTICULO: %-15s UDS: %-3d IMPORTE(euros): %-5d ESTADO :%-15s |\n",nom_produ,
+                                                    prods_p.prod_pedidos[id_produ].num_unid,
+                                                    prods_p.prod_pedidos[id_produ].importe,
+                                                    prods_p.prod_pedidos[id_produ].estado);
+                }       
+            }
+            printf("+---------------------------------------------------------------------------------------+\n");
+        }
+    }
 }
