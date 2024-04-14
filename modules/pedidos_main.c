@@ -5,7 +5,7 @@
 int main()
 {
     pedidos P=cargar_pedidos();
-    printf("se ha cargado el fichero Pedidos.txt correctamente\n");
+    
     int confirmacion=crear_pedido(3,P);
     if(confirmacion==-1){
         printf("se ha cancelado la compra\n");
@@ -13,10 +13,6 @@ int main()
     else{
         printf("se ha realizado el pedido correctamente\n");
     }
-    /*prod_pedidos Prod_P=cargar_prod_pedidos();*/
-    printf("Se ha cargado el fichero ProductosPedidos.txt correctamente\n");
-    //guardar_productos_pedidos(Prod_P);
-    //crear_producto_pedido(P,12, 2,Prod_P);*/
     /*devoluciones D=cargar_devoluciones();
     printf("se ha cargado el fichero Devoluciones.txt correctamente\n");
     crear_devolucion(D,P, Prod_P);*/

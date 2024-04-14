@@ -63,9 +63,9 @@ pedidos cargar_pedidos(){
         i++;
         
     }
-
+    printf("se ha cargado el fichero Pedidos.txt correctamente\n");
     printf("pedidos: %d\n", n_pedidos);
-
+    
     return p;
 }
 
@@ -85,6 +85,7 @@ int crear_pedido(int id_cliente, pedidos p){
     pos=nueva_id; //posicion del nuevo pedido es la id ya que la nueva id sera un nuevo pedido por tanto el numero de pedidos que hay
     p.pedidos=realloc(p.pedidos, (pos+1)*sizeof(pedido)); //reasignamos memoria dinámica, el tamaño sera la pos mas uno ya que la estructura tendra una posicion
     
+    prod_pedidos Prod_P=cargar_prod_pedidos();
     produ_vect productos;
     productos=cargar_productos();
     clients c;
@@ -153,10 +154,10 @@ int crear_pedido(int id_cliente, pedidos p){
                     fflush(stdin);
                     char aux=confirmacion();
                     if(aux=='s' || aux=='S'){
-                        v_prod[n_products-1]=id_producto;
+                        ;
                         printf("cuantas unidades desea introducir: \n");
                         scanf("%d", &n_uds);
-                        v_uds[n_products-1]=n_uds;
+                        
                     }
                     else{
                         n_uds=0;
@@ -169,6 +170,9 @@ int crear_pedido(int id_cliente, pedidos p){
 
                 case 3:
                 compra=0;
+                printf("no desea agregar mas productos al pedido\n");
+                printf("continuamos con el pedido\n");
+                break;
                 
             }
 
@@ -179,9 +183,11 @@ int crear_pedido(int id_cliente, pedidos p){
 
             
         }
-
+        
+        v_prod[n_products-1]=id_producto;
+        v_uds[n_products-1]=n_uds;
         importe_total=importe_total + (productos.produ[id_producto].importe * n_uds); //cada vez que se incluye un producto en la lista se añade al importe total del pedido
-        printf("el importe total del pedido es: %d\n", importe_total);
+        
 
         fflush(stdin);
         printf("Desea agregar mas productos al pedido [s/n]: \n");
@@ -201,13 +207,14 @@ int crear_pedido(int id_cliente, pedidos p){
         
     }
     //RESUMEN DE LOS PRODUCTOS QUE HA PEDIDO Y EL IMPORTE TOTAL
-    
-    for(j=0;j<n_products;j++){
+
+    for(j=0;j<n_products;j++){ 
         id=v_prod[j];
         strcpy(nombre, productos.produ[id].nombre);
         printf("nombre del producto: %s\n", nombre);
         printf("unidades de ese producto: %d\n", v_uds[j]);
     }
+    printf("el importe total del pedido es: %d\n", importe_total);
     
     
 
@@ -256,6 +263,15 @@ int crear_pedido(int id_cliente, pedidos p){
 
     guardar_pedido(p);
     printf("Se han guardado los datos correctamente\n");
+
+    //CREAR PRODUCTO PEDIDO
+    int id_pro, n_unidades;
+    for(j=0;j<n_products;j++){
+        id_pro=v_prod[j];
+        n_unidades=v_uds[j];
+        crear_producto_pedido(p, id_pro, nueva_id, Prod_P, n_unidades);
+
+    }
 }
 
 //Cabecera guardar_pedido(pedidos p, int pos)
@@ -318,7 +334,7 @@ prod_pedidos cargar_prod_pedidos(){
     prod_p.prod_pedidos=malloc(n_prod_ped*sizeof(prod_pedido));
     
     while(fgets(cad_aux, sizeof(cad_aux), f_prod_ped) && i<n_prod_ped){
-        campo_prod_ped=sscanf(cad_aux, "%d-%d-%d-%d/%d/%d-%f-%10[^-]-%d-%10[^-]-%10[^-]-%d/%d/%d",
+        campo_prod_ped=sscanf(cad_aux, "%d-%d-%d-%d/%d/%d-%d-%10[^-]-%d-%10[^-]-%10[^-]-%d/%d/%d",
             &prod_p.prod_pedidos[i].id_pedido,
             &prod_p.prod_pedidos[i].id_prod,
             &prod_p.prod_pedidos[i].num_unid,
@@ -340,7 +356,7 @@ prod_pedidos cargar_prod_pedidos(){
 
         i++;
     }
-
+    printf("se ha cargado el fichero ProductosPedidos.txt correctamente\n");
     printf("productos pedidos: %d\n", n_prod_ped);
     
     return prod_p;
@@ -375,76 +391,66 @@ void guardar_productos_pedidos(prod_pedidos prod_p){
             prod_p.prod_pedidos[i].f_devolucion.mes,
             prod_p.prod_pedidos[i].f_devolucion.anio);
     }
+
+    for(i=0;i<prod_p.lon;i++){
+        printf("%d-",prod_p.prod_pedidos[i].id_pedido);
+        printf("%d-", prod_p.prod_pedidos[i].id_prod);
+        printf("%d-",prod_p.prod_pedidos[i].num_unid);
+        printf("%d",prod_p.prod_pedidos[i].f_entrega.dia);
+        printf("%d",prod_p.prod_pedidos[i].f_entrega.mes);
+        printf("%d-",prod_p.prod_pedidos[i].f_entrega.anio);
+        printf("%d-",prod_p.prod_pedidos[i].importe);
+        printf("%s-",prod_p.prod_pedidos[i].estado);
+        printf("%d-",prod_p.prod_pedidos[i].id_transp);
+        printf("%s-",prod_p.prod_pedidos[i].id_locker);
+        printf("%s-",prod_p.prod_pedidos[i].cod_locker);
+        printf("%d-",prod_p.prod_pedidos[i].f_devolucion.dia);
+        printf("%d-",prod_p.prod_pedidos[i].f_devolucion.mes);
+        printf("%d",prod_p.prod_pedidos[i].f_devolucion.anio);
+    }
 }
 
 //Cabecera
 //Precondición
 //Postcondicion
-void crear_producto_pedido(pedidos p, int pos_product, int id_pedido, prod_pedidos prod_p){
-    int i, pos, nuevo_prod_p, ud,j,k, ocupado=0, id_t, m=0, numero;
-    int disponibles[2]; //vector con los transportistas que pueden encargarse de un producto
-    char ciudad[50]; //variable auxiliar para almacenar la ciudad del cliente
+void crear_producto_pedido(pedidos p, int product, int id_pedido, prod_pedidos prod_p, int uds){
+    int pos,i;
 
-    transport_vect t; //variable de tipo transportistas 
-    t=cargar_transportistas(); //carga la estructura transportistas con los datos que hay en el fichero
-    clients c;
-    c=cargar_clientes();
     produ_vect productos;
     productos=cargar_productos();
 
-    prod_p.prod_pedidos=realloc(prod_p.prod_pedidos,(prod_p.lon+1)*sizeof(prod_pedido));
-    pos=prod_p.lon; //la posicion en el vector de la estructura de producto pedido
-    prod_p.prod_pedidos[pos].id_prod=productos.produ[pos_product].id_prod; //la id del producto que ha seleccionado el cliente
-    prod_p.prod_pedidos[pos].id_pedido=id_pedido; //la id del pedido que se ha creado cuando el cliente decide comprar el producto
+
+    pos=prod_p.lon;
+    prod_p.prod_pedidos=realloc(prod_p.prod_pedidos, (pos+1)*sizeof(prod_pedido));
+    
+    prod_p.prod_pedidos[pos].id_pedido=id_pedido;
+    prod_p.prod_pedidos[pos].id_prod=product;
+    prod_p.prod_pedidos[pos].num_unid=uds;
+
+    //fecha de entrega
+    int d_entrega=productos.produ[product].entrega;
+    prod_p.prod_pedidos[pos].f_entrega=fecha_entrega(p.pedidos[id_pedido].f_pedido, d_entrega);
+
+    prod_p.prod_pedidos[pos].importe=productos.produ[product].importe;
+
+    strcpy(prod_p.prod_pedidos[pos].estado, "en Preparacion");
+
+    prod_p.prod_pedidos[pos].id_transp=0;
+
+    strcpy(prod_p.prod_pedidos[pos].id_locker, p.pedidos[id_pedido].id_locker);
+    strcpy(prod_p.prod_pedidos[pos].cod_locker, "default");
+
+    prod_p.prod_pedidos[pos].f_devolucion.dia=0;
+    prod_p.prod_pedidos[pos].f_devolucion.mes=0;
+    prod_p.prod_pedidos[pos].f_devolucion.anio=0;
+
+    
+    prod_p.lon=prod_p.lon+1;
+    guardar_productos_pedidos(prod_p);   
+}
     
 
-    for(i=0;i<p.lon;i++){
-        if(id_pedido==p.pedidos[i].id_pedido){
-            printf("el pedido existe");
-            
-            //UNIDADES DEL PRODUCTO
-            printf("Cuantas unidades desea del producto: ");
-            scanf("%d",&ud);
-            if(ud<productos.produ[pos_product].stock && ud>0){
-                prod_p.prod_pedidos[pos].num_unid=ud;
-            }
-            else{
-                printf("ERROR");
-                printf("ha introducido un numero de unidades incorrecto");
-            }
-
-            //FECHA DE ENTREGA
-            
-
-            //IMPORTE
-            prod_p.prod_pedidos[pos].importe=productos.produ[pos_product].importe; 
-            
-            //ESTADO
-            strcpy(prod_p.prod_pedidos[pos].estado, "En preparacion");
-            //ID TRANSPORTISTA
-            for(j=0;j<c.n_clients;j++){ //bucle para recorrer la estructura cliente
-                if(p.pedidos[i].id_cliente==c.clients[j].Id_cliente){ //buscar en el fichero de clientes, el cliente que ha realizado este pedido
-                    strcpy(ciudad, c.clients[j].Localidad); //en una cadena auxiliar guardo la ciudad del cliente
-                }
-            }
-            for(k=0;k<t.tam;k++){ //bucle para recorrer la estructura transportistas
-                if(strcmp(ciudad, t.transportistas[k].Ciudad)==0){//buscar transportista de la misma ciudad del cliente
-                    printf("id transportista %d\n", t.transportistas[k].Id_transp);
-                    disponibles[m]=t.transportistas[k].Id_transp; //rellena el vector con los transportistas de esa ciudad
-                    m++;
-                }
-            }
-            srand (time(NULL));
-            numero=rand() % (m+1); //numero aleatorio para asignar un transportista de los que hay en esa ciudad
-            prod_p.prod_pedidos[pos].id_transp=disponibles[numero];
-            //añadir excepcion si no hay transportistas en esa ciudad
-
-            //LOCKERS
-            //igual que con asignar un transportista
-        }
-    }
-}
-        
+      
 
 //Cabecera: devoluciones cargar_devoluciones()
 //Precondicion:

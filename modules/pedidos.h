@@ -58,6 +58,7 @@ devoluciones cargar_devoluciones();
 int crear_pedido(int, pedidos);
 void guardar_pedido(pedidos);
 void guardar_productos_pedidos(prod_pedidos prod_p);
-void crear_producto_pedido(pedidos, int, int, prod_pedidos);
+void crear_producto_pedido(pedidos, int, int, prod_pedidos, int);
 void guardar_devoluciones(devoluciones);
 void crear_devolucion(devoluciones, pedidos, prod_pedidos);
+fecha fecha_entrega(fecha, int);
