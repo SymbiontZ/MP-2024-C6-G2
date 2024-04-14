@@ -462,6 +462,7 @@ int buscar_productos (produ_vect p) {
 		break;
 	}
 	
+	printf("op2: %d\n", op2);
 	return op2;
 }
 

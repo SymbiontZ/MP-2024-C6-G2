@@ -16,7 +16,7 @@
 pedidos cargar_pedidos(){
     
     int n_pedidos=0, i=0, campo_pedidos;
-    char default_pedido[]="0-0/0/0-0-default-default-default\n";
+    char default_pedido[]="0-0/0/0-0-default-default-default";
     char cad_aux[150]; //cadena auxiliar en la que se guarda cada linea del fichero
     
     FILE * f_ped;
@@ -46,9 +46,6 @@ pedidos cargar_pedidos(){
     p.pedidos=malloc(n_pedidos*sizeof(pedido)); //definimos un vector dinamico de tipo pedido, en cada posicion estara la estructura rellenada con los datos dela primera linea
     
     while(fgets(cad_aux, sizeof(cad_aux), f_ped) && i<n_pedidos){
-        //funcion sscanf(cadena, campos a separar):
-        //campos a separar-> %tipo_campo  separardor
-        //cuando es cadena %n_caracteres[hasta donde lee]
         campo_pedidos=sscanf(cad_aux, "%d-%d/%d/%d-%d-%10[^-]-%10[^-]-%10[^-]",
             &p.pedidos[i].id_pedido,
             &p.pedidos[i].f_pedido.dia,
@@ -75,14 +72,145 @@ pedidos cargar_pedidos(){
 //Cabecera: void crear_pedido(int id_cliente, pedidos p)
 //Precondicion: estrcutura pedidos cargada con datos del fichero Pedidos.txt y el id del cliente que ha realizado pedido, lo sabemos cuando ha iniciado sesión en la aplicación
 //Postcondicion: se crea un nuevo pedido realizado por un cliente y se guarda en la estructura pedidos, ademas de escribirlo en el fichero Pedidos.txt
-void crear_pedido(int id_cliente, pedidos p, int id_producto){
-    int n_pedidos=p.lon-1, i=0, nueva_id, pos, lugar, cheque;
-    char cod_cheque[10];
-    int v_prod[1], v_uds[1];//vectores auxiliares con los id de los productos que realiza el cliente ese pedido y las unidades de cada producto
+int crear_pedido(int id_cliente, pedidos p){
+    int n_pedidos=p.lon-1, i=0, nueva_id, pos, lugar, n_products=1, n_uds=0, compra=1, pos_product, j=0, id_producto, importe_total=0,id, importe_uds=0,cantidad=0,importe_cant=0; //n_products es la longitud de los vectores dinamicos
+    char cod_cheque[10],nombre[16];
+    char op,cheque;
+    int *v_prod, *v_uds;//vectores auxiliares con los id de los productos que realiza el cliente ese pedido y las unidades de cada producto
+    
+    v_prod=malloc(n_products*sizeof(int)); 
+    v_uds=malloc(n_products*sizeof(int));
+
     nueva_id=n_pedidos +1; //id de un nuevo pedido, será el numero de pedidos que hay en el fichero +1
     pos=nueva_id; //posicion del nuevo pedido es la id ya que la nueva id sera un nuevo pedido por tanto el numero de pedidos que hay
     p.pedidos=realloc(p.pedidos, (pos+1)*sizeof(pedido)); //reasignamos memoria dinámica, el tamaño sera la pos mas uno ya que la estructura tendra una posicion
     
+    produ_vect productos;
+    productos=cargar_productos();
+    clients c;
+    c=cargar_clientes();
+    int credito_c=c.clients[id_cliente].Cartera;
+
+    //SELECCIONAR PRODUCTO
+    id_producto=1;
+    while(compra==1){ //bucle para seleccionar todos los productos y rellenar los vectores dinámicos
+        printf("AGREGAR PRODUCTO AL PEDIDO\n");
+        n_uds=0;
+        fflush(stdin);
+        //id_producto=buscar_productos(productos); //la posicion de un producto es la misma que su id
+        printf("id producto seleccionado: %d\n",id_producto);
+
+        v_prod=(int*)realloc(v_prod, n_products*sizeof(int));//agrego la id del producto seleccionad al vector productos
+        
+        
+        //SELECCIONAR UNIDADES DE CADA PRODUCTO
+        v_uds=(int*)realloc(v_uds, n_products*sizeof(int));
+        printf("Stock del producto: %d\n",productos.produ[id_producto].stock);
+        printf("introduce el numero de unidades que desea del producto: \n");
+        scanf("%d", &n_uds);
+        //comprobar unidades del producto validas
+        printf("unidades seleccionadas: %d\n", n_uds);
+        while(n_uds>productos.produ[id_producto].stock || n_uds<1){
+            printf("ERROR: ha introducido una opcion válida\n");
+            printf("Introduzca una opcion válida\n");
+            scanf("%d", &n_uds);
+        }
+        
+
+        importe_uds=productos.produ[id_producto].importe*n_uds; //importe de cada producto
+        printf("el importe es: %d\n", importe_uds);
+        printf("el credito del cliente es: %d\n",credito_c);
+        //Comprobamos importe del pedido es menor que credito del cliente
+        
+        if(importe_uds>=credito_c){
+            printf("ERROR: el importe es superior al credito que tiene el cliente\n");
+            printf("OPCIONES DISPONIBLES: \n");
+            printf("1. Modificar unidades\n");
+            printf("2. Cancelar compra\n");
+            if(importe_uds==credito_c){
+                printf("3. Terminar compra\n");
+            }
+            printf("introduzca una opcion: \n");
+            int resp;
+            scanf("%d", &resp);
+
+            switch(resp){
+                case 1:
+                 //numero de unidades que puede comprar el cliente hasta superar su credito
+                cantidad=0;
+                importe_cant=0;
+                while(importe_cant<credito_c-importe_cant){
+                    importe_cant=cantidad*productos.produ[id_producto].importe;
+                    cantidad++;
+                }
+                cantidad=cantidad-1;
+                if(cantidad==0){
+                    printf("no puede comprar ninguna unidad de este producto\n");
+                }
+                else{
+                    printf("puede comprar %d unidades del producto\n", cantidad);
+                    printf("desea añadir el producto [s/n]: \n");
+                    fflush(stdin);
+                    char aux=confirmacion();
+                    if(aux=='s' || aux=='S'){
+                        v_prod[n_products-1]=id_producto;
+                        printf("cuantas unidades desea introducir: \n");
+                        scanf("%d", &n_uds);
+                        v_uds[n_products-1]=n_uds;
+                    }
+                    else{
+                        n_uds=0;
+                    }
+                }
+                break;
+
+                case 2:
+                return -1;
+
+                case 3:
+                compra=0;
+                
+            }
+
+        }
+        else{
+            credito_c=credito_c-importe_uds; //le resto al credito del cliente el import
+            printf("el importe es menor que el credito del cliente\n");
+
+            
+        }
+
+        importe_total=importe_total + (productos.produ[id_producto].importe * n_uds); //cada vez que se incluye un producto en la lista se añade al importe total del pedido
+        printf("el importe total del pedido es: %d\n", importe_total);
+
+        fflush(stdin);
+        printf("Desea agregar mas productos al pedido [s/n]: \n");
+        op=confirmacion();
+        if(op=='s'){
+            n_products++;
+            id_producto++;
+        }
+        else{
+            compra=0; //para salir del bucle
+            printf("no desea agregar mas productos al pedido\n");
+            printf("continuamos con el pedido\n");
+        }
+        
+
+        
+        
+    }
+    //RESUMEN DE LOS PRODUCTOS QUE HA PEDIDO Y EL IMPORTE TOTAL
+    
+    for(j=0;j<n_products;j++){
+        id=v_prod[j];
+        strcpy(nombre, productos.produ[id].nombre);
+        printf("nombre del producto: %s\n", nombre);
+        printf("unidades de ese producto: %d\n", v_uds[j]);
+    }
+    
+    
+
     p.pedidos[pos].id_pedido=nueva_id;
     p.pedidos[pos].id_cliente=id_cliente;
 
@@ -109,26 +237,19 @@ void crear_pedido(int id_cliente, pedidos p, int id_producto){
             printf("opcion no valida");
     }
 
-    printf("Desea utilizar un cheque\n");
-    printf("1. SI\n");
-    printf("2. NO\n");
-    printf("su opcion: ");
-    scanf("%d", &cheque);
-    switch(cheque){
-        case 1:
-            printf("introduce el codigo del cheque:");
-            fflush(stdin);
-            fgets(cod_cheque, 11, stdin);
-            //if cod_cheque existe y es valido lo copia al fichero
-            terminador_cad(cod_cheque);
-            strcpy(p.pedidos[pos].id_cod, cod_cheque);
-            break;
-        case 2:
-            strcpy(p.pedidos[pos].id_cod, "000000000");
-            break;
+    printf("Desea utilizar un cheque de descuento [s/n]: \n");
+    cheque=confirmacion();
+    if(cheque=='s' || cheque == 'S'){
+        printf("introduce el codigo del cheque:");
+        fflush(stdin);
+        fgets(cod_cheque, 11, stdin);
+        //if cod_cheque existe y es valido lo copia al fichero
+        terminador_cad(cod_cheque);
+        strcpy(p.pedidos[pos].id_cod, cod_cheque);
+    }   
+    else{
+        strcpy(p.pedidos[pos].id_cod,"000000000");
         
-        default:
-            printf("opcion no valida");
     }
 
     p.lon=p.lon+1; //actualiza el numero de pedidos que hay 
