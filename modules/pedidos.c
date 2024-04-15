@@ -617,7 +617,8 @@ fecha fecha_entrega(fecha f, int dia_ent){
 void listapedidos_cliente(prod_pedidos prods_p,pedidos p, int id_cliente){
     int i,k,
         id_ped,
-        id_produ;
+        id_produ,
+        n_peds = 0;
     char nom_produ[16];
     produ_vect prods = cargar_productos();
 
@@ -634,7 +635,7 @@ void listapedidos_cliente(prod_pedidos prods_p,pedidos p, int id_cliente){
                                                                             p.pedidos[i].f_pedido.anio, 
                                                                             p.pedidos[i].lugar);
             id_ped = p.pedidos[i].id_pedido;        //Guardo temporalmente la id pedido para manejar mas facil
-
+            n_peds++;
             for(k=1;k<prods_p.lon;k++){             //Mostrar productos de un pedido
                 if(id_ped == prods_p.prod_pedidos[k].id_pedido){
                     id_produ = prods_p.prod_pedidos[k].id_prod;         //Guardo temporalmente la id producto para manejar mas facil
@@ -649,4 +650,10 @@ void listapedidos_cliente(prod_pedidos prods_p,pedidos p, int id_cliente){
             printf("+---------------------------------------------------------------------------------------+\n");
         }
     }
+    if(n_peds == 0){
+        printf("| NO SE ENCONTRARON PEDIDOS                                                             |\n");
+        printf("+---------------------------------------------------------------------------------------+\n");
+    }
+    printf("Pulse [enter] para salir");
+    getchar();
 }

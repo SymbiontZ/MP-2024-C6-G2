@@ -55,11 +55,11 @@ typedef struct{
 
 //Precondicion: El fichero Descuentos.txt debe estar relleno
 //Postcondicion: Devuelve una estructura con el vector de estructuras Desc y almacena su tama�o
-void Cargar_Descuentos();
+Descuentos Cargar_Descuentos();
 
 //Precondici�n: El fichero DescuentosClientes.txt debe estar relleno
 //Postcondici�n: Devuelve una estructura con el vector de estructuras DescCli y almacena su tama�o
-void Cargar_DescuentosClientes();
+DescClientes Cargar_DescuentosClientes();
 
 //Precondicion: Recibe una estructura de tipo Descuentos con datos coherentes almacenados.
 //Postcondicion: Guarda en Descuentos.txt los datos del vector de estructuras recibido
@@ -72,6 +72,8 @@ void Guardar_DescuentosClientes(DescClientes);
 //Precondición: Recibe las estructuras clients y DescClientes
 //Postcondición: Lista los descuentos disponibles para el usuario en concreto
 void Consultar_Descuentos(clients, DescClientes);
+
+void Consultar_desc_cliente(clients , int );
 
 void Gestionar_Descuentos(Descuentos, DescClientes, clients);
 
@@ -98,4 +100,5 @@ Descuentos nuevo_est(Descuentos, int);
 Descuentos nuevo_apl(Descuentos, int);
 
 Descuentos nuevo_imp(Descuentos, int);
+
 #endif // DESCUENTOS_H_INCLUDED

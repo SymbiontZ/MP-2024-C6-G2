@@ -2,7 +2,10 @@
 #define USERADMIN_H_
 
 #include "complementos.h"
-#include"empresas.h"
+#include "empresas.h"
+#include "Productos.h"
+#include "pedidos.h"
+#include "Descuentos.h"
 
 #include <stdio.h>
 #include <stdlib.h> 
@@ -69,6 +72,9 @@ typedef struct
     //POSCONDICION: Ninguna
     void menucliente(clients ,int );
 
+    void menucliente_prod();
+    void menucliente_ped(int );
+
 
     //GESTION DATOS ESPECIFICOS USUARIOS//
     clients cliente_nom(clients , int );
@@ -109,4 +115,5 @@ CAMBIOS PENDIENTES
 > no permitir campos vacios
 > agregar comprobacion de enteros
 > corregir correos no iguales (FALTA CLIENTES)
+> arreglar flujo de cambio de contrasena en mod admin
 */

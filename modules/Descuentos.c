@@ -2,14 +2,14 @@
 #include <stdlib.h>
 #include <string.h>
 #include "Descuentos.h"
-#include "useradmin.h"
 
 
-void Cargar_Descuentos(){
+
+Descuentos Cargar_Descuentos(){
 
     Descuentos vector_desc;
 	FILE *f_descuentos;																	// Puntero al fichero
-	char ruta[] = "..\\ESIZON-main\\data\\Descuentos.txt";                                                  						// Ruta del fichero a leer
+	char ruta[] = "..\\data\\Descuentos.txt";                                                  						// Ruta del fichero a leer
 	char linea[MAX_DESC];													                                // Línea a leer
     int i = 0, m;
 
@@ -26,7 +26,7 @@ void Cargar_Descuentos(){
 	rewind(f_descuentos);
 
 	while((fgets(linea, sizeof(linea), f_descuentos) != NULL) ){
-		m = sscanf(linea, "%10[^-]-%50[^-]-%7[^-]-%8[^-]-%d[^-]-%6[^\n]\n",										// Se cargan los datos del fichero a la estructura
+		m = sscanf(linea, "%10[^-]-%50[^-]-%7[^-]-%8[^-]-%d-%6[^\n]\n",										// Se cargan los datos del fichero a la estructura
             &vector_desc.Desc[i].Id_cod,
 			vector_desc.Desc[i].Descrip,
 			vector_desc.Desc[i].Tipo,
@@ -42,11 +42,11 @@ void Cargar_Descuentos(){
 	}
 	fclose(f_descuentos); 																	// Se cirra el fichero
 
-
+    return vector_desc;
 }
 
 
-void Cargar_DescuentosClientes(){
+DescClientes Cargar_DescuentosClientes(){
 
     DescClientes vector_descClts;
 	FILE *f_DescClientes;																	// Puntero al fichero a leer
@@ -66,7 +66,7 @@ void Cargar_DescuentosClientes(){
 	 	rewind(f_DescClientes);
 
 		while((fgets(linea, sizeof(linea), f_DescClientes) != NULL) ){
-			if((m = sscanf(linea, "%d[^-]-%10[^-]-%d[^-]-%d[^-]-%d[^-]-%d[^-]-%d[^-]-%d[^-]-%d[^\n]\n",						// Se cargan los datos del fichero a la estructura
+			if((m = sscanf(linea, "%d-%10[^-]-%d-%d-%d-%d-%d-%d-%d\n",						// Se cargan los datos del fichero a la estructura
                   &vector_descClts.DescCliente[i].Id_cliente,
                   vector_descClts.DescCliente[i].Id_cod,
                   vector_descClts.DescCliente[i].dia_asig,
@@ -84,7 +84,7 @@ void Cargar_DescuentosClientes(){
 
 	fclose(f_DescClientes);																	// Se cierra el fichero
 
-
+    return vector_descClts;
 }
 
 
@@ -151,8 +151,8 @@ void Consultar_Descuentos(clients cliente, DescClientes descuentosclientes){
 
     int i,j;
 
-	for(int i = 0; i < cliente.n_clients; i++){
-          for(int j = 0; j < descuentosclientes.tam; j++){
+	for(i = 0; i < cliente.n_clients; i++){
+          for(j = 0; j < descuentosclientes.tam; j++){
             if ((descuentosclientes.DescCliente[j].Id_cliente == cliente.clients[i].Id_cliente) && descuentosclientes.DescCliente[j].Estado == 0)		// Se comprueba que el identificador del cliente buscado esta asociado con algun descuento
                 printf("Descuento disponible: %s \n", &descuentosclientes.DescCliente[j].Id_cod);								// Lista los descuentos disponibles para el usuario en concreto
 
@@ -160,6 +160,41 @@ void Consultar_Descuentos(clients cliente, DescClientes descuentosclientes){
 
 	}
 
+}
+
+void Consultar_desc_cliente(clients Cliente, int pos){
+    DescClientes desccl = Cargar_DescuentosClientes();
+    int i,
+        n_desc=0;
+    clear();
+    printf("+---------------------------+");
+    printf("|    TUS DESCUENTOS         |");
+    printf("+---------------------------+");
+    for(i=1;i<desccl.tam;i++){
+        if(Cliente.clients[pos].Id_cliente == desccl.DescCliente[i].Id_cliente){
+            if(desccl.DescCliente[i].Estado == 0)
+                printf("| CODIGO: %-10s ASIGNADO: %d/%d/%d CADUCADO: %d/%d/%d --> Disponible |\n", desccl.DescCliente[i].Id_cod,
+                                                                                                    desccl.DescCliente[i].dia_asig,
+                                                                                                    desccl.DescCliente[i].mes_asig,
+                                                                                                    desccl.DescCliente[i].anio_asig,
+                                                                                                    desccl.DescCliente[i].dia_cad,
+                                                                                                    desccl.DescCliente[i].mes_cad,
+                                                                                                    desccl.DescCliente[i].anio_cad);
+            else
+                printf("| CODIGO: %-10s ASIGNADO: %d/%d/%d CADUCADO: %d/%d/%d --> No disponible |\n", desccl.DescCliente[i].Id_cod,
+                                                                                                    desccl.DescCliente[i].dia_asig,
+                                                                                                    desccl.DescCliente[i].mes_asig,
+                                                                                                    desccl.DescCliente[i].anio_asig,
+                                                                                                    desccl.DescCliente[i].dia_cad,
+                                                                                                    desccl.DescCliente[i].mes_cad,
+                                                                                                    desccl.DescCliente[i].anio_cad);
+        n_desc++;
+        }
+    }
+    if(n_desc == 0){
+        printf("| NO TIENES CUPONES DISPONIBLES |\n");
+        printf("+---------------------------+");
+    }
 }
 
 
