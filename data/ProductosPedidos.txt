@@ -1,4 +1,3 @@
-0-0-0-0/0/0-0-default-0-default-default-0/0/0
-2-1-2-8/2/2024-30-enPreparacion-2-Lock001-134697-8/2/2024
-3-2-2-10/2/2024-45-enLocker-7-Lock001-134697-14/2/2024
-3-3-7-10/2/2024-50-enLocker-7-Lock001-134697-14/2/2024
+0-1-2-29/5/2024-0.000000-ôŸ-977484636-\Users\lucia\AppData\Local\Micro-ia\AppData\Local\Micro-1668238428/1297902689/1869767529
+1-1-2-29/5/2024-0.000000-cia\AppData\Local\Programs\Microsoft VS Code\bin;C:\User-1634887535-ms\Microsoft VS Code\bin;C:\User-ft VS Code\bin;C:\User-1852400220/1547322171/1919251285
+3-1-2-44/1/-216671838-0.000000-en Preparacion-0-–æ?-default-0/0/0

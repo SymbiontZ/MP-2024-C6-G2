@@ -20,11 +20,10 @@ pedidos cargar_pedidos(){
     char cad_aux[150]; //cadena auxiliar en la que se guarda cada linea del fichero
     
     FILE * f_ped;
-    f_ped=fopen("../data/Pedidos.txt", "r"); //abre el fichero Pedidos.txt
+    f_ped=fopen("../data/Pedidos.txt", "a+"); //abre el fichero Pedidos.txt
     if(f_ped==NULL){ //si no existe el fichero o esta vacio lo crea
-        f_ped=fopen("../data/Pedidos.txt","w");
-        fclose(f_ped);
-        printf("ERROR");
+        printf("ERROR se ha creado fichero");
+        Sleep(2000);
     }
 
     rewind(f_ped);
@@ -32,13 +31,14 @@ pedidos cargar_pedidos(){
         f_ped=fopen("../data/Pedidos.txt", "w");
         fprintf(f_ped, default_pedido);
         fclose(f_ped);
-    }   
+    }
+     
     while(fgets(cad_aux, sizeof(cad_aux), f_ped)){ //lee cada linea del fichero y la almacena en la variable cad_aux, para contar las lineas del fichero
         //printf("%s", cad_aux);
         n_pedidos++; //numero de pedidos (numero de lineas del fichero)
     }
-    
     rewind(f_ped);
+    
 
     pedidos p; //p.pedidos es la variable de tipo pedido que esta dentro de la estructura pedidos. 
 
@@ -73,7 +73,7 @@ pedidos cargar_pedidos(){
 //Precondicion: estrcutura pedidos cargada con datos del fichero Pedidos.txt y el id del cliente que ha realizado pedido, lo sabemos cuando ha iniciado sesión en la aplicación
 //Postcondicion: se crea un nuevo pedido realizado por un cliente y se guarda en la estructura pedidos, ademas de escribirlo en el fichero Pedidos.txt
 int crear_pedido(int id_cliente, pedidos p){
-    int n_pedidos=p.lon-1, i=0, nueva_id, pos, lugar, n_products=1, n_uds=0, compra=1, pos_product, j=0, id_producto, importe_total=0,id, importe_uds=0,cantidad=0,importe_cant=0; //n_products es la longitud de los vectores dinamicos
+    int n_pedidos=p.lon+1, i=0, lugar, n_products=1, n_uds=0, compra=1, pos_product, j=0, id_producto, importe_total=0,id, importe_uds=0,cantidad=0,importe_cant=0; //n_products es la longitud de los vectores dinamicos
     char cod_cheque[10],nombre[16];
     char op,cheque;
     int *v_prod, *v_uds;//vectores auxiliares con los id de los productos que realiza el cliente ese pedido y las unidades de cada producto
@@ -81,8 +81,8 @@ int crear_pedido(int id_cliente, pedidos p){
     v_prod=malloc(n_products*sizeof(int)); 
     v_uds=malloc(n_products*sizeof(int));
 
-    nueva_id=n_pedidos +1; //id de un nuevo pedido, será el numero de pedidos que hay en el fichero +1
-    pos=nueva_id; //posicion del nuevo pedido es la id ya que la nueva id sera un nuevo pedido por tanto el numero de pedidos que hay
+    int nueva_id=n_pedidos+1; //id de un nuevo pedido, será el numero de pedidos que hay en el fichero +1
+    int pos=nueva_id-1; //posicion del nuevo pedido es la id ya que la nueva id sera un nuevo pedido por tanto el numero de pedidos que hay
     p.pedidos=realloc(p.pedidos, (pos+1)*sizeof(pedido)); //reasignamos memoria dinámica, el tamaño sera la pos mas uno ya que la estructura tendra una posicion
     
     prod_pedidos Prod_P=cargar_prod_pedidos();
@@ -95,7 +95,7 @@ int crear_pedido(int id_cliente, pedidos p){
     //SELECCIONAR PRODUCTO
     id_producto=1;
     while(compra==1){ //bucle para seleccionar todos los productos y rellenar los vectores dinámicos
-        printf("AGREGAR PRODUCTO AL PEDIDO\n");
+        printf("---AGREGAR PRODUCTO AL PEDIDO---\n");
         n_uds=0;
         fflush(stdin);
         //id_producto=buscar_productos(productos); //la posicion de un producto es la misma que su id
@@ -211,16 +211,17 @@ int crear_pedido(int id_cliente, pedidos p){
     for(j=0;j<n_products;j++){ 
         id=v_prod[j];
         strcpy(nombre, productos.produ[id].nombre);
-        printf("nombre del producto: %s\n", nombre);
-        printf("unidades de ese producto: %d\n", v_uds[j]);
+        printf("-nombre del producto: %s\n", nombre);
+        printf("-unidades de ese producto: %d\n", v_uds[j]);
     }
-    printf("el importe total del pedido es: %d\n", importe_total);
+    printf("-el importe total del pedido es: %d\n", importe_total);
     
     
-
+    printf("pos: %d", pos);
     p.pedidos[pos].id_pedido=nueva_id;
     p.pedidos[pos].id_cliente=id_cliente;
 
+    printf("prueba1");
     p.pedidos[pos].f_pedido.dia=dia_sist();
     p.pedidos[pos].f_pedido.mes=mes_sist();
     p.pedidos[pos].f_pedido.anio=anio_sist();
@@ -260,13 +261,15 @@ int crear_pedido(int id_cliente, pedidos p){
     }
 
     p.lon=p.lon+1; //actualiza el numero de pedidos que hay 
-
+    
+    
     guardar_pedido(p);
-    printf("Se han guardado los datos correctamente\n");
+    
 
     //CREAR PRODUCTO PEDIDO
     int id_pro, n_unidades;
     for(j=0;j<n_products;j++){
+        printf("para llamar a la funcion crear producto pedido");
         id_pro=v_prod[j];
         n_unidades=v_uds[j];
         crear_producto_pedido(p, id_pro, nueva_id, Prod_P, n_unidades);
@@ -297,6 +300,19 @@ void guardar_pedido(pedidos p){
             p.pedidos[i].id_locker,
             p.pedidos[i].id_cod);
     }
+
+    for(i=0;i<p.lon;i++){
+        printf("id pedido: %d\n",p.pedidos[i].id_pedido );
+        printf("dia: %d\n", p.pedidos[i].f_pedido.dia);
+        printf("mes: %d\n", p.pedidos[i].f_pedido.mes);
+        printf("anio: %d\n", p.pedidos[i].f_pedido.anio);
+        printf("id cliente: %d\n", p.pedidos[i].id_cliente);
+        printf("lugar: %s\n", p.pedidos[i].lugar);
+        printf("id locker: %s\n", p.pedidos[i].id_locker);
+        printf("cod: %s\n", p.pedidos[i].id_cod);
+    }
+    printf("Se han guardado los pedidos correctamente\n");
+    Sleep(2000);
 }
 
 //Cabecera: prod_pedidos cargar_prod_pedidos()
@@ -391,23 +407,8 @@ void guardar_productos_pedidos(prod_pedidos prod_p){
             prod_p.prod_pedidos[i].f_devolucion.mes,
             prod_p.prod_pedidos[i].f_devolucion.anio);
     }
-
-    for(i=0;i<prod_p.lon;i++){
-        printf("%d-",prod_p.prod_pedidos[i].id_pedido);
-        printf("%d-", prod_p.prod_pedidos[i].id_prod);
-        printf("%d-",prod_p.prod_pedidos[i].num_unid);
-        printf("%d",prod_p.prod_pedidos[i].f_entrega.dia);
-        printf("%d",prod_p.prod_pedidos[i].f_entrega.mes);
-        printf("%d-",prod_p.prod_pedidos[i].f_entrega.anio);
-        printf("%d-",prod_p.prod_pedidos[i].importe);
-        printf("%s-",prod_p.prod_pedidos[i].estado);
-        printf("%d-",prod_p.prod_pedidos[i].id_transp);
-        printf("%s-",prod_p.prod_pedidos[i].id_locker);
-        printf("%s-",prod_p.prod_pedidos[i].cod_locker);
-        printf("%d-",prod_p.prod_pedidos[i].f_devolucion.dia);
-        printf("%d-",prod_p.prod_pedidos[i].f_devolucion.mes);
-        printf("%d",prod_p.prod_pedidos[i].f_devolucion.anio);
-    }
+    printf("Se han guardado los productos pedidos correctamente\n");
+    Sleep(2000);
 }
 
 //Cabecera
