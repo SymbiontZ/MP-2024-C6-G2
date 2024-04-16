@@ -24,7 +24,7 @@ clients cargar_clientes(){
         f_clients = fopen(filename, "w");
         fprintf(f_clients, default_user);           //Añadimos usuario predeterminado
         fclose(f_clients);
-    } 
+    }
     
     while(fgets(cad_linea, sizeof(cad_linea), f_clients)){      //Contador de clientes en el programa a partir de fichero 
         n_clients++;
@@ -143,7 +143,7 @@ void menucliente(clients C,int pos){
             opt = -1;
             break;
         case 3:
-            Consultar_desc_cliente(C, pos);
+            //Consultar_desc_cliente(C, pos);
             opt = -1;
             break;
         case 4:
@@ -151,6 +151,7 @@ void menucliente(clients C,int pos){
             opt = -1;
             break;
         case 5:
+            menucliente_dev(pos);
             opt = -1;
             break;
         case 0:
@@ -228,6 +229,10 @@ void menucliente_ped(int pos){
             listapedidos_cliente(prods_p, p, pos);
             opt = -1;
             break;
+        case 3:
+
+            opt = -1;
+            break;
         case 0:
             //CASO DE VUELTA AL MENU ANTERIOR
             break;
@@ -236,6 +241,49 @@ void menucliente_ped(int pos){
         }
     } while (opt != 0);
 }
+
+void menucliente_dev(int pos){
+    devoluciones dev = cargar_devoluciones();
+    int opt;
+    do{
+        clear();
+        titulo();
+        printf("+---------------------------------------+\n");
+        printf("|        QUE DESEA HACER                |\n");
+        printf("+---------------------------------------+\n");
+        printf("| <1> Realizar devolucion               |\n");
+        printf("| <2> Seguimiento devoluciones          |\n");
+        printf("| <3> Consultar devoluciones pendientes |\n");
+        printf("| <0> Volver                            |\n");
+        printf("+---------------------------------------+\n");
+
+        scanf("%d", &opt);
+        fflush(stdin);
+
+        switch (opt)
+        {
+        case 1:
+            /* code */
+            opt = -1;
+            break;
+        case 2:
+
+            opt = -1;
+            break;
+        case 3:
+
+            opt = -1;
+            break;    
+        case 0:
+            //CASO DE VUELTA AL MENU ANTERIOR
+            break;
+        default:
+            break;
+        }
+    } while (opt != 0);
+
+}
+
 /*** MENU ADMIN ***/
 
 void inicsesion_admin(admin_prov_vect adminprov, int pos){
@@ -262,7 +310,7 @@ void inicsesion_admin(admin_prov_vect adminprov, int pos){
 void menuadmin(admin_prov_vect admin, int pos){
     int opt = -1;    //AUXILIAR PARA MANEJO DE OPCIONES EN EL SWITCH
 
-    while(opt<1 || opt>5){
+    while(opt != 0){
         clear();
         titulo();
         printf("+------------------------+\n");
@@ -286,8 +334,8 @@ void menuadmin(admin_prov_vect admin, int pos){
             printf("| <10. Administradores\n");
         printf("| <0. Salir del sistema\n");
         printf("+------------------------+\n");
-        scanf("%d", &opt);
-        fflush(stdin);
+
+        opt = input_int();
 
         switch (opt){
         case 1:
@@ -320,7 +368,8 @@ void menuadmin(admin_prov_vect admin, int pos){
             opt = -1;
             break;
         case 10:
-            menuadmin_admin(admin);
+            if(pos == 0)
+                menuadmin_admin(admin);
             opt = -1;
             break;
         case 0:
@@ -598,7 +647,7 @@ admin_prov_vect admin_email(admin_prov_vect admin, int pos, int mod){
         lensuf = strlen(sufijo),             //Longitud del sufijo '@esizon.com'
         emailvalid = 0;                     //Variable para verificar si correo es valido
     
-    char cad_email[MAX_EMAIL-lensuf];
+    char cad_email[MAX_EMAIL];
     
 
     if(mod == 1)
@@ -608,7 +657,7 @@ admin_prov_vect admin_email(admin_prov_vect admin, int pos, int mod){
     do{
         emailvalid = 1;
         fflush(stdin);
-        fgets(cad_email, sizeof(cad_email), stdin);
+        fgets(cad_email, MAX_EMAIL-lensuf, stdin);
         terminador_cad(cad_email);
 
         if(strlen(cad_email) == 0){     //Si email esta vacio no es valido
@@ -947,12 +996,16 @@ clients gestionar_cliente(clients C, int pos, int mode){
 
 clients cliente_nom(clients C, int pos){
     char cad_nom[MAX_NOM];
+    fflush(stdin);
 
+    do{
     printf("Ingrese el nombre: ");
     
-    fgets(cad_nom, sizeof(cad_nom), stdin);
+    fgets(cad_nom, MAX_NOM, stdin);
     terminador_cad(cad_nom);
     fflush(stdin);
+
+    } while (strlen(cad_nom) == 0);     //LIMITAR NOMBRE NO VACIO
 
     strcpy(C.clients[pos].Nom_cliente, cad_nom);
 
@@ -1046,32 +1099,81 @@ clients cliente_dir(clients C, int pos, int mod){
 
 clients cliente_email(clients C, int pos, int mod){
     char cad_email[MAX_EMAIL];
+    char org[12];
+    int opt;
 
     if(mod == 1)
         printf("\nEmail actual: %s\n", C.clients[pos].email);
-    printf("Ingrese el email: ");
-    
-    fgets(cad_email, MAX_EMAIL, stdin);
-    terminador_cad(cad_email);
-    fflush(stdin);
 
+    printf("+----------------------------+\n");
+    printf("| ELIJA PROVEEDOR DEL CORREO |\n");
+    printf("+----------------------------+\n");
+    printf("| <1> GMAIL (@gmail.com)     |\n");
+    printf("| <2> OUTLOOK (@outlook.es)  |\n");
+    printf("| <3> YAHOO (@yahoo.com)     |\n");
+    printf("| <4> CANCELAR               |\n");
+    printf("+----------------------------+\n");
+    do{
+    scanf("%d", &opt);
+    switch (opt)
+    {
+    case 1:
+        strcpy(org, "@gmail.com");
+        break;
+    case 2:
+        strcpy(org, "@outlook.es");
+        break;
+    case 3:
+        strcpy(org, "@yahoo.com");
+        break;
+    case 4:
+        printf("Se ha cancelado cambio de correo");
+        Sleep(2000);
+        return C;
+        break;
+
+    default:
+        break;
+    }
+    } while (opt < 1 || opt > 4);
+
+    int tam_email = (MAX_EMAIL- strlen(org));
+    
+    printf("%s: %d\n", org, strlen(org));
+    do
+    {
+        printf("Ingrese el usuario del correo (Sin la terminacion del correo): ");
+
+        fflush(stdin);
+        fgets(cad_email, MAX_EMAIL, stdin);
+        terminador_cad(cad_email);
+        fflush(stdin);
+        if(strlen(cad_email) > tam_email)
+            printf("Ha sobrepasado el limite de caracteres que es %d\n", tam_email);
+    } while (strlen(cad_email) > tam_email && strlen(cad_email) != 0);
+
+    strcat(cad_email, org);
+    
     strcpy(C.clients[pos].email, cad_email);
 
     return C;
 }
 
 clients cliente_cart(clients C, int pos, int mod){
-    int cartera = 0;
+    int cartera = 0,
+        verif;
     if(mod == 1){
         printf("Saldo de la cartera actual: %d\n", C.clients[pos].Cartera);
     }
     printf("Introduzca el saldo disponible: ");
-    scanf("%d", &cartera);
+    do{
 
-    while(cartera <= 0){
-        printf("Saldo no valido, introduzcalo de nuevo: ");
-        scanf("%d", &cartera);
-    }
+        cartera = input_int();
+        if(cartera < 0)
+            printf("Introduce un saldo positivo: ");
+
+    } while (cartera < 0);
+    
     C.clients[pos].Cartera = cartera;
 
     return C;

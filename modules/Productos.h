@@ -1,6 +1,8 @@
 #ifndef PRODUCTOS_H_
 #define PRODUCTOS_H_
 
+#include "complementos.h"
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>

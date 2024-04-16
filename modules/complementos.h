@@ -24,6 +24,13 @@ int anio_sist();
 //POSCONDICION: Se le cambia el caracter salto de linea por terminador
 void terminador_cad(char []);
 
+//PRECONDICION: Ninguna
+//POSCONDICION: Devuelve un caracter para respuestas si/no
 char confirmacion();
+
+//PRECONDICION: Ninguna
+//POSCONDICION: Devuelve un numero entero siempre
+int input_int();
+
 
 #endif

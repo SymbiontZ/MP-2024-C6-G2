@@ -1,5 +1,5 @@
 #include "Productos.h"
-#include "complementos.h"
+
 
 produ_vect cargar_productos () {
 	char filename[] = "../data/Productos.txt";   

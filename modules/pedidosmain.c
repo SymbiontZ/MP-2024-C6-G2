@@ -1,12 +1,14 @@
-#include<stdio.h>
 #include"pedidos.h"
+#include"useradmin.h"
+
+#include<stdio.h>
 #include<stdlib.h>
 
 int main()
 {
     pedidos P=cargar_pedidos();
     
-    int confirmacion=crear_pedido(3,P);
+    int confirmacion=crear_pedido(P, 1);
     if(confirmacion==-1){
         printf("se ha cancelado la compra\n");
     }

@@ -1,16 +1,23 @@
 #ifndef PEDIDOS_H_
 #define PEDIDOS_H_
 
-#include"complementos.h"
+#include "complementos.h"
+#include "empresas.h"
+#include "Productos.h"
+
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+
 //ESTRUCTURAS
 //Estructura pedidos.txt
 typedef struct{
     int id_pedido;
     fecha f_pedido;
     int id_cliente;
-    char lugar[10];
-    char id_locker[10];
-    char id_cod[10];   
+    char lugar[11];
+    char id_locker[11];
+    char id_cod[11];   
 }pedido;
 
 typedef struct{
@@ -25,10 +32,10 @@ typedef struct{
     int num_unid;
     fecha f_entrega;
     int importe;
-    char estado[20];
+    char estado[21];
     int id_transp;
-    char id_locker[10];
-    char cod_locker[10];
+    char id_locker[11];
+    char cod_locker[11];
     fecha f_devolucion;
 }prod_pedido;
 
@@ -42,8 +49,8 @@ typedef struct{
     int id_pedido;
     int id_prod;
     fecha f_devol;
-    char motivo[50];
-    char estado[10];
+    char motivo[51];
+    char estado[11];
     fecha f_aceptacion;
     fecha f_caducidad;
 }devolucion;
@@ -58,9 +65,9 @@ typedef struct{
 pedidos cargar_pedidos();
 prod_pedidos cargar_prod_pedidos();
 devoluciones cargar_devoluciones();
-int crear_pedido(int, pedidos);
+int crear_pedido(pedidos, int);
 void guardar_pedido(pedidos);
-void guardar_productos_pedidos(prod_pedidos prod_p);
+void guardar_productos_pedidos(prod_pedidos );
 void crear_producto_pedido(pedidos, int, int, prod_pedidos, int);
 void guardar_devoluciones(devoluciones);
 void crear_devolucion(devoluciones, pedidos, prod_pedidos);

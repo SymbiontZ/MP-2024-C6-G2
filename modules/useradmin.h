@@ -5,7 +5,7 @@
 #include "empresas.h"
 #include "Productos.h"
 #include "pedidos.h"
-#include "Descuentos.h"
+//#include "Descuentos.h"
 
 #include <stdio.h>
 #include <stdlib.h> 
@@ -16,6 +16,8 @@
 #define MAX_PSW 16              //Longitud de contrasena + 1(terminador)
 #define MAX_NOM 21              //Longitud de nombre + 1(terminador)
 #define MAX_LOC 21              //Longitud de localidad + 1(terminador)
+
+//ESTRUCTURA DE INFORMACION DE UN CLIENTE
 typedef struct
 {
     int Id_cliente;
@@ -28,6 +30,8 @@ typedef struct
     int Cartera;
 
 }client;
+
+//ESTRUCTURA VECTOR DE CLIENTE Y NUMERO DE CLIENTES(TAM VECTOR)
 typedef struct
 { 
     client *clients;
@@ -91,7 +95,7 @@ typedef struct
     void menuadmin(admin_prov_vect , int );
     void menuadmin_cliente();
     void menuadmin_admin(admin_prov_vect );
-
+    void menucliente_dev(int );
 
     void mostrar_admin(admin_prov_vect );
     int buscar_admin(admin_prov_vect );
@@ -102,8 +106,6 @@ typedef struct
 
     admin_prov_vect admin_email(admin_prov_vect , int , int );
     admin_prov_vect admin_psw(admin_prov_vect , int , int );
-
-
 
 #endif  
 

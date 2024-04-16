@@ -61,3 +61,18 @@ char confirmacion(){
 
     return resp;
 }
+
+int input_int(){
+    int verif_int, //Verifica que se haya introducido numero entero
+        num;
+
+    fflush(stdin);
+    do{
+        verif_int = scanf("%d", &num);
+        fflush(stdin);
+        if (verif_int != 1)
+            printf("Introduca un numero entero: ");
+    } while (verif_int != 1);
+    
+    return num;
+}
