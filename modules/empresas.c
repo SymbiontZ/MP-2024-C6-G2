@@ -7,7 +7,7 @@
 #include "Productos.h"
 #include "empresas.h"
 
-
+// listar (X), buscar (X), alta, baja, modificar
 
 //	FUNCIONES DE INICIO DE SESION
 
@@ -385,6 +385,8 @@ void cambiar_contrasena_t(transport_vect transports, int pos){
 
 
 
+//Precondición: Recibe una estructura de tipo admin_prov_vect (el vector de usuarios tipo adminprov) ya rellena.
+//Postcondición: No devuelve nada. Se habrá mostrado por pantalla todos los AdminProvs del sistema, menos el superusuario.
 void listar_prov(admin_prov_vect provs){
 	
 	clear();
@@ -393,10 +395,10 @@ void listar_prov(admin_prov_vect provs){
 	printf("	# PROVEEDORES REGISTRADOS EN EL SISTEMA #\n");
 	printf("	#########################################\n\n");
 	
-	printf("		    Empresa | Email");
+	printf("		    Empresa | Email\n\n");
 	
 	for(int i = 1; i < provs.tam; i++)
-		printf("%s | %s", provs.usuarios[i].Nombre, provs.usuarios[i].email);
+		printf("%s | %s\n", provs.usuarios[i].Nombre, provs.usuarios[i].email);
 	
 	printf("\n\n Presione cualquier tecla para continuar...");
 	getchar();
@@ -404,12 +406,142 @@ void listar_prov(admin_prov_vect provs){
 
 
 
+//Precondición: Recibe una estructura de tipo admin_prov_vect (el vector de usuarios proveedores / administradores) ya rellena.
+//Postcondición: Devuelve la ID del usuario buscado, o -1 si se cancela la búsqueda.
 int buscar_prov(admin_prov_vect provs){
+	int pos = -2, opt = -1;             // Elijo -2 como pos predeter. ya que -1 es para cancelar la busqueda
+	clear();
+    while (pos == -2){    				// Solo va a salir del bucle cuando se selecciona la posicion de un cliente valido
+        clear();
+        printf("Busqueda de proveedores. Seleccione un metodo de busqueda para continuar.\n");
+        printf("¿Como desea buscar?\n");
+        printf("1. Por nombre de la empresa asociada.\n");
+        printf("2. Por email.\n");
+        printf("0. Cancelar.\n");
+        
+        while(opt > 2 || opt < 0){
+            scanf("%d", &opt);
+            switch (opt)
+            {
+            case 1:
+                pos = buscar_prov_tipo(provs, pos, 1);
+                break;
+            case 2:
+                pos = buscar_prov_tipo(provs, pos, 2);
+                break; 
+            case 0:
+                pos = -1;
+                printf("Se ha cancelado la busqueda.\n");
+				break;
+            default:
+                printf("Introduzca una opcion valida: ");
+                break;
+            }
+        }
+    }
+	Sleep(2000);
+    return pos;
+}
+
+
+
+//Precondición: Recibe una estructura de tipo admin_prov_vect (el vector de usuarios provvedores / administradores) ya rellena y dos enteros (posición a tratar y
+//tipo de búsqueda.
+//Postcondición: Devuelve la ID del usuario buscado, o -1 si se cancela la búsqueda.
+int buscar_prov_tipo(admin_prov_vect provs, int pos, int tipo){
+	int len = 0, i, opt = -1;
+    char cad_busq[35]; 
+    int n_coinc = 0;                      				// Contador de coincidencias encontradas
+    int *vect_coinc;                    				// Vector de guardado de IDs con coincidencias
+
+    vect_coinc = (int*)malloc(1*sizeof(int)); 
+    printf("Por favor, introduzca su busqueda: ");
+
+    fflush(stdin);
+    fgets(cad_busq, sizeof(cad_busq), stdin);         	// Cadena por la que se va a buscar al proveedor
+    fflush(stdin);
+    terminador_cad(cad_busq);
+
+    len = strlen(cad_busq);
+    if(tipo == 1){
+        if(len > 21)
+            len = 21;
+
+        for(i = 1; i < provs.tam; i++){           		// Búsqueda por nombre de empresa asociada.
+            if(strncmp(cad_busq, provs.usuarios[i].Nombre, len) == 0){
+                printf("<%d> %s | %s\n", n_coinc+1,  provs.usuarios[i].Nombre, provs.usuarios[i].email);
+                n_coinc++;
+                vect_coinc = (int*)realloc(vect_coinc, n_coinc*sizeof(int));
+                vect_coinc[n_coinc-1] = provs.usuarios[i].Id_empresa;
+                }
+        }
+    }else if(tipo == 2){
+        if(len > 31)
+            len = 31;
+        for(i = 1; i < provs.tam; i++){          		// Búsqueda por email.
+            if(strncmp(cad_busq, provs.usuarios[i].email, len) == 0){
+                printf("<%d> %s | %s\n",n_coinc+1,  provs.usuarios[i].Nombre, provs.usuarios[i].email);
+                n_coinc++;
+                vect_coinc = (int*)realloc(vect_coinc, n_coinc*sizeof(int));
+                vect_coinc[n_coinc-1] = provs.usuarios[i].Id_empresa;
+                }
+        }
+    }else{
+        return -1;      								// Si hay fallo en el tipo, volvemos al menú anterior (buscar_prov).
+    }
+    
+
+    if(n_coinc == 0){
+        printf("No se ha encontrado ninguna coincidencia.\n");
+        Sleep(2000);
+        return -1;
+    }
+
+    printf("\nIntroduzca el usuario que desea seleccionar, o introduzca '0' para salir.\n");   //Elegir una opcion de coincidencia
+    scanf(" %d", &opt);
+    if(opt == 0){
+        return -1;
+    }
+    
+    while(opt < 0 || opt > n_coinc){
+        printf("Introduzca una opcion valida: ");
+        scanf(" %d", &opt);
+    }
+    fflush(stdin);
+    pos = vect_coinc[opt-1];
+    free(vect_coinc);
+
+    return pos;
 }
 
 
 
 admin_prov_vect alta_prov(admin_prov_vect provs){
+	int nueva_id = provs.tam;
+	
+	provs.usuarios = realloc(provs.usuarios, (nueva_id + 1) * sizeof(admin_prov));
+	provs.tam++;
+	
+	if (provs.usuarios == NULL){
+        printf("No se pudo asignar la estructura de proveedores/administradores.\n");
+        getchar();
+        exit(33);
+    }
+    
+    provs.usuarios[nueva_id].Id_empresa = nueva_id;
+    strcpy(provs.usuarios[nueva_id].Perfil_usuario, "proveedor\0");
+    
+    provs = prov_nombre(provs, nueva_id);
+    provs = prov_email(provs);    
+    provs = prov_contra(provs);
+    
+	guardar_adminprov(provs);
+    
+    printf("Usuario %04d dado de alta correctamente.\n", nueva_id);
+    
+    Sleep(2000);
+    
+	return provs;
 }
 
 
@@ -419,7 +551,40 @@ admin_prov_vect baja_prov(admin_prov_vect provs){
 
 
 
-admin_prov_vect modificar_prov(admin_prov_vect provs){
+admin_prov_vect modificar_prov(admin_prov_vect provs, int pos){
+	int op = -1;
+	
+	clear();
+	
+	printf("##############################\n");
+	printf("##	INFORMACIÓN DEL USUARIO	##\n");
+	printf("##############################\n");
+	
+	
+	
+}
+
+// #########################################################################3
+
+admin_prov_vect prov_nombre(admin_prov_vect provs, int id){
+	char nombre[21];
+	
+	printf("	<1> Empresa a la que pertenece: ");
+	fflush(stdin);
+	fgets(nombre, sizeof(nombre), stdin);
+	terminador_cad(nombre);
+	
+	strcpy(provs.usuarios[id].Nombre, nombre);
+	
+	return provs;
+}
+
+admin_prov_vect prov_email(admin_prov_vect provs){
+	
+}
+
+admin_prov_vect prov_contra(admin_prov_vect provs){
+	
 }
 
 
@@ -428,6 +593,8 @@ admin_prov_vect modificar_prov(admin_prov_vect provs){
 
 
 
+//Precondición: Recibe una estructura de tipo transport_vect (el vector de transportistas) ya rellena.
+//Postcondición: No devuelve nada. Se habrá mostrado por pantalla todos los transportistas del sistema, menos el por defecto.
 void listar_transport(transport_vect transports){
 	
 	clear();
@@ -436,10 +603,10 @@ void listar_transport(transport_vect transports){
 	printf("	# TRANSPORTISTAS REGISTRADOS EN EL SISTEMA #\n");
 	printf("	############################################\n\n");
 	
-	printf("	     Ciudad | Email | Nombre | Empresa  ");
+	printf("	     Ciudad | Email | Nombre | Empresa\n\n");
 	
 	for(int i = 1; i < transports.tam; i++)
-		printf("%s | %s | %s | %s ", transports.transportistas[i].Ciudad, transports.transportistas[i].email, transports.transportistas[i].Nombre, transports.transportistas[i].Nom_Emp);
+		printf("%s | %s | %s | %s\n", transports.transportistas[i].Ciudad, transports.transportistas[i].email, transports.transportistas[i].Nombre, transports.transportistas[i].Nom_Emp);
 	
 	printf("\n\n Presione cualquier tecla para continuar...");
 	getchar();
@@ -448,7 +615,127 @@ void listar_transport(transport_vect transports){
 
 
 
+//Precondición: Recibe una estructura de tipo transport_vect (el vector de transportistas) ya rellena.
+//Postcondición: Devuelve la ID del usuario buscado, o -1 si se cancela la búsqueda.
 int buscar_transport(transport_vect transports){
+	int pos = -2, opt = -1;             // Elijo -2 como pos predeter. ya que -1 es para cancelar la busqueda
+	clear();
+    while (pos == -2){    				// Solo va a salir del bucle cuando se selecciona la posicion de un cliente valido
+        clear();
+        printf("Busqueda de transportistas. Seleccione un metodo de busqueda para continuar.\n");
+        printf("¿Como desea buscar?\n");
+        printf("1. Por nombre.\n");
+        printf("2. Por email.\n");
+        printf("3. Por ciudad de reparto.\n");
+        printf("0. Cancelar.\n");
+        
+        while(opt > 3 || opt < 0){
+            scanf("%d", &opt);
+            switch (opt)
+            {
+            case 1:
+                pos = buscar_transport_tipo(transports, pos, 1);
+                break;
+            case 2:
+                pos = buscar_transport_tipo(transports, pos, 2);
+                break; 
+            case 3:
+            	pos = buscar_transport_tipo(transports, pos, 3);
+            	break;
+            case 0:
+                pos = -1;
+                printf("Se ha cancelado la busqueda.\n");
+				break;
+            default:
+                printf("Introduzca una opcion valida: ");
+                break;
+            }
+        }
+    }
+	Sleep(2000);
+    return pos;
+}
+
+
+
+//Precondición: Recibe una estructura de tipo transport_vect (el vector de transportistas) ya rellena y dos enteros (posición a tratar y
+//tipo de búsqueda.
+//Postcondición: Devuelve la ID del usuario buscado, o -1 si se cancela la búsqueda.
+int buscar_transport_tipo(transport_vect transports, int pos, int tipo){
+	int len = 0, i, opt = -1;
+    char cad_busq[35]; 
+    int n_coinc = 0;                      				// Contador de coincidencias encontradas
+    int *vect_coinc;                    				// Vector de guardado de IDs con coincidencias
+
+    vect_coinc = (int*)malloc(1*sizeof(int)); 
+    printf("Por favor, introduzca su busqueda: ");
+
+    fflush(stdin);
+    fgets(cad_busq, sizeof(cad_busq), stdin);         	// Cadena por la que se va a buscar al proveedor
+    fflush(stdin);
+    terminador_cad(cad_busq);
+
+    len = strlen(cad_busq);
+    if(tipo == 1){
+        if(len > 21)
+            len = 21;
+
+        for(i = 1; i < transports.tam; i++){           		// Búsqueda por nombre de empresa asociada.
+            if(strncmp(cad_busq, transports.transportistas[i].Nombre, len) == 0){
+                printf("<%d> %s | %s | %s | %s\n", n_coinc + 1,  transports.transportistas[i].Nombre, transports.transportistas[i].email, transports.transportistas[i].Nom_Emp, transports.transportistas[i].Ciudad);
+                n_coinc++;
+                vect_coinc = (int*)realloc(vect_coinc, n_coinc*sizeof(int));
+                vect_coinc[n_coinc-1] = transports.transportistas[i].Id_transp;
+                }
+        }
+    }else if(tipo == 2){
+        if(len > 31)
+            len = 31;
+        for(i = 1; i < transports.tam; i++){          		// Búsqueda por email.
+            if(strncmp(cad_busq, transports.transportistas[i].email, len) == 0){
+                printf("<%d> %s | %s | %s | %s\n",n_coinc+1, transports.transportistas[i].Nombre, transports.transportistas[i].email, transports.transportistas[i].Nom_Emp, transports.transportistas[i].Ciudad);
+                n_coinc++;
+                vect_coinc = (int*)realloc(vect_coinc, n_coinc*sizeof(int));
+                vect_coinc[n_coinc-1] = transports.transportistas[i].Id_transp;
+                }
+        }
+    }else if(tipo == 3){
+        if(len > 21)
+            len = 21;
+        for(i = 1; i < transports.tam; i++){          		// Búsqueda por ciudad de reparto.
+            if(strncmp(cad_busq, transports.transportistas[i].Ciudad, len) == 0){
+                printf("<%d> %s | %s | %s | %s\n",n_coinc+1, transports.transportistas[i].Nombre, transports.transportistas[i].email, transports.transportistas[i].Nom_Emp, transports.transportistas[i].Ciudad);
+                n_coinc++;
+                vect_coinc = (int*)realloc(vect_coinc, n_coinc*sizeof(int));
+                vect_coinc[n_coinc-1] = transports.transportistas[i].Id_transp;
+                }
+        }
+    }else{
+        return -1;      									// Si hay fallo en el tipo, volvemos al menú anterior (buscar_prov).
+    }
+    
+
+    if(n_coinc == 0){
+        printf("No se ha encontrado ninguna coincidencia.\n");
+        Sleep(2000);
+        return -1;
+    }
+
+    printf("\nIntroduzca el usuario que desea seleccionar, o introduzca '0' para salir.\n");   //Elegir una opcion de coincidencia
+    scanf(" %d", &opt);
+    if(opt == 0){
+        return -1;
+    }
+    
+    while(opt < 0 || opt > n_coinc){
+        printf("Introduzca una opcion valida: ");
+        scanf(" %d", &opt);
+    }
+    fflush(stdin);
+    pos = vect_coinc[opt-1];
+    free(vect_coinc);
+    
+    return pos;
 }
 
 
@@ -466,6 +753,28 @@ transport_vect baja_transport(transport_vect transports){
 transport_vect modificar_transport(transport_vect transports){
 }
 
+// #################################################################
+
+transport_vect t_nombre(transport_vect transports){
+	
+}
+
+transport_vect t_email(transport_vect transports){
+	
+}
+
+transport_vect t_contrasena(transport_vect transports){
+	
+}
+
+transport_vect t_empresa(transport_vect transports){
+	
+}
+
+transport_vect t_ciudad(transport_vect transports){
+	
+}
+
 
 
 // FUNCIONES DE LECTURA DE FICHEROS
@@ -479,21 +788,20 @@ admin_prov_vect cargar_adminprov(){
 	
 	admin_prov_vect adminprov_sistema;
 	FILE *f_AdminProv;																							// Puntero al fichero a leer.
-	char ruta[] = "..\\data\\AdminProv.txt";																		// Ruta del fichero a leer.
+	char ruta[] = ".\\data\\AdminProv.txt";																		// Ruta del fichero a leer.
 	char linea[LONG_MAX_ADMINPROV];																				// Línea actual del fichero. Longitud máxima de una línea 86 caracteres.
 	char tipo_usuario[14];																						// Cadena auxiliar a convertir.
 	int i = 0, m; 
 
-	if((f_AdminProv = fopen(ruta, "a+")) == NULL){	 // w+ permite leer y escribir, y crea el archivo si no existe.
+	if((f_AdminProv = fopen(ruta, "a+")) == NULL){																// w+ permite leer y escribir, y crea el archivo si no existe.
 		printf("\nError al abrir el fichero AdminProv.txt en cargar_adminprov. Creando uno nuevo...\n");
 		getchar();                     	
 	}	
 
 	//COMPROBACION FICHERO VACIO//
-	if (fgetc(f_AdminProv) == EOF){
-		f_AdminProv = fopen(ruta, "w");
+	char verif = fgetc(f_AdminProv);
+	if (verif == EOF){
 		fprintf(f_AdminProv,"0000-ESIZON-adminadmin@esizon.com-admin000-administrador\n");
-		fclose(f_AdminProv);
 	}
 
 	rewind(f_AdminProv);																								
@@ -528,11 +836,11 @@ transport_vect cargar_transportistas(){
 	
 	transport_vect transport_sistema;
 	FILE *Transportistas;																						// Puntero al fichero a leer.
-	char ruta[] = "../data/Transportistas.txt";																	// Ruta del fichero a leer.
+	char ruta[] = "./data/Transportistas.txt";																	// Ruta del fichero a leer.
 	char linea[LONG_MAX_TRANSPORT];																				// Línea actual del fichero. Longitud máxima de una línea 113 caracteres.
 	int i = 0, m;
 
-	if((Transportistas = fopen(ruta, "w+")) == NULL){															// w+ permite leer y escribir, y crea el archivo si no existe.
+	if((Transportistas = fopen(ruta, "a+")) == NULL){															// w+ permite leer y escribir, y crea el archivo si no existe.
 		printf("\nError al abrir el fichero Transportistas.txt en cargar_transportistas. Creando uno nuevo...\n");
 		getchar();
 	}
@@ -576,16 +884,15 @@ transport_vect cargar_transportistas(){
 
 void guardar_adminprov(admin_prov_vect usuarios){
 	
-	FILE *AdminProv;																				// Puntero al fichero a leer.
-	char ruta[] = "..\\data\\AdminProv.txt";														// Ruta del fichero a leer.
-	char linea[LONG_MAX_ADMINPROV];																	// Línea actual del fichero. Longitud máxima de una línea 86 caracteres.
+	FILE *AdminProv;																							// Puntero al fichero a leer.
+	char ruta[] = "..\\ESIZON-main\\data\\AdminProv.txt";														// Ruta del fichero a leer.
+	char linea[LONG_MAX_ADMINPROV];																				// Línea actual del fichero. Longitud máxima de una línea 86 caracteres.
 	char aux[14];
 	
 	AdminProv = fopen(ruta, "w");
 	
 	for(int i = 0; i < usuarios.tam; i++)
-		fprintf(AdminProv, "%04d-%s-%s-%s-%s\n", usuarios.usuarios[i].Id_empresa, usuarios.usuarios[i].Nombre, usuarios.usuarios[i].email, usuarios.usuarios[i].Contrasena, usuarios.usuarios[i].Perfil_usuario);
-
+		fprintf(AdminProv, "%d-%20[^-]-%30[^-]-%15[^-]-%13[^\n]\n", usuarios.usuarios[i].Id_empresa, usuarios.usuarios[i].Nombre, usuarios.usuarios[i].email, usuarios.usuarios[i].Contrasena, usuarios.usuarios[i].Perfil_usuario);
 	fclose(AdminProv);
 }
 
@@ -603,7 +910,7 @@ void guardar_transportista(transport_vect transportistas){
 	Transportistas = fopen(ruta, "w");
 	
 	for(int i = 0; i < transportistas.tam; i++)
-		fprintf(Transportistas, "%d-%s-%s-%s-%s-%20s\n", transportistas.transportistas[i].Id_transp, transportistas.transportistas[i].Nombre, transportistas.transportistas[i].email, transportistas.transportistas[i].Contrasena, transportistas.transportistas[i].Nom_Emp, transportistas.transportistas[i].Ciudad);
+		fprintf(Transportistas, "%d-%20[^-]-%30[^-]-%15[^-]-%20[^-]-%20s\n", transportistas.transportistas[i].Id_transp, transportistas.transportistas[i].Nombre, transportistas.transportistas[i].email, transportistas.transportistas[i].Contrasena, transportistas.transportistas[i].Nom_Emp, transportistas.transportistas[i].Ciudad);
 	fclose(Transportistas);
 }
 
