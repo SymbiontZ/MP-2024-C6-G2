@@ -66,6 +66,7 @@ pedidos cargar_pedidos(){
 //Precondicion: estrcutura pedidos cargada con datos del fichero Pedidos.txt y el id del cliente que ha realizado pedido, lo sabemos cuando ha iniciado sesión en la aplicación
 //Postcondicion: se crea un nuevo pedido realizado por un cliente y se guarda en la estructura pedidos, ademas de escribirlo en el fichero Pedidos.txt
 int crear_pedido( pedidos p, int id_cliente){
+    //Cargar estructuras necesarias de otros modulos
     clients c = cargar_clientes();
     prod_pedidos Prod_P = cargar_prod_pedidos();
     produ_vect productos = cargar_productos();
@@ -73,17 +74,17 @@ int crear_pedido( pedidos p, int id_cliente){
     int i=0, lugar, n_products=1, n_uds=0, compra=1, pos_product, j=0, id_producto, id;//n_products es la longitud de los vectores dinamicos
 
     //VARIABLES DE IMPORTE
-    int importe_total=0,
-        importe_uds=0,
-        cantidad=0,
-        importe_cant=0; 
+    int importe_total=0, //importe total del pedido realizado por el cliente
+        importe_uds=0, //importe por las unidades compradas de cada producto
+        cantidad=0, //cantidad de unidades que puede comprar hasta que su credito sea menor que el importe
+        importe_cant=0; //importe para comparar el credito del cliente con las cantidades que puede comprar
 
-    char cod_cheque[10],nombre[16];
-    char op,cheque;
+    char cod_cheque[10], //codigo de cheque que introduce el usuario y validar si es correcto
+         nombre[16]; //para mostrar el nombre de los productos despues del que el producto haya terminado del pedido
+    char op,cheque; //caracteres para que el usuario introduzca si si o no a una pregunta que realiza el sistema
     
 
     /***ASIGNACION DE ID, POS Y REASIGNACION DE LA ESTRUCTURA PEDIDOS***/
-
     int n_pedidos=p.lon+1;
     int nueva_id=n_pedidos-1; //id de un nuevo pedido, será el numero de pedidos que hay en el fichero +1
     int pos=nueva_id; //posicion del nuevo pedido es la id ya que la nueva id sera un nuevo pedido por tanto el numero de pedidos que hay
@@ -95,10 +96,11 @@ int crear_pedido( pedidos p, int id_cliente){
         nueva_id = 1;
     }
     printf("\n%d, %d\n", pos, nueva_id);
-    int *v_prod, *v_uds;//vectores auxiliares con los id de los productos que realiza el cliente ese pedido y las unidades de cada producto
-
+    int *v_prod, //vector auxiliar para almacenar las id de los productos que ha seleccionado el usuario en un mismo pedido
+        *v_uds; //vector auxiliar para almacenar las unidades de los productos que ha seleccionado el usuario
+        //cada posicion es un producto, en un vector se almacena la id y en el otro vector las unidades de ese producto
     
-    v_prod=(int*)malloc(n_products*sizeof(int)); 
+    v_prod=(int*)malloc(n_products*sizeof(int)); //definimos de forma dinámica los vectores que hemos creado anteriormente
     v_uds=(int*)malloc(n_products*sizeof(int));
 
     int credito_c=c.clients[id_cliente].Cartera;
@@ -137,12 +139,12 @@ int crear_pedido( pedidos p, int id_cliente){
         printf("el credito del cliente es: %d\n",credito_c);
         //Comprobamos importe del pedido es menor que credito del cliente
         
-        if(importe_uds>=credito_c){
+        if(importe_uds>=credito_c){ 
             printf("ERROR: el importe es superior al credito que tiene el cliente\n");
-            printf("OPCIONES DISPONIBLES: \n");
+            printf("OPCIONES DISPONIBLES: \n"); //opciones que tiene el usuario cuando el importe supera su credito
             printf("1. Modificar unidades\n");
             printf("2. Cancelar compra\n");
-            if(importe_uds==credito_c){
+            if(importe_uds==credito_c){ //opcion para cuando el importe es igual que el credito del cliente
                 printf("3. Terminar compra\n");
             }
             printf("introduzca una opcion: \n");
@@ -154,12 +156,12 @@ int crear_pedido( pedidos p, int id_cliente){
                     //numero de unidades que puede comprar el cliente hasta superar su credito
                     cantidad=0;
                     importe_cant=0;
-                    while(importe_cant<credito_c-importe_cant){
+                    while(importe_cant<credito_c-importe_cant){ //calcular la cantidad que puede comprar el cliente hasta que el importe sea superior al credito
                         importe_cant=cantidad*productos.produ[id_producto].importe;
                         cantidad++;
                     }
                     cantidad=cantidad-1;
-                    if(cantidad==0){
+                    if(cantidad==0){ //si la cantidad es 0 el cliente no puede comprar ese producto
                         printf("no puede comprar ninguna unidad de este producto\n");
                     }
                     else{
@@ -168,7 +170,7 @@ int crear_pedido( pedidos p, int id_cliente){
                         fflush(stdin);
                         char aux=confirmacion();
                         if(aux=='s' || aux=='S'){
-                            printf("cuantas unidades desea introducir: \n");
+                            printf("cuantas unidades desea introducir: \n"); //preguntar al usuario cuantas unidades quiere del producto 
                             scanf("%d", &n_uds);
                             
                         }
@@ -197,11 +199,11 @@ int crear_pedido( pedidos p, int id_cliente){
             
         }
         
-        v_prod[n_products-1]=id_producto;
-        v_uds[n_products-1]=n_uds;
+        v_prod[n_products-1]=id_producto; //guardar en el vector dinamico el id del producto que ha seleccionado el cliente
+        v_uds[n_products-1]=n_uds; //guardar numero de unidades de ese producto que ha seleccionado el usuario
         importe_total=importe_total + (productos.produ[id_producto].importe * n_uds); //cada vez que se incluye un producto en la lista se añade al importe total del pedido
         
-
+        //Preguntar al cliente si desea añadir mas productos a un pedido
         fflush(stdin);
         printf("Desea agregar mas productos al pedido [s/n]: \n");
         op=confirmacion();
@@ -226,8 +228,8 @@ int crear_pedido( pedidos p, int id_cliente){
     }
     printf("-el importe total del pedido es: %d\n", importe_total);
     
-    
     printf("pos: %d", pos);
+    //ALMACENAR EN LA ESTRUCTURA PEDIDO LOS DATOS DEL PEDIDO
     p.pedidos[pos].id_pedido=nueva_id;
     p.pedidos[pos].id_cliente=id_cliente;
 
@@ -317,7 +319,7 @@ void guardar_pedido(pedidos p){
         printf("id locker: %s\n", p.pedidos[i].id_locker);
         printf("cod: %s\n", p.pedidos[i].id_cod);
     }
-    
+    //Escribir en el fichero los pedidos que contiene la estructura pedidos 
     for(i=0;i<p.lon;i++){
         fprintf(f_ped,"%d-%d/%d/%d-%d-%s-%s-%s\n", 
             p.pedidos[i].id_pedido,
@@ -434,15 +436,16 @@ void guardar_productos_pedidos(prod_pedidos prod_p){
 //Precondición
 //Postcondicion
 void crear_producto_pedido(pedidos p, int product, int id_pedido, prod_pedidos prod_p, int uds){
-    int pos,i;
+    int pos, //variable para la posicion en la estructura productos pedidos
+        i; //variable para recorrer la estructura
 
-    produ_vect productos;
-    productos=cargar_productos();
+    produ_vect productos=cargar_productos(); //cargar la estructura del modulo productos
 
 
     pos=prod_p.lon;
-    prod_p.prod_pedidos=realloc(prod_p.prod_pedidos, (pos+1)*sizeof(prod_pedido));
+    prod_p.prod_pedidos=realloc(prod_p.prod_pedidos, (pos+1)*sizeof(prod_pedido)); //reasignamos memoria dinamica al vector de la estructura productos pedidos
     
+    //ALMACENAR DATOS EN LA ESTRUCTURA
     prod_p.prod_pedidos[pos].id_pedido=id_pedido;
     prod_p.prod_pedidos[pos].id_prod=product;
     prod_p.prod_pedidos[pos].num_unid=uds;
@@ -453,11 +456,11 @@ void crear_producto_pedido(pedidos p, int product, int id_pedido, prod_pedidos p
 
     prod_p.prod_pedidos[pos].importe=productos.produ[product].importe;
 
-    strcpy(prod_p.prod_pedidos[pos].estado, "en Preparacion");
+    strcpy(prod_p.prod_pedidos[pos].estado, "en Preparacion"); //por defecto el estado inicial del producto pedido es en Preparacion
 
-    prod_p.prod_pedidos[pos].id_transp=0;
+    prod_p.prod_pedidos[pos].id_transp=0; //se le asignara un transportista en el modulo transportistas
 
-    strcpy(prod_p.prod_pedidos[pos].id_locker, p.pedidos[id_pedido].id_locker);
+    strcpy(prod_p.prod_pedidos[pos].id_locker, p.pedidos[id_pedido].id_locker); //locker asignado es el mismo que se le asigno al pedido
     strcpy(prod_p.prod_pedidos[pos].cod_locker, "default");
 
     prod_p.prod_pedidos[pos].f_devolucion.dia=0;
@@ -563,7 +566,7 @@ void guardar_devoluciones(devoluciones d){
 
 void crear_devolucion(devoluciones d, pedidos p, prod_pedidos prod_p){
     int i, pos, id_ped, producto;
-    char motivo[50];
+    char motivo[50]; //motivo que escribe el cliente para devolver el producto
     pos=d.lon;
     d.devoluciones=realloc(d.devoluciones, (pos+1)*sizeof(devolucion));
 
