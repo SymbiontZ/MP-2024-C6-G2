@@ -516,8 +516,13 @@ int buscar_prov_tipo(admin_prov_vect provs, int pos, int tipo){
 
 
 
+//Precondición: Recibe una estructura de tipo admin_prov_vect (el vector de usuarios provvedores / administradores) ya rellena.
+//Postcondición: Devuelve la estructura de tipo admin_prov_vect con un nuevo proveedor dado de alta, y habiendo guardado el 
+// cambio en AdminProv.txt
 admin_prov_vect alta_prov(admin_prov_vect provs){
 	int nueva_id = provs.tam;
+	
+	clear();
 	
 	provs.usuarios = realloc(provs.usuarios, (nueva_id + 1) * sizeof(admin_prov));
 	provs.tam++;
@@ -532,8 +537,8 @@ admin_prov_vect alta_prov(admin_prov_vect provs){
     strcpy(provs.usuarios[nueva_id].Perfil_usuario, "proveedor\0");
     
     provs = prov_nombre(provs, nueva_id);
-    provs = prov_email(provs);    
-    provs = prov_contra(provs);
+    provs = prov_email(provs, nueva_id);    
+    provs = prov_contra(provs, nueva_id);
     
 	guardar_adminprov(provs);
     
@@ -564,27 +569,71 @@ admin_prov_vect modificar_prov(admin_prov_vect provs, int pos){
 	
 }
 
-// #########################################################################3
+// ###################### SUBFUNCIONES DE GESTIÓN DE PROVEEDORES ######################
 
 admin_prov_vect prov_nombre(admin_prov_vect provs, int id){
-	char nombre[21];
+	char empresa[21];
 	
-	printf("	<1> Empresa a la que pertenece: ");
+	printf("\n	<1> Empresa a la que pertenece: ");
 	fflush(stdin);
-	fgets(nombre, sizeof(nombre), stdin);
-	terminador_cad(nombre);
+	fgets(empresa, sizeof(empresa), stdin);
+	terminador_cad(empresa);
 	
-	strcpy(provs.usuarios[id].Nombre, nombre);
+	strcpy(provs.usuarios[id].Nombre, empresa);
 	
 	return provs;
 }
 
-admin_prov_vect prov_email(admin_prov_vect provs){
+admin_prov_vect prov_email(admin_prov_vect provs, int id){
+	char email[31];
 	
+	printf("\n	<2> Email de proveedor: ");
+	fflush(stdin);
+	fgets(email, sizeof(email), stdin);
+	terminador_cad(email);
+	
+	strcpy(provs.usuarios[id].email, email);
+	
+	return provs;
 }
 
-admin_prov_vect prov_contra(admin_prov_vect provs){
+admin_prov_vect prov_contra(admin_prov_vect provs, int id){
+	char contra[16], contra_rep[16];
+	int contra_valida = 0;
 	
+	printf("\n	<3> Contraseña: ");
+	fflush(stdin);
+	fgets(contra, sizeof(contra), stdin);
+	
+	printf("\n	Repita la contraseña: ");
+	fflush(stdin);
+	fgets(contra_rep, sizeof(contra_rep), stdin);
+	
+	terminador_cad(contra);
+	terminador_cad(contra_rep);
+	
+	if(strcmp(contra, contra_rep) == 0)
+		contra_valida = 1;
+	
+	while(!contra_valida){
+		printf("\n	Contrasenas dispares. Contrasena: ");
+		fflush(stdin);
+		fgets(contra, sizeof(contra), stdin);
+	
+		printf("\n	Repita la contraseña: ");
+		fflush(stdin);
+		fgets(contra_rep, sizeof(contra_rep), stdin);
+	
+		terminador_cad(contra);
+		terminador_cad(contra_rep);
+	
+		if(strcmp(contra, contra_rep) == 0)
+			contra_valida = 1;
+	}
+	
+	strcpy(provs.usuarios[id].Contrasena, contra);
+	
+	return provs;
 }
 
 
@@ -619,8 +668,10 @@ void listar_transport(transport_vect transports){
 //Postcondición: Devuelve la ID del usuario buscado, o -1 si se cancela la búsqueda.
 int buscar_transport(transport_vect transports){
 	int pos = -2, opt = -1;             // Elijo -2 como pos predeter. ya que -1 es para cancelar la busqueda
+	
 	clear();
-    while (pos == -2){    				// Solo va a salir del bucle cuando se selecciona la posicion de un cliente valido
+    
+	while (pos == -2){    				// Solo va a salir del bucle cuando se selecciona la posicion de un cliente valido
         clear();
         printf("Busqueda de transportistas. Seleccione un metodo de busqueda para continuar.\n");
         printf("¿Como desea buscar?\n");
@@ -666,7 +717,9 @@ int buscar_transport_tipo(transport_vect transports, int pos, int tipo){
     char cad_busq[35]; 
     int n_coinc = 0;                      				// Contador de coincidencias encontradas
     int *vect_coinc;                    				// Vector de guardado de IDs con coincidencias
-
+	
+	clear();
+	
     vect_coinc = (int*)malloc(1*sizeof(int)); 
     printf("Por favor, introduzca su busqueda: ");
 
@@ -740,7 +793,38 @@ int buscar_transport_tipo(transport_vect transports, int pos, int tipo){
 
 
 
+//Precondición: Recibe una estructura de tipo transport_vect (el vector de transportistas) ya rellena.
+//Postcondición: Devuelve la estructura de tipo transport_vect con un nuevo transportista dado de alta, y habiendo guardado el 
+// cambio en Transportistas.txt
 transport_vect alta_transport(transport_vect transports){
+	int nueva_id = transports.tam;
+	
+	clear();
+	
+	transports.transportistas = realloc(transports.transportistas, (nueva_id + 1) * sizeof(transport));
+	transports.tam++;
+	
+	if (transports.transportistas == NULL){
+        printf("No se pudo asignar la estructura de transportistas.\n");
+        getchar();
+        exit(33);
+    }
+    
+    transports.transportistas[nueva_id].Id_transp = nueva_id;
+    
+    transports = t_nombre(transports, nueva_id);
+    transports = t_email(transports, nueva_id);    
+    transports = t_empresa(transports, nueva_id);
+    transports = t_ciudad(transports, nueva_id);
+    transports = t_contra(transports, nueva_id);
+    
+	guardar_transportista(transports);
+    
+    printf("Transportista %04d dado de alta correctamente.\n", nueva_id);
+    
+    Sleep(2000);
+    
+	return transports;
 }
 
 
@@ -753,26 +837,97 @@ transport_vect baja_transport(transport_vect transports){
 transport_vect modificar_transport(transport_vect transports){
 }
 
-// #################################################################
+// ###################### SUBFUNCIONES DE GESTIÓN DE TRANSPORTISTAS ######################
 
-transport_vect t_nombre(transport_vect transports){
+transport_vect t_nombre(transport_vect transports, int id){
+	char nombre[21];
 	
+	printf("\n	<1> Nombre completo: ");
+	fflush(stdin);
+	fgets(nombre, sizeof(nombre), stdin);
+	terminador_cad(nombre);
+	
+	strcpy(transports.transportistas[id].Nombre, nombre);
+	
+	return transports;
 }
 
-transport_vect t_email(transport_vect transports){
+transport_vect t_email(transport_vect transports, int id){
+	char email[31];
 	
+	printf("\n	<2> Email de transportista: ");
+	fflush(stdin);
+	fgets(email, sizeof(email), stdin);
+	terminador_cad(email);
+	
+	strcpy(transports.transportistas[id].email, email);
+	
+	return transports;
 }
 
-transport_vect t_contrasena(transport_vect transports){
+transport_vect t_contra(transport_vect transports, int id){
+	char contra[16], contra_rep[16];
+	int contra_valida = 0;
 	
+	printf("\n	<5> Contraseña: ");
+	fflush(stdin);
+	fgets(contra, sizeof(contra), stdin);
+	
+	printf("\n	Repita la contraseña: ");
+	fflush(stdin);
+	fgets(contra_rep, sizeof(contra_rep), stdin);
+	
+	terminador_cad(contra);
+	terminador_cad(contra_rep);
+	
+	if(strcmp(contra, contra_rep) == 0)
+		contra_valida = 1;
+	
+	while(!contra_valida){
+		printf("\n	Contrasenas dispares. Contrasena: ");
+		fflush(stdin);
+		fgets(contra, sizeof(contra), stdin);
+	
+		printf("\n	Repita la contraseña: ");
+		fflush(stdin);
+		fgets(contra_rep, sizeof(contra_rep), stdin);
+	
+		terminador_cad(contra);
+		terminador_cad(contra_rep);
+	
+		if(strcmp(contra, contra_rep) == 0)
+			contra_valida = 1;
+	}
+	
+	strcpy(transports.transportistas[id].Contrasena, contra);
+	
+	return transports;
 }
 
-transport_vect t_empresa(transport_vect transports){
+transport_vect t_empresa(transport_vect transports, int id){
+	char empresa[21];
 	
+	printf("\n	<3> Empresa a la que pertenece: ");
+	fflush(stdin);
+	fgets(empresa, sizeof(empresa), stdin);
+	terminador_cad(empresa);
+	
+	strcpy(transports.transportistas[id].Nom_Emp, empresa);
+	
+	return transports;
 }
 
-transport_vect t_ciudad(transport_vect transports){
+transport_vect t_ciudad(transport_vect transports, int id){
+	char ciudad[21];
 	
+	printf("\n	<4> Ciudad en la que trabaja: ");
+	fflush(stdin);
+	fgets(ciudad, sizeof(ciudad), stdin);
+	terminador_cad(ciudad);
+	
+	strcpy(transports.transportistas[id].Ciudad, ciudad);
+	
+	return transports;
 }
 
 
