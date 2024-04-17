@@ -20,6 +20,7 @@ pedidos cargar_pedidos(){
     }
 
     rewind(f_ped);
+
     if(fgetc(f_ped)==EOF){
         fprintf(f_ped, default_pedido);
     }
@@ -226,6 +227,7 @@ int crear_pedido( pedidos p, int id_cliente){
         printf("-nombre del producto: %s\n", nombre);
         printf("-unidades de ese producto: %d\n", v_uds[j]);
     }
+    printf("-el numero de productos del pedido es: %d\n",n_products);
     printf("-el importe total del pedido es: %d\n", importe_total);
     
     printf("pos: %d", pos);
@@ -284,15 +286,17 @@ int crear_pedido( pedidos p, int id_cliente){
     guardar_clientes(c);
     
 
-    //CREAR PRODUCTO PEDIDO
-    /*int id_pro, n_unidades;
+    //CREAR PRODUCTO PEDIDO Y GUARDARLO EN LA ESTRUCTURA
+   int id_pro, n_unidades;
     for(j=0;j<n_products;j++){
         printf("\npara llamar a la funcion crear producto pedido\n");
         id_pro=v_prod[j];
+        printf("id producto: %d\n",id_pro);
         n_unidades=v_uds[j];
+        printf("unidades de ese productos: %d\n", n_unidades);
         crear_producto_pedido(p, id_pro, nueva_id, Prod_P, n_unidades);
 
-    }*/
+    }
     
     return 1;
 }
@@ -334,6 +338,7 @@ void guardar_pedido(pedidos p){
     
     printf("Se han guardado los pedidos correctamente\n");
     Sleep(2000);
+    fclose(f_ped);
 }
 
 //Cabecera: prod_pedidos cargar_prod_pedidos()
@@ -345,21 +350,22 @@ prod_pedidos cargar_prod_pedidos(){
     char default_prod_ped[]="0-0-0-0/0/0-0-default-0-default-default-0/0/0\n";
     
     FILE * f_prod_ped;
-    f_prod_ped=fopen("../data/ProductosPedidos.txt", "r");
+    f_prod_ped=fopen("../data/ProductosPedidos.txt", "a+");
     if(f_prod_ped==NULL){
-        f_prod_ped = fopen("../data/ProductosPedidos.txt", "w");
-        fclose(f_prod_ped);
-        printf("ERROR");
+       printf("ERROR se ha creado el fichero");
+       Sleep(2000);
     }
 
     rewind(f_prod_ped);
 
     if(fgetc(f_prod_ped) == EOF){
-        f_prod_ped=fopen("../data/ProductosPedidos.txt", "w");
         fprintf(f_prod_ped, default_prod_ped);
-        fclose(f_prod_ped);
     }
+
+    rewind(f_prod_ped);
+
     while(fgets(cad_aux, sizeof(cad_aux), f_prod_ped)){
+        printf("%s", cad_aux);
         n_prod_ped++; //numero de productos pedidos
     }
     rewind(f_prod_ped);
@@ -412,7 +418,7 @@ void guardar_productos_pedidos(prod_pedidos prod_p){
     }
 
     for(i=0;i<prod_p.lon;i++){
-        fprintf(f_prod_ped, "%d-%d-%d-%d/%d/%d-%f-%s-%d-%s-%s-%d/%d/%d\n",
+        fprintf(f_prod_ped, "%d-%d-%d-%d/%d/%d-%d-%s-%d-%s-%s-%d/%d/%d\n",
             prod_p.prod_pedidos[i].id_pedido,
             prod_p.prod_pedidos[i].id_prod,
             prod_p.prod_pedidos[i].num_unid,
@@ -430,6 +436,8 @@ void guardar_productos_pedidos(prod_pedidos prod_p){
     }
     printf("Se han guardado los productos pedidos correctamente\n");
     Sleep(2000);
+
+    fclose(f_prod_ped);
 }
 
 //Cabecera
@@ -469,6 +477,24 @@ void crear_producto_pedido(pedidos p, int product, int id_pedido, prod_pedidos p
 
     
     prod_p.lon=prod_p.lon+1;
+
+    printf("productos pedidos: %d\n", prod_p.lon);
+    for(i=0;i<prod_p.lon;i++){
+        printf("%d-",prod_p.prod_pedidos[i].id_pedido);
+        printf("%d-", prod_p.prod_pedidos[i].id_prod);
+        printf("%d-",prod_p.prod_pedidos[i].num_unid);
+        printf("%d",prod_p.prod_pedidos[i].f_entrega.dia);
+        printf("%d",prod_p.prod_pedidos[i].f_entrega.mes);
+        printf("%d-",prod_p.prod_pedidos[i].f_entrega.anio);
+        printf("%d-",prod_p.prod_pedidos[i].importe);
+        printf("%s-",prod_p.prod_pedidos[i].estado);
+        printf("%d-",prod_p.prod_pedidos[i].id_transp);
+        printf("%s-",prod_p.prod_pedidos[i].id_locker);
+        printf("%s-",prod_p.prod_pedidos[i].cod_locker);
+        printf("%d-",prod_p.prod_pedidos[i].f_devolucion.dia);
+        printf("%d-",prod_p.prod_pedidos[i].f_devolucion.mes);
+        printf("%d\n",prod_p.prod_pedidos[i].f_devolucion.anio);
+    }
     guardar_productos_pedidos(prod_p);
 }
     
