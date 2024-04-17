@@ -8,7 +8,7 @@ int main()
 {
     pedidos P=cargar_pedidos();
     prod_pedidos Prod_P=cargar_prod_pedidos();
-    /*int confirmacion=crear_pedido(P, 1);
+    /*int confirmacion=crear_pedido(P, 5);
     if(confirmacion==-1){
         printf("se ha cancelado la compra\n");
     }

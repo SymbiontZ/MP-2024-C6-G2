@@ -691,18 +691,36 @@ void listapedidos_cliente(prod_pedidos prods_p,pedidos p, int id_cliente){
 }
 
 void listar_prod_clientes(int id_cliente, pedidos p, prod_pedidos prod_p){
-    int i,j;
-    for(i=0;i<p.lon;i++){
-        if(id_cliente==p.pedidos[i].id_cliente){
-            printf("\nse han encontrado los pedidos del cliente\n");
-            printf("id de los pedidos del cliente: %d\n", p.pedidos[i].id_pedido);
+    int i,j,k,
+        id_prod; //variable para almacenar los id de los productos que han sido entregados al cliente
+    produ_vect Prod=cargar_productos();
+    for(i=1;i<p.lon;i++){
+        //comprobar que el cliente tiene pedidos
+        if(id_cliente==p.pedidos[i].id_cliente){ 
             int id_p=p.pedidos[i].id_pedido; //variable para almacenar las id de los pedido de ese cliente
-            for(j=0;j<prod_p.lon;j++){
-                if(id_p==prod_p.prod_pedidos[i].id_pedido){
-                    printf("los productos del cliente son: %d\n", prod_p.prod_pedidos[i].num_unid);
+            for(j=1;j<prod_p.lon;j++){
+                //saber cuales son los productos que pertenecen a los pedidos de ese cliente
+                if(id_p==prod_p.prod_pedidos[j].id_pedido){
+                    //printf("los productos del cliente son: %d\n", prod_p.prod_pedidos[j].id_prod);
+                    //comprobamos que los productos han sido entregados al cliente
+                    if(strcmp(prod_p.prod_pedidos[j].estado, "entregado")==0){
+                        printf("pedido: %d\n", id_p);
+                        printf("el producto %d de ese pedido ha sido entregado al cliente\n", prod_p.prod_pedidos[j].id_prod);
+                        id_prod=prod_p.prod_pedidos[j].id_prod; //asignamos la id de los productos del pedido a una variable auxiliar
+                        for(k=0;k<Prod.num_prod;k++){
+                            //obtenemos los nombres de los productos cuya id es la que hemos almacenado anteriormente
+                            if(id_prod==Prod.produ[k].id_prod){
+                                printf("nombres de producto entregado: %s\n", Prod.produ[k].nombre);
+                            }
+                        }
+
+                    }
                 }
             }
             
+        }
+        else{
+            printf("ERROR: no hay pedidos de el cliente");
         }
     }
 }
