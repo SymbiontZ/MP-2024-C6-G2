@@ -12,6 +12,9 @@
 //	FUNCIONES DE INICIO DE SESION
 
 
+//FabioR -> He modificado los fprintfs de la funcion guardar ya que sino no funciona correctamente en el compilador gcc
+//			Agregue condicion para que solo muestre proveedores
+
 
 //Precondición: Recibe una estructura de tipo admin_prov_vect (el vector de usuarios tipo adminprov), y la posición a utilizar en él.
 //Postcondición: El usuario habrá iniciado sesión como proveedor en el sistema, o se habrá cerrado la sesión por fallar la contraseña muchas veces. No devuelve nada.
@@ -388,19 +391,19 @@ void cambiar_contrasena_t(transport_vect transports, int pos){
 //Precondición: Recibe una estructura de tipo admin_prov_vect (el vector de usuarios tipo adminprov) ya rellena.
 //Postcondición: No devuelve nada. Se habrá mostrado por pantalla todos los AdminProvs del sistema, menos el superusuario.
 void listar_prov(admin_prov_vect provs){
-	
+	int i;
 	clear();
 	
-	printf("	#########################################\n");
-	printf("	# PROVEEDORES REGISTRADOS EN EL SISTEMA #\n");
-	printf("	#########################################\n\n");
-	
-	printf("		    Empresa | Email\n\n");
-	
-	for(int i = 1; i < provs.tam; i++)
-		printf("%s | %s\n", provs.usuarios[i].Nombre, provs.usuarios[i].email);
-	
-	printf("\n\n Presione cualquier tecla para continuar...");
+	printf("+---------------------------------------+\n");
+	printf("| PROVEEDORES REGISTRADOS EN EL SISTEMA |\n");
+	printf("+----------------------+----------------+---------------+\n");
+	printf("| EMPRESA              | CORREO                         |\n");
+	printf("+----------------------+--------------------------------+\n");
+	for(i = 1; i < provs.tam; i++)
+		if(strcmp(provs.usuarios[i].Perfil_usuario, "proveedor")==0)
+			printf("| %-20s | %-30s |\n", provs.usuarios[i].Nombre, provs.usuarios[i].email);
+	printf("+----------------------+--------------------------------+\n");
+	printf("Presione [enter] para volver...");
 	getchar();
 }
 
@@ -943,7 +946,7 @@ admin_prov_vect cargar_adminprov(){
 	
 	admin_prov_vect adminprov_sistema;
 	FILE *f_AdminProv;																							// Puntero al fichero a leer.
-	char ruta[] = ".\\data\\AdminProv.txt";																		// Ruta del fichero a leer.
+	char ruta[] = "..\\data\\AdminProv.txt";																		// Ruta del fichero a leer.
 	char linea[LONG_MAX_ADMINPROV];																				// Línea actual del fichero. Longitud máxima de una línea 86 caracteres.
 	char tipo_usuario[14];																						// Cadena auxiliar a convertir.
 	int i = 0, m; 
@@ -991,7 +994,7 @@ transport_vect cargar_transportistas(){
 	
 	transport_vect transport_sistema;
 	FILE *Transportistas;																						// Puntero al fichero a leer.
-	char ruta[] = "./data/Transportistas.txt";																	// Ruta del fichero a leer.
+	char ruta[] = "../data/Transportistas.txt";																	// Ruta del fichero a leer.
 	char linea[LONG_MAX_TRANSPORT];																				// Línea actual del fichero. Longitud máxima de una línea 113 caracteres.
 	int i = 0, m;
 
@@ -1040,14 +1043,14 @@ transport_vect cargar_transportistas(){
 void guardar_adminprov(admin_prov_vect usuarios){
 	
 	FILE *AdminProv;																							// Puntero al fichero a leer.
-	char ruta[] = "..\\ESIZON-main\\data\\AdminProv.txt";														// Ruta del fichero a leer.
+	char ruta[] = "..\\data\\AdminProv.txt";														// Ruta del fichero a leer.
 	char linea[LONG_MAX_ADMINPROV];																				// Línea actual del fichero. Longitud máxima de una línea 86 caracteres.
 	char aux[14];
 	
 	AdminProv = fopen(ruta, "w");
 	
 	for(int i = 0; i < usuarios.tam; i++)
-		fprintf(AdminProv, "%d-%20[^-]-%30[^-]-%15[^-]-%13[^\n]\n", usuarios.usuarios[i].Id_empresa, usuarios.usuarios[i].Nombre, usuarios.usuarios[i].email, usuarios.usuarios[i].Contrasena, usuarios.usuarios[i].Perfil_usuario);
+		fprintf(AdminProv, "%04d-%s-%s-%s-%s\n", usuarios.usuarios[i].Id_empresa, usuarios.usuarios[i].Nombre, usuarios.usuarios[i].email, usuarios.usuarios[i].Contrasena, usuarios.usuarios[i].Perfil_usuario);
 	fclose(AdminProv);
 }
 
@@ -1059,13 +1062,13 @@ void guardar_adminprov(admin_prov_vect usuarios){
 void guardar_transportista(transport_vect transportistas){
 	
 	FILE *Transportistas;																						// Puntero al fichero a leer.
-	char ruta[] = "..\\ESIZON-main\\data\\Transportistas.txt";													// Ruta del fichero a leer.
+	char ruta[] = "..\\data\\Transportistas.txt";													// Ruta del fichero a leer.
 	char linea[LONG_MAX_TRANSPORT];																				// Línea actual del fichero. Longitud máxima de una línea 113 caracteres.
 
 	Transportistas = fopen(ruta, "w");
 	
 	for(int i = 0; i < transportistas.tam; i++)
-		fprintf(Transportistas, "%d-%20[^-]-%30[^-]-%15[^-]-%20[^-]-%20s\n", transportistas.transportistas[i].Id_transp, transportistas.transportistas[i].Nombre, transportistas.transportistas[i].email, transportistas.transportistas[i].Contrasena, transportistas.transportistas[i].Nom_Emp, transportistas.transportistas[i].Ciudad);
+		fprintf(Transportistas, "%d-%s-%s-%s-%s-%20s\n", transportistas.transportistas[i].Id_transp, transportistas.transportistas[i].Nombre, transportistas.transportistas[i].email, transportistas.transportistas[i].Contrasena, transportistas.transportistas[i].Nom_Emp, transportistas.transportistas[i].Ciudad);
 	fclose(Transportistas);
 }
 
@@ -1084,7 +1087,7 @@ int longitud_vector_adminprov(){
 	char aux[LONG_MAX_ADMINPROV];
 	int i = 0;
 	
-	if((Admin_Prov_txt = fopen("..\\ESIZON-main\\data\\AdminProv.txt", "r")) == NULL){
+	if((Admin_Prov_txt = fopen("..\\data\\AdminProv.txt", "r")) == NULL){
         printf("\nError en la apertura de AdminProv.txt para longitud_vector_adminprov.\n");
         Sleep(2000);
 	}  

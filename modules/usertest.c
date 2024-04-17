@@ -2,7 +2,8 @@
 
 int main(){
     clients C = cargar_clientes();
-
-    menucliente(C, 2);
+    admin_prov_vect adminprov = cargar_adminprov();
+    printf("Hola");
+    menuadmin(adminprov, 0);
     return 0;
 }

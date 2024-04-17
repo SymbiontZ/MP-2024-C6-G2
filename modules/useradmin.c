@@ -321,18 +321,18 @@ void menuadmin(admin_prov_vect admin, int pos){
             printf("| Administrador          |\n");
 
         printf("+------------------------+\n");
-        printf("| <1. Perfil\n");
-        printf("| <2. Clientes\n");
-        printf("| <3. Proveedores\n");
-        printf("| <4. Productos\n");
-        printf("| <5. Categorias\n");
-        printf("| <6. Pedidos\n");
-        printf("| <7. Transportistas\n");
-        printf("| <8. Descuentos\n");
-        printf("| <9. Devoluciones\n");
+        printf("| <1> Perfil             |\n");
+        printf("| <2> Clientes           |\n");
+        printf("| <3> Proveedores        |\n");
+        printf("| <4> Productos          |\n");
+        printf("| <5> Categorias         |\n");
+        printf("| <6> Pedidos            |\n");
+        printf("| <7> Transportistas     |\n");
+        printf("| <8> Descuentos         |\n");
+        printf("| <9> Devoluciones       |\n");
         if (pos == 0)
-            printf("| <10. Administradores\n");
-        printf("| <0. Salir del sistema\n");
+            printf("| <10> Administradores   |\n");
+        printf("| <0> Salir del sistema  |\n");
         printf("+------------------------+\n");
 
         opt = input_int();
@@ -347,6 +347,7 @@ void menuadmin(admin_prov_vect admin, int pos){
             opt = -1;
             break;
         case 3:
+            menuadmin_prov(admin);
             opt = -1;
             break;
         case 4:
@@ -390,9 +391,15 @@ void menuadmin_cliente(){
     while (opt < 0 || opt > 5){
         //MOSTRAR INFORMACION//
         clear();
-
-        printf("\n### QUE DESEA REALIZAR: ###\n");
-        printf(" 1. Mostrar listado clientes.\n 2. Dar de alta cliente\n 3. Dar de baja cliente.\n 4. Modificar cliente\n 0. Salir\n############################\n");
+        printf("+--------------------------------+\n");
+        printf("| QUE DESEA REALIZAR:            |\n");
+        printf("+--------------------------------+\n");
+        printf("| <1> Mostrar listado clientes   |\n");
+        printf("| <2> Dar de alta cliente        |\n");
+        printf("| <3> Dar de baja cliente        |\n");
+        printf("| <4> Modificar cliente          |\n");
+        printf("| <0> Volver                     |\n");
+        printf("+--------------------------------+\n");
         scanf("%d", &opt);
         fflush(stdin);
         switch (opt){
@@ -435,8 +442,7 @@ void menuadmin_admin(admin_prov_vect admin){
     char resp;
     int pos;                            //Posicion del admin al que se le realizan los cambios.
 
-    while (opt < 0 || opt > 5){
-        //MOSTRAR INFORMACION//
+    do{
         clear();
         printf("+----------------------------+\n");
         printf("| QUE DESEA REALIZAR:        |\n");
@@ -452,7 +458,7 @@ void menuadmin_admin(admin_prov_vect admin){
         fflush(stdin);
         switch (opt){
             case 1:
-                mostrar_admin(admin);
+                listar_admin(admin);
                 opt = -1;   
                 break;
             case 2:
@@ -482,22 +488,77 @@ void menuadmin_admin(admin_prov_vect admin){
                 break;
         }
         guardar_adminprov(admin);
-    }
+    }while (opt != 0);
 }
 
-void mostrar_admin(admin_prov_vect admin){
+void menuadmin_prov(admin_prov_vect admin){
+    int opt = -1;
+    char resp;
+    int pos;          //Posicion del proveedor al que se le realizan los cambios.
+
+    do{
+        clear();
+        printf("+--------------------------------+\n");
+        printf("| QUE DESEA REALIZAR:            |\n");
+        printf("+--------------------------------+\n");
+        printf("| <1> Mostrar listado proveedor  |\n");
+        printf("| <2> Dar de alta proveedor      |\n");
+        printf("| <3> Dar de baja proveedor      |\n");
+        printf("| <4> Modificar proveedor        |\n");
+        printf("| <0> Volver                     |\n");
+        printf("+--------------------------------+\n");
+ 
+        scanf("%d", &opt);
+        fflush(stdin);
+        switch (opt){
+            case 1:
+                listar_prov(admin);
+                opt = -1;   
+                break;
+            case 2:
+                printf("Seguro que quiere agregar un proveedor [s/n]: ");
+                resp = confirmacion();
+                if(resp == 'S'|| resp == 's')
+                    admin = agregar_admin(admin);
+                opt = -1;
+                break;
+            case 3:
+                pos = buscar_prov(admin);
+                if (pos != -1)
+                    admin = eliminar_admin(admin, pos);
+                opt = -1;
+                break;
+            case 4:
+                pos = buscar_prov(admin);
+                if (pos != -1)
+                    admin = gestionar_admin(admin, pos, 0);
+                opt = -1;
+                break;
+            
+            case 0:         //CASO DE SALIDA
+                break;
+            default:
+                printf("Seleccione una opcion valida: ");
+                break;
+        }
+        guardar_adminprov(admin);
+    }while (opt != 0);
+}
+
+
+void listar_admin(admin_prov_vect admin){
     int i;
     clear();
-    printf("+-----------------------------------+\n");
-    printf("+--------- LISTA DE ADMINS ---------+\n");
-    printf("+-----------------------------------+\n");
+    printf("+------------------------------+\n");
+    printf("| ADMINS REGISTRADOS           |\n");
+    printf("+------------------------------+\n");
 
     for(i=1;i<admin.tam;i++){
         if(strcmp(admin.usuarios[i].Perfil_usuario, "administrador") == 0)
-            printf("| %-33s |\n",admin.usuarios[i].email);
+            printf("| %-30s |\n",admin.usuarios[i].email);
     }
-    printf("+-----------------------------------+\n");
-    printf("Presione [ENTER] para salir");
+    printf("+------------------------------+\n");
+    printf("Presione [ENTER] para volver...");
     getchar();
 }
 /*** GESTIONAR ADMIN ***/
@@ -518,7 +579,7 @@ int buscar_admin(admin_prov_vect admin){
 
     len = strlen(cad_busq);
     for(i=1; i<admin.tam; i++){           //Busqueda de coincidencias nombre.
-        if(strncmp(cad_busq, admin.usuarios[i].email, len) == 0){
+        if(strncasecmp(cad_busq, admin.usuarios[i].email, len) == 0){
             printf("<%d> %s\n",n_coinc+1, admin.usuarios[i].email);
             n_coinc++;
             vect_coinc = (int*)realloc(vect_coinc, n_coinc*sizeof(int));
@@ -793,7 +854,7 @@ int busqueda_clientetipo(clients C, int pos, int tipo){
             len = MAX_NOM;
 
         for(i=1; i<C.n_clients; i++){           //Busqueda de coincidencias nombre.
-            if(strncmp(cad_busq, C.clients[i].Nom_cliente, len) == 0){
+            if(strncasecmp(cad_busq, C.clients[i].Nom_cliente, len) == 0){
                 printf("<%d> %s - %s - %s\n",n_coinc+1,  C.clients[i].Nom_cliente, C.clients[i].email, C.clients[i].Localidad);
                 n_coinc++;
                 vect_coinc = (int*)realloc(vect_coinc, n_coinc*sizeof(int));
@@ -804,7 +865,7 @@ int busqueda_clientetipo(clients C, int pos, int tipo){
         if(len > MAX_LOC)
             len = MAX_LOC;
         for(i=1; i<C.n_clients; i++){           //Busqueda de coincidencias localidad.
-            if(strncmp(cad_busq, C.clients[i].Localidad, len) == 0){
+            if(strncasecmp(cad_busq, C.clients[i].Localidad, len) == 0){
                 printf("<%d> %s - %s - %s\n",n_coinc+1,  C.clients[i].Nom_cliente, C.clients[i].email, C.clients[i].Localidad);
                 n_coinc++;
                 vect_coinc = (int*)realloc(vect_coinc, n_coinc*sizeof(int));
@@ -815,7 +876,7 @@ int busqueda_clientetipo(clients C, int pos, int tipo){
         if(len > MAX_EMAIL)
             len = MAX_EMAIL;
         for(i=1; i<C.n_clients; i++){           //Busqueda de coincidencias email.
-            if(strncmp(cad_busq, C.clients[i].email, len) == 0){
+            if(strncasecmp(cad_busq, C.clients[i].email, len) == 0){
                 printf("<%d> %s - %s - %s\n",n_coinc+1,  C.clients[i].Nom_cliente, C.clients[i].email, C.clients[i].Localidad);
                 n_coinc++;
                 vect_coinc = (int*)realloc(vect_coinc, n_coinc*sizeof(int));
@@ -853,14 +914,15 @@ int busqueda_clientetipo(clients C, int pos, int tipo){
 void mostrar_clientes(clients C){
     int i;
     clear();
-    printf("LISTADO DE CLIENTES\n");
-    printf("---------------------------------------------\n");
-    printf("Nombre | Localidad  | Email\n");
-    printf("---------------------------------------------\n");
+    printf("+---------------------+\n");
+    printf("| LISTADO DE CLIENTES |\n");
+    printf("+---------------------+---------------------+-------------------------------+\n");
+    printf("| Nombre              | Localidad           | Email                         |\n");
+    printf("+---------------------+---------------------+-------------------------------+\n");
     for(i=1;i<C.n_clients;i++){
-        printf("%s - %s - %s\n",C.clients[i].Nom_cliente, C.clients[i].Localidad, C.clients[i].email);
+        printf("| %-20s| %-20s| %-30s|\n",C.clients[i].Nom_cliente, C.clients[i].Localidad, C.clients[i].email);
     }
-    printf("---------------------------------------\n");
+    printf("+---------------------+---------------------+-------------------------------+\n");
     printf("Presione enter para salir");
     getchar();
 }
@@ -1178,4 +1240,3 @@ clients cliente_cart(clients C, int pos, int mod){
 
     return C;
 }
-
