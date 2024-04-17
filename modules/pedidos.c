@@ -20,6 +20,7 @@ pedidos cargar_pedidos(){
     }
 
     rewind(f_ped);
+
     if(fgetc(f_ped)==EOF){
         fprintf(f_ped, default_pedido);
     }
@@ -110,11 +111,12 @@ int crear_pedido( pedidos p, int id_cliente){
     //SELECCIONAR PRODUCTO
     id_producto=1;
     do{ //bucle para seleccionar todos los productos y rellenar los vectores dinámicos
+        clear();
         printf("---AGREGAR PRODUCTO AL PEDIDO---\n");
         n_uds=0;
         fflush(stdin);
         //id_producto=buscar_productos(productos); //la posicion de un producto es la misma que su id
-        printf("id producto seleccionado: %d\n",id_producto);
+        //printf("id producto seleccionado: %d\n",id_producto);
 
         v_prod=(int*)realloc(v_prod, n_products*sizeof(int));//agrego la id del producto seleccionad al vector productos
         
@@ -204,6 +206,7 @@ int crear_pedido( pedidos p, int id_cliente){
         importe_total=importe_total + (productos.produ[id_producto].importe * n_uds); //cada vez que se incluye un producto en la lista se añade al importe total del pedido
         
         //Preguntar al cliente si desea añadir mas productos a un pedido
+        
         fflush(stdin);
         printf("Desea agregar mas productos al pedido [s/n]: \n");
         op=confirmacion();
@@ -213,19 +216,21 @@ int crear_pedido( pedidos p, int id_cliente){
         }
         else{
             compra=0; //para salir del bucle
-            printf("no desea agregar mas productos al pedido\n");
-            printf("continuamos con el pedido\n");
+            printf("\nno desea agregar mas productos al pedido\n");
+            printf("\ncontinuamos con el pedido\n");
         }
 
     }while(compra != 0);
     //RESUMEN DE LOS PRODUCTOS QUE HA PEDIDO Y EL IMPORTE TOTAL
-
+    
+    printf("\n---RESUMEN DEL PEDIDO---\n");
     for(j=0;j<n_products;j++){ 
         id=v_prod[j];
         strcpy(nombre, productos.produ[id].nombre);
         printf("-nombre del producto: %s\n", nombre);
         printf("-unidades de ese producto: %d\n", v_uds[j]);
     }
+    printf("-el numero de productos del pedido es: %d\n",n_products);
     printf("-el importe total del pedido es: %d\n", importe_total);
     
     printf("pos: %d", pos);
@@ -239,7 +244,7 @@ int crear_pedido( pedidos p, int id_cliente){
 
 
     /***LUGAR DE ENTREGA Y CHEQUES***/
-
+    clear();
     printf("Selecciona un lugar de entrega: \n");
     printf("1. DOMICILIO\n");
     printf("2. LOCKER\n");
@@ -259,6 +264,7 @@ int crear_pedido( pedidos p, int id_cliente){
             printf("opcion no valida");
     }
 
+    clear();
     printf("Desea utilizar un cheque de descuento [s/n]: \n");
     cheque=confirmacion();
     if(cheque=='s' || cheque == 'S'){
@@ -284,15 +290,21 @@ int crear_pedido( pedidos p, int id_cliente){
     guardar_clientes(c);
     
 
-    //CREAR PRODUCTO PEDIDO
-    /*int id_pro, n_unidades;
-    for(j=0;j<n_products;j++){
-        printf("\npara llamar a la funcion crear producto pedido\n");
+    //CREAR PRODUCTO PEDIDO Y GUARDARLO EN LA ESTRUCTURA
+   int id_pro, n_unidades;
+    for(j=0;j<n_products+1;j++){
+        prod_pedidos Prod_P=cargar_prod_pedidos();
+        /*printf("productos pedidos: %d\n", n_products);
+        printf("j: %d\n", j);
+        printf("\npara llamar a la funcion crear producto pedido\n");*/
         id_pro=v_prod[j];
+        
+        //printf("id producto: %d\n",id_pro);
         n_unidades=v_uds[j];
+        //printf("unidades de ese productos: %d\n", n_unidades);
         crear_producto_pedido(p, id_pro, nueva_id, Prod_P, n_unidades);
 
-    }*/
+    }
     
     return 1;
 }
@@ -309,16 +321,6 @@ void guardar_pedido(pedidos p){
         printf("ERROR");
     }
 
-    for(i=0;i<p.lon;i++){
-        printf("id pedido: %d\n",p.pedidos[i].id_pedido );
-        printf("dia: %d\n", p.pedidos[i].f_pedido.dia);
-        printf("mes: %d\n", p.pedidos[i].f_pedido.mes);
-        printf("anio: %d\n", p.pedidos[i].f_pedido.anio);
-        printf("id cliente: %d\n", p.pedidos[i].id_cliente);
-        printf("lugar: %s\n", p.pedidos[i].lugar);
-        printf("id locker: %s\n", p.pedidos[i].id_locker);
-        printf("cod: %s\n", p.pedidos[i].id_cod);
-    }
     //Escribir en el fichero los pedidos que contiene la estructura pedidos 
     for(i=0;i<p.lon;i++){
         fprintf(f_ped,"%d-%d/%d/%d-%d-%s-%s-%s\n", 
@@ -332,8 +334,9 @@ void guardar_pedido(pedidos p){
             p.pedidos[i].id_cod);
     }
     
-    printf("Se han guardado los pedidos correctamente\n");
+    printf("\nSe han guardado los pedidos correctamente\n");
     Sleep(2000);
+    fclose(f_ped);
 }
 
 //Cabecera: prod_pedidos cargar_prod_pedidos()
@@ -345,21 +348,22 @@ prod_pedidos cargar_prod_pedidos(){
     char default_prod_ped[]="0-0-0-0/0/0-0-default-0-default-default-0/0/0\n";
     
     FILE * f_prod_ped;
-    f_prod_ped=fopen("../data/ProductosPedidos.txt", "r");
+    f_prod_ped=fopen("../data/ProductosPedidos.txt", "a+");
     if(f_prod_ped==NULL){
-        f_prod_ped = fopen("../data/ProductosPedidos.txt", "w");
-        fclose(f_prod_ped);
-        printf("ERROR");
+       printf("\nERROR se ha creado el fichero\n");
+       Sleep(2000);
     }
 
     rewind(f_prod_ped);
 
     if(fgetc(f_prod_ped) == EOF){
-        f_prod_ped=fopen("../data/ProductosPedidos.txt", "w");
         fprintf(f_prod_ped, default_prod_ped);
-        fclose(f_prod_ped);
     }
+
+    rewind(f_prod_ped);
+
     while(fgets(cad_aux, sizeof(cad_aux), f_prod_ped)){
+        printf("%s", cad_aux);
         n_prod_ped++; //numero de productos pedidos
     }
     rewind(f_prod_ped);
@@ -388,13 +392,13 @@ prod_pedidos cargar_prod_pedidos(){
             &prod_p.prod_pedidos[i].f_devolucion.anio);
 
         if(campo_prod_ped != 14){
-            printf("error en la estructura productos pedidos, i=%d", i);
+            printf("error en la estructura productos pedidos, i=%d\n", i);
         }
 
         i++;
     }
-    printf("se ha cargado el fichero ProductosPedidos.txt correctamente\n");
-    printf("productos pedidos: %d\n", n_prod_ped);
+    printf("\nse ha cargado el fichero ProductosPedidos.txt correctamente\n");
+
     
     return prod_p;
 }
@@ -412,7 +416,7 @@ void guardar_productos_pedidos(prod_pedidos prod_p){
     }
 
     for(i=0;i<prod_p.lon;i++){
-        fprintf(f_prod_ped, "%d-%d-%d-%d/%d/%d-%f-%s-%d-%s-%s-%d/%d/%d\n",
+        fprintf(f_prod_ped, "%d-%d-%d-%d/%d/%d-%d-%s-%d-%s-%s-%d/%d/%d\n",
             prod_p.prod_pedidos[i].id_pedido,
             prod_p.prod_pedidos[i].id_prod,
             prod_p.prod_pedidos[i].num_unid,
@@ -428,8 +432,10 @@ void guardar_productos_pedidos(prod_pedidos prod_p){
             prod_p.prod_pedidos[i].f_devolucion.mes,
             prod_p.prod_pedidos[i].f_devolucion.anio);
     }
-    printf("Se han guardado los productos pedidos correctamente\n");
+    printf("\nSe han guardado los productos pedidos correctamente\n");
     Sleep(2000);
+
+    fclose(f_prod_ped);
 }
 
 //Cabecera
@@ -469,6 +475,9 @@ void crear_producto_pedido(pedidos p, int product, int id_pedido, prod_pedidos p
 
     
     prod_p.lon=prod_p.lon+1;
+
+    printf("\nproductos pedidos: %d\n", prod_p.lon);
+    
     guardar_productos_pedidos(prod_p);
 }
     
@@ -679,4 +688,39 @@ void listapedidos_cliente(prod_pedidos prods_p,pedidos p, int id_cliente){
     }
     printf("Pulse [enter] para salir");
     getchar();
+}
+
+void listar_prod_clientes(int id_cliente, pedidos p, prod_pedidos prod_p){
+    int i,j,k,
+        id_prod; //variable para almacenar los id de los productos que han sido entregados al cliente
+    produ_vect Prod=cargar_productos();
+    for(i=1;i<p.lon;i++){
+        //comprobar que el cliente tiene pedidos
+        if(id_cliente==p.pedidos[i].id_cliente){ 
+            int id_p=p.pedidos[i].id_pedido; //variable para almacenar las id de los pedido de ese cliente
+            for(j=1;j<prod_p.lon;j++){
+                //saber cuales son los productos que pertenecen a los pedidos de ese cliente
+                if(id_p==prod_p.prod_pedidos[j].id_pedido){
+                    //printf("los productos del cliente son: %d\n", prod_p.prod_pedidos[j].id_prod);
+                    //comprobamos que los productos han sido entregados al cliente
+                    if(strcmp(prod_p.prod_pedidos[j].estado, "entregado")==0){
+                        printf("pedido: %d\n", id_p);
+                        printf("el producto %d de ese pedido ha sido entregado al cliente\n", prod_p.prod_pedidos[j].id_prod);
+                        id_prod=prod_p.prod_pedidos[j].id_prod; //asignamos la id de los productos del pedido a una variable auxiliar
+                        for(k=0;k<Prod.num_prod;k++){
+                            //obtenemos los nombres de los productos cuya id es la que hemos almacenado anteriormente
+                            if(id_prod==Prod.produ[k].id_prod){
+                                printf("nombres de producto entregado: %s\n", Prod.produ[k].nombre);
+                            }
+                        }
+
+                    }
+                }
+            }
+            
+        }
+        else{
+            printf("ERROR: no hay pedidos de el cliente");
+        }
+    }
 }
