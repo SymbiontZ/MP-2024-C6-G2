@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include"pedidos.h"
 #include"useradmin.h"
+#include"Descuentos.h"
 
 //Cabecera: pedidos cargar_pedidos()
 //Precondición: el fichero debe existir y la estructura de cada pedido
@@ -109,14 +110,14 @@ int crear_pedido( pedidos p, int id_cliente){
     
 
     //SELECCIONAR PRODUCTO
-    id_producto=1;
+    
     do{ //bucle para seleccionar todos los productos y rellenar los vectores dinámicos
         clear();
         printf("---AGREGAR PRODUCTO AL PEDIDO---\n");
         n_uds=0;
         fflush(stdin);
-        //id_producto=buscar_productos(productos); //la posicion de un producto es la misma que su id
-        //printf("id producto seleccionado: %d\n",id_producto);
+        id_producto=buscar_productos(productos); //la posicion de un producto es la misma que su id
+        printf("id producto seleccionado: %d\n",id_producto);
 
         v_prod=(int*)realloc(v_prod, n_products*sizeof(int));//agrego la id del producto seleccionad al vector productos
         
@@ -253,10 +254,11 @@ int crear_pedido( pedidos p, int id_cliente){
     switch(lugar){
         case 1:
             strcpy(p.pedidos[pos].lugar, "Domicilio");
-            strcpy(p.pedidos[pos].id_locker, "000000000");
+            strcpy(p.pedidos[pos].id_locker, "noLocker");
             break;
         case 2:
             strcpy(p.pedidos[pos].lugar, "Locker");
+            strcpy(p.pedidos[pos].id_locker, "pendLock"); //esta pendiente de asignación de locker
             //añadir un id del locker y un codigo del locker
             //funciones modulo lockers para mirar locker libres
             break;
@@ -267,13 +269,42 @@ int crear_pedido( pedidos p, int id_cliente){
     clear();
     printf("Desea utilizar un cheque de descuento [s/n]: \n");
     cheque=confirmacion();
+    int l,k, 
+        conf=0;//variable para almacenar si el cliente tiene asociados codigos de descuento
+    DescClientes desc_clients = Cargar_DescuentosClientes(); //cargar la estructura descuentos clientes para comprobar que el codigo introducido por el cliente es correcto
     if(cheque=='s' || cheque == 'S'){
-        printf("introduce el codigo del cheque:");
-        fflush(stdin);
-        fgets(cod_cheque, 11, stdin);
+        
         //if cod_cheque existe y es valido lo copia al fichero
-        terminador_cad(cod_cheque);
-        strcpy(p.pedidos[pos].id_cod, cod_cheque);
+        for(l=0;l<desc_clients.tam;l++){ //comprobar que el cliente tiene asociados codigo de descuento
+            if(id_cliente==desc_clients.DescCliente[l].Id_cliente){
+                conf=1;
+                
+            }
+            else{
+                conf=0;
+            }
+        }
+        if(conf=1){
+            printf("el cliente tiene asociado codigos de descuentos\n");
+            printf("el cliente tiene codigos de descuentos\n");
+            printf("introduce el codigo del cheque:");
+            fflush(stdin);
+            fgets(cod_cheque, 11, stdin);
+            for(k=0;k<desc_clients.tam;k++){ //comprobar que el codigo que ha introducido el cliente es correcto
+                if(strcmp(cod_cheque, desc_clients.DescCliente[k].Id_cod)==0){
+                    printf("el cheque introducido es correcto\n");
+                    terminador_cad(cod_cheque);
+                    strcpy(p.pedidos[pos].id_cod, cod_cheque);
+                }
+                else{
+                    printf("el cheque introducido es correcto\n");
+                }
+            }
+        }
+        else{
+            printf("el cliente no tiene codigos de descuento asociados\n");
+        }
+        
     }   
     else{
         strcpy(p.pedidos[pos].id_cod,"000000000");
@@ -467,7 +498,7 @@ void crear_producto_pedido(pedidos p, int product, int id_pedido, prod_pedidos p
     prod_p.prod_pedidos[pos].id_transp=0; //se le asignara un transportista en el modulo transportistas
 
     strcpy(prod_p.prod_pedidos[pos].id_locker, p.pedidos[id_pedido].id_locker); //locker asignado es el mismo que se le asigno al pedido
-    strcpy(prod_p.prod_pedidos[pos].cod_locker, "default");
+    strcpy(prod_p.prod_pedidos[pos].cod_locker, "pendcod");//codigo pendiente de asignacion
 
     prod_p.prod_pedidos[pos].f_devolucion.dia=0;
     prod_p.prod_pedidos[pos].f_devolucion.mes=0;
@@ -579,6 +610,7 @@ void crear_devolucion(devoluciones d, pedidos p, prod_pedidos prod_p){
     pos=d.lon;
     d.devoluciones=realloc(d.devoluciones, (pos+1)*sizeof(devolucion));
 
+    listar_prod_clientes(3, p, prod_p);
     fflush(stdin);
 
     printf("Introduce el id del pedido que desea devolver: ");
@@ -586,11 +618,7 @@ void crear_devolucion(devoluciones d, pedidos p, prod_pedidos prod_p){
     fflush(stdin);
     d.devoluciones[pos].id_pedido=id_ped; 
     
-    for(i=0;i<p.lon;i++){//bucle para buscar el producto que corresponde a ese pedido que desea devolver el cliente
-        if(id_ped==prod_p.prod_pedidos[i].id_pedido){
-            producto=prod_p.prod_pedidos[i].id_prod; //saca el producto al que corresponde el pedido
-        }
-    }
+    
     d.devoluciones[pos].id_prod=producto;
     printf("el producto que corresponde a ese pedido es: %d\n", producto);
     
@@ -711,6 +739,7 @@ void listar_prod_clientes(int id_cliente, pedidos p, prod_pedidos prod_p){
                             //obtenemos los nombres de los productos cuya id es la que hemos almacenado anteriormente
                             if(id_prod==Prod.produ[k].id_prod){
                                 printf("nombres de producto entregado: %s\n", Prod.produ[k].nombre);
+                                printf("fecha del producto que ha sido entregado: %d/%d/%d", p.pedidos[i].f_pedido.dia, p.pedidos[i].f_pedido.mes, p.pedidos[i].f_pedido.anio);
                             }
                         }
 
