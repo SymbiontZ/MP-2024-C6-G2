@@ -65,4 +65,33 @@ void Guardar_Lockers(Vect_Lock lockers);
 //Postcondicion: Guarda en CompartimentosLockers.txt los datos del vector de estructuras recibido
 void Guardar_CompartimentosLockers(Vect_CompLock compartimentoslockers);
 
+//Precondición: Recibe la estructura Lockers
+//Postcondición: Devuelve la estructura Lockers con un Locker nuevo
+Vect_Lock Alta_Lockers(Vect_Lock);
+
+///------------------------------- FUNCIONES INTERNAS DE Alta_Lockers -------------------------------///
+
+//Precondición: Recibe la estructura Lockers
+//Postcondición: Devuelve la estructura Descuentos con el id del nuevo locker
+Vect_Lock nuevo_id(Vect_Lock, int);
+
+//Precondición: Recibe la estructura Lockers
+//Postcondición: Devuelve la estructura Descuentos con la localidad del nuevo locker
+Vect_Lock nueva_localidad(Vect_Lock, int);
+
+//Precondición: Recibe la estructura Lockers
+//Postcondición: Devuelve la estructura Descuentos con la provincia del nuevo locker
+Vect_Lock nueva_provincia(Vect_Lock, int);
+
+//Precondición: Recibe la estructura Lockers
+//Postcondición: Devuelve la estructura Descuentos con la ubicación del nuevo locker
+Vect_Lock nueva_ubica(Vect_Lock, int);
+
+//Precondición: Recibe la estructura Lockers
+//Postcondición: Devuelve la estructura Descuentos con los compartimentos totales del nuevo locker
+Vect_Lock nuevo_numcompT(Vect_Lock, int);
+
+//Precondición: Recibe la estructura Lockers
+//Postcondición: Devuelve la estructura Descuentos con los compartimentos ocupados del nuevo locker
+Vect_Lock nuevo_numcompOkup(Vect_Lock, int);
 #endif // LOCKERS_H_INCLUDED
