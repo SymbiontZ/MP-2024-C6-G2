@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include <windows.h>
 
 #include "complementos.h"
@@ -8,13 +9,10 @@
 #include "pedidos.h"
 #include "empresas.h"
 
-// listar (X), buscar (X), alta (X), baja (X), modificar (X)
+
 
 //	FUNCIONES DE INICIO DE SESION
 
-
-//FabioR -> He modificado los fprintfs de la funcion guardar ya que sino no funciona correctamente en el compilador gcc
-//			Agregue condicion para que solo muestre proveedores
 
 
 //Precondición: Recibe una estructura de tipo admin_prov_vect (el vector de usuarios tipo adminprov), y la posición a utilizar en él.
@@ -222,12 +220,19 @@ void ver_pedidos(admin_prov_vect provs, int pos){
 //Postcondición: No devuelve nada. Se habrá cambiado el email del usuario guardado en el puntero.
 void cambiar_email(admin_prov_vect provs, int pos){
 	
-	char nuevo_email[31];
-	printf("\nIngrese el nuevo email: ");
-	fflush(stdin);
-	fgets(nuevo_email, sizeof(nuevo_email), stdin);
-	terminador_cad(nuevo_email);
-	strcpy(provs.usuarios[pos].email, nuevo_email);
+	char nuevo_email[31 - strlen(provs.usuarios[pos].Nombre) - 1];
+	char prefijo[strlen(provs.usuarios[pos].Nombre) + 1];
+	strcpy(prefijo, provs.usuarios[pos].Nombre);
+	mayus_minus(prefijo);
+	
+	do{
+		printf("Introduzca su nuevo email: nuevo_email@%s.com\n Nuevo email: ", prefijo);
+		fflush(stdin);
+		fgets(nuevo_email, sizeof(nuevo_email), stdin);
+		terminador_cad(nuevo_email);
+	}while(strlen(nuevo_email) == 0);
+	
+	sprintf(provs.usuarios[pos].email, "%s@%s.com", nuevo_email, prefijo);
 	
 }
 
@@ -340,13 +345,18 @@ void cambiar_nombre_t(transport_vect transports, int pos){
 //Postcondición: No devuelve nada. Se habrá cambiado el email del usuario guardado en el puntero.
 void cambiar_email_t(transport_vect transports, int pos){
 	
-	char nuevo_email[31];
-	printf("\nIngrese el nuevo email: ");
-	fflush(stdin);
-	fgets(nuevo_email, sizeof(nuevo_email), stdin);
-	fflush(stdin);
-	terminador_cad(nuevo_email);
-	strcpy(transports.transportistas[pos].email, nuevo_email);
+	char nuevo_email[31 - strlen(transports.transportistas[pos].Nom_Emp) - 1], prefijo[strlen(transports.transportistas[pos].Nom_Emp) + 1];
+	strcpy(prefijo, transports.transportistas[pos].Nom_Emp);
+	mayus_minus(prefijo);
+	do{
+		printf("\nIngrese el nuevo email: nuevo_email@%s.com\nnuevo_email: ", prefijo);
+		fflush(stdin);
+		fgets(nuevo_email, sizeof(nuevo_email), stdin);
+		fflush(stdin);
+		terminador_cad(nuevo_email);
+	}while(strlen(nuevo_email) == 0);
+
+	sprintf(transports.transportistas[pos].email, "%s@%s.com", nuevo_email, prefijo);
 	
 }
 
@@ -435,23 +445,30 @@ int buscar_prov(admin_prov_vect provs){
         printf("0. Cancelar.\n");
         
         while(opt > 2 || opt < 0){
-            scanf("%d", &opt);
-            switch (opt)
-            {
-            case 1:
-                pos = buscar_prov_tipo(provs, pos, 1);
-                break;
-            case 2:
-                pos = buscar_prov_tipo(provs, pos, 2);
-                break; 
-            case 0:
-                pos = -1;
-                printf("Se ha cancelado la busqueda.\n");
-				break;
-            default:
-                printf("Introduzca una opcion valida: ");
-                break;
-            }
+            if(scanf("%i",&opt) != 1){
+				fflush(stdin);
+				printf("\nError: introduzca una entrada válida.");
+				Sleep(2000);
+				opt = -1;
+			}
+			else{
+	            switch (opt)
+	            {
+	            case 1:
+	                pos = buscar_prov_tipo(provs, pos, 1);
+	                break;
+	            case 2:
+	                pos = buscar_prov_tipo(provs, pos, 2);
+	                break; 
+	            case 0:
+	                pos = -1;
+	                printf("Se ha cancelado la busqueda.\n");
+					break;
+	            default:
+	                printf("Introduzca una opcion valida: ");
+	                break;
+	            }
+	    	}
         }
     }
 	Sleep(2000);
@@ -469,14 +486,17 @@ int buscar_prov_tipo(admin_prov_vect provs, int pos, int tipo){
     int n_coinc = 0;                      				// Contador de coincidencias encontradas
     int *vect_coinc;                    				// Vector de guardado de IDs con coincidencias
 
-    vect_coinc = (int*)malloc(1*sizeof(int)); 
-    printf("Por favor, introduzca su busqueda: ");
-
-    fflush(stdin);
-    fgets(cad_busq, sizeof(cad_busq), stdin);         	// Cadena por la que se va a buscar al proveedor
-    fflush(stdin);
-    terminador_cad(cad_busq);
-
+    vect_coinc = (int*)malloc(1*sizeof(int));
+	
+	do{
+		printf("Por favor, introduzca su busqueda: ");
+	
+	    fflush(stdin);
+	    fgets(cad_busq, sizeof(cad_busq), stdin);         	// Cadena por la que se va a buscar al proveedor
+	    fflush(stdin);
+	    terminador_cad(cad_busq);
+	}while(strlen(cad_busq) == 0); 
+	
     len = strlen(cad_busq);
     if(tipo == 1){
         if(len > 21)
@@ -689,15 +709,17 @@ void prov_nombre(admin_prov_vect provs, int id){
 // ID del proveedor a registrar.
 //Postcondición: No devuelve nada, pero modifica el proveedor con el identificador indicado, habiendo asignado el email de la empresa a su cuenta.
 void prov_email(admin_prov_vect provs, int id){
-	char email[31];
+	char email[31 - strlen(provs.usuarios[id].Nombre) - 1], prefijo[strlen(provs.usuarios[id].Nombre) + 1];
+	strcpy(prefijo, provs.usuarios[id].Nombre);
+	mayus_minus(prefijo);
 	
-	printf("\n	<2> Email de proveedor: ");
-	fflush(stdin);
-	fgets(email, sizeof(email), stdin);
-	terminador_cad(email);
-	
-	strcpy(provs.usuarios[id].email, email);
-	
+	do{
+		printf("\n	<2> Email de proveedor: nuevo_email@%s.com\n	    nuevo_email: ", prefijo);
+		fflush(stdin);
+		fgets(email, sizeof(email), stdin);
+		terminador_cad(email);		
+	}while(strlen(email) == 0);
+
 }
 
 //Precondición: Recibe una estructura de tipo admin_prov_vect (el vector de proveedores / administradores) ya rellena, y la 
@@ -820,26 +842,33 @@ int buscar_transport(transport_vect transports){
         printf("0. Cancelar.\n");
         
         while(opt > 3 || opt < 0){
-            scanf("%d", &opt);
-            switch (opt)
-            {
-            case 1:
-                pos = buscar_transport_tipo(transports, pos, 1);
-                break;
-            case 2:
-                pos = buscar_transport_tipo(transports, pos, 2);
-                break; 
-            case 3:
-            	pos = buscar_transport_tipo(transports, pos, 3);
-            	break;
-            case 0:
-                pos = -1;
-                printf("Se ha cancelado la busqueda.\n");
-				break;
-            default:
-                printf("Introduzca una opcion valida: ");
-                break;
-            }
+            if(scanf("%i",&opt) != 1){
+				fflush(stdin);
+				printf("\nError: introduzca una entrada válida.");
+				Sleep(2000);
+				opt=-1;
+			}
+			else{
+					switch (opt)
+	            {
+	            case 1:
+	                pos = buscar_transport_tipo(transports, pos, 1);
+	                break;
+	            case 2:
+	                pos = buscar_transport_tipo(transports, pos, 2);
+	                break; 
+	            case 3:
+	            	pos = buscar_transport_tipo(transports, pos, 3);
+	            	break;
+	            case 0:
+	                pos = -1;
+	                printf("Se ha cancelado la busqueda.\n");
+					break;
+	            default:
+	                printf("Introduzca una opcion valida: ");
+	                break;
+	            }
+			}
         }
     }
 	Sleep(2000);
@@ -860,13 +889,14 @@ int buscar_transport_tipo(transport_vect transports, int pos, int tipo){
 	clear();
 	
     vect_coinc = (int*)malloc(1*sizeof(int)); 
-    printf("Por favor, introduzca su busqueda: ");
-
-    fflush(stdin);
-    fgets(cad_busq, sizeof(cad_busq), stdin);         	// Cadena por la que se va a buscar al proveedor
-    fflush(stdin);
-    terminador_cad(cad_busq);
-
+    do{
+    	printf("Por favor, introduzca su busqueda: ");
+	    fflush(stdin);
+	    fgets(cad_busq, sizeof(cad_busq), stdin);         	// Cadena por la que se va a buscar al proveedor
+	    fflush(stdin);
+	    terminador_cad(cad_busq);    	
+	}while(strlen(cad_busq) == 0);
+	
     len = strlen(cad_busq);
     if(tipo == 1){
         if(len > 21)
@@ -958,8 +988,8 @@ transport_vect alta_transport(transport_vect transports){
     transports.transportistas[nueva_id].Id_transp = nueva_id;
     
     t_nombre(transports, nueva_id);
-    t_email(transports, nueva_id);    
     t_empresa(transports, nueva_id);
+    t_email(transports, nueva_id);    
     t_ciudad(transports, nueva_id);
     t_contra(transports, nueva_id);
     
@@ -1085,15 +1115,20 @@ void t_nombre(transport_vect transports, int id){
 //Precondición: Recibe una estructura de tipo transport_vect (el vector de transportistas) ya rellena, y la ID del transportista a registrar.
 //Postcondición: No devuelve nada, pero modifica el transportista con el identificador indicado, habiendo asignado un email a su cuenta.
 void t_email(transport_vect transports, int id){
-	char email[31];
+
+	char email[31 - strlen(transports.transportistas[id].Nom_Emp) - 1], prefijo[strlen(transports.transportistas[id].Nom_Emp) + 1];
+	strcpy(prefijo, transports.transportistas[id].Nom_Emp);
+	mayus_minus(prefijo);
 	
-	printf("\n	<2> Email de transportista: ");
-	fflush(stdin);
-	fgets(email, sizeof(email), stdin);
-	terminador_cad(email);
-	
-	strcpy(transports.transportistas[id].email, email);
-	
+	do{
+		printf("\n	<2> Email de transportista: nuevo_email@%s.com\n	    nuevo_email: ", prefijo);
+		fflush(stdin);
+		fgets(email, sizeof(email), stdin);
+		terminador_cad(email);		
+	}while(strlen(email) == 0);
+
+	sprintf(transports.transportistas[id].email, "%s@%s.com", email, prefijo);
+
 }
 
 //Precondición: Recibe una estructura de tipo transport_vect (el vector de transportistas) ya rellena, y la ID del transportista a registrar.
@@ -1102,38 +1137,40 @@ void t_contra(transport_vect transports, int id){
 	char contra[16], contra_rep[16];
 	int contra_valida = 0;
 	
-	printf("\n	<5> Contraseña: ");
-	fflush(stdin);
-	fgets(contra, sizeof(contra), stdin);
-	
-	printf("\n	Repita la contraseña: ");
-	fflush(stdin);
-	fgets(contra_rep, sizeof(contra_rep), stdin);
-	
-	terminador_cad(contra);
-	terminador_cad(contra_rep);
-	
-	if(strcmp(contra, contra_rep) == 0)
-		contra_valida = 1;
-	
-	while(!contra_valida || strlen(contra) ==  0){
-		
-		contra_valida = 0;
-		
-		printf("\n	Contrasenas dispares. Contrasena: ");
+	do{
+		printf("\n	<5> Contraseña: ");
 		fflush(stdin);
 		fgets(contra, sizeof(contra), stdin);
-	
+		
 		printf("\n	Repita la contraseña: ");
 		fflush(stdin);
 		fgets(contra_rep, sizeof(contra_rep), stdin);
-	
+		
 		terminador_cad(contra);
 		terminador_cad(contra_rep);
-	
+		
 		if(strcmp(contra, contra_rep) == 0)
 			contra_valida = 1;
-	}
+		
+		while(!contra_valida){
+			
+			contra_valida = 0;
+			
+			printf("\n	Contrasenas dispares. Contrasena: ");
+			fflush(stdin);
+			fgets(contra, sizeof(contra), stdin);
+		
+			printf("\n	Repita la contraseña: ");
+			fflush(stdin);
+			fgets(contra_rep, sizeof(contra_rep), stdin);
+		
+			terminador_cad(contra);
+			terminador_cad(contra_rep);
+		
+			if(strcmp(contra, contra_rep) == 0)
+				contra_valida = 1;
+		}
+	}while(strlen(contra) ==  0);
 	
 	strcpy(transports.transportistas[id].Contrasena, contra);
 
@@ -1360,6 +1397,12 @@ int longitud_vector_transportistas(){
     fclose(Transportistas_txt);
     
     return i;	
+}
+
+char* mayus_minus(char* cad){
+	for(int i = 0; i < strlen(cad); i++)
+		cad[i] = tolower(cad[i]);
+	return cad;
 }
 
 /*
