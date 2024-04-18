@@ -5,6 +5,7 @@
 
 #include "complementos.h"
 #include "Productos.h"
+#include "pedidos.h"
 #include "empresas.h"
 
 // listar (X), buscar (X), alta (X), baja (X), modificar (X)
@@ -237,7 +238,7 @@ void cambiar_email(admin_prov_vect provs, int pos){
 void cambiar_contrasena(admin_prov_vect provs, int pos){
 	
 	char nueva_contra[21], contra_compr[21];									// Cadenas donde guardamos la contraseña nueva, y su repetición.
-	int valido = 0;
+	int valido = 0, i = 0;
 	
 	printf("\nIntroduzca la contrasena actual: ");
 	fflush(stdin);
@@ -245,6 +246,8 @@ void cambiar_contrasena(admin_prov_vect provs, int pos){
 	terminador_cad(contra_compr);
 	if(strcmp(contra_compr, provs.usuarios[pos].Contrasena) == 0){							
 		do{
+			if(i > 3)
+				clear();
 			printf("\nIndique la nueva contrasena: ");	
 			fflush(stdin);					
 			fgets(nueva_contra, sizeof(nueva_contra), stdin);
@@ -259,7 +262,8 @@ void cambiar_contrasena(admin_prov_vect provs, int pos){
 				valido = 1;
 			else	
 				printf("Contrasenas distintas, inténtelo de nuevo.");			// Solicitamos la nueva contraseña al usuario mientras no verifique que se repitan.
-		}while(valido == 0);
+			i++;
+		}while(valido == 0 || strlen(nueva_contra) == 0);
 		printf("\nContraseña cambiada satisfactoriamente.");
 		strcpy(provs.usuarios[pos].Contrasena, nueva_contra);
 		Sleep(3000);															// Esperamos tres segundos antes de limpiar la pantalla para poder leer el mensaje anterior.
@@ -316,13 +320,18 @@ void ver_perfil_t(transport_vect transports, int pos){
 void cambiar_nombre_t(transport_vect transports, int pos){
 	
 	char nuevo_nombre[21];
-	printf("\nIngrese el nombre que debe figurar en el sistema: ");
-	fflush(stdin);
-	fgets(nuevo_nombre, sizeof(nuevo_nombre), stdin);
-	fflush(stdin);
-	terminador_cad(nuevo_nombre);
-	strcpy(transports.transportistas[pos].Nombre, nuevo_nombre);
-	
+	int i = 0;
+	do{
+		if(i > 3)
+			clear();
+		printf("\nIngrese el nombre que debe figurar en el sistema: ");
+		fflush(stdin);
+		fgets(nuevo_nombre, sizeof(nuevo_nombre), stdin);
+		fflush(stdin);
+		terminador_cad(nuevo_nombre);
+		strcpy(transports.transportistas[pos].Nombre, nuevo_nombre);
+		i++;
+	}while(strlen(nuevo_nombre) == 0);
 }
 
 
@@ -348,7 +357,7 @@ void cambiar_email_t(transport_vect transports, int pos){
 void cambiar_contrasena_t(transport_vect transports, int pos){
 	
 	char nueva_contra[21], contra_compr[21];									// Cadenas donde guardamos la contraseña nueva, y su repetición.
-	int valido = 0;
+	int valido = 0, i = 0;
 	
 	printf("\nIntroduzca la contrasena actual: ");
 	fflush(stdin);
@@ -357,6 +366,8 @@ void cambiar_contrasena_t(transport_vect transports, int pos){
 	terminador_cad(contra_compr);
 	if(strcmp(contra_compr, transports.transportistas[pos].Contrasena) == 0){							
 		do{
+			if(i > 3)
+				clear();
 			printf("\nIndique la nueva contrasena: ");						
 			fflush(stdin);
 			fgets(nueva_contra, sizeof(nueva_contra), stdin);
@@ -371,7 +382,8 @@ void cambiar_contrasena_t(transport_vect transports, int pos){
 				valido = 1;
 			else	
 				printf("\nContrasenas distintas, inténtelo de nuevo.");			// Solicitamos la nueva contraseña al usuario mientras no verifique que se repitan.
-		}while(valido == 0);
+			i++;
+		}while(valido == 0 || strlen(nueva_contra) == 0);
 		strcpy(transports.transportistas[pos].Contrasena, nueva_contra);
 		printf("\nContraseña cambiada satisfactoriamente.");
 		Sleep(3000);															// Esperamos tres segundos antes de limpiar la pantalla para poder leer el mensaje anterior.
@@ -662,10 +674,12 @@ admin_prov_vect modificar_prov(admin_prov_vect provs, int id){
 void prov_nombre(admin_prov_vect provs, int id){
 	char empresa[21];
 	
-	printf("\n	<1> Empresa a la que pertenece: ");
-	fflush(stdin);
-	fgets(empresa, sizeof(empresa), stdin);
-	terminador_cad(empresa);
+	do{
+		printf("\n	<1> Empresa a la que pertenece: ");
+		fflush(stdin);
+		fgets(empresa, sizeof(empresa), stdin);
+		terminador_cad(empresa);
+	}while(strlen(empresa) == 0);
 	
 	strcpy(provs.usuarios[id].Nombre, empresa);
 
@@ -707,7 +721,10 @@ void prov_contra(admin_prov_vect provs, int id){
 	if(strcmp(contra, contra_rep) == 0)
 		contra_valida = 1;
 	
-	while(!contra_valida){
+	while(!contra_valida || strlen(contra) == 0){
+		
+		contra_valida = 0;
+		
 		printf("\n	Contrasenas dispares. Contrasena: ");
 		fflush(stdin);
 		fgets(contra, sizeof(contra), stdin);
@@ -726,7 +743,6 @@ void prov_contra(admin_prov_vect provs, int id){
 	strcpy(provs.usuarios[id].Contrasena, contra);
 	
 }
-
 
 //Precondición: Recibe una estructura de tipo admin_prov_vect (el vector de proveedores / administradores) ya rellena, y la 
 // ID del proveedor a registrar.
@@ -1055,10 +1071,12 @@ transport_vect modificar_transport(transport_vect transports, int id){
 void t_nombre(transport_vect transports, int id){
 	char nombre[21];
 	
-	printf("\n	<1> Nombre completo: ");
-	fflush(stdin);
-	fgets(nombre, sizeof(nombre), stdin);
-	terminador_cad(nombre);
+	do{	
+		printf("\n	<1> Nombre completo: ");
+		fflush(stdin);
+		fgets(nombre, sizeof(nombre), stdin);
+		terminador_cad(nombre);
+	}while(strlen(nombre) == 0);
 	
 	strcpy(transports.transportistas[id].Nombre, nombre);
 
@@ -1098,7 +1116,10 @@ void t_contra(transport_vect transports, int id){
 	if(strcmp(contra, contra_rep) == 0)
 		contra_valida = 1;
 	
-	while(!contra_valida){
+	while(!contra_valida || strlen(contra) ==  0){
+		
+		contra_valida = 0;
+		
 		printf("\n	Contrasenas dispares. Contrasena: ");
 		fflush(stdin);
 		fgets(contra, sizeof(contra), stdin);
@@ -1123,10 +1144,12 @@ void t_contra(transport_vect transports, int id){
 void t_empresa(transport_vect transports, int id){
 	char empresa[21];
 	
-	printf("\n	<3> Empresa a la que pertenece: ");
-	fflush(stdin);
-	fgets(empresa, sizeof(empresa), stdin);
-	terminador_cad(empresa);
+	do{
+		printf("\n	<3> Empresa a la que pertenece: ");
+		fflush(stdin);
+		fgets(empresa, sizeof(empresa), stdin);
+		terminador_cad(empresa);
+	}while(strlen(empresa) == 0);
 	
 	strcpy(transports.transportistas[id].Nom_Emp, empresa);
 	
@@ -1137,10 +1160,12 @@ void t_empresa(transport_vect transports, int id){
 void t_ciudad(transport_vect transports, int id){
 	char ciudad[21];
 	
-	printf("\n	<4> Ciudad en la que trabaja: ");
-	fflush(stdin);
-	fgets(ciudad, sizeof(ciudad), stdin);
-	terminador_cad(ciudad);
+	do{
+		printf("\n	<4> Ciudad en la que trabaja: ");
+		fflush(stdin);
+		fgets(ciudad, sizeof(ciudad), stdin);
+		terminador_cad(ciudad);
+	}while(strlen(ciudad) == 0);
 	
 	strcpy(transports.transportistas[id].Ciudad, ciudad);
 	
@@ -1159,7 +1184,7 @@ admin_prov_vect cargar_adminprov(){
 	
 	admin_prov_vect adminprov_sistema;
 	FILE *f_AdminProv;																							// Puntero al fichero a leer.
-	char ruta[] = "..\\data\\AdminProv.txt";																		// Ruta del fichero a leer.
+	char ruta[] = ".\\data\\AdminProv.txt";																		// Ruta del fichero a leer.
 	char linea[LONG_MAX_ADMINPROV];																				// Línea actual del fichero. Longitud máxima de una línea 86 caracteres.
 	char tipo_usuario[14];																						// Cadena auxiliar a convertir.
 	int i = 0, m; 
@@ -1179,7 +1204,7 @@ admin_prov_vect cargar_adminprov(){
 	adminprov_sistema.tam = 0;
 	while(fgets(linea, sizeof(linea), f_AdminProv) != NULL)														// Contamos el número de usuarios en el fichero...
 		adminprov_sistema.tam++;
-	printf("\nCarga completada.\nUsuarios almacenados en AdminProv.txt: %d \n", adminprov_sistema.tam);
+//	printf("\nCarga completada.\nUsuarios almacenados en AdminProv.txt: %d \n", adminprov_sistema.tam);
 	adminprov_sistema.usuarios = (admin_prov*)malloc((adminprov_sistema.tam + 1) * sizeof(admin_prov));			// ... y reservamos memoria para el vector (más uno por si se necesita añadir algún usuario).
 	rewind(f_AdminProv);																								
 	
@@ -1207,7 +1232,7 @@ transport_vect cargar_transportistas(){
 	
 	transport_vect transport_sistema;
 	FILE *Transportistas;																						// Puntero al fichero a leer.
-	char ruta[] = "../data/Transportistas.txt";																	// Ruta del fichero a leer.
+	char ruta[] = "./data/Transportistas.txt";																	// Ruta del fichero a leer.
 	char linea[LONG_MAX_TRANSPORT];																				// Línea actual del fichero. Longitud máxima de una línea 113 caracteres.
 	int i = 0, m;
 
@@ -1225,7 +1250,7 @@ transport_vect cargar_transportistas(){
 	transport_sistema.tam = 0;
 	while(fgets(linea, sizeof(linea), Transportistas) != NULL)													// Contamos el número de usuarios en el fichero...
     	transport_sistema.tam++;
-    printf("\nCarga completada.\nTransportistas almacenados en Transportistas.txt: %d \n", transport_sistema.tam);
+//  printf("\nCarga completada.\nTransportistas almacenados en Transportistas.txt: %d \n", transport_sistema.tam);
  	transport_sistema.transportistas = (transport*)malloc((transport_sistema.tam + 1) * sizeof(transport));		// ... y reservamos memoria para el vector (más uno por si se necesita añadir algún usuario).
  	rewind(Transportistas);																							
     
@@ -1255,7 +1280,7 @@ transport_vect cargar_transportistas(){
 void guardar_adminprov(admin_prov_vect usuarios){
 	
 	FILE *AdminProv;																							// Puntero al fichero a leer.
-	char ruta[] = "..\\data\\AdminProv.txt";																		// Ruta del fichero a leer.
+	char ruta[] = ".\\data\\AdminProv.txt";																		// Ruta del fichero a leer.
 	char linea[LONG_MAX_ADMINPROV];																				// Línea actual del fichero. Longitud máxima de una línea 86 caracteres.
 	char aux[14];
 	
@@ -1273,7 +1298,7 @@ void guardar_adminprov(admin_prov_vect usuarios){
 void guardar_transportista(transport_vect transportistas){
 	
 	FILE *Transportistas;																						// Puntero al fichero a leer.
-	char ruta[] = "..\\data\\Transportistas.txt";																// Ruta del fichero a leer.
+	char ruta[] = ".\\data\\Transportistas.txt";																// Ruta del fichero a leer.
 	char linea[LONG_MAX_TRANSPORT];																				// Línea actual del fichero. Longitud máxima de una línea 113 caracteres.
 
 	Transportistas = fopen(ruta, "w");
