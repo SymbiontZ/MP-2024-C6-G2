@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "Descuentos.h"
+#include "complementos.h"
 
 
 
@@ -102,7 +103,7 @@ void Guardar_Descuentos(Descuentos descuentos){
 	}
 
 	for(int i = 0; i < descuentos.tam; i++)
-		fprintf(f_descuentos, "%10[^-]-%50[^-]-%7[^-]-%8[^-]-%d[^-]-%6[^\n]\n",										// Se escribe el contenido de la estructura en el fichero
+		fprintf(f_descuentos, "%10[^-]-%50[^-]-%7[^-]-%8[^-]-%d-%6[^\n]\n",										// Se escribe el contenido de la estructura en el fichero
             descuentos.Desc[i].Id_cod,
             descuentos.Desc[i].Descrip,
 			descuentos.Desc[i].Tipo,
@@ -130,7 +131,7 @@ void Guardar_DescuentosClientes(DescClientes descuentosclientes){
 	}
 
 	for(int i = 0; i < descuentosclientes.tam; i++)
-		fprintf(f_DescClientes, "%d[^-]-%10[^-]-%d[^-]-%d[^-]-%d[^-]-%d[^-]-%d[^-]-%d[^-]-%d[^\n]\n",							// Se escribe el contenido de la estructura en el fichero
+		fprintf(f_DescClientes, "%d-%10[^-]-%d-%d-%d-%d-%d-%d-%d\n",							// Se escribe el contenido de la estructura en el fichero
             descuentosclientes.DescCliente[i].Id_cliente,
             descuentosclientes.DescCliente[i].Id_cod,
             descuentosclientes.DescCliente[i].dia_asig,
@@ -263,12 +264,16 @@ Descuentos Alta_Descuentos(Descuentos D){
 Descuentos nuevo_id(Descuentos D, int pos){
     char new_Id_cod[11];															// Variable que guardara la id del nuevo descuento
 
+    do{
+
     printf("Ingrese el identificador: \n");
 
     fflush(stdin);
     fgets(new_Id_cod, sizeof(new_Id_cod), stdin);
 
-    strcpy(D.Desc[pos].Id_cod, new_Id_cod);													// Se escribe en la nueva posicion de la estructura la nueva id
+    strcpy(D.Desc[pos].Id_cod, new_Id_cod);	                                        // Se escribe en la nueva posicion de la estructura la nueva id
+
+    }while(strlen(new_Id_cod) == 0);
 
     return D;
 }
@@ -277,12 +282,16 @@ Descuentos nuevo_id(Descuentos D, int pos){
 Descuentos nueva_desc(Descuentos D, int pos){
     char new_Descrip[11];															// Variable que guardara la descripcion del nuevo descuento
 
+    do{
+
     printf("Ingrese la descripción: \n");
 
     fflush(stdin);
     fgets(new_Descrip, sizeof(new_Descrip), stdin);
 
     strcpy(D.Desc[pos].Descrip, new_Descrip);													// Se escribe en la nueva posicion de la estructura la nueva descripcion
+
+    }while(strlen(new_Descrip) == 0);
 
     return D;
 }
@@ -292,7 +301,6 @@ Descuentos nueva_desc(Descuentos D, int pos){
 Descuentos nuevo_tipo(Descuentos D, int pos){
 
     int op = 0;
-    char new_Tipo[8];																// Variable que guardara el tipo del nuevo descuento
 
     while(op != 1 || op != 2){
         printf("Elija el tipo de descuento: \n");
@@ -301,16 +309,18 @@ Descuentos nuevo_tipo(Descuentos D, int pos){
         scanf("%d", &op);
 
         switch(op){
+
             case 1:
-                new_Tipo[8] = "codpro";
-                strcpy(D.Desc[pos].Tipo, new_Tipo);												// Se escribe en la nueva posicion de la estructura el tipo "codpro"
+                strcpy(D.Desc[pos].Tipo, "codpro");												// Se escribe en la nueva posicion de la estructura el tipo "codpro"
                 break;
+
             case 2:
-                new_Tipo[8] = "cheqreg";
-                strcpy(D.Desc[pos].Tipo, new_Tipo);												// Se escribe en la nueva posicion de la estructura el tipo "cheqreg"
+                strcpy(D.Desc[pos].Tipo, "cheqreg");												// Se escribe en la nueva posicion de la estructura el tipo "cheqreg"
                 break;
+
             default:
                 break;
+
         }
     }
 
@@ -321,7 +331,6 @@ Descuentos nuevo_tipo(Descuentos D, int pos){
 Descuentos nuevo_est(Descuentos D, int pos){
 
     int op = 0;
-    char new_Estado[9];																// Variable que guardara el estado del nuevo descuento
 
     while(op != 1 || op != 2){
         printf("Seleccione el estado: \n");
@@ -330,16 +339,18 @@ Descuentos nuevo_est(Descuentos D, int pos){
         scanf("%d", &op);
 
         switch(op){
+
             case 1:
-                new_Estado[9] = "activo";
-                strcpy(D.Desc[pos].Estado, new_Estado);												// Se escribe en la nueva posicion de la estructura el estado "activo"
+                strcpy(D.Desc[pos].Estado, "activo");												// Se escribe en la nueva posicion de la estructura el estado "activo"
                 break;
+
             case 2:
-                new_Estado[9] = "inactivo";
-                strcpy(D.Desc[pos].Estado, new_Estado);												// Se escribe en la nueva posicion de la estructura el estado "inactivo"
+                strcpy(D.Desc[pos].Estado, "inactivo");												// Se escribe en la nueva posicion de la estructura el estado "inactivo"
                 break;
+
             default:
                 break;
+
         }
     }
 
@@ -350,7 +361,6 @@ Descuentos nuevo_est(Descuentos D, int pos){
 Descuentos nuevo_apl(Descuentos D, int pos){
 
     int op = 0;
-    char new_Aplicable[7];															// Variable que guardara la aplicabilidad del nuevo descuento
 
     while(op != 1 || op != 2){
         printf("Seleccione la aplicabilidad: \n");
@@ -359,16 +369,18 @@ Descuentos nuevo_apl(Descuentos D, int pos){
         scanf("%d", &op);
 
         switch(op){
+
             case 1:
-                new_Aplicable[7] = "esizon";
-                strcpy(D.Desc[pos].Aplicable, new_Aplicable);											// Se escribe en la nueva posicion de la estructura la aplicabilidad "esizon"
+                strcpy(D.Desc[pos].Aplicable, "esizon");											// Se escribe en la nueva posicion de la estructura la aplicabilidad "esizon"
                 break;
+
             case 2:
-                new_Aplicable[7] = "todos";
-                strcpy(D.Desc[pos].Aplicable, new_Aplicable);											// Se escribe en la nueva posicion de la estructura la aplicabilidad "todos"
+                strcpy(D.Desc[pos].Aplicable, "todos");											// Se escribe en la nueva posicion de la estructura la aplicabilidad "todos"
                 break;
+
             default:
                 break;
+
         }
     }
 
@@ -380,8 +392,8 @@ Descuentos nuevo_imp(Descuentos D, int pos){
 
     int new_Importe = 0;															// Variable que guardara el importe del nuevo descuentos
 
-        printf("Introduzca el importe: \n");
-        scanf("%d", &new_Importe);
+    printf("Introduzca el importe: \n");
+    scanf("%d", &new_Importe);
 
         D.Desc[pos].Importe = new_Importe;													// Se escribe en la nueva posicion de la estructura el importe introducido
 
@@ -483,6 +495,7 @@ Descuentos Modificar_Descuentos(Descuentos D){
 }
 
 Descuentos Asignar_Descuentos(clients cliente, Descuentos D, DescClientes dc){
+
     int tamD = D.tam, tamC = cliente.n_clients, i, j, Id_cli_busqueda, n_dia_a, n_mes_a, n_anio_a, n_dia_c, n_mes_c, n_anio_c;
     char Id_cod_busqueda[11];                                                                                                       // Variable en la que se almacena el codigo del descuento a asignar
 
@@ -505,7 +518,6 @@ Descuentos Asignar_Descuentos(clients cliente, Descuentos D, DescClientes dc){
             for(j=0; j>tamD; j++){
                 if(strcmp(Id_cod_busqueda, dc.DescCliente[i].Id_cod) == 0){
 
-
                     printf("Introduzca el dia de hoy\n");
                     scanf("%i",&n_dia_a);
                     printf("Introduzca el mes de hoy\n");
@@ -521,7 +533,7 @@ Descuentos Asignar_Descuentos(clients cliente, Descuentos D, DescClientes dc){
 
 
                     strcpy(dc.DescCliente[tamC].Id_cod, Id_cod_busqueda);
-                    strcpy(dc.DescCliente[tamC].Id_cliente, Id_cli_busqueda);
+                    dc.DescCliente[tamC].Id_cliente = Id_cli_busqueda;
                     dc.DescCliente[tamC].dia_asig = n_dia_a;
                     dc.DescCliente[tamC].mes_asig = n_mes_a;
                     dc.DescCliente[tamC].anio_asig = n_anio_a;
@@ -529,6 +541,7 @@ Descuentos Asignar_Descuentos(clients cliente, Descuentos D, DescClientes dc){
                     dc.DescCliente[tamC].mes_cad = n_mes_c;
                     dc.DescCliente[tamC].anio_cad = n_anio_c;
                     dc.DescCliente[tamC].Estado = 0;
+
                 }
 
             }
