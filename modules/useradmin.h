@@ -8,8 +8,9 @@
 //#include "Descuentos.h"
 
 #include <stdio.h>
-#include <stdlib.h> 
+#include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 #include <windows.h>
 
 #define MAX_EMAIL 31            //Longitud de email + 1(terminador)
@@ -78,7 +79,7 @@ typedef struct
 
     void menucliente_prod();
     void menucliente_ped(int );
-
+    void menucliente_dev(int );
 
     //GESTION DATOS ESPECIFICOS USUARIOS//
     clients cliente_nom(clients , int );
@@ -95,9 +96,9 @@ typedef struct
     void menuadmin(admin_prov_vect , int );
     void menuadmin_cliente();
     void menuadmin_admin(admin_prov_vect );
-    void menucliente_dev(int );
+    void menuadmin_prov(admin_prov_vect );
 
-    void mostrar_admin(admin_prov_vect );
+    void listar_admin(admin_prov_vect );
     int buscar_admin(admin_prov_vect );
 
     admin_prov_vect agregar_admin(admin_prov_vect );

@@ -9,6 +9,7 @@
 #define MAX_DESC 87
 #define MAX_DESCLI 42
 
+//ESTRUCTTURA DE DESCUENTOS
 typedef struct {
 
     char Id_cod[11],                //Identificador del codigo promocional
@@ -21,6 +22,7 @@ typedef struct {
 
 }Descuento;
 
+//ESTRUCTURA DE DESCUENTOSCLIENTES
 typedef struct {
 
     char Id_cod[11];                //Identificador del c�digo promocional
@@ -38,6 +40,7 @@ typedef struct {
 
 //Se han separado los campos de las fechas para facilitar el manejo posterior con funciones
 
+//ESTRUCTURA DE VECTOR DE DESCUENTOS Y NUM DE DESCUENTOS(TAM VECTOR)
 typedef struct{
 
     int tam;                       //Tamano del vector
@@ -45,6 +48,7 @@ typedef struct{
 
 }Descuentos;
 
+//ESTRUCTURA DE VECTOR DE DESCUENTOSCLIENTES Y NUM DE DESCUENTOSCLIENTES(TAM VECTOR)
 typedef struct{
 
     int tam;                        //Tama�o del vector
@@ -73,32 +77,62 @@ void Guardar_DescuentosClientes(DescClientes);
 //Postcondición: Lista los descuentos disponibles para el usuario en concreto
 void Consultar_Descuentos(clients, DescClientes);
 
+//Precondición: Recibe la estructura clients y un valor entero (posicion en la estructura)
+//Postcondición: Muestra un listado con los descuentos asignados al cliente
 void Consultar_desc_cliente(clients , int );
 
+//Precondición: Recibe 3 estructuras (Descuentos, DescClientes, clients)
+//Postcondición: Muestra un menú con las funcionalidades referentes a los descuentos
 void Gestionar_Descuentos(Descuentos, DescClientes, clients);
 
-Descuentos Alta_Descuentos(Descuentos);
-
+//Precondición: Recibe la estructura Descuentos
+//Postcondición: Devuelve la estructura Descuentos con el descuento seleccionado eliminado
 Descuentos Baja_Descuentos(Descuentos);
 
+//Precondición: Recibe la estructura Descuentos
+//Postcondición: Devuelve la estructura Descuentos y muestra el descuento/descuentos coincidentes con la búsqueda
 Descuentos Busqueda_Descuentos(Descuentos);
 
+//Precondición: Recibe la estructura Descuentos
+//Postcondición: Devuelve la estructura Descuentos y lista todos los descuentos contenidos en la estructura
 Descuentos Listar_Descuentos(Descuentos);
 
+//Precondición: Recibe la estructura Descuentos
+//Postcondición: Devuelve la estructura Descuentos con las modificaciones realizadas
 Descuentos Modificar_Descuentos(Descuentos);
 
+//Precondición: Recibe 3 estructuras (Descuentos, DescClientes, clients)
+//Postcondición: Devuelve la estructura Descuentos con el descuento asignado al cliente indicado
 Descuentos Asignar_Descuentos(clients, Descuentos, DescClientes);
 
+//Precondición: Recibe la estructura Descuentos
+//Postcondición: Devuelve la estructura Descuentos con un nuevo descuento
+Descuentos Alta_Descuentos(Descuentos);
+
+///------------------------------- FUNCIONES INTERNAS DE Alta_Descuentos -------------------------------///
+
+//Precondición: Recibe la estructura Descuentos
+//Postcondición: Devuelve la estructura Descuentos con el id del nuevo descuento
 Descuentos nuevo_id(Descuentos, int);
 
+//Precondición: Recibe la estructura Descuentos
+//Postcondición: Devuelve la estructura Descuentos con la descripción del nuevo descuento
 Descuentos nueva_desc(Descuentos, int);
 
+//Precondición: Recibe la estructura Descuentos
+//Postcondición: Devuelve la estructura Descuentos con el tipo del nuevo descuento
 Descuentos nuevo_tipo(Descuentos, int);
 
+//Precondición: Recibe la estructura Descuentos
+//Postcondición: Devuelve la estructura Descuentos con el estado del nuevo descuento
 Descuentos nuevo_est(Descuentos, int);
 
+//Precondición: Recibe la estructura Descuentos
+//Postcondición: Devuelve la estructura Descuentos con la aplicabilidad del nuevo descuento
 Descuentos nuevo_apl(Descuentos, int);
 
+//Precondición: Recibe la estructura Descuentos
+//Postcondición: Devuelve la estructura Descuentos con el importe del nuevo descuento
 Descuentos nuevo_imp(Descuentos, int);
 
 #endif // DESCUENTOS_H_INCLUDED

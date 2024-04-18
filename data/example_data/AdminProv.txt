@@ -1,0 +1,7 @@
+0-ESIZON-superadmin@esizon.com-admin000-administrador
+1-ESIZON-admin01@esizon.com-admin01-administrador
+2-ESIZON-admin02@esizon.com-admin001-administrador
+3-ESIZON-percorb01@esizon.com-aliciaputera-administrador
+0004-DISTGEN-donatolima@distgen.com-donlim04-proveedor
+0005-DISTGEN-donatolima@distgen.com-donlim04-proveedor
+0006-DISTGEN-donatolima@distgen.com-donlim04-proveedor

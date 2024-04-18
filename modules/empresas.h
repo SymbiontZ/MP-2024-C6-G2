@@ -5,6 +5,7 @@
 #define LONG_MAX_TRANSPORT 113
 
 
+
 // --------------- ESTRUCTURAS DE DATOS ---------------
 
 
@@ -14,8 +15,8 @@ typedef struct{
 	int Id_empresa;					// Identificador de la empresa administradora o proveedora (Id_empresa), 4 dígitos.
 	char Nombre[21],				// Nombre de la empresa (Nombre), sería ESIZON si es administrador, 20 caracteres máximo.
 		 email[31],					// Email (email), 30 caracteres máximo, será usado como nombre de usuario para el acceso a la plataforma.
-		Contrasena[16],				// Contraseña para acceder al sistema (Contraseña), con 15 caracteres máximo.
-		Perfil_usuario[14];			// Tipo de usuario: administrador o proveedor.
+		 Contrasena[16],				// Contraseña para acceder al sistema (Contraseña), con 15 caracteres máximo.
+		 Perfil_usuario[14];			// Tipo de usuario: administrador o proveedor.
 } admin_prov;
 
 // Estructura asociada a cada transportista en Transportistas.txt
@@ -127,8 +128,8 @@ void listar_prov(admin_prov_vect provs);
 //Postcondición: Devuelve la ID del usuario buscado, o -1 si se cancela la búsqueda.
 int buscar_prov(admin_prov_vect provs);
 
-//Precondición: Recibe una estructura de tipo admin_prov_vect (el vector de usuarios provvedores / administradores) ya rellena y dos enteros (posición a tratar y
-//tipo de búsqueda.
+//Precondición: Recibe una estructura de tipo admin_prov_vect (el vector de usuarios provvedores / administradores) ya rellena y dos enteros 
+// (posición a tratar y tipo de búsqueda).
 //Postcondición: Devuelve la ID del usuario buscado, o -1 si se cancela la búsqueda.
 int buscar_prov_tipo(admin_prov_vect provs, int pos, int tipo);
 
@@ -137,17 +138,40 @@ int buscar_prov_tipo(admin_prov_vect provs, int pos, int tipo);
 // cambio en AdminProv.txt
 admin_prov_vect alta_prov(admin_prov_vect provs);
 
-admin_prov_vect baja_prov(admin_prov_vect provs);
+//Precondición: Recibe una estructura de tipo admin_prov_vect (el vector de proveedores / administradores) ya rellena, y la 
+// ID del proveedor / administrador a eliminar.
+//Postcondición: Devuelve la estructura de tipo admin_prov_vect sin el proveedor / administrador de identificador indicado, y habiendo  
+// guardado el cambio en Transportistas.txt
+admin_prov_vect baja_prov(admin_prov_vect provs, int id);
 
+//Precondición: Recibe una estructura de tipo admin_prov_vect (el vector de proveedores / administradores) ya rellena, y la 
+// ID del proveedor a modificar.
+//Postcondición: Devuelve la estructura de tipo admin_prov_vect con el proveedor / administrador de identificador indicado, habiendo  
+// guardado el cambio en AdminProv.txt
 admin_prov_vect modificar_prov(admin_prov_vect provs, int pos);
 
 // ###################### SUBFUNCIONES DE GESTIÓN DE PROVEEDORES ######################
 
-admin_prov_vect prov_nombre(admin_prov_vect provs, int id);
+//Precondición: Recibe una estructura de tipo admin_prov_vect (el vector de proveedores / administradores) ya rellena, y la 
+// ID del proveedor a registrar.
+//Postcondición: No devuelve nada, pero modifica el proveedor con el identificador indicado, habiendo asignado el nombre de la empresa a su cuenta.
+void prov_nombre(admin_prov_vect provs, int id);
 
-admin_prov_vect prov_email(admin_prov_vect provs, int id);
+//Precondición: Recibe una estructura de tipo admin_prov_vect (el vector de proveedores / administradores) ya rellena, y la 
+// ID del proveedor a registrar.
+//Postcondición: No devuelve nada, pero modifica el proveedor con el identificador indicado, habiendo asignado el email de la empresa a su cuenta.
+void prov_email(admin_prov_vect provs, int id);
 
-admin_prov_vect prov_contra(admin_prov_vect provs, int id);
+//Precondición: Recibe una estructura de tipo admin_prov_vect (el vector de proveedores / administradores) ya rellena, y la 
+// ID del proveedor a registrar.
+//Postcondición: No devuelve nada, pero modifica el proveedor con el identificador indicado, habiendo asignado una contraseña a su cuenta.
+void prov_contra(admin_prov_vect provs, int id);
+
+//Precondición: Recibe una estructura de tipo admin_prov_vect (el vector de proveedores / administradores) ya rellena, y la 
+// ID del proveedor a registrar.
+//Postcondición: No devuelve nada, pero guarda el proveedor de identificador indicado, habiendo  
+// cambiado sus privilegios.
+//void prov_privi(admin_prov_vect provs, int id);
 
 
 // --------------- FUNCIONES PARA LA GESTIÓN DE TRANSPORTISTAS ---------------
@@ -171,21 +195,39 @@ int buscar_transport_tipo(transport_vect transports, int pos, int tipo);
 // cambio en Transportistas.txt
 transport_vect alta_transport(transport_vect transports);
 
-transport_vect baja_transport(transport_vect transports);
+//Precondición: Recibe una estructura de tipo transport_vect (el vector de transportistas) ya rellena, y la ID del transportista a eliminar.
+//Postcondición: Devuelve la estructura de tipo transport_vect sin el transportista de identificador indicado, y habiendo guardado el 
+// cambio en Transportistas.txt
+transport_vect baja_transport(transport_vect transports, int id);
 
-transport_vect modificar_transport(transport_vect transports);
+//Precondición: Recibe una estructura de tipo transport_vect (el vector de transportistas) ya rellena, y la ID del transportista a modificar.
+//Postcondición: Devuelve la estructura de tipo transport_vect con el transportista de identificador indicado, habiendo guardado cualquier 
+// cambio en su cuenta.
+transport_vect modificar_transport(transport_vect transports, int id);
 
 // ###################### SUBFUNCIONES DE GESTIÓN DE TRANSPORTISTAS ######################
 
-transport_vect t_nombre(transport_vect transports, int id);
+//Precondición: Recibe una estructura de tipo transport_vect (el vector de transportistas) ya rellena, y la ID del transportista a registrar.
+//Postcondición: No devuelve nada, pero modifica el transportista con el identificador indicado, habiendo asignado un nombre a su cuenta.
+void t_nombre(transport_vect transports, int id);
 
-transport_vect t_email(transport_vect transports, int id);
+//Precondición: Recibe una estructura de tipo transport_vect (el vector de transportistas) ya rellena, y la ID del transportista a registrar.
+//Postcondición: No devuelve nada, pero modifica el transportista con el identificador indicado, habiendo asignado un email a su cuenta.
+void t_email(transport_vect transports, int id);
 
-transport_vect t_contra(transport_vect transports, int id);
+//Precondición: Recibe una estructura de tipo transport_vect (el vector de transportistas) ya rellena, y la ID del transportista a registrar.
+//Postcondición: No devuelve nada, pero modifica el transportista con el identificador indicado, habiendo asignado una contraseña a su cuenta.
+void t_contra(transport_vect transports, int id);
 
-transport_vect t_empresa(transport_vect transports, int id);
+//Precondición: Recibe una estructura de tipo transport_vect (el vector de transportistas) ya rellena, y la ID del transportista a registrar.
+//Postcondición: No devuelve nada, pero modifica el transportista con el identificador indicado, habiendo asignado una empresa a su cuenta.
+void t_empresa(transport_vect transports, int id);
 
-transport_vect t_ciudad(transport_vect transports, int id);
+//Precondición: Recibe una estructura de tipo transport_vect (el vector de transportistas) ya rellena, y la ID del transportista a registrar.
+//Postcondición: No devuelve nada, pero modifica el transportista con identificador indicado, habiendo asignado una ciudad a su cuenta.
+void t_ciudad(transport_vect transports, int id);
+
+
 
 // --------------- FUNCIONES DE LECTURA DE FICHEROS ---------------
 
