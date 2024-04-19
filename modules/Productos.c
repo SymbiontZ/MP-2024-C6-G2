@@ -11,23 +11,20 @@ produ_vect cargar_productos () {
 	
 	FILE *f_prod;
 	
-	f_prod = fopen (filename, "r");
+	f_prod = fopen (filename, "a+");
 	
-	if (f_prod == NULL) {
-		f_prod = fopen (filename, "w");		 //Excepcion si no encuentra fichero
-		fclose (f_prod);
+	if (f_prod == NULL) {
 		printf ("No se pudo abrir el archivo de productos. Se ha creado un nuevo archivo\n");
 		getchar ();
 	}
 	
 	rewind (f_prod);						//Necesario para volver a leer el fichero
 	
-	if (fgetc(f_prod) == EOF) {				//Si fichero vacio, añadimos producto predeterminado
-		f_prod = fopen (filename, "w");
+	if (fgetc(f_prod) == EOF) {				//Si fichero vacio, añadimos producto predeterminado
 		fprintf (f_prod, default_prod);
-		fclose (f_prod);
 	}
 	
+rewind (f_prod);
 	while (fgets (cad_linea, sizeof(cad_linea), f_prod)) {			//Contador de productos en el programa a partir de fichero 
         num_prod++;
     }
