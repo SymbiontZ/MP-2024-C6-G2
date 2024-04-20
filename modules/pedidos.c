@@ -720,7 +720,9 @@ void listapedidos_cliente(prod_pedidos prods_p,pedidos p, int id_cliente){
 
 void listar_prod_clientes(int id_cliente, pedidos p, prod_pedidos prod_p){
     int i,j,k,
-        id_prod; //variable para almacenar los id de los productos que han sido entregados al cliente
+        id_prod,     //variable para almacenar los id de los productos que han sido entregados al cliente
+        n_coinc = 0; //variable para almacenar el numero de coincidencias que hay
+    
     produ_vect Prod=cargar_productos();
     for(i=1;i<p.lon;i++){
         //comprobar que el cliente tiene pedidos
@@ -739,7 +741,7 @@ void listar_prod_clientes(int id_cliente, pedidos p, prod_pedidos prod_p){
                             //obtenemos los nombres de los productos cuya id es la que hemos almacenado anteriormente
                             if(id_prod==Prod.produ[k].id_prod){
                                 printf("nombres de producto entregado: %s\n", Prod.produ[k].nombre);
-                                printf("fecha del producto que ha sido entregado: %d/%d/%d", p.pedidos[i].f_pedido.dia, p.pedidos[i].f_pedido.mes, p.pedidos[i].f_pedido.anio);
+                                printf("fecha del producto que ha sido entregado: %d/%d/%d\n", p.pedidos[i].f_pedido.dia, p.pedidos[i].f_pedido.mes, p.pedidos[i].f_pedido.anio);
                             }
                         }
 
@@ -753,3 +755,4 @@ void listar_prod_clientes(int id_cliente, pedidos p, prod_pedidos prod_p){
         }
     }
 }
+
