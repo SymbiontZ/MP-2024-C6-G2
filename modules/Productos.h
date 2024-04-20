@@ -1,11 +1,10 @@
 #ifndef PRODUCTOS_H_
 #define PRODUCTOS_H_
 
-#include "complementos.h"
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <windows.h>
 
 typedef struct {
 	int id_prod;		//Identificador del producto
@@ -30,6 +29,7 @@ int buscar_productos (produ_vect);
 produ_vect modificar_productos (produ_vect);
 produ_vect eliminar_productos (produ_vect);
 produ_vect listar_productos (produ_vect);
+produ_vect buscador_productos (produ_vect);
 void menu_prod (produ_vect);
 
 #endif

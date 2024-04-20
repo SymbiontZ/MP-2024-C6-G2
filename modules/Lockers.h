@@ -65,4 +65,46 @@ void Guardar_Lockers(Vect_Lock lockers);
 //Postcondicion: Guarda en CompartimentosLockers.txt los datos del vector de estructuras recibido
 void Guardar_CompartimentosLockers(Vect_CompLock compartimentoslockers);
 
+//Precondición: Recibe 3 estructuras (Descuentos, DescClientes, clients)
+//Postcondición: Muestra un menú con las funcionalidades referentes a los lockers
+void Gestionar_Lockers(Vect_Lock);
+
+//Precondición: Recibe la estructura Lockers
+//Postcondición: Devuelve la estructura Lockers con un Locker eliminado
+Vect_Lock Baja_Lockers(Vect_Lock);
+
+//Precondición: Recibe la estructura Lockers
+//Postcondición: Muestra todos los lockers del fichero
+void Listar_Lockers(Vect_Lock);
+
+//Precondición: Recibe la estructura Lockers
+//Postcondición: Devuelve la estructura Lockers con un Locker nuevo
+Vect_Lock Alta_Lockers(Vect_Lock);
+
+///------------------------------- FUNCIONES INTERNAS DE Alta_Lockers -------------------------------///
+
+//Precondición: Recibe la estructura Lockers
+//Postcondición: Devuelve la estructura Descuentos con el id del nuevo locker
+Vect_Lock nuevo_idL(Vect_Lock, int);
+
+//Precondición: Recibe la estructura Lockers
+//Postcondición: Devuelve la estructura Descuentos con la localidad del nuevo locker
+Vect_Lock nueva_localidadL(Vect_Lock, int);
+
+//Precondición: Recibe la estructura Lockers
+//Postcondición: Devuelve la estructura Descuentos con la provincia del nuevo locker
+Vect_Lock nueva_provinciaL(Vect_Lock, int);
+
+//Precondición: Recibe la estructura Lockers
+//Postcondición: Devuelve la estructura Descuentos con la ubicación del nuevo locker
+Vect_Lock nueva_ubicaL(Vect_Lock, int);
+
+//Precondición: Recibe la estructura Lockers
+//Postcondición: Devuelve la estructura Descuentos con los compartimentos totales del nuevo locker
+Vect_Lock nuevo_numcompTL(Vect_Lock, int);
+
+//Precondición: Recibe la estructura Lockers
+//Postcondición: Devuelve la estructura Descuentos con los compartimentos ocupados del nuevo locker
+Vect_Lock nuevo_numcompOkupL(Vect_Lock, int);
+
 #endif // LOCKERS_H_INCLUDED
