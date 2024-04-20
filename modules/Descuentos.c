@@ -3,6 +3,7 @@
 #include <string.h>
 #include "Descuentos.h"
 #include "complementos.h"
+#include "useradmin.h"
 
 
 
@@ -148,9 +149,10 @@ void Guardar_DescuentosClientes(DescClientes descuentosclientes){
 }
 
 
-void Consultar_Descuentos(clients cliente, DescClientes descuentosclientes){
+void Consultar_Descuentos(DescClientes descuentosclientes){
 
     int i,j;
+    clients cliente = cargar_clientes();
 
 	for(i = 0; i < cliente.n_clients; i++){
           for(j = 0; j < descuentosclientes.tam; j++){
@@ -163,7 +165,9 @@ void Consultar_Descuentos(clients cliente, DescClientes descuentosclientes){
 
 }
 
-void Consultar_desc_cliente(clients Cliente, int pos){
+void Consultar_desc_cliente(int pos){
+
+    clients Cliente = cargar_clientes();
     DescClientes desccl = Cargar_DescuentosClientes();
     int i,
         n_desc=0;
@@ -199,9 +203,10 @@ void Consultar_desc_cliente(clients Cliente, int pos){
 }
 
 
-void Gestionar_Descuentos(Descuentos D, DescClientes dc, clients cliente){
+void Gestionar_Descuentos(Descuentos D, DescClientes dc){
 
     int op;
+    clients cliente = cargar_clientes();
 
     printf("###¿Qué desea hacer?###\n\n");															// Menu de seleccion de funciones relacionadas a descuentos
     printf("1. Dar de alta\n");
@@ -231,7 +236,7 @@ void Gestionar_Descuentos(Descuentos D, DescClientes dc, clients cliente){
             Modificar_Descuentos(D);
             break;
         case 6:
-            Asignar_Descuentos(cliente,D,dc);
+            Asignar_Descuentos(D,dc);
             break;
         default:
             break;
@@ -241,6 +246,7 @@ void Gestionar_Descuentos(Descuentos D, DescClientes dc, clients cliente){
 
 
 Descuentos Alta_Descuentos(Descuentos D){
+
     int tam = D.tam;
 
     D.Desc = realloc(D.Desc, D.tam+1*sizeof(Descuento));											// Se amplia la longitud del vector para añadir un descuento en la estructura
@@ -403,14 +409,14 @@ Descuentos nuevo_imp(Descuentos D, int pos){
 
 Descuentos Baja_Descuentos(Descuentos D){
     int tam = D.tam, i;
-    char Id_cod_busqueda[11], new_Estado[9] = "inactivo";											// Variables que serviran como filtro a la hora de buscar el descuento que se dara de baja
+    char Id_cod_busqueda[11];			                    								// Variables que serviran como filtro a la hora de buscar el descuento que se dara de baja
 
     printf("Introduzca el identificador del descuento que quiere dar de baja\n");
     scanf("%s", &Id_cod_busqueda);
 
     for(i=0; i<tam; i++){
         if(strcmp(Id_cod_busqueda, D.Desc[i].Id_cod) == 0)
-            strcpy(D.Desc[i].Estado, new_Estado);												// Se actualiza el del descuento encontrado, dejandolo "inactivo" en caso de querer darlo de alta en el futuro
+            strcpy(D.Desc[i].Estado, "inactivo");												// Se actualiza el del descuento encontrado, dejandolo "inactivo" en caso de querer darlo de alta en el futuro
     }
 
     return D;
@@ -494,8 +500,9 @@ Descuentos Modificar_Descuentos(Descuentos D){
     return D;
 }
 
-Descuentos Asignar_Descuentos(clients cliente, Descuentos D, DescClientes dc){
+Descuentos Asignar_Descuentos(Descuentos D, DescClientes dc){
 
+    clients cliente = cargar_clientes();
     int tamD = D.tam, tamC = cliente.n_clients, i, j, Id_cli_busqueda, n_dia_a, n_mes_a, n_anio_a, n_dia_c, n_mes_c, n_anio_c;
     char Id_cod_busqueda[11];                                                                                                       // Variable en la que se almacena el codigo del descuento a asignar
 

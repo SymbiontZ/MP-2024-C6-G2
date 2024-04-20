@@ -73,17 +73,17 @@ void Guardar_Descuentos(Descuentos);
 //Postcondicion: Guarda en DescuentosClientes.txt los datos del vector de estructuras recibido
 void Guardar_DescuentosClientes(DescClientes);
 
-//Precondición: Recibe las estructuras clients y DescClientes
+//Precondición: Recibe la estructura DescClientes
 //Postcondición: Lista los descuentos disponibles para el usuario en concreto
-void Consultar_Descuentos(clients, DescClientes);
+void Consultar_Descuentos(DescClientes);
 
 //Precondición: Recibe la estructura clients y un valor entero (posicion en la estructura)
 //Postcondición: Muestra un listado con los descuentos asignados al cliente
-void Consultar_desc_cliente(clients , int );
+void Consultar_desc_cliente(int);
 
-//Precondición: Recibe 3 estructuras (Descuentos, DescClientes, clients)
+//Precondición: Recibe 2 estructuras (Descuentos, DescClientes)
 //Postcondición: Muestra un menú con las funcionalidades referentes a los descuentos
-void Gestionar_Descuentos(Descuentos, DescClientes, clients);
+void Gestionar_Descuentos(Descuentos, DescClientes);
 
 //Precondición: Recibe la estructura Descuentos
 //Postcondición: Devuelve la estructura Descuentos con el descuento seleccionado eliminado
@@ -101,9 +101,9 @@ Descuentos Listar_Descuentos(Descuentos);
 //Postcondición: Devuelve la estructura Descuentos con las modificaciones realizadas
 Descuentos Modificar_Descuentos(Descuentos);
 
-//Precondición: Recibe 3 estructuras (Descuentos, DescClientes, clients)
+//Precondición: Recibe 2 estructuras (Descuentos, DescClientes)
 //Postcondición: Devuelve la estructura Descuentos con el descuento asignado al cliente indicado
-Descuentos Asignar_Descuentos(clients, Descuentos, DescClientes);
+Descuentos Asignar_Descuentos(Descuentos, DescClientes);
 
 //Precondición: Recibe la estructura Descuentos
 //Postcondición: Devuelve la estructura Descuentos con un nuevo descuento
