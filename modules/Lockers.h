@@ -1,6 +1,9 @@
 #ifndef LOCKERS_H_INCLUDED
 #define LOCKERS_H_INCLUDED
 
+#include "pedidos.h"
+#include "useradmin.h"
+
 #define MAX_LOCK 79
 #define MAX_COMPLOCK 50
 
@@ -77,6 +80,10 @@ Vect_Lock Baja_Lockers(Vect_Lock);
 //Postcondición: Muestra todos los lockers del fichero
 void Listar_Lockers(Vect_Lock);
 
+//Precondición: Recibe la estructura Lockers y la posicion de la estructura pedidos del pedido que quiere asignarse en un locker
+//Postcondición: Devuelve la posicion del primer locker coincidente con la ciudad deseada
+int Locker_Dispo(Vect_Lock, int);
+
 //Precondición: Recibe la estructura Lockers
 //Postcondición: Devuelve la estructura Lockers con un Locker nuevo
 Vect_Lock Alta_Lockers(Vect_Lock);
@@ -106,5 +113,6 @@ Vect_Lock nuevo_numcompTL(Vect_Lock, int);
 //Precondición: Recibe la estructura Lockers
 //Postcondición: Devuelve la estructura Descuentos con los compartimentos ocupados del nuevo locker
 Vect_Lock nuevo_numcompOkupL(Vect_Lock, int);
+
 
 #endif // LOCKERS_H_INCLUDED
