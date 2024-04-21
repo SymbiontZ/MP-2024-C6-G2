@@ -239,8 +239,13 @@ int crear_pedido( pedidos p, int id_cliente, int modo){
     //ALMACENAR EN LA ESTRUCTURA PEDIDO LOS DATOS DEL PEDIDO
     p.pedidos[pos].id_pedido=nueva_id;
 
+    
     if(modo==0){
         printf("crear pedido como administrador\n");
+        p.pedidos[pos].id_cliente=busqueda_cliente();
+    }
+    else{
+        printf("crear pedido como cliente\n");
     }
     p.pedidos[pos].id_cliente=id_cliente;
 
@@ -282,7 +287,7 @@ int crear_pedido( pedidos p, int id_cliente, int modo){
         printf("Introduce el codigo del descuento que deseas utilizar: ");
         fflush(stdin);
         fgets(cod_desc, 11, stdin);
-        conf = comprobar_descuento(cod_desc, desc_clients, id_cliente);
+        conf = comprobar_descuento(cod_desc, id_cliente);
         if(conf==0){
             printf("el codigo de descuento introducido es correcto\n");
             strcpy(p.pedidos[pos].id_cod, cod_desc);
@@ -290,7 +295,8 @@ int crear_pedido( pedidos p, int id_cliente, int modo){
         else{
             printf("el codigo de descuento introducido no es correcto\n");
         
-    }   
+        }  
+    } 
     else{
         strcpy(p.pedidos[pos].id_cod,"000000000");
         
@@ -370,6 +376,7 @@ void guardar_pedido(pedidos p){
 
     //Escribir en el fichero los pedidos que contiene la estructura pedidos 
     for(i=0;i<p.lon;i++){
+        printf("guardar datos fichero\n");
         fprintf(f_ped,"%d-%d/%d/%d-%d-%s-%s-%s\n", 
             p.pedidos[i].id_pedido,
             p.pedidos[i].f_pedido.dia,
@@ -528,16 +535,60 @@ void crear_producto_pedido(pedidos p, int product, int id_pedido, prod_pedidos p
     guardar_productos_pedidos(prod_p);
 }
 
-/*void eliminar_pedidos_productos(prod_pedidos prod_p, pedidos p, int id_pedido){
+void eliminar_pedidos_productos(prod_pedidos prod_p, pedidos p, int pos_ped){
     int i;
     char resp;
-    priintf("Estas seguro de elimar el pedido? [s/n]: ");
-    resp=confimacion();
-    if(resp =='S' || resp='s'){
+    printf("Estas seguro de elimar el pedido? [s/n]: ");
+    resp=confirmacion();
+    if(resp =='S' || resp=='s'){
+        printf("prueba1\n");
+        for(i=pos_ped;i<p.lon;i++){
+            printf("prueba2\n");
+            p.pedidos[i]=p.pedidos[i+1];
+        }
+        p.lon=p.lon-1;
+        p.pedidos=realloc(p.pedidos, p.lon*sizeof(pedido));
+        if(p.pedidos=NULL){
+            printf("No se pudo reasignar la estructura pedidos\n");
+            /*getchar();
+            exit(EXIT_FAILURE);*/
+        }
 
+        guardar_pedido(p);
+        printf("se ha eliminado el pedido correctamente\n");
+
+        //eliminar_productos_ped(prod_p, pos_ped);
     }
-}*/
 
+    for(i=0;i<p.lon;i++){
+        printf("%d-%d/%d/%d-%d-%s-%d-%s", p.pedidos[i].id_pedido,
+                                        p.pedidos[i].f_pedido.dia,
+                                        p.pedidos[i].f_pedido.mes,
+                                        p.pedidos[i].f_pedido.anio,
+                                        p.pedidos[i].id_cliente,
+                                        p.pedidos[i].lugar,
+                                        p.pedidos[i].id_cod);
+    }
+}
+
+void eliminar_productos_ped(prod_pedidos prod_p, int pos_ped){
+    int i;
+    for(i=pos_ped;i<prod_p.lon-1;i++){
+        if(prod_p.prod_pedidos[i].id_pedido==pos_ped){
+            prod_p.prod_pedidos[i]=prod_p.prod_pedidos[i+1];
+        }
+    }
+
+    prod_p.lon=prod_p.lon-1;
+    prod_p.prod_pedidos=realloc(prod_p.prod_pedidos, prod_p.lon*sizeof(prod_pedido));
+    if(prod_p.prod_pedidos==NULL){
+        printf("No se pudo reasignar estructuras a productos pedidos");
+    }
+
+    guardar_productos_pedidos(prod_p);
+    printf("se han eliminado los productos del pedido correctamente");
+
+}
       
 
 //Cabecera: devoluciones cargar_devoluciones()
