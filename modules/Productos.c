@@ -149,6 +149,7 @@ produ_vect agregar_productos (produ_vect p) {
 	scanf ("%d", &p.produ[nueva_id].importe);
 	fflush (stdin);
 	
+	p.num_prod++;
 	guardar_productos (p);
 	
 	printf ("Se ha registrado el producto %s correctamente", p.produ[nueva_id].nombre);

@@ -519,19 +519,19 @@ void menuadmin_prov(admin_prov_vect admin){
                 printf("Seguro que quiere agregar un proveedor [s/n]: ");
                 resp = confirmacion();
                 if(resp == 'S'|| resp == 's')
-                    admin = agregar_admin(admin);
+                    admin = alta_prov(admin);
                 opt = -1;
                 break;
             case 3:
                 pos = buscar_prov(admin);
                 if (pos != -1)
-                    admin = eliminar_admin(admin, pos);
+                    admin = baja_prov(admin, pos);
                 opt = -1;
                 break;
             case 4:
                 pos = buscar_prov(admin);
                 if (pos != -1)
-                    admin = gestionar_admin(admin, pos, 0);
+                    admin = modificar_prov(admin, pos);
                 opt = -1;
                 break;
             
@@ -544,7 +544,6 @@ void menuadmin_prov(admin_prov_vect admin){
         guardar_adminprov(admin);
     }while (opt != 0);
 }
-
 
 void listar_admin(admin_prov_vect admin){
     int i;
@@ -561,6 +560,8 @@ void listar_admin(admin_prov_vect admin){
     printf("Presione [ENTER] para volver...");
     getchar();
 }
+
+
 /*** GESTIONAR ADMIN ***/
 
 int buscar_admin(admin_prov_vect admin){

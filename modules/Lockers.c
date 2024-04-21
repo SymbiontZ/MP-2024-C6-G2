@@ -304,6 +304,20 @@ Vect_Lock nuevo_numcompOkupL(Vect_Lock L, int pos){
 
 Vect_Lock Baja_Lockers(Vect_Lock L){
 
+    char Id_locker_busqueda[11];
+    int i;
+
+    printf("Introduzca la id del locker a eliminar: \n");
+    scanf("%s", &Id_locker_busqueda);
+
+    for(i=0; i<L.tam; i++){
+        if(strcmp(Id_locker_busqueda, L.Lock[i].Id_locker) == 0){
+
+        }
+
+    }
+
+    return L;
 
 }
 
@@ -322,5 +336,17 @@ void Listar_Lockers(Vect_Lock L){
     printf("+------------------------------+\n");
     printf("Presione [ENTER] para volver...");
     getchar();
+
 }
 
+int Locker_Dispo(Vect_Lock L, int pos){
+
+    int i = 0;
+    clients c = cargar_clientes();
+
+    while((i<=L.tam) && (L.Lock[i].Localidad != c.clients[pos].Localidad))
+        i++;
+
+    return i;
+
+}

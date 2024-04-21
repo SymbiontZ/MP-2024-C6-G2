@@ -1,1 +1,9 @@
+<<<<<<< HEAD
 0000000-defaultname-defaultdesc-0000-0000-0-0-0
+=======
+0000000-default-defaultdesc-0000-0000-0-0-0
+0000001-Tele-Tele Grande-0001-0001-45-43-21
+0000002-Tele-Tele Pequena-0001-0001-30-7-12
+0000003-Auricular-Auricular Bluetooth-0002-0002-50-21-12
+0000004-Abrigo-Abrigo de adrian-0001-0001-12-2-30
+>>>>>>> 7a6175977c55475d8326367b77bcfb2254821681
