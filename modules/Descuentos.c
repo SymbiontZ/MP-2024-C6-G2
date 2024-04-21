@@ -52,7 +52,7 @@ DescClientes Cargar_DescuentosClientes(){
 
     DescClientes vector_descClts;
 	FILE *f_DescClientes;																	// Puntero al fichero a leer
-	char ruta[] = "../data/DescuentosClientes.txt";                                                  					// Ruta del fichero a leer
+	char ruta[] = "..\\ESIZON-main\\data\\DescuentosClientes.txt";                                                  					// Ruta del fichero a leer
 	char linea[MAX_DESCLI];													                                // Linea a leer
     int i = 0, m;
 
@@ -93,7 +93,7 @@ DescClientes Cargar_DescuentosClientes(){
 void Guardar_Descuentos(Descuentos descuentos){
 
     FILE *f_descuentos;																		// Puntero al fichero a leer
-	char ruta[] = "..\\ESIZON-main\\data\\Descuentos.txt";													// Ruta del fichero a leer
+	char ruta[] = "..\\data\\Descuentos.txt";													// Ruta del fichero a leer
 	char linea[MAX_DESC];																	// Línea actual del fichero
 	char aux[14];
 
@@ -121,7 +121,7 @@ void Guardar_Descuentos(Descuentos descuentos){
 void Guardar_DescuentosClientes(DescClientes descuentosclientes){
 
     FILE *f_DescClientes;																	// Puntero al fichero
-	char ruta[] = "..\\ESIZON-main\\data\\DescuentosClientes.txt";												// Ruta del fichero
+	char ruta[] = "..\\data\\DescuentosClientes.txt";												// Ruta del fichero
 	char linea[MAX_DESCLI];																	// Línea actual del fichero
 	char aux[14];
 
@@ -165,43 +165,64 @@ void Consultar_Descuentos(DescClientes descuentosclientes){
 
 }
 
-void Consultar_desc_cliente(int pos){
-
+void Consultar_desc_cliente(int pos, int mode){
     clients Cliente = cargar_clientes();
     DescClientes desccl = Cargar_DescuentosClientes();
+
+
     int i,
         n_desc=0;
     clear();
     printf("+---------------------------+");
     printf("|    TUS DESCUENTOS         |");
     printf("+---------------------------+");
-    for(i=1;i<desccl.tam;i++){
-        if(Cliente.clients[pos].Id_cliente == desccl.DescCliente[i].Id_cliente){
-            if(desccl.DescCliente[i].Estado == 0)
-                printf("| CODIGO: %-10s ASIGNADO: %d/%d/%d CADUCADO: %d/%d/%d --> Disponible |\n", desccl.DescCliente[i].Id_cod,
-                                                                                                    desccl.DescCliente[i].dia_asig,
-                                                                                                    desccl.DescCliente[i].mes_asig,
-                                                                                                    desccl.DescCliente[i].anio_asig,
-                                                                                                    desccl.DescCliente[i].dia_cad,
-                                                                                                    desccl.DescCliente[i].mes_cad,
-                                                                                                    desccl.DescCliente[i].anio_cad);
-            else
-                printf("| CODIGO: %-10s ASIGNADO: %d/%d/%d CADUCADO: %d/%d/%d --> No disponible |\n", desccl.DescCliente[i].Id_cod,
-                                                                                                    desccl.DescCliente[i].dia_asig,
-                                                                                                    desccl.DescCliente[i].mes_asig,
-                                                                                                    desccl.DescCliente[i].anio_asig,
-                                                                                                    desccl.DescCliente[i].dia_cad,
-                                                                                                    desccl.DescCliente[i].mes_cad,
-                                                                                                    desccl.DescCliente[i].anio_cad);
-        n_desc++;
+
+    if(mode == 0)
+        for(i=1;i<desccl.tam;i++){
+            if(Cliente.clients[pos].Id_cliente == desccl.DescCliente[i].Id_cliente){
+                if(desccl.DescCliente[i].Estado == 0)
+                    printf("| CODIGO: %-10s ASIGNADO: %d/%d/%d CADUCADO: %d/%d/%d --> Disponible |\n", desccl.DescCliente[i].Id_cod,
+                                                                                                        desccl.DescCliente[i].dia_asig,
+                                                                                                        desccl.DescCliente[i].mes_asig,
+                                                                                                        desccl.DescCliente[i].anio_asig,
+                                                                                                        desccl.DescCliente[i].dia_cad,
+                                                                                                        desccl.DescCliente[i].mes_cad,
+                                                                                                        desccl.DescCliente[i].anio_cad);
+                else
+                    printf("| CODIGO: %-10s ASIGNADO: %d/%d/%d CADUCADO: %d/%d/%d --> No disponible |\n", desccl.DescCliente[i].Id_cod,
+                                                                                                        desccl.DescCliente[i].dia_asig,
+                                                                                                        desccl.DescCliente[i].mes_asig,
+                                                                                                        desccl.DescCliente[i].anio_asig,
+                                                                                                        desccl.DescCliente[i].dia_cad,
+                                                                                                        desccl.DescCliente[i].mes_cad,
+                                                                                                        desccl.DescCliente[i].anio_cad);
+            n_desc++;
+            }
         }
-    }
+    else
     if(n_desc == 0){
         printf("| NO TIENES CUPONES DISPONIBLES |\n");
         printf("+---------------------------+");
     }
+
 }
 
+int desc_activo(char cod[]){
+    Descuentos D = Cargar_Descuentos();
+    int i, pos;
+    printf("%s", cod);
+    for(i=0; i< D.tam; i++){
+        if(strcmp(D.Desc[i].Id_cod, cod)== 0)
+            pos = i;
+        else 
+            return 0;
+    }
+
+    if(strcmp(D.Desc[pos].Estado, "activo"))
+        return 1;
+    else
+        return 0;
+}
 
 void Gestionar_Descuentos(Descuentos D, DescClientes dc){
 
@@ -556,5 +577,7 @@ Descuentos Asignar_Descuentos(Descuentos D, DescClientes dc){
         }
 
     }
+
+    return D;
 }
 

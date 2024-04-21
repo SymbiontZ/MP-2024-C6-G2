@@ -33,4 +33,9 @@ char confirmacion();
 int input_int();
 
 
+//PRECONDICION: Se le pasa dos estructuras tipo fecha, la fecha que quieres comparar y la fecha limite.
+//POSCONDICION: Devuelve un 1 si no ha pasado la fecha limite y un 0 si no la ha pasado.
+int comprobar_fecha(fecha, fecha );
+
+
 #endif

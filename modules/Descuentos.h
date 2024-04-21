@@ -77,14 +77,15 @@ void Guardar_DescuentosClientes(DescClientes);
 //Postcondición: Lista los descuentos disponibles para el usuario en concreto
 void Consultar_Descuentos(DescClientes);
 
-//Precondición: Recibe la estructura clients y un valor entero (posicion en la estructura)
+//Precondición: Recibe valor entero (posicion de cliente en la estructura) y el modo que muestra(0: TODOS, 1: DISPONIBLES PARA ASIGNAR)
 //Postcondición: Muestra un listado con los descuentos asignados al cliente
-void Consultar_desc_cliente(int);
+void Consultar_desc_cliente(int, int);
 
 //Precondición: Recibe 2 estructuras (Descuentos, DescClientes)
 //Postcondición: Muestra un menú con las funcionalidades referentes a los descuentos
 void Gestionar_Descuentos(Descuentos, DescClientes);
 
+int desc_activo(char[] );
 //Precondición: Recibe la estructura Descuentos
 //Postcondición: Devuelve la estructura Descuentos con el descuento seleccionado eliminado
 Descuentos Baja_Descuentos(Descuentos);

@@ -84,8 +84,6 @@ typedef struct{
  //Postcondición: El usuario habrá realizado las tareas de gestión de productos convenientes.
  void ver_productos(admin_prov_vect provs, int pos);
 
-
-
  void ver_pedidos(admin_prov_vect provs, int pos);
 
  //Precondición: Recibe un puntero a una estructura de admin_prov.
@@ -96,6 +94,7 @@ typedef struct{
  //Postcondición: No devuelve nada. Se habrá cambiado la contraseña del usuario guardada en el puntero, o no.
  void cambiar_contrasena(admin_prov_vect provs, int pos);
 
+ int buscar_id_prov(admin_prov_vect provs, char* empresa);
 
 // --------------- FUNCIONES PARA EL MENU DE TRANSPORTISTA ---------------
 
@@ -116,7 +115,7 @@ typedef struct{
  //Postcondición: No devuelve nada. Se habrá cambiado la contraseña del usuario guardada en el puntero, o no.
  void cambiar_contrasena_t(transport_vect transports, int pos);
 
-
+ 
 // --------------- FUNCIONES PARA LA GESTIÓN DE PROVEEDORES ---------------
 
 
