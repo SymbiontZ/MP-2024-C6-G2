@@ -41,7 +41,7 @@ pedidos cargar_pedidos(){
     p.pedidos=malloc(n_pedidos*sizeof(pedido)); //definimos un vector dinamico de tipo pedido, en cada posicion estara la estructura rellenada con los datos dela primera linea
     
     while(fgets(cad_aux, sizeof(cad_aux), f_ped) && i<n_pedidos){
-        campo_pedidos=sscanf(cad_aux, "%d-%d/%d/%d-%d-%11[^-]-%11[^-]-%11[^-]",
+        campo_pedidos=sscanf(cad_aux, "%d-%d/%d/%d-%d-%11[^-]-%11[^-]-%11[^\n]",
             &p.pedidos[i].id_pedido,
             &p.pedidos[i].f_pedido.dia,
             &p.pedidos[i].f_pedido.mes,
@@ -296,9 +296,9 @@ int crear_pedido( pedidos p, int id_cliente, int modo){
             printf("el codigo de descuento introducido no es correcto\n");
         
         }  
-    } 
+    }
     else{
-        strcpy(p.pedidos[pos].id_cod,"000000000");
+        strcpy(p.pedidos[pos].id_cod, "nocod\0");
         
     }
 
@@ -376,8 +376,7 @@ void guardar_pedido(pedidos p){
 
     //Escribir en el fichero los pedidos que contiene la estructura pedidos 
     for(i=0;i<p.lon;i++){
-        printf("guardar datos fichero\n");
-        fprintf(f_ped,"%d-%d/%d/%d-%d-%s-%s-%s\n", 
+        fprintf(f_ped,"%07d-%02d/%02d/%04d-%07d-%s-%s-%s\n", 
             p.pedidos[i].id_pedido,
             p.pedidos[i].f_pedido.dia,
             p.pedidos[i].f_pedido.mes,
@@ -464,7 +463,7 @@ void guardar_productos_pedidos(prod_pedidos prod_p){
     int i;
 
     FILE*f_prod_ped;
-    f_prod_ped=fopen("../data/ProductosPedidos.txt", "rw+");
+    f_prod_ped=fopen("../data/ProductosPedidos.txt", "w");
     if(f_prod_ped==NULL){
         printf("ERROR");
     }
@@ -541,17 +540,18 @@ void eliminar_pedidos_productos(prod_pedidos prod_p, pedidos p, int pos_ped){
     printf("Estas seguro de elimar el pedido? [s/n]: ");
     resp=confirmacion();
     if(resp =='S' || resp=='s'){
-        printf("prueba1\n");
-        for(i=pos_ped;i<p.lon;i++){
+        for(i=pos_ped;i<p.lon-1;i++){
             printf("prueba2\n");
             p.pedidos[i]=p.pedidos[i+1];
+            p.pedidos[i].id_pedido = i;
+
         }
-        p.lon=p.lon-1;
+        p.lon--;
         p.pedidos=realloc(p.pedidos, p.lon*sizeof(pedido));
-        if(p.pedidos=NULL){
+        if(p.pedidos==NULL){
             printf("No se pudo reasignar la estructura pedidos\n");
-            /*getchar();
-            exit(EXIT_FAILURE);*/
+            getchar();
+            exit(EXIT_FAILURE);
         }
 
         guardar_pedido(p);
@@ -559,15 +559,8 @@ void eliminar_pedidos_productos(prod_pedidos prod_p, pedidos p, int pos_ped){
 
         //eliminar_productos_ped(prod_p, pos_ped);
     }
-
-    for(i=0;i<p.lon;i++){
-        printf("%d-%d/%d/%d-%d-%s-%d-%s", p.pedidos[i].id_pedido,
-                                        p.pedidos[i].f_pedido.dia,
-                                        p.pedidos[i].f_pedido.mes,
-                                        p.pedidos[i].f_pedido.anio,
-                                        p.pedidos[i].id_cliente,
-                                        p.pedidos[i].lugar,
-                                        p.pedidos[i].id_cod);
+    for(i=1;i<p.lon;i++){
+        printf("%s, test",p.pedidos[i].id_cod);
     }
 }
 

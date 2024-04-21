@@ -963,13 +963,7 @@ clients eliminar_cliente(clients C, int pos){
     clear();
     printf("Estas seguro de eliminar al usuario [ %s ]? [s/n]: ", C.clients[pos].Nom_cliente);
     
-    scanf(" %c", &resp);
-    fflush(stdin);
-    while (resp != 'S' && resp != 's' && resp != 'N' && resp != 'n'){
-        printf("Introduzca una respuesta valida: ");
-        scanf(" %c", &resp);
-        fflush(stdin);
-    }
+    resp = confirmacion();
 
     if (resp == 'S' || resp == 's'){
         for (i = pos; i < C.n_clients - 1; i++) {	//Desplazar la posicion de los clientes
