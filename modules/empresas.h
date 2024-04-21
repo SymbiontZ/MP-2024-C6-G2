@@ -107,6 +107,10 @@ typedef struct{
  void cambiar_estado_pedido();
 
  //Precondición: No recibe nada.
+ //Postcondición: No devuelve nada. Permite elegir al usuario entre buscar transportistas, listarlos o asignar alguno a un pedido.
+ void asig_transport();
+ 
+ //Precondición: No recibe nada.
  //Postcondición: Devuelve 0 siempre por peculiaridades del código, que permite salir en cualquier momento.
  int modificar_asig_transport();
 
