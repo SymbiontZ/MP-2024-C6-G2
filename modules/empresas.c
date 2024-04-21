@@ -606,6 +606,7 @@ int buscar_prov_tipo(admin_prov_vect provs, int pos, int tipo){
     pos = vect_coinc[opt-1];
     free(vect_coinc);
 
+	printf("%d", pos);
     return pos;
 }
 
@@ -620,13 +621,13 @@ admin_prov_vect alta_prov(admin_prov_vect provs){
 	
 	clear();
     
-    printf("\n	##################################\n");
-    printf("	## SERVICIO DE ALTAS DE USUARIO ##\n");
-    printf("	##################################\n");
+    printf("+------------------------------+\n");
+    printf("| SERVICIO DE ALTAS DE USUARIO |\n");
+    printf("+------------------------------+\n");
     
-    printf("\nIntroduzca los datos del nuevo usuario del sistema:\n\n");
+    printf("\n+- Introduzca los datos del nuevo usuario del sistema -+\n\n");
     
-	provs.usuarios = realloc(provs.usuarios, (provs.tam + 1) * sizeof(admin_prov));
+	provs.usuarios = realloc(provs.usuarios, (provs.tam + 1) * sizeof(admin_prov));	
 	provs.tam++;
 	
 	if (provs.usuarios == NULL){
@@ -637,7 +638,6 @@ admin_prov_vect alta_prov(admin_prov_vect provs){
     
     prov_nombre(provs, provs.tam - 1);
     nueva_id = buscar_id_prov(provs, provs.usuarios[provs.tam - 1].Nombre);
-    printf("%d", nueva_id);
     provs.usuarios[provs.tam - 1].Id_empresa = nueva_id;
     prov_email(provs, provs.tam - 1);    
     prov_contra(provs, provs.tam - 1);
@@ -757,7 +757,7 @@ void prov_nombre(admin_prov_vect provs, int id){
 	char empresa[21];
 	
 	do{
-		printf("\n	<1> Empresa a la que pertenece: ");
+		printf("<1> Empresa a la que pertenece: ");
 		fflush(stdin);
 		fgets(empresa, sizeof(empresa), stdin);
 		terminador_cad(empresa);
@@ -776,7 +776,7 @@ void prov_email(admin_prov_vect provs, int id){
 	mayus_minus(prefijo);
 	
 	do{
-		printf("\n	<2> Email de proveedor: nuevo_email@%s.com\n	    nuevo_email: ", prefijo);
+		printf("<2> Email de proveedor: nuevo_email@%s.com\n	nuevo_email: ", prefijo);
 		fflush(stdin);
 		fgets(email, sizeof(email), stdin);
 		terminador_cad(email);		
@@ -798,29 +798,29 @@ void prov_contra(admin_prov_vect provs, int id){
 	char contra[16], contra_rep[16];
 	int contra_valida = 0;
 	
-	printf("\n	<3> Contraseña: ");
+	printf("<3> Contrasena: ");
 	fflush(stdin);
 	fgets(contra, sizeof(contra), stdin);
 	
-	printf("\n	Repita la contraseña: ");
+	printf("	Repita la contrasena: ");
 	fflush(stdin);
 	fgets(contra_rep, sizeof(contra_rep), stdin);
 	
 	terminador_cad(contra);
 	terminador_cad(contra_rep);
 	
-	if(strcmp(contra, contra_rep) == 0)
+	if(strcmp(contra, contra_rep) == 0 && strlen(contra) != 0)
 		contra_valida = 1;
 	
-	while(!contra_valida || strlen(contra) == 0){
+	while(!contra_valida){
 		
 		contra_valida = 0;
 		
-		printf("\n	Contrasenas dispares. Contrasena: ");
+		printf("	Contrasenas dispares. Contrasena: ");
 		fflush(stdin);
 		fgets(contra, sizeof(contra), stdin);
 	
-		printf("\n	Repita la contraseña: ");
+		printf("	Repita la contrasena: ");
 		fflush(stdin);
 		fgets(contra_rep, sizeof(contra_rep), stdin);
 	
@@ -868,22 +868,21 @@ void prov_contra(admin_prov_vect provs, int id){
 //Precondición: Recibe una estructura de tipo admin_prov_vect (el vector de usuarios tipo adminprov), y una cadena a comparar.
 //Postcondición: Devuelve la ID de empresa del proveedor dado de alta en la plataforma según la empresa a la que pertenezca.
 int buscar_id_prov(admin_prov_vect provs, char* empresa){
-	int i, id, val = 0;
+	int i, id= 0, val = 0;
 	
-	for(int i = 1; i < provs.tam; i++){
-		if(strcmp(empresa, provs.usuarios[i].Nombre) == 0 && id < provs.usuarios[i].Id_empresa){
+	for(i = 1; i < provs.tam-1; i++){	//Si empresa ya creada
+		if(strcmp(empresa, provs.usuarios[i].Nombre) == 0){
 			id = provs.usuarios[i].Id_empresa;
-			val = 1;
+			return id;
 		}	
 	}
-	
-	if(!val){
-		for(int i = 1; i < provs.tam; i++){
-			if(id < provs.usuarios[i].Id_empresa)
-				id = provs.usuarios[i].Id_empresa;	
-		}
+
+	for(i = 1; i < provs.tam-1; i++){
+		if(id < provs.usuarios[i].Id_empresa)
+			id = provs.usuarios[i].Id_empresa;
 	}
-	id++;	
+
+	id++;
 	return id;
 }
 
@@ -1477,7 +1476,7 @@ admin_prov_vect cargar_adminprov(){
 	
 	admin_prov_vect adminprov_sistema;
 	FILE *f_AdminProv;																							// Puntero al fichero a leer.
-	char ruta[] = ".\\data\\AdminProv.txt";																		// Ruta del fichero a leer.
+	char ruta[] = "..\\data\\AdminProv.txt";																		// Ruta del fichero a leer.
 	char linea[LONG_MAX_ADMINPROV];																				// Línea actual del fichero. Longitud máxima de una línea 86 caracteres.
 	char tipo_usuario[14];																						// Cadena auxiliar a convertir.
 	int i = 0, m; 
@@ -1525,7 +1524,7 @@ transport_vect cargar_transportistas(){
 	
 	transport_vect transport_sistema;
 	FILE *Transportistas;																						// Puntero al fichero a leer.
-	char ruta[] = "./data/Transportistas.txt";																	// Ruta del fichero a leer.
+	char ruta[] = "../data/Transportistas.txt";																	// Ruta del fichero a leer.
 	char linea[LONG_MAX_TRANSPORT];																				// Línea actual del fichero. Longitud máxima de una línea 113 caracteres.
 	int i = 0, m;
 
@@ -1558,7 +1557,6 @@ transport_vect cargar_transportistas(){
 	}	
 		                                    
 	fclose(Transportistas);
-	Sleep(2000); 
 	return transport_sistema;  
 }
 
@@ -1573,7 +1571,7 @@ transport_vect cargar_transportistas(){
 void guardar_adminprov(admin_prov_vect usuarios){
 	
 	FILE *AdminProv;																							// Puntero al fichero a leer.
-	char ruta[] = ".\\data\\AdminProv.txt";																		// Ruta del fichero a leer.
+	char ruta[] = "..\\data\\AdminProv.txt";																		// Ruta del fichero a leer.
 	char linea[LONG_MAX_ADMINPROV];																				// Línea actual del fichero. Longitud máxima de una línea 86 caracteres.
 	char aux[14];
 	
@@ -1591,7 +1589,7 @@ void guardar_adminprov(admin_prov_vect usuarios){
 void guardar_transportista(transport_vect transportistas){
 	
 	FILE *Transportistas;																						// Puntero al fichero a leer.
-	char ruta[] = ".\\data\\Transportistas.txt";																// Ruta del fichero a leer.
+	char ruta[] = "..\\data\\Transportistas.txt";																// Ruta del fichero a leer.
 	char linea[LONG_MAX_TRANSPORT];																				// Línea actual del fichero. Longitud máxima de una línea 113 caracteres.
 
 	Transportistas = fopen(ruta, "w");

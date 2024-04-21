@@ -188,13 +188,13 @@ void Consultar_desc_cliente(int pos, int mode){
     
 
     if(mode == 0){
-        printf("+---------------------------+");
-        printf("|    TUS DESCUENTOS         |");
-        printf("+---------------------------+");
+        printf("+---------------------------+\n");
+        printf("|    TUS DESCUENTOS         |\n");
+        printf("+---------------------------+\n");
         for(i=1;i<desccl.tam;i++){
             if(Cliente.clients[pos].Id_cliente == desccl.DescCliente[i].Id_cliente){
                 if(desccl.DescCliente[i].Estado == 0)
-                    printf("| CODIGO: %-10s ASIGNADO: %d/%d/%d CADUCADO: %d/%d/%d --> Disponible |\n", desccl.DescCliente[i].Id_cod,
+                    printf("| CODIGO: %-10s ASIGNADO: %02d/%02d/%04d CADUCADO: %02d/%02d/%04d --> Disponible |\n", desccl.DescCliente[i].Id_cod,
                                                                                                         desccl.DescCliente[i].dia_asig,
                                                                                                         desccl.DescCliente[i].mes_asig,
                                                                                                         desccl.DescCliente[i].anio_asig,
@@ -202,7 +202,7 @@ void Consultar_desc_cliente(int pos, int mode){
                                                                                                         desccl.DescCliente[i].mes_cad,
                                                                                                         desccl.DescCliente[i].anio_cad);
                 else
-                    printf("| CODIGO: %-10s ASIGNADO: %d/%d/%d CADUCADO: %d/%d/%d --> No disponible |\n", desccl.DescCliente[i].Id_cod,
+                    printf("| CODIGO: %-10s ASIGNADO: %02d/%02d/%04d CADUCADO: %02d/%02d/%04d --> No disponible |\n", desccl.DescCliente[i].Id_cod,
                                                                                                         desccl.DescCliente[i].dia_asig,
                                                                                                         desccl.DescCliente[i].mes_asig,
                                                                                                         desccl.DescCliente[i].anio_asig,
@@ -216,7 +216,7 @@ void Consultar_desc_cliente(int pos, int mode){
         for(i=1;i<desccl.tam;i++){
             if(Cliente.clients[pos].Id_cliente == desccl.DescCliente[i].Id_cliente){
                 if(desccl.DescCliente[i].Estado == 0 && desc_activo(desccl.DescCliente[i].Id_cod) == 1)
-                    printf("| CODIGO: %-10s |", desccl.DescCliente[i].Id_cod);
+                    printf("| CODIGO: %-10s |\n", desccl.DescCliente[i].Id_cod);
             n_desc++;
             }
         }

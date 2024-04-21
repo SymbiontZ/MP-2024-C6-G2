@@ -282,14 +282,14 @@ int crear_pedido( pedidos p, int id_cliente, int modo){
         printf("Introduce el codigo del descuento que deseas utilizar: ");
         fflush(stdin);
         fgets(cod_desc, 11, stdin);
-        conf = comprobar_descuento(cod_desc, desc_clients, id_cliente);
+        conf = comprobar_descuento(cod_desc, id_cliente);
         if(conf==0){
             printf("el codigo de descuento introducido es correcto\n");
             strcpy(p.pedidos[pos].id_cod, cod_desc);
         }
         else{
             printf("el codigo de descuento introducido no es correcto\n");
-        
+        }
     }   
     else{
         strcpy(p.pedidos[pos].id_cod,"000000000");

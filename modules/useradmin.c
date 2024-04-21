@@ -61,8 +61,8 @@ clients cargar_clientes(){
         i++;
     }
 
-    printf("\nCarga de clientes completada.\nClientes registrados: %d \n", C.n_clients-1);
-    Sleep(1500);
+    //printf("\nCarga de clientes completada.\nClientes registrados: %d \n", C.n_clients-1);
+    //Sleep(1500);
 
     fclose(f_clients);
     return C;
@@ -621,7 +621,7 @@ admin_prov_vect agregar_admin(admin_prov_vect admin){
         exit(EXIT_FAILURE);
     }
 
-    admin.usuarios[new_id].Id_empresa = new_id;
+    admin.usuarios[new_id].Id_empresa = 0;
     strcpy(admin.usuarios[new_id].Nombre, "ESIZON");
     admin = admin_email(admin, new_id, 0);
     admin = admin_psw(admin, new_id, 0);
@@ -646,9 +646,8 @@ admin_prov_vect eliminar_admin(admin_prov_vect admin, int pos){
     resp = confirmacion();
 
     if (resp == 'S' || resp == 's'){
-        for (i = pos; i < admin.tam - 1; i++) {	//Desplazar la posicion de los clientes
+        for (i = pos; i < admin.tam - 1; i++) {	//Desplazar la posicion de la estructura admin(admin_prov_vect)
 			admin.usuarios[i] = admin.usuarios[i + 1];
-			admin.usuarios[i].Id_empresa = i + 1;				//Reasignar id clientes
 		}
 
         admin.tam --;
@@ -1139,8 +1138,9 @@ clients cliente_dir(clients C, int pos, int mod){
         fgets(cad_dir, sizeof(cad_dir), stdin);
         terminador_cad(cad_dir);
         fflush(stdin);
-        strcpy(C.clients[pos].Dir_cliente, cad_dir);
-    } while (strlen(cad_dir) != 0);
+        
+    } while (strlen(cad_dir) == 0);
+    strcpy(C.clients[pos].Dir_cliente, cad_dir);
 
     if (mod == 1)
         printf("\nLocalidad actual: %s\n", C.clients[pos].Localidad);
@@ -1150,8 +1150,10 @@ clients cliente_dir(clients C, int pos, int mod){
         fgets(cad_lugar, sizeof(cad_lugar), stdin);
         terminador_cad(cad_lugar);
         fflush(stdin);
-        strcpy(C.clients[pos].Localidad, cad_lugar);
-    } while (strlen(cad_lugar) != 0);
+        
+    } while (strlen(cad_lugar) == 0);
+
+    strcpy(C.clients[pos].Localidad, cad_lugar);
 
     if (mod == 1)
         printf("\nProvincia actual: %s\n", C.clients[pos].Provincia);
@@ -1161,8 +1163,9 @@ clients cliente_dir(clients C, int pos, int mod){
         fgets(cad_lugar, sizeof(cad_lugar), stdin);
         terminador_cad(cad_lugar);
         fflush(stdin);
-        strcpy(C.clients[pos].Provincia, cad_lugar);
-    } while (strlen(cad_lugar) != 0);
+        
+    } while (strlen(cad_lugar) == 0);
+    strcpy(C.clients[pos].Provincia, cad_lugar);
 
     return C;
 }
@@ -1170,7 +1173,7 @@ clients cliente_dir(clients C, int pos, int mod){
 clients cliente_email(clients C, int pos, int mod){
     char cad_email[MAX_EMAIL];
     char org[12];
-    int opt;
+    int opt,i;
 
     if(mod == 1)
         printf("\nEmail actual: %s\n", C.clients[pos].email);
@@ -1208,19 +1211,32 @@ clients cliente_email(clients C, int pos, int mod){
     } while (opt < 1 || opt > 4);
 
     int tam_email = (MAX_EMAIL- strlen(org));
+    int emailvalid = 0;
     
     printf("%s: %d\n", org, strlen(org));
-    do
-    {
+    do{
+        emailvalid = 1;
         printf("Ingrese el usuario del correo (Sin la terminacion del correo): ");
 
         fflush(stdin);
         fgets(cad_email, MAX_EMAIL, stdin);
         terminador_cad(cad_email);
         fflush(stdin);
-        if(strlen(cad_email) > tam_email)
+
+        if(strlen(cad_email) > tam_email){
             printf("Ha sobrepasado el limite de caracteres que es %d\n", tam_email);
-    } while (strlen(cad_email) > tam_email && strlen(cad_email) != 0);
+            emailvalid = 0;
+        }else if(strlen(cad_email) == 0){
+            emailvalid = 0;
+        }else{
+            for(i=1;i<C.n_clients;i++){
+                if(strncmp(C.clients[i].email, cad_email, strlen(cad_email)) == 0){
+                    emailvalid = 0;
+                    printf("Ese usuario del mail ya ha sido introducido.\n");
+                }
+            }
+        }
+    }while (emailvalid != 1);
 
     strcat(cad_email, org);
     

@@ -115,8 +115,6 @@ typedef struct
 CAMBIOS PENDIENTES
 
 > cambiar interfaces
-> no permitir campos vacios
 > agregar comprobacion de enteros
-> corregir correos no iguales (FALTA CLIENTES)
 > arreglar flujo de cambio de contrasena en mod admin
 */
