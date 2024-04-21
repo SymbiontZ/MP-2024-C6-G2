@@ -278,7 +278,7 @@ int crear_pedido( pedidos p, int id_cliente){
         printf("Introduce el codigo del descuento que deseas utilizar: ");
         fflush(stdin);
         fgets(cod_desc, 11, stdin);
-        conf = comprobar_descuento(cod_desc, desc_clients, id_cliente);
+        conf = comprobar_descuento(cod_desc, id_cliente);
 
         
     }   
@@ -315,10 +315,12 @@ int crear_pedido( pedidos p, int id_cliente){
     
     return 1;
 }
-int comprobar_descuento(char cod_descuento, DescClientes des_c, int id_cliente){
+int comprobar_descuento(char cod_descuento[], int id_cliente){
     int i, j;
+    DescClientes des_c = Cargar_DescuentosClientes();
     Descuentos des=Cargar_Descuentos();
     produ_vect pro=cargar_productos();
+
     for(i=0;i<des.tam;i++){
         if(strcmp(cod_descuento, des.Desc[i].Id_cod)==0){
             printf("el codigo de descuento introducido existe");
