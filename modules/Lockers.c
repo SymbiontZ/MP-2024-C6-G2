@@ -7,9 +7,9 @@
 Vect_Lock Cargar_Lockers(){
 
     Vect_Lock vector_lock;
-	FILE *f_lockers;
-	char ruta[] = "..\\ESIZON-main\\data\\Lockers.txt";
-	char linea[MAX_LOCK];
+	FILE *f_lockers;                                                                                                        // Puntero al fichero
+	char ruta[] = "..\\ESIZON-main\\data\\Lockers.txt";                                                                     // Ruta del fichero a leer
+	char linea[MAX_LOCK];                                                                                                   // Línea a leer
     int i = 0, m;
 
 	if((f_lockers = fopen(ruta, "r+")) == NULL){
@@ -18,14 +18,14 @@ Vect_Lock Cargar_Lockers(){
 	}
 
 	vector_lock.tam = 0;
-	while(fgets(linea, sizeof(linea), f_lockers) != NULL)
+	while(fgets(linea, sizeof(linea), f_lockers) != NULL)                                                                   // Contamos el número de líneas del fichero
 	    vector_lock.tam++;
 	printf("Descuentos almacenados en Lockers.txt: %d \n", vector_lock.tam);
     vector_lock.Lock = malloc((vector_lock.tam + 1) * sizeof(Lockers));
 	rewind(f_lockers);
 
 	while((fgets(linea, sizeof(linea), f_lockers) != NULL) ){
-		m = sscanf(linea, "%10[^-]-%20[^-]-%20[^-]-%20[^-]-%d[^-]-%d[^\n]\n",
+		m = sscanf(linea, "%10[^-]-%20[^-]-%20[^-]-%20[^-]-%d[^-]-%d[^\n]\n",                                               // Se cargan los datos del fichero a la estructura
 			&vector_lock.Lock[i].Id_locker,
 			vector_lock.Lock[i].Localidad,
 			vector_lock.Lock[i].Provincia,
@@ -39,7 +39,7 @@ Vect_Lock Cargar_Lockers(){
 			exit(EXIT_FAILURE);
 		}
 	}
-	fclose(f_lockers);
+	fclose(f_lockers);                                                                                                      // Se cirra el fichero
 
     return vector_lock;
 }
@@ -47,9 +47,9 @@ Vect_Lock Cargar_Lockers(){
 Vect_CompLock Cargar_CompartimentosLockers(){
 
     Vect_CompLock vector_complock;
-	FILE *f_compartimentoslockers;
-	char ruta[] = "..\\ESIZON-main\\data\\CompartimentosLockers.txt";
-	char linea[MAX_COMPLOCK];
+	FILE *f_compartimentoslockers;                                                                                          // Puntero al fichero
+	char ruta[] = "..\\ESIZON-main\\data\\CompartimentosLockers.txt";                                                       // Ruta del fichero a leer
+	char linea[MAX_COMPLOCK];                                                                                               // Línea a leer
     int i = 0, m;
 
 	if((f_compartimentoslockers = fopen(ruta, "r+")) == NULL){
@@ -58,14 +58,14 @@ Vect_CompLock Cargar_CompartimentosLockers(){
 	}
 
 	vector_complock.tam = 0;
-	while(fgets(linea, sizeof(linea), f_compartimentoslockers) != NULL)
+	while(fgets(linea, sizeof(linea), f_compartimentoslockers) != NULL)                                                     // Contamos el número de líneas del fichero
 	    vector_complock.tam++;
 	printf("Descuentos almacenados en CompartimentosLockers.txt: %d \n", vector_complock.tam);
     vector_complock.CompLock = malloc((vector_complock.tam + 1) * sizeof(CompartimentosLockers));
 	rewind(f_compartimentoslockers);
 
 	while((fgets(linea, sizeof(linea), f_compartimentoslockers) != NULL) ){
-		m = sscanf(linea, "%d[^-]-%d[^-]-%d[^-]-%7[^-]-%d[^-]-%d[^-]-%d[^-]-%d[^-]-%d[^-]-%d[^\n]\n",
+		m = sscanf(linea, "%d[^-]-%d[^-]-%d[^-]-%7[^-]-%d[^-]-%d[^-]-%d[^-]-%d[^-]-%d[^-]-%d[^\n]\n",                       // Se cargan los datos del fichero a la estructura
 			&vector_complock.CompLock[i].Id_locker,
 			vector_complock.CompLock[i].Num_comp,
 			vector_complock.CompLock[i].Cod_locker,
@@ -83,7 +83,7 @@ Vect_CompLock Cargar_CompartimentosLockers(){
 			exit(EXIT_FAILURE);
 		}
 	}
-	fclose(f_compartimentoslockers);
+	fclose(f_compartimentoslockers);                                                                                        // Se cirra el fichero
 
     return vector_complock;
 
@@ -92,9 +92,9 @@ Vect_CompLock Cargar_CompartimentosLockers(){
 
 void Guardar_Lockers(Vect_Lock lockers){
 
-    FILE *f_lockers;
-	char ruta[] = "..\\ESIZON-main\\data\\Lockers.txt";
-	char linea[MAX_LOCK];
+    FILE *f_lockers;                                                                                                        // Puntero al fichero a leer
+	char ruta[] = "..\\ESIZON-main\\data\\Lockers.txt";                                                                     // Ruta del fichero a leer
+	char linea[MAX_LOCK];                                                                                                   // Línea actual del fichero
 	char aux[14];
 
 	if((f_lockers = fopen(ruta, "a+")) == NULL){
@@ -104,7 +104,7 @@ void Guardar_Lockers(Vect_Lock lockers){
 	}
 
 	for(int i = 0; i < lockers.tam; i++)
-		fprintf(f_lockers, "%10[^-]-%20[^-]-%20[^-]-%20[^-]-%d[^-]-%d[^\n]\n",
+		fprintf(f_lockers, "%10[^-]-%20[^-]-%20[^-]-%20[^-]-%d[^-]-%d[^\n]\n",                                              // Se escribe el contenido de la estructura en el fichero
             lockers.Lock[i].Id_locker,
 			lockers.Lock[i].Localidad,
 			lockers.Lock[i].Provincia,
@@ -112,16 +112,16 @@ void Guardar_Lockers(Vect_Lock lockers){
 			lockers.Lock[i].Num_compT,
 			lockers.Lock[i].Num_compOkup);
 
-    fclose(f_lockers);
+    fclose(f_lockers);                                                                                                      // Se cierra el fichero
 
 }
 
 
 void Guardar_CompartimentosLockers(Vect_CompLock compartimentoslockers){
 
-    FILE *f_complockers;
-	char ruta[] = "..\\ESIZON-main\\data\\CompartimentosLockers.txt";
-	char linea[MAX_COMPLOCK];
+    FILE *f_complockers;                                                                                                    // Puntero al fichero a leer
+	char ruta[] = "..\\ESIZON-main\\data\\CompartimentosLockers.txt";                                                       // Ruta del fichero a leer
+	char linea[MAX_COMPLOCK];                                                                                               // Línea actual del fichero
 	char aux[14];
 
 	if((f_complockers = fopen(ruta, "a+")) == NULL){
@@ -131,7 +131,7 @@ void Guardar_CompartimentosLockers(Vect_CompLock compartimentoslockers){
 	}
 
 	for(int i = 0; i < compartimentoslockers.tam; i++)
-		fprintf(f_complockers, "%d[^-]-%d[^-]-%d[^-]-%7[^-]-%d[^-]-%d[^-]-%d[^-]-%d[^-]-%d[^-]-%d[^\n]\n",
+		fprintf(f_complockers, "%d[^-]-%d[^-]-%d[^-]-%7[^-]-%d[^-]-%d[^-]-%d[^-]-%d[^-]-%d[^-]-%d[^\n]\n",                  // Se escribe el contenido de la estructura en el fichero
             compartimentoslockers.CompLock[i].Id_locker,
 			compartimentoslockers.CompLock[i].Num_comp,
 			compartimentoslockers.CompLock[i].Cod_locker,
@@ -143,7 +143,7 @@ void Guardar_CompartimentosLockers(Vect_CompLock compartimentoslockers){
 			compartimentoslockers.CompLock[i].mes_cad,
 			compartimentoslockers.CompLock[i].anio_cad);
 
-    fclose(f_complockers);
+    fclose(f_complockers);                                                                                                  // Se cierra el fichero
 
 }
 
@@ -151,7 +151,7 @@ void Gestionar_Lockers(Vect_Lock L){
 
     int op;
 
-    printf("###¿Qué desea hacer?###\n\n");															// Menu de seleccion de funciones relacionadas a descuentos
+    printf("###¿Qué desea hacer?###\n\n");															// Menu de seleccion de funciones relacionadas a lockers
     printf("1. Crear locker\n");
     printf("2. Eliminar locker\n");
     printf("3. Listar lockers\n");
@@ -304,19 +304,19 @@ Vect_Lock Baja_Lockers(Vect_Lock L){
     int i, pos = -1;
 
     printf("Introduzca la id del locker a eliminar: \n");
-    scanf("%s", &Id_locker_busqueda);                                           //Se guarda
+    scanf("%s", &Id_locker_busqueda);                                                     //Se guarda la id del locker que se quiere eliminar en la variable de busqueda
 
     for(i=0; i<L.tam; i++){
 
-        if(strcmp(Id_locker_busqueda, L.Lock[i].Id_locker) == 0){
+        if(strcmp(Id_locker_busqueda, L.Lock[i].Id_locker) == 0){                         //Una vez se encuentra una coincidencia de la id de busqueda en la estructura
 
             for(pos = i; pos<L.tam; pos++){
 
-                L.Lock[pos] = L.Lock[pos+1];
+                L.Lock[pos] = L.Lock[pos+1];                                              //Se asignan los lockers en la posicion anterior a partir de la instancia del locker
 
             }
 
-            L.Lock = realloc(L.Lock, (L.tam - 1)*sizeof(Lockers));
+            L.Lock = realloc(L.Lock, (L.tam - 1)*sizeof(Lockers));                       //Se reajusta la memoria asignada al vector de estructuras
 
             if (L.Lock == NULL){
                 printf("No se pudo asignar la estructura de descuentosclientes");
@@ -324,7 +324,7 @@ Vect_Lock Baja_Lockers(Vect_Lock L){
                 exit(EXIT_FAILURE);
             }
 
-            L.tam = L.tam - 1;
+            L.tam = L.tam - 1;                                                            //Se reduce el tamaño total del vector de estructuras
             break;
         }
     }
@@ -357,12 +357,12 @@ int Locker_Dispo(Vect_Lock L, int pos){
 
     int i = 0, res = -1;
 
-    clients c = cargar_clientes();
+    clients c = cargar_clientes();                                                                                              //Se carga la estructura clientes
 
     while((i<=L.tam) && (L.Lock[i].Localidad != c.clients[pos].Localidad) && (L.Lock[i].Num_compOkup < L.Lock[i].Num_compT))
         i++;
 
-    if(L.Lock[i].Localidad == c.clients[pos].Localidad)
+    if(L.Lock[i].Localidad == c.clients[pos].Localidad)                                                                         //Se busca una coincidencia de localidades
         res = i;
 
     else
@@ -376,14 +376,14 @@ int Locker_Dispo(Vect_Lock L, int pos){
 int Comp_Dispo(Vect_Lock L, Vect_CompLock C, int cli){
 
     int i = 0, pos;
-    pos = Locker_Dispo(L, cli);
+    pos = Locker_Dispo(L, cli);                                                                                                 //Se busca la primera posicion del vector de lockers con un locker disponible
 
     while((i<=C.tam) && (C.CompLock[i].Id_locker != L.Lock[pos].Id_locker) && (C.CompLock[i].Estado != "ocupado"))
         i++;
 
-    strcpy(C.CompLock[i].Estado, "ocupado");
+    strcpy(C.CompLock[i].Estado, "ocupado");                                                                                    //Se actualiza el estado del locker
 
-    return i;
+    return i;                                                                                                                   //Devuelve la posicion del primer vector de compartimentos lockers disponible
 
 }
 
@@ -395,20 +395,20 @@ Vect_CompLock Asignar_Compartimentos(Vect_Lock L, Vect_CompLock C){
 
 
     printf("Indique la ID del locker al que quiere asignarle los compartimentos \n");
-    scanf("%s", &Id_locker_busqueda);
+    scanf("%s", &Id_locker_busqueda);                                                                                                       //Se guarda la id del locker que se quiere eliminar en la variable de busqueda
 
     for(i=0; i<L.tam; i++){
 
-            if(strcmp(Id_locker_busqueda, L.Lock[i].Id_locker) == 0){
+            if(strcmp(Id_locker_busqueda, L.Lock[i].Id_locker) == 0){                                                                       //Una vez se encuentra una coincidencia de la id de busqueda en la estructura
 
-                    C.CompLock = realloc(C.CompLock, (L.Lock[i].Num_compT - L.Lock[i].Num_compOkup)*sizeof(CompartimentosLockers));											                // Se amplia la longitud del vector para añadir un descuento en la estructura
+                    C.CompLock = realloc(C.CompLock, (L.Lock[i].Num_compT - L.Lock[i].Num_compOkup)*sizeof(CompartimentosLockers));	        //Se reasigna la memoria reservada para el vector de compartimentos lockers
                     if (C.CompLock == NULL){
                         printf("No se pudo asignar la estructura de descuentosclientes");
                         getchar();
                         exit(EXIT_FAILURE);
                     }
 
-                    cont = C.tam - (L.Lock[i].Num_compT - L.Lock[i].Num_compOkup);
+                    cont = C.tam - (L.Lock[i].Num_compT - L.Lock[i].Num_compOkup);                                                          //Se ajustan los parametros de los contadores para recorrer la estructura y para saber el numero del compartimento correspondiente
                     n_comp = L.Lock[i].Num_compOkup  + 1;
                     do{
 
