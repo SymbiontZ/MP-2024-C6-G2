@@ -2,7 +2,7 @@
 #include "complementos.h"
 
 produ_vect cargar_productos () {
-	char filename[] = "../data/Productos.txt";   
+	char filename[] = "Productos.txt";   
     int num_prod = 0;                         //Numero de productos registrados
     int i = 0;                          		
     char cad_linea[250];                      //Caracteres maximos que puede ocupar una linea en fichero
@@ -11,10 +11,11 @@ produ_vect cargar_productos () {
 	
 	FILE *f_prod;
 	
-	f_prod = fopen (filename, "a+");
+	f_prod = fopen (filename, "r");
 	
 	if (f_prod == NULL) {
-
+		f_prod = fopen (filename, "w");		 //Excepcion si no encuentra fichero
+		fclose (f_prod);
 		printf ("No se pudo abrir el archivo de productos. Se ha creado un nuevo archivo\n");
 		getchar ();
 	}
@@ -22,11 +23,11 @@ produ_vect cargar_productos () {
 	rewind (f_prod);						//Necesario para volver a leer el fichero
 	
 	if (fgetc(f_prod) == EOF) {				//Si fichero vacio, añadimos producto predeterminado
-
+		f_prod = fopen (filename, "w");
 		fprintf (f_prod, default_prod);
+		fclose (f_prod);
 	}
 	
-rewind (f_prod);
 	while (fgets (cad_linea, sizeof(cad_linea), f_prod)) {			//Contador de productos en el programa a partir de fichero 
         num_prod++;
     }
@@ -74,11 +75,7 @@ void guardar_productos (produ_vect p) {
 	int i;
 	
 	FILE *f_prod;
-<<<<<<< HEAD
 	char filename[] = "Productos.txt";
-=======
-	char filename[] = "../data/Productos.txt";
->>>>>>> c37106f407833092b9bcde6971fefc5c5081f442
 	f_prod = fopen (filename, "w");
 	
 	if (f_prod == NULL) {
@@ -121,7 +118,7 @@ produ_vect agregar_productos (produ_vect p) {
         exit (EXIT_FAILURE);
 	}
 	
-	p.produ[nueva_id].id_prod = nueva_id; //La id del producto se rellena automáticamente
+	p.produ[nueva_id].id_prod = nueva_id;		//La id del producto se rellena automáticamente
 	
 	printf ("\nPrimero, escribe el nombre del producto: ");
 	fgets (p.produ[nueva_id].nombre, 16, stdin);
@@ -197,15 +194,14 @@ int buscar_productos (produ_vect p) {
 			
 				if (cont != 0) {
 					if (cont == 1) {
-						printf ("Se encontro un producto con el nombre especificado:\n");				
+						printf ("\nSe encontro un producto con el nombre especificado:\n");				
 						//Mostrar el producto encontrado
-						for (i = 1; i < p.num_prod && vaux[i] != i; i++) {
+						for (i = 1; i < p.num_prod; i++) {
 							if (vaux[i] == i) {
-								printf ("\n%d. %s-%s-%d-%d-%d", i, p.produ[vaux[i]].nombre, p.produ[vaux[i]].descrip, p.produ[vaux[i]].stock, p.produ[vaux[i]].entrega, p.produ[vaux[i]].importe);
+								printf ("\n%d. %s-%s-%d-%d-%d\n", i, p.produ[vaux[i]].nombre, p.produ[vaux[i]].descrip, p.produ[vaux[i]].stock, p.produ[vaux[i]].entrega, p.produ[vaux[i]].importe);
+								op2 = i;
 							}
 						}
-						
-						op2 = i;
 					}
 					else {
 						printf ("\nSe encontraron %d productos con el nombre especificado:\n", cont);
@@ -241,7 +237,7 @@ int buscar_productos (produ_vect p) {
 		
 		case 2:
 			do {
-				printf ("Itroduzca la descripcion del producto que este buscando: ");
+				printf ("\nIntroduzca la descripcion del producto que este buscando: ");
 				fgets (saux, 51, stdin);
 				fflush (stdin);
 				terminador_cad (saux);
@@ -256,15 +252,14 @@ int buscar_productos (produ_vect p) {
 			
 				if (cont != 0) {
 					if (cont == 1) {
-						printf ("Se encontro un producto con la descripcion especificada:\n");				
+						printf ("\nSe encontro un producto con la descripcion especificada:\n");				
 						//Mostrar el producto encontrado
-						for (i = 1; i < p.num_prod && vaux[i] != i; i++) {
+						for (i = 1; i < p.num_prod; i++) {
 							if (vaux[i] == i) {
-								printf ("\n%d. %s-%s-%d-%d-%d", i, p.produ[vaux[i]].nombre, p.produ[vaux[i]].descrip, p.produ[vaux[i]].stock, p.produ[vaux[i]].entrega, p.produ[vaux[i]].importe);
+								printf ("\n%d. %s-%s-%d-%d-%d\n", i, p.produ[vaux[i]].nombre, p.produ[vaux[i]].descrip, p.produ[vaux[i]].stock, p.produ[vaux[i]].entrega, p.produ[vaux[i]].importe);
+								op2 = i;
 							}
 						}
-						
-						op2 = i;
 					}
 					else {
 						printf ("\nSe encontraron %d productos con la descripcion especificada:\n", cont);
@@ -300,7 +295,7 @@ int buscar_productos (produ_vect p) {
 			
 		case 3:
 			do {
-				printf ("Itroduzca el stock del producto que este buscando: ");
+				printf ("\nIntroduzca el stock del producto que este buscando: ");
 				scanf ("%d", &naux);
 				fflush (stdin);
 			
@@ -313,15 +308,14 @@ int buscar_productos (produ_vect p) {
 			
 				if (cont != 0) {
 					if (cont == 1) {
-						printf ("Se encontro un producto con el stock especificado:\n");				
+						printf ("\nSe encontro un producto con el stock especificado:\n");				
 						//Mostrar el producto encontrado
-						for (i = 1; i < p.num_prod && vaux[i] != i; i++) {
+						for (i = 1; i < p.num_prod; i++) {
 							if (vaux[i] == i) {
-								printf ("\n%d. %s-%s-%d-%d-%d", i, p.produ[vaux[i]].nombre, p.produ[vaux[i]].descrip, p.produ[vaux[i]].stock, p.produ[vaux[i]].entrega, p.produ[vaux[i]].importe);
+								printf ("\n%d. %s-%s-%d-%d-%d\n", i, p.produ[vaux[i]].nombre, p.produ[vaux[i]].descrip, p.produ[vaux[i]].stock, p.produ[vaux[i]].entrega, p.produ[vaux[i]].importe);
+								op2 = i;
 							}
 						}
-						
-						op2 = i;
 					}
 					else {
 						printf ("\nSe encontraron %d productos con el stock especificado:\n", cont);
@@ -357,7 +351,7 @@ int buscar_productos (produ_vect p) {
 			
 		case 4:
 			do {
-				printf ("Itroduzca los dias de compromiso de entrega del producto que este buscando: ");
+				printf ("\nIntroduzca los dias de compromiso de entrega del producto que este buscando: ");
 				scanf ("%d", &naux);
 				fflush (stdin);
 			
@@ -370,15 +364,14 @@ int buscar_productos (produ_vect p) {
 			
 				if (cont != 0) {
 					if (cont == 1) {
-						printf ("Se encontro un producto con los dias de compromiso de entrega especificados:\n");				
+						printf ("\nSe encontro un producto con los dias de compromiso de entrega especificados:\n");				
 						//Mostrar el producto encontrado
-						for (i = 1; i < p.num_prod && vaux[i] != i; i++) {
+						for (i = 1; i < p.num_prod; i++) {
 							if (vaux[i] == i) {
-								printf ("\n%d. %s-%s-%d-%d-%d", i, p.produ[vaux[i]].nombre, p.produ[vaux[i]].descrip, p.produ[vaux[i]].stock, p.produ[vaux[i]].entrega, p.produ[vaux[i]].importe);
+								printf ("\n%d. %s-%s-%d-%d-%d\n", i, p.produ[vaux[i]].nombre, p.produ[vaux[i]].descrip, p.produ[vaux[i]].stock, p.produ[vaux[i]].entrega, p.produ[vaux[i]].importe);
+								op2 = i;
 							}
 						}
-						
-						op2 = i;
 					}
 					else {
 						printf ("\nSe encontraron %d productos con los dias de compromiso de entrega especificados:\n", cont);
@@ -414,7 +407,7 @@ int buscar_productos (produ_vect p) {
 		
 		case 5:
 			do {
-				printf ("Itroduzca el importe en euros del producto que este buscando: ");
+				printf ("\nIntroduzca el importe en euros del producto que este buscando: ");
 				scanf ("%d", &naux);
 				fflush (stdin);
 			
@@ -427,15 +420,14 @@ int buscar_productos (produ_vect p) {
 			
 				if (cont != 0) {
 					if (cont == 1) {
-						printf ("Se encontro un producto con el importe especificado:\n");				
+						printf ("\nSe encontro un producto con el importe especificado:\n");				
 						//Mostrar el producto encontrado
-						for (i = 1; i < p.num_prod && vaux[i] != i; i++) {
+						for (i = 1; i < p.num_prod; i++) {
 							if (vaux[i] == i) {
-								printf ("\n%d. %s-%s-%d-%d-%d", i, p.produ[vaux[i]].nombre, p.produ[vaux[i]].descrip, p.produ[vaux[i]].stock, p.produ[vaux[i]].entrega, p.produ[vaux[i]].importe);
+								printf ("\n%d. %s-%s-%d-%d-%d\n", i, p.produ[vaux[i]].nombre, p.produ[vaux[i]].descrip, p.produ[vaux[i]].stock, p.produ[vaux[i]].entrega, p.produ[vaux[i]].importe);
+								op2 = i;
 							}
 						}
-						
-						op2 = i;
 					}
 					else {
 						printf ("\nSe encontraron %d productos con el importe especificado:\n", cont);
@@ -451,7 +443,6 @@ int buscar_productos (produ_vect p) {
 							printf ("\n\nSeleccione el producto que este buscando escribiendo su respectivo indice: ");
 							scanf ("%d", &op2);
 							fflush (stdin);
-							vaux[op2] = op2;
 							
 							//Verificar si el indice ingresado es valido
     						if (op2 < 1 || op2 >= p.num_prod || vaux[op2] != op2) {
@@ -472,6 +463,7 @@ int buscar_productos (produ_vect p) {
 		
 		case 0:
 			printf ("\nVolviendo al menu anterior...\n");
+			op2 = -1;
 		break;
 		
 		default:
@@ -502,6 +494,9 @@ produ_vect modificar_productos (produ_vect p) {
 	printf ("\nEsta seguro que desea modificar el producto '%s-%s'? (S/N): ", p.produ[pos].nombre, p.produ[pos].descrip);
 	scanf ("%c", &respuesta);
 	fflush (stdin);
+	
+	clear ();
+	Sleep (1000);
 	
 	if (respuesta == 'S' || respuesta == 's') {
 		do {
@@ -627,8 +622,9 @@ produ_vect listar_productos (produ_vect p) {
 	return p;
 }
 
+//Función para useradmin
 produ_vect buscador_productos (produ_vect p) {
-	int i, op, naux, len, cont = 0, vaux[p.num_prod];
+	int i, op, len, naux, cont = 0, vaux[p.num_prod];
 	char saux [16];
 	
 	for (i = 0; i < p.num_prod; i++) {	//Inicializa todos los elementos del vector a 0
@@ -662,9 +658,9 @@ produ_vect buscador_productos (produ_vect p) {
 			
 				if (cont != 0) {
 					if (cont == 1) {
-						printf ("Se encontro un producto con el nombre especificado:\n");				
+						printf ("\nSe encontro un producto con el nombre especificado:\n");				
 						//Mostrar el producto encontrado
-						for (i = 1; i < p.num_prod && vaux[i] != i; i++) {
+						for (i = 1; i < p.num_prod; i++) {
 							if (vaux[i] == i) {
 								printf ("\n%d. %s-%s-%d-%d-%d", i, p.produ[vaux[i]].nombre, p.produ[vaux[i]].descrip, p.produ[vaux[i]].stock, p.produ[vaux[i]].entrega, p.produ[vaux[i]].importe);
 							}
@@ -681,7 +677,7 @@ produ_vect buscador_productos (produ_vect p) {
 					}
 				}
 				else {
-					printf ("No se encontro ningun producto con el importe especificado, pruebe con un importe distinto:\n\n");
+					printf ("No se encontro ningun producto con el nombre especificado, pruebe con un nombre distinto:\n\n");
 				}
 			}while (cont == 0);		
 		break;
@@ -701,9 +697,9 @@ produ_vect buscador_productos (produ_vect p) {
 			
 				if (cont != 0) {
 					if (cont == 1) {
-						printf ("Se encontro un producto con la id de la categoria especificada:\n");				
+						printf ("\nSe encontro un producto con la id de la categoria especificada:\n");				
 						//Mostrar el producto encontrado
-						for (i = 1; i < p.num_prod && vaux[i] != i; i++) {
+						for (i = 1; i < p.num_prod; i++) {
 							if (vaux[i] == i) {
 								printf ("\n%d. %s-%s-%d-%d-%d", i, p.produ[vaux[i]].nombre, p.produ[vaux[i]].descrip, p.produ[vaux[i]].stock, p.produ[vaux[i]].entrega, p.produ[vaux[i]].importe);
 							}
