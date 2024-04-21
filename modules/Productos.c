@@ -74,7 +74,11 @@ void guardar_productos (produ_vect p) {
 	int i;
 	
 	FILE *f_prod;
+<<<<<<< HEAD
+	char filename[] = "Productos.txt";
+=======
 	char filename[] = "../data/Productos.txt";
+>>>>>>> c37106f407833092b9bcde6971fefc5c5081f442
 	f_prod = fopen (filename, "w");
 	
 	if (f_prod == NULL) {

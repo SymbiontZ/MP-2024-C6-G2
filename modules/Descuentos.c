@@ -58,7 +58,7 @@ DescClientes Cargar_DescuentosClientes(){
 
     DescClientes vector_descClts;
 	FILE *f_DescClientes;																	// Puntero al fichero a leer
-	char ruta[] = "..\\data\\DescuentosClientes.txt";                                                  					// Ruta del fichero a leer
+	char ruta[] = "..\\ESIZON-main\\data\\DescuentosClientes.txt";                                                  					// Ruta del fichero a leer
 	char linea[MAX_DESCLI];													                                // Linea a leer
     int i = 0, m;
 
