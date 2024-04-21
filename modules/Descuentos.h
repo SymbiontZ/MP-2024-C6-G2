@@ -7,7 +7,7 @@
 #include "useradmin.h"
 
 #define MAX_DESC 87
-#define MAX_DESCLI 42
+#define MAX_DESCLI 50
 
 //ESTRUCTTURA DE DESCUENTOS
 typedef struct {

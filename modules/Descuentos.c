@@ -15,33 +15,39 @@ Descuentos Cargar_Descuentos(){
 	char linea[MAX_DESC];													                                // Línea a leer
     int i = 0, m;
 
-	if((f_descuentos = fopen(ruta, "r+")) == NULL){
+	if((f_descuentos = fopen(ruta, "a+")) == NULL){
 		printf("Error al abrir el fichero Descuentos.txt.\n");
 		exit(33);
 	}
+
+
 
 	vector_desc.tam = 0;
 	while(fgets(linea, sizeof(linea), f_descuentos) != NULL)												// Contamos el número de líneas del fichero
 	    vector_desc.tam++;
 	printf("Descuentos almacenados en Descuentos.txt: %d \n", vector_desc.tam);
-    vector_desc.Desc = malloc((vector_desc.tam + 1) * sizeof(Descuento));											// Se reserva memoria para el vector
+    vector_desc.Desc = malloc((vector_desc.tam + 1) * sizeof(Descuento));
+    											// Se reserva memoria para el vector
 	rewind(f_descuentos);
 
+   
 	while((fgets(linea, sizeof(linea), f_descuentos) != NULL) ){
-		m = sscanf(linea, "%10[^-]-%50[^-]-%7[^-]-%8[^-]-%d-%6[^\n]\n",										// Se cargan los datos del fichero a la estructura
-            &vector_desc.Desc[i].Id_cod,
+		m = sscanf(linea, "%11[^-]-%51[^-]-%8[^-]-%9[^-]-%d-%7[^\n]\n",										// Se cargan los datos del fichero a la estructura
+            vector_desc.Desc[i].Id_cod,
 			vector_desc.Desc[i].Descrip,
 			vector_desc.Desc[i].Tipo,
 			vector_desc.Desc[i].Estado,
-			vector_desc.Desc[i].Importe,
+			&vector_desc.Desc[i].Importe,
 			vector_desc.Desc[i].Aplicable);
 
 			i++;
 		if(m != 6){
 			printf("Error leyendo datos del fichero Descuentos.txt. Linea: %d\n", i + 1);
+            getchar();
 			exit(EXIT_FAILURE);
 		}
 	}
+    
 	fclose(f_descuentos); 																	// Se cirra el fichero
 
     return vector_desc;
@@ -56,36 +62,36 @@ DescClientes Cargar_DescuentosClientes(){
 	char linea[MAX_DESCLI];													                                // Linea a leer
     int i = 0, m;
 
-	if((f_DescClientes = fopen(ruta, "r+")) == NULL){
+	if((f_DescClientes = fopen(ruta, "a+")) == NULL){
 		printf("Error al abrir el fichero DescuentosClientes.txt.\n");
 		exit(33);
 	}
 	vector_descClts.tam = 0;
 	while(fgets(linea, sizeof(linea), f_DescClientes) != NULL)												// Contamos el numero de lineas del fichero
 	    vector_descClts.tam++;
-	    printf("Descuentos almacenados en DescuentosClientes.txt: %d \n", vector_descClts.tam);
         vector_descClts.DescCliente = malloc((vector_descClts.tam + 1) * sizeof(DescClientes));									// Se reserva memoria para el vector
 	 	rewind(f_DescClientes);
 
 		while((fgets(linea, sizeof(linea), f_DescClientes) != NULL) ){
-			if((m = sscanf(linea, "%d-%10[^-]-%d-%d-%d-%d-%d-%d-%d\n",						// Se cargan los datos del fichero a la estructura
+			m = sscanf(linea, "%d-%11[^-]-%d/%d/%d-%d/%d/%d-%d\n",						// Se cargan los datos del fichero a la estructura
                   &vector_descClts.DescCliente[i].Id_cliente,
                   vector_descClts.DescCliente[i].Id_cod,
-                  vector_descClts.DescCliente[i].dia_asig,
-                  vector_descClts.DescCliente[i].mes_asig,
-                  vector_descClts.DescCliente[i].anio_asig,
-                  vector_descClts.DescCliente[i].dia_cad,
-                  vector_descClts.DescCliente[i].mes_cad,
-                  vector_descClts.DescCliente[i].anio_cad)) == 6)
+                  &vector_descClts.DescCliente[i].dia_asig,
+                  &vector_descClts.DescCliente[i].mes_asig,
+                  &vector_descClts.DescCliente[i].anio_asig,
+                  &vector_descClts.DescCliente[i].dia_cad,
+                  &vector_descClts.DescCliente[i].mes_cad,
+                  &vector_descClts.DescCliente[i].anio_cad);
 				i++;
-			else{
-				printf("Error leyendo datos del fichero DescuentosClientes.txt. L�nea: %d\n", i + 1);
-				exit(33);
+			if(m != 9){
+				printf("Error leyendo datos del fichero DescuentosClientes.txt. Linea: %d\n", i + 1);
+                getchar();
+				exit(EXIT_FAILURE);
 			}
 		}
 
 	fclose(f_DescClientes);																	// Se cierra el fichero
-
+    printf("Descuentos almacenados en DescuentosClientes.txt: %d \n", vector_descClts.tam);
     return vector_descClts;
 }
 
@@ -171,13 +177,15 @@ void Consultar_desc_cliente(int pos, int mode){
 
 
     int i,
-        n_desc=0;
+        n_desc=0,
+        activo;
     clear();
-    printf("+---------------------------+");
-    printf("|    TUS DESCUENTOS         |");
-    printf("+---------------------------+");
+    
 
-    if(mode == 0)
+    if(mode == 0){
+        printf("+---------------------------+");
+        printf("|    TUS DESCUENTOS         |");
+        printf("+---------------------------+");
         for(i=1;i<desccl.tam;i++){
             if(Cliente.clients[pos].Id_cliente == desccl.DescCliente[i].Id_cliente){
                 if(desccl.DescCliente[i].Estado == 0)
@@ -199,7 +207,16 @@ void Consultar_desc_cliente(int pos, int mode){
             n_desc++;
             }
         }
-    else
+    }else{
+        for(i=1;i<desccl.tam;i++){
+            if(Cliente.clients[pos].Id_cliente == desccl.DescCliente[i].Id_cliente){
+                if(desccl.DescCliente[i].Estado == 0 && desc_activo(desccl.DescCliente[i].Id_cod) == 1)
+                    printf("| CODIGO: %-10s |", desccl.DescCliente[i].Id_cod);
+            n_desc++;
+            }
+        }
+    }
+
     if(n_desc == 0){
         printf("| NO TIENES CUPONES DISPONIBLES |\n");
         printf("+---------------------------+");
@@ -209,16 +226,20 @@ void Consultar_desc_cliente(int pos, int mode){
 
 int desc_activo(char cod[]){
     Descuentos D = Cargar_Descuentos();
-    int i, pos;
-    printf("%s", cod);
+    int i, pos = -1;
+    
     for(i=0; i< D.tam; i++){
         if(strcmp(D.Desc[i].Id_cod, cod)== 0)
-            pos = i;
-        else 
-            return 0;
+            pos = i;           
     }
 
-    if(strcmp(D.Desc[pos].Estado, "activo"))
+    if (pos == -1){
+        printf("No se pudo encontrar el codigo del descuento [%s] (COMPROBACION DISPONIBILIDAD GENERAL)", cod);
+        getchar();
+        return 0;
+
+    }
+    if(strcmp(D.Desc[pos].Estado, "activo") == 0)
         return 1;
     else
         return 0;
