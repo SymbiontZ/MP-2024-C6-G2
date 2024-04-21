@@ -67,7 +67,7 @@ pedidos cargar_pedidos(){
 //Cabecera: void crear_pedido(int id_cliente, pedidos p)
 //Precondicion: estrcutura pedidos cargada con datos del fichero Pedidos.txt y el id del cliente que ha realizado pedido, lo sabemos cuando ha iniciado sesión en la aplicación
 //Postcondicion: se crea un nuevo pedido realizado por un cliente y se guarda en la estructura pedidos, ademas de escribirlo en el fichero Pedidos.txt
-int crear_pedido( pedidos p, int id_cliente){
+int crear_pedido( pedidos p, int id_cliente, int modo){
     //Cargar estructuras necesarias de otros modulos
     clients c = cargar_clientes();
     prod_pedidos Prod_P = cargar_prod_pedidos();
@@ -238,6 +238,10 @@ int crear_pedido( pedidos p, int id_cliente){
     printf("pos: %d", pos);
     //ALMACENAR EN LA ESTRUCTURA PEDIDO LOS DATOS DEL PEDIDO
     p.pedidos[pos].id_pedido=nueva_id;
+
+    if(modo==0){
+        printf("crear pedido como administrador\n");
+    }
     p.pedidos[pos].id_cliente=id_cliente;
 
     p.pedidos[pos].f_pedido.dia=dia_sist();
@@ -278,8 +282,13 @@ int crear_pedido( pedidos p, int id_cliente){
         printf("Introduce el codigo del descuento que deseas utilizar: ");
         fflush(stdin);
         fgets(cod_desc, 11, stdin);
-        conf = comprobar_descuento(cod_desc, id_cliente);
-
+        conf = comprobar_descuento(cod_desc, desc_clients, id_cliente);
+        if(conf==0){
+            printf("el codigo de descuento introducido es correcto\n");
+            strcpy(p.pedidos[pos].id_cod, cod_desc);
+        }
+        else{
+            printf("el codigo de descuento introducido no es correcto\n");
         
     }   
     else{
@@ -320,7 +329,6 @@ int comprobar_descuento(char cod_descuento[], int id_cliente){
     DescClientes des_c = Cargar_DescuentosClientes();
     Descuentos des=Cargar_Descuentos();
     produ_vect pro=cargar_productos();
-
     for(i=0;i<des.tam;i++){
         if(strcmp(cod_descuento, des.Desc[i].Id_cod)==0){
             printf("el codigo de descuento introducido existe");
@@ -519,7 +527,16 @@ void crear_producto_pedido(pedidos p, int product, int id_pedido, prod_pedidos p
     
     guardar_productos_pedidos(prod_p);
 }
-    
+
+/*void eliminar_pedidos_productos(prod_pedidos prod_p, pedidos p, int id_pedido){
+    int i;
+    char resp;
+    priintf("Estas seguro de elimar el pedido? [s/n]: ");
+    resp=confimacion();
+    if(resp =='S' || resp='s'){
+
+    }
+}*/
 
       
 

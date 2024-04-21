@@ -65,7 +65,7 @@ typedef struct{
 pedidos cargar_pedidos();
 prod_pedidos cargar_prod_pedidos();
 devoluciones cargar_devoluciones();
-int crear_pedido(pedidos, int);
+int crear_pedido(pedidos, int, int);
 void guardar_pedido(pedidos);
 void guardar_productos_pedidos(prod_pedidos );
 void crear_producto_pedido(pedidos, int, int, prod_pedidos, int);
@@ -73,7 +73,7 @@ void guardar_devoluciones(devoluciones);
 void crear_devolucion(devoluciones, int, int);
 void listapedidos_cliente(prod_pedidos, pedidos, int);
 fecha fecha_entrega(fecha, int);
-void listar_prod_clientes(int, pedidos, prod_pedidos);
-int comprobar_descuento(char [], int);
+void listar_prod_clientes(int, pedidos, prod_pedidos,int);
+int comprobar_descuento(char[], int);
 
 #endif
