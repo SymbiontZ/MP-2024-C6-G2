@@ -2,7 +2,7 @@
 #include "complementos.h"
 
 produ_vect cargar_productos () {
-	char filename[] = "Productos.txt";   
+	char filename[] = "../data/Productos.txt";   
     int num_prod = 0;                         //Numero de productos registrados
     int i = 0;                          		
     char cad_linea[250];                      //Caracteres maximos que puede ocupar una linea en fichero
@@ -13,14 +13,16 @@ produ_vect cargar_productos () {
 	
 	f_prod = fopen (filename, "a+");
 	
-	if (f_prod == NULL) {
+	if (f_prod == NULL) {
+
 		printf ("No se pudo abrir el archivo de productos. Se ha creado un nuevo archivo\n");
 		getchar ();
 	}
 	
 	rewind (f_prod);						//Necesario para volver a leer el fichero
 	
-	if (fgetc(f_prod) == EOF) {				//Si fichero vacio, añadimos producto predeterminado
+	if (fgetc(f_prod) == EOF) {				//Si fichero vacio, añadimos producto predeterminado
+
 		fprintf (f_prod, default_prod);
 	}
 	
