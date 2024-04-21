@@ -68,29 +68,32 @@ DescClientes Cargar_DescuentosClientes(){
 	}
     
 	vector_descClts.tam = 0;
+    
 	while(fgets(linea, sizeof(linea), f_DescClientes) != NULL)												// Contamos el numero de lineas del fichero
 	    vector_descClts.tam++;
-        vector_descClts.DescCliente = malloc((vector_descClts.tam + 1) * sizeof(DescClientes));									// Se reserva memoria para el vector
-	 	rewind(f_DescClientes);
+    
+    vector_descClts.DescCliente = malloc((vector_descClts.tam) * sizeof(DescCliente));		    							// Se reserva memoria para el vector
+	rewind(f_DescClientes);
 
-		while((fgets(linea, sizeof(linea), f_DescClientes) != NULL) ){
-			m = sscanf(linea, "%d-%11[^-]-%d/%d/%d-%d/%d/%d-%d\n",						// Se cargan los datos del fichero a la estructura
-                  &vector_descClts.DescCliente[i].Id_cliente,
-                  vector_descClts.DescCliente[i].Id_cod,
-                  &vector_descClts.DescCliente[i].dia_asig,
-                  &vector_descClts.DescCliente[i].mes_asig,
-                  &vector_descClts.DescCliente[i].anio_asig,
-                  &vector_descClts.DescCliente[i].dia_cad,
-                  &vector_descClts.DescCliente[i].mes_cad,
-                  &vector_descClts.DescCliente[i].anio_cad,
-                  &vector_descClts.DescCliente[i].Estado);
-				i++;
-			if(m != 9){
-				printf("Error leyendo datos del fichero DescuentosClientes.txt. Linea: %d\n", i);
-                getchar();
-				exit(EXIT_FAILURE);
-			}
+	while((fgets(linea, sizeof(linea), f_DescClientes) != NULL) ){
+		m = sscanf(linea, "%d-%11[^-]-%d/%d/%d-%d/%d/%d-%d\n",						// Se cargan los datos del fichero a la estructura
+            &vector_descClts.DescCliente[i].Id_cliente,
+            vector_descClts.DescCliente[i].Id_cod,
+            &vector_descClts.DescCliente[i].dia_asig,
+            &vector_descClts.DescCliente[i].mes_asig,
+            &vector_descClts.DescCliente[i].anio_asig,
+            &vector_descClts.DescCliente[i].dia_cad,
+            &vector_descClts.DescCliente[i].mes_cad,
+            &vector_descClts.DescCliente[i].anio_cad,
+            &vector_descClts.DescCliente[i].Estado);
+				
+		if(m != 9){
+			printf("Error leyendo datos del fichero DescuentosClientes.txt. Linea: %d\n", i);
+            getchar();
+			exit(EXIT_FAILURE);
 		}
+        i++;
+	}
 
 	fclose(f_DescClientes);																	// Se cierra el fichero
     printf("Descuentos almacenados en DescuentosClientes.txt: %d \n", vector_descClts.tam);
