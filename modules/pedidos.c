@@ -72,6 +72,7 @@ int crear_pedido( pedidos p, int id_cliente){
     clients c = cargar_clientes();
     prod_pedidos Prod_P = cargar_prod_pedidos();
     produ_vect productos = cargar_productos();
+    DescClientes desc_clients = Cargar_DescuentosClientes(); //cargar la estructura descuentos clientes para comprobar que el codigo introducido por el cliente es correcto
 
     int i=0, lugar, n_products=1, n_uds=0, compra=1, pos_product, j=0, id_producto, id;//n_products es la longitud de los vectores dinamicos
 
@@ -271,39 +272,14 @@ int crear_pedido( pedidos p, int id_cliente){
     cheque=confirmacion();
     int l,k, 
         conf=0;//variable para almacenar si el cliente tiene asociados codigos de descuento
-    DescClientes desc_clients = Cargar_DescuentosClientes(); //cargar la estructura descuentos clientes para comprobar que el codigo introducido por el cliente es correcto
+    char cod_desc[11];
     if(cheque=='s' || cheque == 'S'){
-        
-        //if cod_cheque existe y es valido lo copia al fichero
-        for(l=0;l<desc_clients.tam;l++){ //comprobar que el cliente tiene asociados codigo de descuento
-            if(id_cliente==desc_clients.DescCliente[l].Id_cliente){
-                conf=1;
-                
-            }
-            else{
-                conf=0;
-            }
-        }
-        if(conf=1){
-            printf("el cliente tiene asociado codigos de descuentos\n");
-            printf("el cliente tiene codigos de descuentos\n");
-            printf("introduce el codigo del cheque:");
-            fflush(stdin);
-            fgets(cod_cheque, 11, stdin);
-            for(k=0;k<desc_clients.tam;k++){ //comprobar que el codigo que ha introducido el cliente es correcto
-                if(strcmp(cod_cheque, desc_clients.DescCliente[k].Id_cod)==0){
-                    printf("el cheque introducido es correcto\n");
-                    terminador_cad(cod_cheque);
-                    strcpy(p.pedidos[pos].id_cod, cod_cheque);
-                }
-                else{
-                    printf("el cheque introducido es correcto\n");
-                }
-            }
-        }
-        else{
-            printf("el cliente no tiene codigos de descuento asociados\n");
-        }
+        //listar descuentos de ese cliente
+        printf("Introduce el codigo del descuento que deseas utilizar: ");
+        fflush(stdin);
+        fgets(cod_desc, 11, stdin);
+        conf = comprobar_descuento(cod_desc, desc_clients, id_cliente);
+
         
     }   
     else{
@@ -339,7 +315,37 @@ int crear_pedido( pedidos p, int id_cliente){
     
     return 1;
 }
-
+int comprobar_descuento(char cod_descuento, DescClientes des_c, int id_cliente){
+    int i, j;
+    Descuentos des=Cargar_Descuentos();
+    produ_vect pro=cargar_productos();
+    for(i=0;i<des.tam;i++){
+        if(strcmp(cod_descuento, des.Desc[i].Id_cod)==0){
+            printf("el codigo de descuento introducido existe");
+            if(strcmp(des.Desc[i].Estado, "activo")==0){
+                printf("el descuento esta activo");
+                for(j=0;j<des_c.tam;j++){
+                    if(id_cliente==des_c.DescCliente[j].Id_cliente){
+                        printf("cliente tiene asociado descuento\n");
+                        if(strcmp(cod_descuento, des_c.DescCliente[j].Id_cod)==0){
+                            printf("el descuento pertenece al cliente\n");
+                            if(des_c.DescCliente[j].Estado==0){
+                                printf("el descuento no ha sido aplicado por tanto lo puede usar el cliente");
+                                return 0;
+                            }
+                            else{
+                                return 1;
+                            }
+                                
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    
+}
 //Cabecera guardar_pedido(pedidos p, int pos)
 //Precondición: estructura pedidos cargada con los datos del ultimo pedido realizado
 //Postcondicion: se guarda en el fichero la estructura pedidos
