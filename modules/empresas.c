@@ -913,7 +913,6 @@ void listar_pedidos_prov(int id){
 //Postcondición: No devuelve nada. Cambia el estado de un pedido elegido dentro de la propia función, y guarda los cambios.
 void cambiar_estado_pedido(){
 	int op = -1, id;
-	pedidos pedidos = cargar_pedidos();
 	prod_pedidos prods_pedidos = cargar_prod_pedidos();
 	produ_vect prods = cargar_productos();
 	
@@ -923,9 +922,8 @@ void cambiar_estado_pedido(){
 	
 	for(int i = 0; i < prods_pedidos.lon; i++){
 		if(id == prods_pedidos.prod_pedidos[i].id_pedido){
-			
 			do{
-				printf("\n\n Producto: %04d - %s.\nElija un estado para continuar:\n\n <1> En preparación.\n <2> Enviado.\n <0> Cancelar\n Elija una opción: ", prods_pedidos.prod_pedidos[i].id_prod, prods.produ[ prods_pedidos.prod_pedidos[i].id_prod ].nombre);
+				printf("\n\n Producto [%04d - %s].\nElija un estado para continuar:\n\n <1> En preparación.\n <2> Enviado.\n <0> Cancelar\n Elija una opción: ", prods_pedidos.prod_pedidos[i].id_prod, prods.produ[ prods_pedidos.prod_pedidos[i].id_prod ].nombre);
 				if(scanf("%i",&op)!=1){
 					fflush(stdin);
 					printf("\nError: introduzca una entrada válida.");
@@ -942,7 +940,7 @@ void cambiar_estado_pedido(){
 				}
 			}while(op!=0);
 			
-			i = pedidos.lon;
+			i = prods_pedidos.lon;
 			id = -1;
 		}		
 	}
@@ -950,9 +948,14 @@ void cambiar_estado_pedido(){
 		printf("\nNo se ha podido encontrar el pedido solicitado.");
 	else
 		printf("\nCambios realizados satisfactoriamente.");
+		
+	guardar_productos_pedidos(prods_pedidos);
+	
 	Sleep(2000);
 }
 
+//Precondición: No recibe nada.
+//Postcondición: No devuelve nada. Permite elegir al usuario entre buscar transportistas, listarlos o asignar alguno a un pedido.
 void asig_transport(){
 	int op = -1;
 	transport_vect transports = cargar_transportistas();
@@ -975,11 +978,12 @@ void asig_transport(){
 			}
 		}
 	}while(op!=0);
+	
 }
+
 //Precondición: No recibe nada.
 //Postcondición: Devuelve 0 siempre por peculiaridades del código, que permite salir en cualquier momento.
 int modificar_asig_transport(){
-	pedidos pedidos = cargar_pedidos();
 	prod_pedidos prods_pedidos = cargar_prod_pedidos();
 	transport_vect transports = cargar_transportistas();
 	produ_vect prods = cargar_productos();
@@ -992,10 +996,10 @@ int modificar_asig_transport(){
 	if(id == 0)
 		return 0;
 		
-	for(int i = 0; i < pedidos.lon; i++){																						// Buscamos el pedido...
-		if(id == pedidos.pedidos[i].id_pedido){
+	for(int i = 0; i < prods_pedidos.lon; i++){																						// Buscamos el pedido...
+		if(id == prods_pedidos.prod_pedidos[i].id_pedido){
 			encontrado_ped = 1;				
-			i = pedidos.lon;	
+			i = prods_pedidos.lon;	
 		}
 	}
 	
@@ -1010,7 +1014,7 @@ int modificar_asig_transport(){
 			if(id_p == 0)
 				return 0;
 			for(int i = 0; i < prods_pedidos.lon; i++){	
-				if(id_p == prods_pedidos.prod_pedidos[i].id_prod && id == pedidos.pedidos[i].id_pedido){								// Buscamos el producto dentro del pedido...
+				if(id_p == prods_pedidos.prod_pedidos[i].id_prod && id == prods_pedidos.prod_pedidos[i].id_pedido){								// Buscamos el producto dentro del pedido...
 					encontrado_prod = 1;
 					if(strcmp(prods_pedidos.prod_pedidos[i].estado, "enPreparación") == 0) 												// Si se encuentra en preparación...
 						printf("\n{Pedido %d} El producto [%04d - %s] se encuentra en preparación, no es posible asignar un transportista todavia.", id, prods_pedidos.prod_pedidos[i].id_prod, prods.produ[ prods_pedidos.prod_pedidos[i].id_prod ].nombre);
@@ -1042,6 +1046,9 @@ int modificar_asig_transport(){
 				printf("\nNo se ha podido encontrar el producto en el sistema de pedidos. Intentelo de nuevo.");
 		}while(!encontrado_prod);
 	}
+	
+	guardar_productos_pedidos(prods_pedidos);
+	
 	return 0;
 }
 
