@@ -20,6 +20,8 @@ int main()
    
     //listar_prod_clientes(1, P, Prod_P);
 
-    eliminar_pedidos_productos(Prod_P, P, 2);
+    //eliminar_pedidos_productos(Prod_P, P, 2);
+
+    devoluciones d = cargar_devoluciones();
     return 0;
 }

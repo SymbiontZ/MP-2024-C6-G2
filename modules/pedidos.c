@@ -606,6 +606,9 @@ devoluciones cargar_devoluciones(){
         fprintf(f_dev, default_dev);
         fclose(f_dev);
     }
+    
+    rewind(f_dev);
+
     while(fgets(cad_aux, sizeof(cad_aux), f_dev)){
         n_dev++; //numero de devoluciones que hay, es decir, las líneas del fichero
     }
@@ -634,6 +637,8 @@ devoluciones cargar_devoluciones(){
 
         if(campo_devoluciones!=13){
             printf("error en estructura devoluciones, i=%d", i);
+            getchar();
+            exit(EXIT_FAILURE);
         }
     
     i++;
