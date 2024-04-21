@@ -264,7 +264,7 @@ void ver_pedidos(admin_prov_vect provs, int pos){
 			switch(op){
 				case 1: listar_pedidos_prov(pos); break;
 				case 2: cambiar_estado_pedido(); break;
-				case 3: modificar_asig_transport(); break;
+				case 3: asig_transport(); break;
 				case 4: break;
 				case 0: break;
 				default: break;
@@ -953,6 +953,29 @@ void cambiar_estado_pedido(){
 	Sleep(2000);
 }
 
+void asig_transport(){
+	int op = -1;
+	transport_vect transports = cargar_transportistas();
+		
+	do{
+		printf("\n\nElija una opcion para continuar.\n <1> Ver transportistas del sistema.\n <2> Buscar transporista.\n <3> Asignar transportista a pedido.\n <0> Volver.\n Elija una opción: ");
+		if(scanf("%i",&op)!=1){
+			fflush(stdin);
+			printf("\nError: introduzca una entrada válida.");
+			Sleep(2000);
+			op=-1;
+		}
+		else{
+			switch(op){
+				case 1: listar_transport(transports); break;
+				case 2: buscar_transport(transports); break;
+				case 3: modificar_asig_transport(); break;
+				case 0: break;
+				default: break;
+			}
+		}
+	}while(op!=0);
+}
 //Precondición: No recibe nada.
 //Postcondición: Devuelve 0 siempre por peculiaridades del código, que permite salir en cualquier momento.
 int modificar_asig_transport(){

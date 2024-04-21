@@ -106,6 +106,8 @@ typedef struct{
  //Postcondición: No devuelve nada. Cambia el estado de un pedido elegido dentro de la propia función, y guarda los cambios.
  void cambiar_estado_pedido();
 
+ void asig_transport();
+ 
  //Precondición: No recibe nada.
  //Postcondición: Devuelve 0 siempre por peculiaridades del código, que permite salir en cualquier momento.
  int modificar_asig_transport();
