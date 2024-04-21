@@ -200,7 +200,37 @@ void ver_perfil(admin_prov_vect provs, int pos){
 void ver_productos(admin_prov_vect provs, int pos){
 	
 	produ_vect prods = cargar_productos();	//Creamos el vector de productos
-	menu_prod(prods);						//Accedemos al menú de gestión de productos
+	int op;
+	
+	do{
+		clear();
+		
+		printf("	######################################\n");
+		printf("	## SERVICIO DE GESTIÓN DE PRODUCTOS ##\n");
+		printf("	######################################\n");
+		
+		printf("\n	EMPRESA: %s\n", provs.usuarios[pos].Nombre);
+		
+		printf("\nBienvenido al servicio de gestion de productos. Seleccione una opcion para continuar.\n\n <1> Ver mis productos.\n <2> Buscar un producto.\n <3> Modificar un producto\n <4> Añadir un producto al catalogo.\n <5> Retirar un producto del catalogo.\n Elija una opción: ", provs.usuarios[pos].email);
+		if(scanf("%i",&op)!=1){
+			fflush(stdin);
+			printf("\nError: introduzca una entrada válida.");
+			Sleep(2000);
+			op=-1;
+		}
+		else{
+			switch(op){
+				case 1: break;
+				case 2: break;
+				case 3: break;
+				case 4: break;
+				case 5: break;
+				case 0: break;
+				default: break;
+			}
+		}
+	}while(op!=0);
+	
 	guardar_productos(prods);				//Guardamos cambios
 	Sleep(2000);
 	
@@ -555,12 +585,10 @@ int buscar_prov_tipo(admin_prov_vect provs, int pos, int tipo){
 //Postcondición: Devuelve la estructura de tipo admin_prov_vect con un nuevo proveedor dado de alta, y habiendo guardado el 
 // cambio en AdminProv.txt
 admin_prov_vect alta_prov(admin_prov_vect provs){
-	int nueva_id = provs.tam;
+	int nueva_id;
+	char empresa[21];
 	
 	clear();
-	
-	provs.usuarios[nueva_id].Id_empresa = nueva_id;
-    strcpy(provs.usuarios[nueva_id].Perfil_usuario, "proveedor\0");
     
     printf("\n	##################################\n");
     printf("	## SERVICIO DE ALTAS DE USUARIO ##\n");
@@ -568,7 +596,7 @@ admin_prov_vect alta_prov(admin_prov_vect provs){
     
     printf("\nIntroduzca los datos del nuevo usuario del sistema:\n\n");
     
-	provs.usuarios = realloc(provs.usuarios, (nueva_id + 1) * sizeof(admin_prov));
+	provs.usuarios = realloc(provs.usuarios, (provs.tam + 1) * sizeof(admin_prov));
 	provs.tam++;
 	
 	if (provs.usuarios == NULL){
@@ -577,9 +605,13 @@ admin_prov_vect alta_prov(admin_prov_vect provs){
         exit(33);
     }
     
-    prov_nombre(provs, nueva_id);
-    prov_email(provs, nueva_id);    
-    prov_contra(provs, nueva_id);
+    prov_nombre(provs, provs.tam - 1);
+    nueva_id = buscar_id_prov(provs, provs.usuarios[provs.tam - 1].Nombre);
+    printf("%d", nueva_id);
+    provs.usuarios[provs.tam - 1].Id_empresa = nueva_id;
+    prov_email(provs, provs.tam - 1);    
+    prov_contra(provs, provs.tam - 1);
+    strcpy(provs.usuarios[provs.tam - 1].Perfil_usuario, "proveedor\0");
     
 	guardar_adminprov(provs);
     
@@ -709,7 +741,7 @@ void prov_nombre(admin_prov_vect provs, int id){
 // ID del proveedor a registrar.
 //Postcondición: No devuelve nada, pero modifica el proveedor con el identificador indicado, habiendo asignado el email de la empresa a su cuenta.
 void prov_email(admin_prov_vect provs, int id){
-	char email[31 - strlen(provs.usuarios[id].Nombre) - 1], prefijo[strlen(provs.usuarios[id].Nombre) + 1];
+	char email[31 - strlen(provs.usuarios[id].Nombre) - 1], prefijo[strlen(provs.usuarios[id].Nombre) + 1], email_final[31];
 	strcpy(prefijo, provs.usuarios[id].Nombre);
 	mayus_minus(prefijo);
 	
@@ -719,6 +751,13 @@ void prov_email(admin_prov_vect provs, int id){
 		fgets(email, sizeof(email), stdin);
 		terminador_cad(email);		
 	}while(strlen(email) == 0);
+	
+	strcpy(email_final, email);
+	strcat(email_final, "@");
+	strcat(email_final, prefijo);
+	strcat(email_final, ".com");
+	
+	strcpy(provs.usuarios[id].email, email_final);
 
 }
 
@@ -796,7 +835,25 @@ void prov_contra(admin_prov_vect provs, int id){
 	
 }*/
 
-
+int buscar_id_prov(admin_prov_vect provs, char* empresa){
+	int i, id, val = 0;
+	
+	for(int i = 1; i < provs.tam; i++){
+		if(strcmp(empresa, provs.usuarios[i].Nombre) == 0 && id < provs.usuarios[i].Id_empresa){
+			id = provs.usuarios[i].Id_empresa;
+			val = 1;
+		}	
+	}
+	
+	if(!val){
+		for(int i = 1; i < provs.tam; i++){
+			if(id < provs.usuarios[i].Id_empresa)
+				id = provs.usuarios[i].Id_empresa;	
+		}
+	}
+	id++;	
+	return id;
+}
 
 // FUNCIONES PARA LA GESTIÓN DE TRANSPORTISTAS
 
