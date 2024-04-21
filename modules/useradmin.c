@@ -415,13 +415,13 @@ void menuadmin_cliente(){
                 opt = -1;
                 break;
             case 3:
-                pos = busqueda_cliente(C);
+                pos = busqueda_cliente();
                 if (pos != -1)
                     C = eliminar_cliente(C, pos);
                 opt = -1;
                 break;
             case 4:
-                pos = busqueda_cliente(C);
+                pos = busqueda_cliente();
                 if (pos != -1)
                     C = gestionar_cliente(C, pos, 0);
                 opt = -1;
@@ -797,7 +797,9 @@ admin_prov_vect admin_psw(admin_prov_vect admin, int pos, int mod){
 
 /*** GESTIONAR CLIENTE ***/
 
-int busqueda_cliente(clients C){
+int busqueda_cliente(){
+    clients C = cargar_clientes();
+
     int pos = -2, opt = -1;             //Elijo -2 como pos predeter. ya que -1 es para cancelar la busqueda
     while (pos == -2){    //Solo va a salir del bucle cuando se selecciona la posicion de un cliente valido
         clear();
@@ -1062,11 +1064,11 @@ clients cliente_nom(clients C, int pos){
     fflush(stdin);
 
     do{
-    printf("Ingrese el nombre: ");
-    
-    fgets(cad_nom, MAX_NOM, stdin);
-    terminador_cad(cad_nom);
-    fflush(stdin);
+        printf("Ingrese el nombre: ");
+        
+        fgets(cad_nom, MAX_NOM, stdin);
+        terminador_cad(cad_nom);
+        fflush(stdin);
 
     } while (strlen(cad_nom) == 0);     //LIMITAR NOMBRE NO VACIO
 
@@ -1131,31 +1133,36 @@ clients cliente_dir(clients C, int pos, int mod){
     
     if (mod == 1)
         printf("\nDireccion actual: %s\n", C.clients[pos].Dir_cliente);
-    printf("Ingrese la direccion del hogar (max 50 caracteres): ");
     
-    
-    fgets(cad_dir, sizeof(cad_dir), stdin);
-    terminador_cad(cad_dir);
-    fflush(stdin);
-    strcpy(C.clients[pos].Dir_cliente, cad_dir);
+    do{   
+        printf("Ingrese la direccion del hogar (max 50 caracteres): ");
+        fgets(cad_dir, sizeof(cad_dir), stdin);
+        terminador_cad(cad_dir);
+        fflush(stdin);
+        strcpy(C.clients[pos].Dir_cliente, cad_dir);
+    } while (strlen(cad_dir) != 0);
 
     if (mod == 1)
         printf("\nLocalidad actual: %s\n", C.clients[pos].Localidad);
-    printf("Introduzca la localidad: ");
     
-    fgets(cad_lugar, sizeof(cad_lugar), stdin);
-    terminador_cad(cad_lugar);
-    fflush(stdin);
-    strcpy(C.clients[pos].Localidad, cad_lugar);
+    do{
+        printf("Introduzca la localidad: ");
+        fgets(cad_lugar, sizeof(cad_lugar), stdin);
+        terminador_cad(cad_lugar);
+        fflush(stdin);
+        strcpy(C.clients[pos].Localidad, cad_lugar);
+    } while (strlen(cad_lugar) != 0);
 
     if (mod == 1)
         printf("\nProvincia actual: %s\n", C.clients[pos].Provincia);
-    printf("Introduzca la provincia: ");
     
-    fgets(cad_lugar, sizeof(cad_lugar), stdin);
-    terminador_cad(cad_lugar);
-    fflush(stdin);
-    strcpy(C.clients[pos].Provincia, cad_lugar);
+    do{   
+        printf("Introduzca la provincia: ");
+        fgets(cad_lugar, sizeof(cad_lugar), stdin);
+        terminador_cad(cad_lugar);
+        fflush(stdin);
+        strcpy(C.clients[pos].Provincia, cad_lugar);
+    } while (strlen(cad_lugar) != 0);
 
     return C;
 }

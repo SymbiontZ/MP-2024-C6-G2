@@ -1,12 +1,8 @@
 #include "Descuentos.h"
 
 int main(){
-    Descuentos D = Cargar_Descuentos();
     
-    char cod[] = "black001";
+    Consultar_desc_cliente(1, 0);
 
-    int i = desc_activo(cod);
-
-    printf("%d", i);
     return 0;
 }

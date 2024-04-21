@@ -86,15 +86,34 @@ typedef struct{
 
  void ver_pedidos(admin_prov_vect provs, int pos);
 
- //Precondición: Recibe un puntero a una estructura de admin_prov.
+ //Precondición: Recibe una estructura de tipo admin_prov_vect (el vector de usuarios tipo adminprov), y la posición a utilizar en él.
  //Postcondición: No devuelve nada. Se habrá cambiado el email del usuario guardado en el puntero.
  void cambiar_email(admin_prov_vect provs, int pos);
 
- //Precondición: Recibe un puntero a una estructura de admin_prov.
+ //Precondición: Recibe una estructura de tipo admin_prov_vect (el vector de usuarios tipo adminprov), y la posición a utilizar en él.
  //Postcondición: No devuelve nada. Se habrá cambiado la contraseña del usuario guardada en el puntero, o no.
  void cambiar_contrasena(admin_prov_vect provs, int pos);
-
+ 
+ //Precondición: Recibe una estructura de tipo admin_prov_vect (el vector de usuarios tipo adminprov), y una cadena a comparar.
+ //Postcondición: Devuelve la ID de empresa del proveedor dado de alta en la plataforma según la empresa a la que pertenezca.
  int buscar_id_prov(admin_prov_vect provs, char* empresa);
+ 
+ //Precondición: Recibe la ID del proveedor para asegurar que sólo ve sus pedidos.
+ //Postcondición: No devuelve nada. Muestra por pantalla todos los pedidos asociados a productos de su empresa.
+ void listar_pedidos_prov(int id);
+ 
+ //Precondición: No recibe nada.
+ //Postcondición: No devuelve nada. Cambia el estado de un pedido elegido dentro de la propia función, y guarda los cambios.
+ void cambiar_estado_pedido();
+
+ //Precondición: No recibe nada.
+ //Postcondición: No devuelve nada. Permite elegir al usuario entre buscar transportistas, listarlos o asignar alguno a un pedido.
+ void asig_transport();
+ 
+ //Precondición: No recibe nada.
+ //Postcondición: Devuelve 0 siempre por peculiaridades del código, que permite salir en cualquier momento.
+ int modificar_asig_transport();
+
 
 // --------------- FUNCIONES PARA EL MENU DE TRANSPORTISTA ---------------
 

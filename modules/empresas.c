@@ -1,3 +1,5 @@
+#include "empresas.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -7,9 +9,8 @@
 #include "complementos.h"
 #include "Productos.h"
 #include "pedidos.h"
-#include "empresas.h"
 
-
+// void listar_pedidos_prov(int id); void cambiar_estado_pedido(); void modificar_asig_transport();
 
 //	FUNCIONES DE INICIO DE SESION
 
@@ -135,7 +136,7 @@ void menu_transport(transport_vect transports, int pos){
 		printf("\n	NOMBRE: %s\n", transports.transportistas[pos].Nombre);
 		printf("\n	EMPRESA: %s\n", transports.transportistas[pos].Nom_Emp);
 		
-		printf("\nBienvenido, %s - ¿Qué desea hacer hoy?\n\n <1> Ver perfil.\n <2> Ver repartos asignados.\n <3> Ver retornos.\n <0> Salir.\n Elija una opción: ", transports.transportistas[pos].email);
+		printf("\nBienvenido, %s - ¿Qué desea hacer hoy?\n\n <1> Ver perfil.\n <2> Ver repartos asignados.\n <3> Retornos.\n <0> Salir.\n Elija una opción: ", transports.transportistas[pos].email);
 		if(scanf("%i",&op)!=1){
 			fflush(stdin);
 			printf("\nError: introduzca una entrada válida.");
@@ -241,6 +242,35 @@ void ver_productos(admin_prov_vect provs, int pos){
 //Precondición: Recibe una estructura de tipo admin_prov_vect (el vector de usuarios tipo adminprov), y la posición a utilizar en él.
 //Postcondición: El usuario habrá realizado las tareas de gestión de pedidos convenientes.
 void ver_pedidos(admin_prov_vect provs, int pos){
+	int op = -1;
+	
+	do{
+		clear();
+		
+		printf("	####################################\n");
+		printf("	## SERVICIO DE GESTION DE PEDIDOS ##\n");
+		printf("	####################################\n");
+		
+		printf("\n	EMPRESA: %s\n", provs.usuarios[pos].Nombre);
+		
+		printf("\nBienvenido al servicio de gestion de peidos. Elija una opcion para continuar:\n\n <1> Ver pedidos asociados.\n <2> Cambiar estado de un pedido.\n <3> Modificar asignación de transportista.\n <4> Modificar asignación de locker. <0> Volver.\n Elija una opción: ", provs.usuarios[pos].email);
+		if(scanf("%i",&op)!=1){
+			fflush(stdin);
+			printf("\nError: introduzca una entrada válida.");
+			Sleep(2000);
+			op=-1;
+		}
+		else{
+			switch(op){
+				case 1: listar_pedidos_prov(pos); break;
+				case 2: cambiar_estado_pedido(); break;
+				case 3: asig_transport(); break;
+				case 4: break;
+				case 0: break;
+				default: break;
+			}
+		}
+	}while(op!=0);
 	
 }
 
@@ -646,6 +676,7 @@ admin_prov_vect baja_prov(admin_prov_vect provs, int id){
 		if(respuesta == 'S' || respuesta == 's'){
 			for (int i = id; i < provs.tam - 1; i++) {				// Desplazamos la posicion de los usuarios en el vector
 				provs.usuarios[i] = provs.usuarios[i + 1];
+				provs.usuarios[i].Id_empresa = i;				// Reasignamos el identificador de cada usuario
 			}
 			
 			provs.tam--;
@@ -834,6 +865,8 @@ void prov_contra(admin_prov_vect provs, int id){
 	
 }*/
 
+//Precondición: Recibe una estructura de tipo admin_prov_vect (el vector de usuarios tipo adminprov), y una cadena a comparar.
+//Postcondición: Devuelve la ID de empresa del proveedor dado de alta en la plataforma según la empresa a la que pertenezca.
 int buscar_id_prov(admin_prov_vect provs, char* empresa){
 	int i, id, val = 0;
 	
@@ -853,6 +886,173 @@ int buscar_id_prov(admin_prov_vect provs, char* empresa){
 	id++;	
 	return id;
 }
+
+//Precondición: Recibe la ID del proveedor para asegurar que sólo ve sus pedidos.
+//Postcondición: No devuelve nada. Muestra por pantalla todos los pedidos asociados a productos de su empresa.
+void listar_pedidos_prov(int id){
+	produ_vect prods = cargar_productos();
+	pedidos pedidos = cargar_pedidos();
+	prod_pedidos prods_pedidos = cargar_prod_pedidos();
+	int i;
+	
+	printf("+-------------------+\n");
+	printf("| PEDIDOS ASOCIADOS |\n");
+	printf("+-------------------+--------------------+-----------+--------------------------------------+\n");
+	printf("| PRODUCTO          | UNIDADES PEDIDAS   | IMPORTE   | ESTADO             | PEDIDO ASOCIADO |");
+	for(i = 0; i < prods_pedidos.lon; i++){
+		if(id == prods.produ[prods_pedidos.prod_pedidos[i].id_prod].id_gestor)
+			printf("| %-20s | %-20d | %-11d | %-20s | %-20d |\n", prods.produ[ prods_pedidos.prod_pedidos[i].id_prod ].nombre, prods_pedidos.prod_pedidos[i].num_unid, prods_pedidos.prod_pedidos[i].importe, prods_pedidos.prod_pedidos[i].estado, prods_pedidos.prod_pedidos[i].id_pedido);
+	}
+	printf("+-------------------+--------------------+-----------+--------------------------------------+\n");	
+	printf("Presione [enter] para volver...");
+	getchar();
+	
+}
+
+//Precondición: No recibe nada.
+//Postcondición: No devuelve nada. Cambia el estado de un pedido elegido dentro de la propia función, y guarda los cambios.
+void cambiar_estado_pedido(){
+	int op = -1, id;
+	prod_pedidos prods_pedidos = cargar_prod_pedidos();
+	produ_vect prods = cargar_productos();
+	
+	do{
+		printf("Indique la ID del pedido: ");
+	}while(scanf("%i", &id) != 1);
+	
+	for(int i = 0; i < prods_pedidos.lon; i++){
+		if(id == prods_pedidos.prod_pedidos[i].id_pedido){
+			do{
+				printf("\n\n Producto [%04d - %s].\nElija un estado para continuar:\n\n <1> En preparación.\n <2> Enviado.\n <0> Cancelar\n Elija una opción: ", prods_pedidos.prod_pedidos[i].id_prod, prods.produ[ prods_pedidos.prod_pedidos[i].id_prod ].nombre);
+				if(scanf("%i",&op)!=1){
+					fflush(stdin);
+					printf("\nError: introduzca una entrada válida.");
+					Sleep(2000);
+					op=-1;
+				}
+				else{
+					switch(op){
+						case 1: strcpy(prods_pedidos.prod_pedidos[i].estado, "enPreparación\0"); break;
+						case 2: strcpy(prods_pedidos.prod_pedidos[i].estado, "enviado\0"); break;
+						case 0: break;
+						default: break;
+					}
+				}
+			}while(op!=0);
+			
+			i = prods_pedidos.lon;
+			id = -1;
+		}		
+	}
+	if(id != -1)
+		printf("\nNo se ha podido encontrar el pedido solicitado.");
+	else
+		printf("\nCambios realizados satisfactoriamente.");
+		
+	guardar_productos_pedidos(prods_pedidos);
+	
+	Sleep(2000);
+}
+
+//Precondición: No recibe nada.
+//Postcondición: No devuelve nada. Permite elegir al usuario entre buscar transportistas, listarlos o asignar alguno a un pedido.
+void asig_transport(){
+	int op = -1;
+	transport_vect transports = cargar_transportistas();
+		
+	do{
+		printf("\n\nElija una opcion para continuar.\n <1> Ver transportistas del sistema.\n <2> Buscar transporista.\n <3> Asignar transportista a pedido.\n <0> Volver.\n Elija una opción: ");
+		if(scanf("%i",&op)!=1){
+			fflush(stdin);
+			printf("\nError: introduzca una entrada válida.");
+			Sleep(2000);
+			op=-1;
+		}
+		else{
+			switch(op){
+				case 1: listar_transport(transports); break;
+				case 2: buscar_transport(transports); break;
+				case 3: modificar_asig_transport(); break;
+				case 0: break;
+				default: break;
+			}
+		}
+	}while(op!=0);
+	
+}
+
+//Precondición: No recibe nada.
+//Postcondición: Devuelve 0 siempre por peculiaridades del código, que permite salir en cualquier momento.
+int modificar_asig_transport(){
+	prod_pedidos prods_pedidos = cargar_prod_pedidos();
+	transport_vect transports = cargar_transportistas();
+	produ_vect prods = cargar_productos();
+	int id, id_p, id_t, encontrado_ped = 0, encontrado_prod = 0, encontrado_t = 0;
+	
+	do{
+		printf("Indique la ID del pedido, o pulse 0 para volver: ");
+	}while(scanf("%i", &id) != 1);
+	
+	if(id == 0)
+		return 0;
+		
+	for(int i = 0; i < prods_pedidos.lon; i++){																						// Buscamos el pedido...
+		if(id == prods_pedidos.prod_pedidos[i].id_pedido){
+			encontrado_ped = 1;				
+			i = prods_pedidos.lon;	
+		}
+	}
+	
+	if(!encontrado_ped)																											// Si no se encuentra el pedido...
+		printf("\nNo se ha podido encontrar el pedido y/o el producto solicitado.");
+	else{																														// Si se encuentra...	
+		do{
+			do{
+				printf("\nAhora indique la ID del producto dentro del pedido, o pulse 0 si desea salir: ");
+			}while(scanf("%i", &id_p) != 1);
+			
+			if(id_p == 0)
+				return 0;
+			for(int i = 0; i < prods_pedidos.lon; i++){	
+				if(id_p == prods_pedidos.prod_pedidos[i].id_prod && id == prods_pedidos.prod_pedidos[i].id_pedido){								// Buscamos el producto dentro del pedido...
+					encontrado_prod = 1;
+					if(strcmp(prods_pedidos.prod_pedidos[i].estado, "enPreparación") == 0) 												// Si se encuentra en preparación...
+						printf("\n{Pedido %d} El producto [%04d - %s] se encuentra en preparación, no es posible asignar un transportista todavia.", id, prods_pedidos.prod_pedidos[i].id_prod, prods.produ[ prods_pedidos.prod_pedidos[i].id_prod ].nombre);
+					else{
+						do{																												// Si no...
+							do{
+								printf("Indique la ID del transportista a asociar, o pulse 0 para salir: ");
+							}while(scanf("%i", &id_t) != 1);
+							
+							if(id_t == 0)
+								return 0;
+								
+							for(int j = 0; j < transports.tam; j++){																	// Buscamos al transportista en el vector.
+								if(id == transports.transportistas[j].Id_transp){														// Si se encuentra...
+									encontrado_t = 1;
+									prods_pedidos.prod_pedidos[i].id_transp = id;														
+								}
+							}
+							
+							if(!encontrado_t)																							// Si no se encuentra...
+								printf("\nNo se ha podido encontrar el transportista solicitado. Indique otro.");
+							else
+								printf("\nTransportista asignado.\n\n");
+						}while(!encontrado_t);		
+					}
+				}
+			}
+			if(!encontrado_prod)
+				printf("\nNo se ha podido encontrar el producto en el sistema de pedidos. Intentelo de nuevo.");
+		}while(!encontrado_prod);
+	}
+	
+	guardar_productos_pedidos(prods_pedidos);
+	
+	return 0;
+}
+
+
 
 // FUNCIONES PARA LA GESTIÓN DE TRANSPORTISTAS
 
@@ -1455,6 +1655,10 @@ int longitud_vector_transportistas(){
     return i;	
 }
 
+
+
+//Precondición: Recibe una cadena de caracteres, en principio con caracteres en mayúsculas.
+//Postcondición: Devuelve la misma cadena dada, pero con todas las letras en minúscula.
 char* mayus_minus(char* cad){
 	for(int i = 0; i < strlen(cad); i++)
 		cad[i] = tolower(cad[i]);
