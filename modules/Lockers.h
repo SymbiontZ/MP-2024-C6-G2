@@ -3,6 +3,7 @@
 
 #include "pedidos.h"
 #include "useradmin.h"
+#include "complementos.h"
 
 #define MAX_LOCK 79
 #define MAX_COMPLOCK 50
@@ -53,12 +54,11 @@ typedef struct{
 
 //Precondicion: El fichero Lockers.txt debe estar relleno
 //Postcondicion: Devuelve una estructura con el vector de estructuras Desc y almacena su tama�o
-void Cargar_Lockers();
-
+Vect_Lock Cargar_Lockers();
 
 //Precondici�n: El fichero CompartimentosLockers.txt debe estar relleno
 //Postcondici�n: Devuelve una estructura con el vector de estructuras DescCli y almacena su tama�o
-void Cargar_CompartimentosLockers();
+Vect_CompLock Cargar_CompartimentosLockers();
 
 //Precondicion: Recibe una estructura de tipo Vect_Lock con datos coherentes almacenados.
 //Postcondicion: Guarda en Lockers.txt los datos del vector de estructuras recibido
@@ -83,6 +83,14 @@ void Listar_Lockers(Vect_Lock);
 //Precondición: Recibe la estructura Lockers y la posicion de la estructura pedidos del pedido que quiere asignarse en un locker
 //Postcondición: Devuelve la posicion del primer locker coincidente con la ciudad deseada
 int Locker_Dispo(Vect_Lock, int);
+
+//Precondición: Recibe la estructura Lockers y la posicion del primer locker disponible
+//Postcondición: Devuelve la posicion del primer compartimento disponible en el locker
+int Comp_Dispo(Vect_Lock, Vect_CompLock, int);
+
+//Precondición: Recibe las estructuras Lockers y CompartimentosLockers
+//Postcondición: Devuelve la estructura CompartimentosLockers asignada al locker correspondiente
+Vect_CompLock Asignar_Compartimentos(Vect_Lock, Vect_CompLock);
 
 //Precondición: Recibe la estructura Lockers
 //Postcondición: Devuelve la estructura Lockers con un Locker nuevo
