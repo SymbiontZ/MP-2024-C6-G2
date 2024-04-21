@@ -646,7 +646,6 @@ admin_prov_vect baja_prov(admin_prov_vect provs, int id){
 		if(respuesta == 'S' || respuesta == 's'){
 			for (int i = id; i < provs.tam - 1; i++) {				// Desplazamos la posicion de los usuarios en el vector
 				provs.usuarios[i] = provs.usuarios[i + 1];
-				provs.usuarios[i].Id_empresa = i;				// Reasignamos el identificador de cada usuario
 			}
 			
 			provs.tam--;

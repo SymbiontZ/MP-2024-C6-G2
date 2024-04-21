@@ -577,5 +577,7 @@ Descuentos Asignar_Descuentos(Descuentos D, DescClientes dc){
         }
 
     }
+
+    return D;
 }
 

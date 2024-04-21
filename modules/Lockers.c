@@ -4,7 +4,7 @@
 #include "Lockers.h"
 #include "complementos.h"
 
-void Cargar_Lockers(){
+Vect_Lock Cargar_Lockers(){
 
     Vect_Lock vector_lock;
 	FILE *f_lockers;
@@ -41,10 +41,10 @@ void Cargar_Lockers(){
 	}
 	fclose(f_lockers);
 
-
+    return vector_lock;
 }
 
-void Cargar_CompartimentosLockers(){
+Vect_CompLock Cargar_CompartimentosLockers(){
 
     Vect_CompLock vector_complock;
 	FILE *f_compartimentoslockers;
@@ -85,6 +85,7 @@ void Cargar_CompartimentosLockers(){
 	}
 	fclose(f_compartimentoslockers);
 
+    return vector_complock;
 
 }
 
@@ -291,12 +292,7 @@ Vect_Lock nuevo_numcompTL(Vect_Lock L, int pos){
 
 Vect_Lock nuevo_numcompOkupL(Vect_Lock L, int pos){
 
-    int new_NumcompOkup;															// Variable que guardara los compartimentos ocupados del nuevo locker
-
-    printf("Ingrese los compartimentos ocupados: \n");
-    scanf("%d", &new_NumcompOkup);
-
-    L.Lock[pos].Num_compOkup = new_NumcompOkup;	                                        // Se escribe en la nueva posicion de la estructura los compartimentos ocupados
+    L.Lock[pos].Num_compOkup = 0;	                                        // Se escribe en la nueva posicion de la estructura los compartimentos ocupados (0)
 
     return L;
 
@@ -305,17 +301,35 @@ Vect_Lock nuevo_numcompOkupL(Vect_Lock L, int pos){
 Vect_Lock Baja_Lockers(Vect_Lock L){
 
     char Id_locker_busqueda[11];
-    int i;
+    int i, pos = -1;
 
     printf("Introduzca la id del locker a eliminar: \n");
-    scanf("%s", &Id_locker_busqueda);
+    scanf("%s", &Id_locker_busqueda);                                           //Se guarda
 
     for(i=0; i<L.tam; i++){
+
         if(strcmp(Id_locker_busqueda, L.Lock[i].Id_locker) == 0){
 
-        }
+            for(pos = i; pos<L.tam; pos++){
 
+                L.Lock[pos] = L.Lock[pos+1];
+
+            }
+
+            L.Lock = realloc(L.Lock, (L.tam - 1)*sizeof(Lockers));
+
+            if (L.Lock == NULL){
+                printf("No se pudo asignar la estructura de descuentosclientes");
+                getchar();
+                exit(EXIT_FAILURE);
+            }
+
+            L.tam = L.tam - 1;
+            break;
+        }
     }
+
+
 
     return L;
 
@@ -341,12 +355,81 @@ void Listar_Lockers(Vect_Lock L){
 
 int Locker_Dispo(Vect_Lock L, int pos){
 
-    int i = 0;
+    int i = 0, res = -1;
+
     clients c = cargar_clientes();
 
-    while((i<=L.tam) && (L.Lock[i].Localidad != c.clients[pos].Localidad))
+    while((i<=L.tam) && (L.Lock[i].Localidad != c.clients[pos].Localidad) && (L.Lock[i].Num_compOkup < L.Lock[i].Num_compT))
         i++;
+
+    if(L.Lock[i].Localidad == c.clients[pos].Localidad)
+        res = i;
+
+    else
+        printf("No existe ningún locker disponible en tu localidad \n");
+
+    return res;
+
+}
+
+
+int Comp_Dispo(Vect_Lock L, Vect_CompLock C, int cli){
+
+    int i = 0, pos;
+    pos = Locker_Dispo(L, cli);
+
+    while((i<=C.tam) && (C.CompLock[i].Id_locker != L.Lock[pos].Id_locker) && (C.CompLock[i].Estado != "ocupado"))
+        i++;
+
+    strcpy(C.CompLock[i].Estado, "ocupado");
 
     return i;
 
 }
+
+
+Vect_CompLock Asignar_Compartimentos(Vect_Lock L, Vect_CompLock C){
+
+    int i, j, cont = 0, n_comp = 0;
+    char Id_locker_busqueda[11];
+
+
+    printf("Indique la ID del locker al que quiere asignarle los compartimentos \n");
+    scanf("%s", &Id_locker_busqueda);
+
+    for(i=0; i<L.tam; i++){
+
+            if(strcmp(Id_locker_busqueda, L.Lock[i].Id_locker) == 0){
+
+                    C.CompLock = realloc(C.CompLock, (L.Lock[i].Num_compT - L.Lock[i].Num_compOkup)*sizeof(CompartimentosLockers));											                // Se amplia la longitud del vector para añadir un descuento en la estructura
+                    if (C.CompLock == NULL){
+                        printf("No se pudo asignar la estructura de descuentosclientes");
+                        getchar();
+                        exit(EXIT_FAILURE);
+                    }
+
+                    cont = C.tam - (L.Lock[i].Num_compT - L.Lock[i].Num_compOkup);
+                    n_comp = L.Lock[i].Num_compOkup  + 1;
+                    do{
+
+                        strcpy(C.CompLock[cont].Id_locker, Id_locker_busqueda);
+                        strcpy(C.CompLock[cont].Estado, "vacío");
+                        C.CompLock[cont].Num_comp = n_comp;
+                        C.CompLock[cont].dia_okup = 0;
+                        C.CompLock[cont].mes_okup = 0;
+                        C.CompLock[cont].anio_okup = 0;
+                        C.CompLock[cont].dia_cad = 0;
+                        C.CompLock[cont].mes_cad = 0;
+                        C.CompLock[cont].anio_cad = 0;
+
+                        n_comp++;
+                        cont++;
+                    }while(cont != C.tam);
+
+            }
+
+        }
+
+        return C;
+}
+
