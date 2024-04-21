@@ -53,7 +53,7 @@ typedef struct
     void guardar_clientes(clients );
 
 
-    int busqueda_cliente(clients );
+    int busqueda_cliente();
     int busqueda_clientetipo(clients , int ,int );
 
     //PRECONDICION: Se le pasa la estructura tipo clients cargada y la posicion del cliente en la estructura

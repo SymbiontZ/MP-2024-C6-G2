@@ -415,13 +415,13 @@ void menuadmin_cliente(){
                 opt = -1;
                 break;
             case 3:
-                pos = busqueda_cliente(C);
+                pos = busqueda_cliente();
                 if (pos != -1)
                     C = eliminar_cliente(C, pos);
                 opt = -1;
                 break;
             case 4:
-                pos = busqueda_cliente(C);
+                pos = busqueda_cliente();
                 if (pos != -1)
                     C = gestionar_cliente(C, pos, 0);
                 opt = -1;
@@ -797,7 +797,9 @@ admin_prov_vect admin_psw(admin_prov_vect admin, int pos, int mod){
 
 /*** GESTIONAR CLIENTE ***/
 
-int busqueda_cliente(clients C){
+int busqueda_cliente(){
+    clients C = cargar_clientes();
+
     int pos = -2, opt = -1;             //Elijo -2 como pos predeter. ya que -1 es para cancelar la busqueda
     while (pos == -2){    //Solo va a salir del bucle cuando se selecciona la posicion de un cliente valido
         clear();

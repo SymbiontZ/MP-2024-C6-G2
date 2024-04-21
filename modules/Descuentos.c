@@ -58,14 +58,15 @@ DescClientes Cargar_DescuentosClientes(){
 
     DescClientes vector_descClts;
 	FILE *f_DescClientes;																	// Puntero al fichero a leer
-	char ruta[] = "..\\ESIZON-main\\data\\DescuentosClientes.txt";                                                  					// Ruta del fichero a leer
+	char ruta[] = "..\\data\\DescuentosClientes.txt";                                                  					// Ruta del fichero a leer
 	char linea[MAX_DESCLI];													                                // Linea a leer
     int i = 0, m;
 
 	if((f_DescClientes = fopen(ruta, "a+")) == NULL){
 		printf("Error al abrir el fichero DescuentosClientes.txt.\n");
-		exit(33);
+        Sleep(2000);
 	}
+    
 	vector_descClts.tam = 0;
 	while(fgets(linea, sizeof(linea), f_DescClientes) != NULL)												// Contamos el numero de lineas del fichero
 	    vector_descClts.tam++;
@@ -81,10 +82,11 @@ DescClientes Cargar_DescuentosClientes(){
                   &vector_descClts.DescCliente[i].anio_asig,
                   &vector_descClts.DescCliente[i].dia_cad,
                   &vector_descClts.DescCliente[i].mes_cad,
-                  &vector_descClts.DescCliente[i].anio_cad);
+                  &vector_descClts.DescCliente[i].anio_cad,
+                  &vector_descClts.DescCliente[i].Estado);
 				i++;
 			if(m != 9){
-				printf("Error leyendo datos del fichero DescuentosClientes.txt. Linea: %d\n", i + 1);
+				printf("Error leyendo datos del fichero DescuentosClientes.txt. Linea: %d\n", i);
                 getchar();
 				exit(EXIT_FAILURE);
 			}
@@ -173,8 +175,8 @@ void Consultar_Descuentos(DescClientes descuentosclientes){
 
 void Consultar_desc_cliente(int pos, int mode){
     clients Cliente = cargar_clientes();
+    printf("hola");
     DescClientes desccl = Cargar_DescuentosClientes();
-
 
     int i,
         n_desc=0,
