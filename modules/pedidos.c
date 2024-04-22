@@ -557,29 +557,38 @@ void eliminar_pedidos_productos(prod_pedidos prod_p, pedidos p, int pos_ped){
         guardar_pedido(p);
         printf("se ha eliminado el pedido correctamente\n");
 
-        //eliminar_productos_ped(prod_p, pos_ped);
+        eliminar_productos_ped(prod_p, pos_ped);
     }
-    for(i=1;i<p.lon;i++){
-        printf("%s, test",p.pedidos[i].id_cod);
+    else{
+        printf("se ha cancelado la eliminacion del pedido indicado\n");
     }
 }
 
 void eliminar_productos_ped(prod_pedidos prod_p, int pos_ped){
-    int i;
+    int i,j=0,
+        n_ped=0; //variable que almacena el numero de productos que hay del pedido
     for(i=pos_ped;i<prod_p.lon-1;i++){
         if(prod_p.prod_pedidos[i].id_pedido==pos_ped){
-            prod_p.prod_pedidos[i]=prod_p.prod_pedidos[i+1];
+            n_ped++;
         }
     }
+    printf("numero de productos en el pedido: %d\n", n_ped);
 
-    prod_p.lon=prod_p.lon-1;
+    do{
+        for(i=pos_ped;i<prod_p.lon-n_ped;i++){
+            prod_p.prod_pedidos[i]=prod_p.prod_pedidos[i+1];
+        }
+        j++;
+    }while(j<n_ped);
+    
+    prod_p.lon=prod_p.lon-n_ped;
     prod_p.prod_pedidos=realloc(prod_p.prod_pedidos, prod_p.lon*sizeof(prod_pedido));
     if(prod_p.prod_pedidos==NULL){
-        printf("No se pudo reasignar estructuras a productos pedidos");
+        printf("No se pudo reasignar estructuras a productos pedidos\n");
     }
 
     guardar_productos_pedidos(prod_p);
-    printf("se han eliminado los productos del pedido correctamente");
+    printf("se han eliminado los productos del pedido correctamente\n");
 
 }
       
