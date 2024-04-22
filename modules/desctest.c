@@ -2,7 +2,7 @@
 
 int main(){
     
-    Consultar_desc_cliente(1, 0);
+    marcar_aplicado(1, "black001");
 
     return 0;
 }

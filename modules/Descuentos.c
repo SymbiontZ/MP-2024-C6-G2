@@ -69,12 +69,15 @@ DescClientes Cargar_DescuentosClientes(){
     
 	vector_descClts.tam = 0;
     
+    rewind(f_DescClientes);
+
 	while(fgets(linea, sizeof(linea), f_DescClientes) != NULL)												// Contamos el numero de lineas del fichero
 	    vector_descClts.tam++;
     
     vector_descClts.DescCliente = malloc((vector_descClts.tam) * sizeof(DescCliente));		    							// Se reserva memoria para el vector
 	rewind(f_DescClientes);
 
+    
 	while((fgets(linea, sizeof(linea), f_DescClientes) != NULL) ){
 		m = sscanf(linea, "%d-%11[^-]-%d/%d/%d-%d/%d/%d-%d\n",						// Se cargan los datos del fichero a la estructura
             &vector_descClts.DescCliente[i].Id_cliente,
@@ -88,15 +91,15 @@ DescClientes Cargar_DescuentosClientes(){
             &vector_descClts.DescCliente[i].Estado);
 				
 		if(m != 9){
-			printf("Error leyendo datos del fichero DescuentosClientes.txt. Linea: %d\n", i);
+			printf("Error leyendo datos del fichero DescuentosClientes.txt. Linea: %d %d\n", i,m);
             getchar();
 			exit(EXIT_FAILURE);
 		}
         i++;
 	}
 
-	fclose(f_DescClientes);																	// Se cierra el fichero
-    printf("Descuentos almacenados en DescuentosClientes.txt: %d \n", vector_descClts.tam);
+	fclose(f_DescClientes);
+    																// Se cierra el fichero
     return vector_descClts;
 }
 
@@ -108,14 +111,10 @@ void Guardar_Descuentos(Descuentos descuentos){
 	char linea[MAX_DESC];																	// Línea actual del fichero
 	char aux[14];
 
-	if((f_descuentos = fopen(ruta, "a+")) == NULL){
-		printf("\nError al abrir el fichero Descuentos.txt\n");
-		f_descuentos = fopen(ruta, "w");
-		Sleep(2000);
-	}
+	f_descuentos = fopen(ruta, "w");
 
 	for(int i = 0; i < descuentos.tam; i++)
-		fprintf(f_descuentos, "%10[^-]-%50[^-]-%7[^-]-%8[^-]-%d-%6[^\n]\n",										// Se escribe el contenido de la estructura en el fichero
+		fprintf(f_descuentos, "%s-%s-%s-%s-%d-%s\n",										// Se escribe el contenido de la estructura en el fichero
             descuentos.Desc[i].Id_cod,
             descuentos.Desc[i].Descrip,
 			descuentos.Desc[i].Tipo,
@@ -124,7 +123,7 @@ void Guardar_Descuentos(Descuentos descuentos){
 			descuentos.Desc[i].Aplicable);
 
 
-        fclose(f_descuentos);																	// Se cierra el fichero
+    fclose(f_descuentos);																	// Se cierra el fichero
 
 }
 
@@ -136,14 +135,11 @@ void Guardar_DescuentosClientes(DescClientes descuentosclientes){
 	char linea[MAX_DESCLI];																	// Línea actual del fichero
 	char aux[14];
 
-	if((f_DescClientes = fopen(ruta, "a+")) == NULL){
-		printf("\nError al abrir el fichero DescuentosClientes.txt\n");
-		f_DescClientes = fopen(ruta, "w");
-		Sleep(2000);
-	}
+	f_DescClientes = fopen(ruta, "w");
+
 
 	for(int i = 0; i < descuentosclientes.tam; i++)
-		fprintf(f_DescClientes, "%d-%10[^-]-%d-%d-%d-%d-%d-%d-%d\n",							// Se escribe el contenido de la estructura en el fichero
+		fprintf(f_DescClientes, "%07d-%s-%02d/%02d/%04d-%02d/%02d/%04d-%d\n",							// Se escribe el contenido de la estructura en el fichero
             descuentosclientes.DescCliente[i].Id_cliente,
             descuentosclientes.DescCliente[i].Id_cod,
             descuentosclientes.DescCliente[i].dia_asig,
@@ -151,12 +147,11 @@ void Guardar_DescuentosClientes(DescClientes descuentosclientes){
             descuentosclientes.DescCliente[i].anio_asig,
             descuentosclientes.DescCliente[i].dia_cad,
             descuentosclientes.DescCliente[i].mes_cad,
-            descuentosclientes.DescCliente[i].anio_cad);
+            descuentosclientes.DescCliente[i].anio_cad,
+            descuentosclientes.DescCliente[i].Estado);
 
 
-        fclose(f_DescClientes);																	// Se cierra el fichero
-
-
+    fclose(f_DescClientes);																	// Se cierra el fichero
 }
 
 
@@ -228,6 +223,27 @@ void Consultar_desc_cliente(int pos, int mode){
     }
 
 }
+
+void marcar_aplicado(int id_cliente, char cod[]){
+    DescClientes DescC = Cargar_DescuentosClientes();
+    int i,pos = -1;
+
+    for(i=1; i< DescC.tam ; i++){
+        if(DescC.DescCliente[i].Id_cliente == id_cliente && strcmp(DescC.DescCliente[i].Id_cod, cod) == 0)
+            pos = i;
+    }
+
+    if(pos != -1){
+        DescC.DescCliente[pos].Estado = 1;
+    }else{
+        printf("No se pudo marcar el descuento como aplicado.\n");
+        getchar();
+    }
+
+    Guardar_DescuentosClientes(DescC);
+    free(DescC.DescCliente);
+}
+
 
 int desc_activo(char cod[]){
     Descuentos D = Cargar_Descuentos();

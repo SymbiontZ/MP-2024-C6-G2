@@ -88,18 +88,11 @@ void guardar_categorias (categ_vect c) {
     }
     
     fclose (f_cat);
-    
-    if (c.num_cat == 1) {
-    	printf ("\n**Estructura guardada con 1 categoria\n");
-	}
-	else {
-		printf ("\n**Estructura guardada con %d categorias\n", c.num_cat - 1);
-	}	
 }
 
 categ_vect agregar_categorias (categ_vect c) {
 	int nueva_id = c.num_cat;		//IDENTIFICADOR DEL NUEVO PRODUCTO
-	
+	char desc[51];
 	c.categ = (categorias*)realloc(c.categ, (nueva_id + 1)*sizeof(categorias));
 	
 	if (c.categ == NULL) {
@@ -109,17 +102,19 @@ categ_vect agregar_categorias (categ_vect c) {
 	}
 	
 	c.categ[nueva_id].id_categ = nueva_id;		//La id de la categoria se rellena automáticamente
-	
-	printf ("\nEscribe la descripcion de la categoria: ");
-	fgets (c.categ[nueva_id].descrip, 51, stdin);
-	fflush (stdin);
-	terminador_cad (c.categ[nueva_id].descrip);
+	do{
+		printf ("\nEscribe la descripcion de la categoria: ");
+		fflush(stdin);
+		fgets (desc, 51, stdin);
+		fflush (stdin);
+		terminador_cad (desc);
+	} while (strlen(desc) == 0);
 	
 	c.num_cat++;
 	guardar_categorias (c);
 	
 	printf ("Se ha registrado la categoria %04d correctamente", c.categ[nueva_id].id_categ);
-	getchar ();
+	Sleep(2000);
 	
 	return c;
 }
