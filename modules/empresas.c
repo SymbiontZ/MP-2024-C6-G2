@@ -11,7 +11,7 @@
 #include "pedidos.h"
 #include "lockers.h"
 
-// void listar_pedidos_prov(int id); void cambiar_estado_pedido(); void modificar_asig_transport();
+
 
 //	FUNCIONES DE INICIO DE SESION
 
@@ -266,7 +266,7 @@ void ver_pedidos(admin_prov_vect provs, int pos){
 				case 1: listar_pedidos_prov(provs.usuarios[pos].Id_empresa); break;
 				case 2: cambiar_estado_pedido(provs.usuarios[pos].Id_empresa); break;
 				case 3: modificar_asig_transport_menu(provs.usuarios[pos].Id_empresa); break;
-				case 4: break;
+				case 4: modificar_asig_lockers_menu(provs.usuarios[pos].Id_empresa); break;
 				case 0: break;
 				default: break;
 			}
@@ -1062,7 +1062,7 @@ int modificar_asig_transport(int id_prov){
 
 //Precondición: No recibe nada.
 //Postcondición: No devuelve nada. Permite elegir al usuario entre listar los lockers del sistema o asignar alguno a un pedido.
-void modificar_asig_locker_menu(int id_prov){
+void modificar_asig_lockers_menu(int id_prov){
 	
 	Vect_Lock lockers = Cargar_Lockers();
 	int op = -1;
@@ -1078,7 +1078,7 @@ void modificar_asig_locker_menu(int id_prov){
 		else{
 			switch(op){
 				case 1: Listar_Lockers(lockers); break;
-				case 2: modificar_asig_locker(id_prov); break;
+				case 2: modificar_asig_lockers(id_prov); break;
 				case 0: break;
 				default: break;
 			}
@@ -1089,7 +1089,7 @@ void modificar_asig_locker_menu(int id_prov){
 
 //Precondición: No recibe nada.
 //Postcondición: Devuelve 0 si se completa la asignación de lockers a un pedido, o -1 si se ha cancelado el proceso.
-int modificar_asig_locker(int id_prov){
+int modificar_asig_lockers(int id_prov){
 	pedidos pedidos = cargar_pedidos();
 	prod_pedidos prods_pedidos = cargar_prod_pedidos();
 	produ_vect prods = cargar_productos();

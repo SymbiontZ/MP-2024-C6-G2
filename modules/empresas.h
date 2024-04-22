@@ -116,11 +116,11 @@ typedef struct{
  
  //Precondición: No recibe nada.
  //Postcondición: No devuelve nada. Permite elegir al usuario entre listar los lockers del sistema o asignar alguno a un pedido.
- void modificar_asig_locker_menu(int pos);
+ void modificar_asig_lockers_menu(int pos);
  
  //Precondición: No recibe nada.
  //Postcondición: Devuelve 0 si se completa la asignación de lockers a un pedido, o -1 si se ha cancelado el proceso.
- int modificar_asig_locker(int id_prov);
+ int modificar_asig_lockers(int id_prov);
 
 
 // --------------- FUNCIONES PARA EL MENU DE TRANSPORTISTA ---------------
