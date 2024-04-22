@@ -78,4 +78,7 @@ int comprobar_descuento(char[], int);
 void eliminar_pedidos_productos(prod_pedidos, pedidos, int);
 void eliminar_productos_ped(prod_pedidos, int);
 
+void menu_listadoped_estado();
+void listadoped_estado(prod_pedidos , char[]);
+
 #endif

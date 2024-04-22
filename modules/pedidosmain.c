@@ -22,6 +22,8 @@ int main()
 
     //eliminar_pedidos_productos(Prod_P, P, 2);
 
-    devoluciones d = cargar_devoluciones();
+    //devoluciones d = cargar_devoluciones();
+
+    menu_listadoped_estado();
     return 0;
 }
