@@ -950,7 +950,7 @@ void listadoped_estado(prod_pedidos prod_p, char estado[]){
         
     }
     if(npeds == 0)
-    printf("|                          NO EXISTEN PEDIDOS CON ESTE ESTADO!                         |\n");
+        printf("|                          NO EXISTEN PEDIDOS CON ESTE ESTADO!                         |\n");
 
     printf("+----------------------+----------------------------------------------------+----------+\n");
     printf("Pulse [enter] para volver...");

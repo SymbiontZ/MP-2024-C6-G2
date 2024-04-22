@@ -28,7 +28,7 @@ produ_vect agregar_productos (produ_vect);
 int buscar_productos (produ_vect);
 produ_vect modificar_productos (produ_vect);
 produ_vect eliminar_productos (produ_vect);
-produ_vect listar_productos (produ_vect);
+void listar_productos (produ_vect);
 produ_vect buscador_productos (produ_vect);
 void menu_prod (produ_vect);
 

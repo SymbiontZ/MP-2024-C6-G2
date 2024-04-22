@@ -2,7 +2,7 @@
 #include "complementos.h"
 
 categ_vect cargar_categorias () {
-	char filename[] = "Categorias.txt";   
+	char filename[] = "../data/Categorias.txt";   
     int num_cat = 0;                          //Numero de categorias registradas
     int i = 0;                          		
     char cad_linea[250];                      //Caracteres maximos que puede ocupar una linea en fichero

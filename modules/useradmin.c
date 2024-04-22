@@ -351,6 +351,7 @@ void menuadmin(admin_prov_vect admin, int pos){
             opt = -1;
             break;
         case 4:
+            menuadmin_prod();
             opt = -1;
             break;
         case 5:
@@ -508,7 +509,7 @@ void menuadmin_prov(admin_prov_vect admin){
         printf("| <0> Volver                     |\n");
         printf("+--------------------------------+\n");
  
-        scanf("%d", &opt);
+        opt = input_int();
         fflush(stdin);
         switch (opt){
             case 1:
@@ -538,10 +539,63 @@ void menuadmin_prov(admin_prov_vect admin){
             case 0:         //CASO DE SALIDA
                 break;
             default:
-                printf("Seleccione una opcion valida: ");
                 break;
         }
         guardar_adminprov(admin);
+    }while (opt != 0);
+}
+
+void menuadmin_prod(){
+    produ_vect Produ = cargar_productos();
+    int opt = -1;
+    char resp;
+    int pos;          //Posicion del proveedor al que se le realizan los cambios.
+
+    do{
+        clear();
+        printf("+--------------------------------+\n");
+        printf("| QUE DESEA REALIZAR:            |\n");
+        printf("+--------------------------------+\n");
+        printf("| <1> Mostrar listado productos  |\n");
+        printf("| <2> Dar de alta productos      |\n");
+        printf("| <3> Dar de baja productos      |\n");
+        printf("| <4> Modificar producto         |\n");
+        printf("| <0> Volver                     |\n");
+        printf("+--------------------------------+\n");
+ 
+        scanf("%d", &opt);
+        fflush(stdin);
+        switch (opt){
+            case 1:
+                listar_productos(Produ);
+                opt = -1;   
+                break;
+            case 2:
+                printf("Seguro que quiere agregar un producto [s/n]: ");
+                resp = confirmacion();
+                if(resp == 'S'|| resp == 's')
+                    
+                opt = -1;
+                break;
+            case 3:
+                
+                if (pos != -1)
+                
+                opt = -1;
+                break;
+            case 4:
+
+                if (pos != -1)
+                    
+                opt = -1;
+                break;
+            
+            case 0:         //CASO DE SALIDA
+                break;
+            default:
+                break;
+        }
+        guardar_productos(Produ);
     }while (opt != 0);
 }
 

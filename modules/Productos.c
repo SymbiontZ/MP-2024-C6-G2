@@ -1,9 +1,10 @@
 #include "Productos.h"
 #include "Categorias.h"
 #include "complementos.h"
+#include "empresas.h"
 
 produ_vect cargar_productos () {
-	char filename[] = "Productos.txt";   
+	char filename[] = "../data/Productos.txt";   
     int num_prod = 0;                         //Numero de productos registrados
     int i = 0;                          		
     char cad_linea[250];                      //Caracteres maximos que puede ocupar una linea en fichero
@@ -76,7 +77,7 @@ void guardar_productos (produ_vect p) {
 	int i;
 	
 	FILE *f_prod;
-	char filename[] = "Productos.txt";
+	char filename[] = "../data/Productos.txt";
 	f_prod = fopen (filename, "w");
 	
 	if (f_prod == NULL) {
@@ -613,18 +614,45 @@ produ_vect eliminar_productos (produ_vect p) {
 	return p;
 }
 
-produ_vect listar_productos (produ_vect p) {
-	int i;
+void listar_productos (produ_vect p) {
+	int i,j,
+		id_cat,
+		id_gest;
+	categ_vect Cat = cargar_categorias();
+	admin_prov_vect adminprov = cargar_adminprov();
+	
 	
 	clear ();
-	Sleep (1000);
-	printf ("---> LISTA DE PRODUCTOS: <---\n\n");
+	printf("+--------------------+\n");
+	printf("| LISTA DE PRODUCTOS |\n");
+	printf("+-----------------+--+-------------------------------------------------+---------------------------+\n");
+	printf("| NOMBRE          | DESCRIPCION                                        | EMPRESA GESTORA           |\n");
+	printf("| STOCK           | CATEGORIA                                          | DIAS DE ENTREGA | IMPORTE |\n");
+	printf("+-----------------+----------------------------------------------------+---------------------------+\n");
 	
 	for (i = 1; i < p.num_prod; i++) {
-		printf ("(%i) %07d-%s-%s-%04d-%04d-%d-%d-%d\n", i, p.produ[i].id_prod, p.produ[i].nombre, p.produ[i].descrip, p.produ[i].id_categ, p.produ[i].id_gestor, p.produ[i].stock, p.produ[i].entrega, p.produ[i].importe);
+		for(j=1; j < Cat.num_cat; j++){
+			if(p.produ[i].id_categ == Cat.categ[j].id_categ)
+				id_cat = j;
+		}
+		for(j=1; j < adminprov.tam; j++){
+			if(p.produ[i].id_gestor == adminprov.usuarios[j].Id_empresa)
+				id_gest = j;
+		}
+		printf ("| %-15s | %-50s | %-25s |\n| %-15d | %-50s | %-15d | %-7d |\n",
+		p.produ[i].nombre,
+		p.produ[i].descrip,
+		adminprov.usuarios[id_gest].Nombre,
+		p.produ[i].stock, 
+		Cat.categ[id_cat].descrip,
+
+		
+		p.produ[i].entrega, 
+		p.produ[i].importe);
+		printf("+-----------------+----------------------------------------------------+---------------------------+\n");
 	}
-	
-	return p;
+	printf("Pulse [enter] para volver...");
+	getchar();
 }
 
 //Función para useradmin
