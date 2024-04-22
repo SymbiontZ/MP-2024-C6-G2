@@ -136,7 +136,7 @@ typedef struct{
  
  //Precondición: Recibe un puntero a una estructura de transport.
  //Postcondición: No devuelve nada. Se habrá cambiado el email del usuario guardado en el puntero.
- void cambiar_email_t(transport_vect transports, int pos);
+ //void cambiar_email_t(transport_vect transports, int pos);
 
  //Precondición: Recibe un puntero a una estructura de transport.
  //Postcondición: No devuelve nada. Se habrá cambiado la contraseña del usuario guardada en el puntero, o no.
