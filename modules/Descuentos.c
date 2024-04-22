@@ -11,7 +11,7 @@ Descuentos Cargar_Descuentos(){
 
     Descuentos vector_desc;
 	FILE *f_descuentos;																	// Puntero al fichero
-	char ruta[] = "..\\data\\Descuentos.txt";                                                  						// Ruta del fichero a leer
+	char ruta[] = "../data/Descuentos.txt";                                                  						// Ruta del fichero a leer
 	char linea[MAX_DESC];													                                // Línea a leer
     int i = 0, m;
 
@@ -58,7 +58,7 @@ DescClientes Cargar_DescuentosClientes(){
 
     DescClientes vector_descClts;
 	FILE *f_DescClientes;																	// Puntero al fichero a leer
-	char ruta[] = "..\\data\\DescuentosClientes.txt";                                                  					// Ruta del fichero a leer
+	char ruta[] = "../data/DescuentosClientes.txt";                                                  					// Ruta del fichero a leer
 	char linea[MAX_DESCLI];													                                // Linea a leer
     int i = 0, m;
 
