@@ -299,7 +299,6 @@ void Gestionar_Descuentos(Descuentos D, DescClientes dc){
             Modificar_Descuentos(D);
             break;
         case 6:
-            Asignar_Descuentos(D,dc);
             break;
         default:
             break;
@@ -563,63 +562,50 @@ Descuentos Modificar_Descuentos(Descuentos D){
     return D;
 }
 
-Descuentos Asignar_Descuentos(Descuentos D, DescClientes dc){
-
-    clients cliente = cargar_clientes();
-    int tamD = D.tam, tamC = cliente.n_clients, i, j, Id_cli_busqueda, n_dia_a, n_mes_a, n_anio_a, n_dia_c, n_mes_c, n_anio_c;
-    char Id_cod_busqueda[11];                                                                                                       // Variable en la que se almacena el codigo del descuento a asignar
-
-    dc.DescCliente = realloc(dc.DescCliente, dc.tam+1*sizeof(DescCliente));											                // Se amplia la longitud del vector para añadir un descuento en la estructura
+void Asignar_Descuentos(DescClientes dc, char cod_desc[], int id_cliente, fecha fch_cad){
+    
+    int new_pos = dc.tam;
+    dc.DescCliente = realloc(dc.DescCliente, (dc.tam+1)*sizeof(DescCliente));											                // Se amplia la longitud del vector para añadir un descuento en la estructura
     if (dc.DescCliente == NULL){
         printf("No se pudo asignar la estructura de descuentosclientes");
         getchar();
         exit(EXIT_FAILURE);
     }
 
-    printf("Introduzca el ID del cliente al que quiere asignar el descuento\n");
-    scanf("%i", &Id_cli_busqueda);
+    dc.DescCliente[new_pos].Id_cliente = id_cliente;
 
-    for(i=0; i<tamC; i++){
-        if(Id_cli_busqueda == cliente.clients[i].Id_cliente){
+    strcpy(dc.DescCliente[new_pos].Id_cod, cod_desc);
 
-            printf("Introduzca el codigo del descuento que quiere asignarle\n");
-            scanf("%s", &Id_cod_busqueda);
+    //FECHA DE ASIGNACION
+    fecha fch_sist;
+    fch_sist.dia = dia_sist();
+    fch_sist.mes = mes_sist();
+    fch_sist.anio = anio_sist();
 
-            for(j=0; j>tamD; j++){
-                if(strcmp(Id_cod_busqueda, dc.DescCliente[i].Id_cod) == 0){
+    dc.DescCliente[new_pos].dia_asig = fch_sist.dia;
+    dc.DescCliente[new_pos].mes_asig = fch_sist.mes;
+    dc.DescCliente[new_pos].anio_asig = fch_sist.anio;
 
-                    printf("Introduzca el dia de hoy\n");
-                    scanf("%i",&n_dia_a);
-                    printf("Introduzca el mes de hoy\n");
-                    scanf("%i",&n_mes_a);
-                    printf("Introduzca el año de hoy\n");
-                    scanf("%i",&n_anio_a);
-                    printf("Introduzca el dia de caducidad\n");
-                    scanf("%i",&n_dia_c);
-                    printf("Introduzca el mes de caducidad\n");
-                    scanf("%i",&n_mes_c);
-                    printf("Introduzca el año de caducidad\n");
-                    scanf("%i",&n_anio_c);
-
-
-                    strcpy(dc.DescCliente[tamC].Id_cod, Id_cod_busqueda);
-                    dc.DescCliente[tamC].Id_cliente = Id_cli_busqueda;
-                    dc.DescCliente[tamC].dia_asig = n_dia_a;
-                    dc.DescCliente[tamC].mes_asig = n_mes_a;
-                    dc.DescCliente[tamC].anio_asig = n_anio_a;
-                    dc.DescCliente[tamC].dia_cad = n_dia_c;
-                    dc.DescCliente[tamC].mes_cad = n_mes_c;
-                    dc.DescCliente[tamC].anio_cad = n_anio_c;
-                    dc.DescCliente[tamC].Estado = 0;
-
-                }
-
-            }
-
+    //FECHA DE CADUCIDAD
+    int fch_ok;
+    do{
+        fch_ok = comprobar_fecha(fch_sist, fch_cad);
+        printf(" comp: %d ", fch_ok);
+        if(fch_ok != 1){
+            printf("Fecha de caducidad no valida. Genera una valida.\n");
+            fch_cad = crear_fechacad(fch_sist);
         }
+    } while (fch_ok != 1);
+    
+    
+    dc.DescCliente[new_pos].dia_cad = fch_cad.dia;
+    dc.DescCliente[new_pos].mes_cad = fch_cad.mes;
+    dc.DescCliente[new_pos].anio_cad = fch_cad.anio;
 
-    }
+    dc.DescCliente[new_pos].Estado = 0;
 
-    return D;
+    dc.tam++;
+
+    Guardar_DescuentosClientes(dc);
 }
 

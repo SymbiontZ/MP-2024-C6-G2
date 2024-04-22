@@ -35,7 +35,9 @@ int input_int();
 
 //PRECONDICION: Se le pasa dos estructuras tipo fecha, la fecha que quieres comparar y la fecha limite.
 //POSCONDICION: Devuelve un 1 si no ha pasado la fecha limite y un 0 si no la ha pasado.
-int comprobar_fecha(fecha, fecha );
+int comprobar_fecha(fecha fch_comp, fecha fch_lim);
 
-
+//PRECONDICION: Se le pasa una estructura tipo fecha con valores asignados a comprobar.
+//POSCONDICION: Devuelve una estructura tipo fecha para usarlo como fecha de caducidad.
+fecha crear_fechacad(fecha fch_base);
 #endif

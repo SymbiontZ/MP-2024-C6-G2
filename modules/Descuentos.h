@@ -104,9 +104,9 @@ Descuentos Listar_Descuentos(Descuentos);
 //Postcondición: Devuelve la estructura Descuentos con las modificaciones realizadas
 Descuentos Modificar_Descuentos(Descuentos);
 
-//Precondición: Recibe 2 estructuras (Descuentos, DescClientes)
-//Postcondición: Devuelve la estructura Descuentos con el descuento asignado al cliente indicado
-Descuentos Asignar_Descuentos(Descuentos, DescClientes);
+//Precondición: Recibe estrucutra DescuentosClientes, la cadena codigo desc, la id del cliente y una estructura fecha con la fecha de caducidad.
+//Postcondición: Asigna un descuento a un cliente correctamente
+void Asignar_Descuentos(DescClientes dc, char cod_desc[], int id_cliente, fecha fch_cad);
 
 //Precondición: Recibe la estructura Descuentos
 //Postcondición: Devuelve la estructura Descuentos con un nuevo descuento
