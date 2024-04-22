@@ -374,7 +374,7 @@ void ver_perfil_t(transport_vect transports, int pos){
 	
 		printf("\nInformación de su perfil:\n ID DEL SISTEMA: %04d\n NOMBRE: %s\n EMAIL: %s\n EMPRESA: %s\n CIUDAD ASIGNADA: %s\n", transports.transportistas[pos].Id_transp, transports.transportistas[pos].Nombre, transports.transportistas[pos].email, transports.transportistas[pos].Nom_Emp, transports.transportistas[pos].Ciudad);
 		
-		printf("\n¿Qué desea hacer?\n <1> Cambiar nombre.\n <2> Cambiar email.\n <3> Cambiar contraseña.\n <0> Volver.\n Elija una opción: ");
+		printf("\n¿Qué desea hacer?\n <1> Cambiar nombre.\n <2> Cambiar contraseña.\n <0> Volver.\n Elija una opción: ");
 		if(scanf("%i",&op)!=1){
 			fflush(stdin);
 			printf("\nError: introduzca una entrada válida: ");
@@ -384,8 +384,8 @@ void ver_perfil_t(transport_vect transports, int pos){
 		else{
 			switch(op){
 				case 1: cambiar_nombre_t(transports, pos); break;
-				case 2: cambiar_email_t(transports, pos); break;
-				case 3: cambiar_contrasena_t(transports, pos); break;
+				//case 2: cambiar_email_t(transports, pos); break;
+				case 2: cambiar_contrasena_t(transports, pos); break;
 				case 0: break;
 				default: break;
 			}
@@ -415,7 +415,7 @@ void cambiar_nombre_t(transport_vect transports, int pos){
 }
 
 
-
+/*
 //Precondición: Recibe una estructura de tipo admin_prov_vect (el vector de usuarios tipo adminprov), y la posición a utilizar en él.
 //Postcondición: No devuelve nada. Se habrá cambiado el email del usuario guardado en el puntero.
 void cambiar_email_t(transport_vect transports, int pos){
@@ -434,8 +434,7 @@ void cambiar_email_t(transport_vect transports, int pos){
 	sprintf(transports.transportistas[pos].email, "%s@%s.com", nuevo_email, prefijo);
 	
 }
-
-
+*/
 
 //Precondición: Recibe una estructura de tipo admin_prov_vect (el vector de usuarios tipo adminprov), y la posición a utilizar en él.
 //Postcondición: No devuelve nada. Se habrá cambiado la contraseña del usuario guardada en el puntero, o no.
