@@ -96,7 +96,11 @@ produ_vect listar_productos (produ_vect);
 
 //PRECONDICIÓN:
 //POSCONDICIÓN:
-produ_vect buscador_productos (produ_vect);
+int buscador_prodnombre ();
+
+//PRECONDICIÓN:
+//POSCONDICIÓN:
+int buscador_prodidcateg ();
 
 //PRECONDICIÓN:
 //POSCONDICIÓN:
