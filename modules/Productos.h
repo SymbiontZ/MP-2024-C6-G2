@@ -89,11 +89,17 @@ produ_vect modificar_productos (produ_vect);
 //PRECONDICIÓN:
 //POSCONDICIÓN:
 produ_vect eliminar_productos (produ_vect);
+
+//PRECONDICIÓN:
+//POSCONDICIÓN:
 void listar_productos (produ_vect);
+
+//PRECONDICIÓN:
+//POSCONDICIÓN:
 produ_vect buscador_productos (produ_vect);
 
 //PRECONDICIÓN:
 //POSCONDICIÓN:
-void menu_prod (produ_vect);
+int buscador_prodidcateg ();
 
 #endif
