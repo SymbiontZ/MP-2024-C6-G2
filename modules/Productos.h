@@ -96,14 +96,14 @@ produ_vect listar_productos (produ_vect);
 
 //PRECONDICIÓN:
 //POSCONDICIÓN:
+void menu_prod (produ_vect);
+
+//PRECONDICIÓN:
+//POSCONDICIÓN:
 int buscador_prodnombre ();
 
 //PRECONDICIÓN:
 //POSCONDICIÓN:
 int buscador_prodidcateg ();
-
-//PRECONDICIÓN:
-//POSCONDICIÓN:
-void menu_prod (produ_vect);
 
 #endif
