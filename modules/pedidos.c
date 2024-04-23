@@ -1100,15 +1100,22 @@ void modificar_devoluciones(devoluciones d, prod_pedidos prod_p,  pedidos p){
     produ_vect prod = cargar_productos();
     clients c = cargar_clientes();
 
+    
     for(i=0;i<d.lon;i++){
         id_ped=d.devoluciones[i].id_pedido;
-        if(id_ped==p.pedidos[j].id_pedido){
-            for(k=0;c.n_clients;k++){
-                if(p.pedidos[j].id_cliente==c.clients[k].Id_cliente){
-                    strcpy(nom_cliente, c.clients[k].Nom_cliente); //guardo el nombre del cliente que corresponde a esa devolucion
+        printf("id pedido devoluciones: %d\n", id_ped);
+        
+        for(j=0;j<p.lon;j++){
+            printf("id pedido fichero: %d\n", p.pedidos[j].id_pedido);
+            if(id_ped==p.pedidos[j].id_pedido){
+                for(k=0;c.n_clients;k++){
+                    if(p.pedidos[j].id_cliente==c.clients[k].Id_cliente){
+                        strcpy(nom_cliente, c.clients[k].Nom_cliente); //guardo el nombre del cliente que corresponde a esa devolucion
+                    }
                 }
             }
         }
+        printf("prueba1\n");
 
         id_prod=d.devoluciones[i].id_prod;
         for(j=0;j<prod.num_prod;j++){
