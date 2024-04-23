@@ -141,7 +141,7 @@ void menucliente(clients C,int pos){
             menucliente_prod();
             break;
         case 3:
-            //Consultar_desc_cliente(C, pos);
+            Consultar_desc_cliente(pos, 0);
             break;
         case 4:
             menucliente_ped(pos);
@@ -352,8 +352,10 @@ void menuadmin(admin_prov_vect admin, int pos){
             menuadmin_transp();
             break;
         case 8:
+            menuadmin_desc();
             break;
         case 9:
+            menuadmin_devol();
             break;
         case 10:
             if(pos == 0)
@@ -368,6 +370,7 @@ void menuadmin(admin_prov_vect admin, int pos){
         }
     }while(opt != 0);
 }
+
 
 void menuadmin_cliente(){
     clients C = cargar_clientes();
@@ -844,9 +847,8 @@ void menuadmin_devol(){
             default:
                 break;
         }
-        guardar_transportista(T);
+       
     }while (opt != 0);
-    free(T.transportistas);
 }
 
 void listar_admin(admin_prov_vect admin){

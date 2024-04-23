@@ -101,6 +101,8 @@ typedef struct
     void menuadmin_cat();
     void menuadmin_ped();
     void menuadmin_transp();
+    void menuadmin_desc();
+    void mmenuadmin_devol();
 
     void listar_admin(admin_prov_vect );
     int buscar_admin(admin_prov_vect );

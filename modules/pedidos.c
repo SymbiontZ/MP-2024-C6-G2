@@ -118,7 +118,6 @@ int crear_pedido( pedidos p, int id_cliente, int modo){
         n_uds=0;
         fflush(stdin);
         id_producto=buscar_productos(productos); //la posicion de un producto es la misma que su id
-        printf("id producto seleccionado: %d\n",id_producto);
 
         v_prod=(int*)realloc(v_prod, n_products*sizeof(int));//agrego la id del producto seleccionad al vector productos
         
@@ -127,14 +126,14 @@ int crear_pedido( pedidos p, int id_cliente, int modo){
         v_uds=(int*)realloc(v_uds, n_products*sizeof(int));
         printf("Stock del producto: %d\n",productos.produ[id_producto].stock);
         printf("introduce el numero de unidades que desea del producto: \n");
-        scanf("%d", &n_uds);
+        n_uds = input_int();
 
         //comprobar unidades del producto validas
         printf("unidades seleccionadas: %d\n", n_uds);
         while(n_uds>productos.produ[id_producto].stock || n_uds<1){
             printf("ERROR: ha introducido una opcion válida\n");
             printf("Introduzca una opcion válida\n");
-            scanf("%d", &n_uds);
+            n_uds = input_int();
         }
         
 
@@ -153,7 +152,7 @@ int crear_pedido( pedidos p, int id_cliente, int modo){
             }
             printf("introduzca una opcion: \n");
             int resp;
-            scanf("%d", &resp);
+            resp = input_int();
 
             switch(resp){
                 case 1:
@@ -171,11 +170,10 @@ int crear_pedido( pedidos p, int id_cliente, int modo){
                     else{
                         printf("puede comprar %d unidades del producto\n", cantidad);
                         printf("desea añadir el producto [s/n]: \n");
-                        fflush(stdin);
                         char aux=confirmacion();
                         if(aux=='s' || aux=='S'){
                             printf("cuantas unidades desea introducir: \n"); //preguntar al usuario cuantas unidades quiere del producto 
-                            scanf("%d", &n_uds);
+                            n_uds = input_int();
                             
                         }
                         else{
@@ -276,12 +274,15 @@ int crear_pedido( pedidos p, int id_cliente, int modo){
             printf("opcion no valida");
     }
 
-    clear();
-    printf("Desea utilizar un cheque de descuento [s/n]: \n");
-    cheque=confirmacion();
+    /*** CHEQUE Y CODIGO DE DESCUENTO ***/
     int l,k, 
         conf=0;//variable para almacenar si el cliente tiene asociados codigos de descuento
     char cod_desc[11];
+
+    clear();
+    printf("Desea utilizar un cheque de descuento [s/n]: \n");
+    cheque=confirmacion();
+
     if(cheque=='s' || cheque == 'S'){
         //listar descuentos de ese cliente
         printf("Introduce el codigo del descuento que deseas utilizar: ");
@@ -290,6 +291,7 @@ int crear_pedido( pedidos p, int id_cliente, int modo){
         conf = comprobar_descuento(cod_desc, id_cliente);
         if(conf==0){
             printf("el codigo de descuento introducido es correcto\n");
+            marcar_aplicado(id_cliente, cod_desc);
             strcpy(p.pedidos[pos].id_cod, cod_desc);
         }
         else{
