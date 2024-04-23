@@ -81,5 +81,6 @@ void listar_devoluciones(pedidos, prod_pedidos, devoluciones);
 
 void menu_listadoped_estado();
 void listadoped_estado(prod_pedidos , char[]);
+void modificar_devoluciones(devoluciones, prod_pedidos, pedidos);
 
 #endif

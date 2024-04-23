@@ -1047,7 +1047,7 @@ void listar_devoluciones(pedidos p, prod_pedidos prod_p, devoluciones d){
             
         }
         id_prod=d.devoluciones[i].id_prod;
-        for(j=0;prod.num_prod;j++){
+        for(j=0;j<prod.num_prod;j++){
             if(id_prod==prod.produ[j].id_prod){
                 printf("nombre del producto: %s", prod.produ[j].nombre);
             }
@@ -1063,5 +1063,54 @@ void listar_devoluciones(pedidos p, prod_pedidos prod_p, devoluciones d){
                                               d.devoluciones[i].f_caducidad.mes,
                                               d.devoluciones[i].f_caducidad.anio);
     }
+
+}
+
+void modificar_devoluciones(devoluciones d, prod_pedidos prod_p,  pedidos p){
+    int i, j,k,
+        id_ped,
+        id_prod,
+        pos;
+    char nom_cliente[21];
+    char nom_prod[16];
+    printf("+--------------------------------------------------------------------------------+\n");
+    printf("| LISTA DE DEVOLUCIONES                                                          |\n");
+    printf("+--------------------------------------------------------------------------------+\n");
+    printf("<n< nombre cliente - nombre_producto - estado - fecha aceptacion - fehca caducidad\n");
+    produ_vect prod = cargar_productos();
+    clients c = cargar_clientes();
+
+    for(i=0;i<d.lon;i++){
+        id_ped=d.devoluciones[i].id_pedido;
+        if(id_ped==p.pedidos[j].id_pedido){
+            for(k=0;c.n_clients;k++){
+                if(p.pedidos[j].id_cliente==c.clients[k].Id_cliente){
+                    strcpy(nom_cliente, c.clients[k].Nom_cliente); //guardo el nombre del cliente que corresponde a esa devolucion
+                }
+            }
+        }
+
+        id_prod=d.devoluciones[i].id_prod;
+        for(j=0;j<prod.num_prod;j++){
+            if(id_prod==prod.produ[j].id_prod){
+                strcpy(nom_prod, prod.produ[j].nombre); //guardo el nombre del producto que corresponde a esa devolucion
+            }
+        }
+
+        printf("<%d> %s - %s - %s - %d/%d/%d - %d/%d/%d\n ", i+1,
+                                                            nom_cliente,
+                                                            nom_prod,
+                                                            d.devoluciones[i].estado,
+                                                            d.devoluciones[i].f_aceptacion.dia,
+                                                            d.devoluciones[i].f_aceptacion.mes,
+                                                            d.devoluciones[i].f_aceptacion.anio,
+                                                            d.devoluciones[i].f_caducidad.dia,
+                                                            d.devoluciones[i].f_caducidad.mes,
+                                                            d.devoluciones[i].f_caducidad.anio);
+    }
+
+    printf("introduce el numero n de la modificacion que desea modificar\n");
+    scanf("%d", &pos);
+    printf("posicion: %d\n", pos);
 
 }
