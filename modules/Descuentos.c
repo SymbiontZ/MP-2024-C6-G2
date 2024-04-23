@@ -723,3 +723,15 @@ void Listar_Descuentos_Aplicados(DescClientes dc){
         }
     }
 }
+
+int importe_descuento(char cod_desc[]){
+    Descuentos D = Cargar_Descuentos();
+    int i, importe;
+
+    for(i=0;i<D.tam;i++){
+        if(strcmp(cod_desc, D.Desc[i].Id_cod)== 0)
+            importe = D.Desc[i].Importe;
+    }
+
+    return importe;
+}
