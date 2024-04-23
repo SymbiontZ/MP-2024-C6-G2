@@ -107,7 +107,7 @@ Descuentos Modificar_Descuentos(Descuentos);
 
 //Precondición: Recibe estrucutra DescuentosClientes, la cadena codigo desc, la id del cliente y una estructura fecha con la fecha de caducidad.
 //Postcondición: Asigna un descuento a un cliente correctamente
-void Asignar_Descuentos(DescClientes dc, char cod_desc[], int id_cliente, fecha fch_cad);
+void Asignar_Descuentos(DescClientes dc, int id_cliente, fecha fch_cad);
 
 //Precondición: Recibe estrucutra DescuentosClientes
 //Postcondición: Asigna un codigo promocional a todos los clientes del sistema

@@ -173,7 +173,6 @@ void Consultar_Descuentos(DescClientes descuentosclientes){
 
 void Consultar_desc_cliente(int pos, int mode){
     clients Cliente = cargar_clientes();
-    printf("hola");
     DescClientes desccl = Cargar_DescuentosClientes();
 
     int i,
@@ -219,7 +218,7 @@ void Consultar_desc_cliente(int pos, int mode){
 
     if(n_desc == 0){
         printf("| NO TIENES CUPONES DISPONIBLES |\n");
-        printf("+---------------------------+");
+        printf("+-------------------------------+");
     }
 
 }
@@ -595,8 +594,8 @@ void Asignar_Descuentos(DescClientes dc, int id_cliente, fecha fch_cad){
         exit(EXIT_FAILURE);
     }
 
-    do
-    {
+    //ELEGIR CODIGO DE DESCUENTO
+    do{
         printf("Introduzca el codigo de descuento a asignar:");
         fflush(stdin);
         fgets(cod_desc, 11, stdin);
@@ -669,7 +668,7 @@ DescClientes Asignar_codpro(DescClientes dc){
     strcpy(cod_desc, "codpro");
 
     for(i=0; i<c.n_clients; i++){
-        Asignar_Descuentos(dc, cod_desc, c.clients[i].Id_cliente, fch_cad);
+        Asignar_Descuentos(dc, c.clients[i].Id_cliente, fch_cad);
     }
 
     return dc;

@@ -776,11 +776,11 @@ void menuadmin_desc(){
             case 7:
                 printf("Se va a proceder a buscar un cliente para asignar un codigo");
                 Sleep(2000);
-                pos = busqueda_cliente(C);
-                fch_cad = crear_fechacad(fch_act);
-                
-                
-
+                pos = busqueda_cliente();
+                if(pos != -1){
+                    fch_cad = crear_fechacad(fch_act);
+                    Asignar_Descuentos(Dc, pos, fch_cad);
+                }
                 break;
             
             case 0:         //CASO DE SALIDA
@@ -797,7 +797,56 @@ void menuadmin_desc(){
 }
 
 void menuadmin_devol(){
+    devoluciones Dev = cargar_devoluciones();
+    int opt;
+    char resp;
+    int pos, ped;          //Posicion del proveedor al que se le realizan los cambios.
 
+    do{
+        clear();
+        printf("+---------------------------------+\n");
+        printf("| QUE DESEA REALIZAR:             |\n");
+        printf("+---------------------------------+\n");
+        printf("| <1> Listado devoluciones        |\n");
+        printf("| <2> Dar de alta devolucion      |\n");
+        printf("| <3> Dar de baja devolucion      |\n");
+        printf("| <4> Modificar devolucion        |\n");
+        printf("| <5> Aceptar devolucion          |\n");
+        printf("| <6> Marcar devolucion recibida  |\n");
+        printf("| <0> Volver                      |\n");
+        printf("+---------------------------------+\n");
+ 
+        opt = input_int();
+        fflush(stdin);
+        switch (opt){
+            case 1:
+                
+                break;
+            case 2:
+                printf("Para hacer una devolucion tiene que elegir un cliente.");
+                Sleep(2000);
+                pos = busqueda_cliente();
+                    if (pos != -1){
+                        printf("Ahora tienes que seleccionar un pedido.\n");
+                        Sleep(2000);
+                        //BUSCAR PEDIDO
+                        crear_devolucion(Dev, ped, pos);
+                    }
+                break;
+            case 3:
+
+                break;
+            case 4:
+                break;
+            
+            case 0:         //CASO DE SALIDA
+                break;
+            default:
+                break;
+        }
+        guardar_transportista(T);
+    }while (opt != 0);
+    free(T.transportistas);
 }
 
 void listar_admin(admin_prov_vect admin){
