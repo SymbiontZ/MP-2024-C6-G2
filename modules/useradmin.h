@@ -5,7 +5,7 @@
 #include "empresas.h"
 #include "Productos.h"
 #include "pedidos.h"
-//#include "Descuentos.h"
+#include "Descuentos.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -97,6 +97,10 @@ typedef struct
     void menuadmin_cliente();
     void menuadmin_admin(admin_prov_vect );
     void menuadmin_prov(admin_prov_vect );
+    void menuadmin_prod();
+    void menuadmin_cat();
+    void menuadmin_ped();
+    void menuadmin_transp();
 
     void listar_admin(admin_prov_vect );
     int buscar_admin(admin_prov_vect );
@@ -106,7 +110,7 @@ typedef struct
     admin_prov_vect gestionar_admin (admin_prov_vect , int , int);
 
     admin_prov_vect admin_email(admin_prov_vect , int , int );
-    admin_prov_vect admin_psw(admin_prov_vect , int , int );
+    admin_prov_vect admin_contr(admin_prov_vect , int , int );
 
 #endif  
 

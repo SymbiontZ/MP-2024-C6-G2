@@ -104,15 +104,23 @@ typedef struct{
  
  //Precondición: No recibe nada.
  //Postcondición: No devuelve nada. Cambia el estado de un pedido elegido dentro de la propia función, y guarda los cambios.
- void cambiar_estado_pedido();
+ void cambiar_estado_pedido(int id_prov);
 
  //Precondición: No recibe nada.
  //Postcondición: No devuelve nada. Permite elegir al usuario entre buscar transportistas, listarlos o asignar alguno a un pedido.
- void asig_transport();
+ void modificar_asig_transport_menu(int id_prov);
  
  //Precondición: No recibe nada.
- //Postcondición: Devuelve 0 siempre por peculiaridades del código, que permite salir en cualquier momento.
- int modificar_asig_transport();
+ //Postcondición: Devuelve 0 si se completa la asignación de transportistas a un pedido, o -1 si se ha cancelado el proceso.
+ int modificar_asig_transport(int id_prov);
+ 
+ //Precondición: No recibe nada.
+ //Postcondición: No devuelve nada. Permite elegir al usuario entre listar los lockers del sistema o asignar alguno a un pedido.
+ void modificar_asig_lockers_menu(int pos);
+ 
+ //Precondición: No recibe nada.
+ //Postcondición: Devuelve 0 si se completa la asignación de lockers a un pedido, o -1 si se ha cancelado el proceso.
+ int modificar_asig_lockers(int id_prov);
 
 
 // --------------- FUNCIONES PARA EL MENU DE TRANSPORTISTA ---------------
@@ -128,7 +136,7 @@ typedef struct{
  
  //Precondición: Recibe un puntero a una estructura de transport.
  //Postcondición: No devuelve nada. Se habrá cambiado el email del usuario guardado en el puntero.
- void cambiar_email_t(transport_vect transports, int pos);
+ //void cambiar_email_t(transport_vect transports, int pos);
 
  //Precondición: Recibe un puntero a una estructura de transport.
  //Postcondición: No devuelve nada. Se habrá cambiado la contraseña del usuario guardada en el puntero, o no.

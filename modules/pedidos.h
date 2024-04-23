@@ -79,4 +79,7 @@ void eliminar_pedidos_productos(prod_pedidos, pedidos, int);
 void eliminar_productos_ped(prod_pedidos, int);
 void listar_devoluciones(pedidos, prod_pedidos, devoluciones);
 
+void menu_listadoped_estado();
+void listadoped_estado(prod_pedidos , char[]);
+
 #endif

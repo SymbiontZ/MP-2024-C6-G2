@@ -77,14 +77,14 @@ int input_int(){
     return num;
 }
 
-int comprobar_fecha(fecha fch_actual, fecha fch_limite){
-    if (fch_actual.anio > fch_limite.anio) //Si sobrepasa el anio
+int comprobar_fecha(fecha fch_comp, fecha fch_limite){
+    if (fch_comp.anio > fch_limite.anio) //Si sobrepasa el anio
         return 0;
-    else if(fch_actual.anio == fch_limite.anio){
-        if(fch_actual.mes > fch_limite.mes)
+    else if(fch_comp.anio == fch_limite.anio){
+        if(fch_comp.mes > fch_limite.mes)
             return 0;
-        else if(fch_actual.mes == fch_limite.mes){
-            if(fch_actual.dia > fch_limite.dia)
+        else if(fch_comp.mes == fch_limite.mes){
+            if(fch_comp.dia > fch_limite.dia)
                 return 0;
             else
                 return 1;
@@ -92,4 +92,27 @@ int comprobar_fecha(fecha fch_actual, fecha fch_limite){
             return 1;
     }else
         return 1;
+}
+
+
+fecha crear_fechacad(fecha fch_base){
+    fecha fch_cad;
+    int fch_ok;     //Variable para comprobar la fecha es valida
+    do{
+        printf("FECHA ACTUAL: %02d / %02d / %04d\n", fch_base.dia, fch_base.mes, fch_base.anio);
+        printf("Introduzca el dia que caduca: ");
+        fch_cad.dia = input_int();
+        printf("Introduzca el mes que caduca: ");
+        fch_cad.mes = input_int();
+        printf("Introduzca el anio que caduca: ");
+        fch_cad.anio = input_int();
+
+        fch_ok = comprobar_fecha(fch_base, fch_cad);
+        if (fch_ok != 1){
+            printf("La fecha indicada no es valida. Vuelva a intentarlo.\n");
+        }
+        
+    } while (fch_ok != 1);
+
+    return fch_cad;
 }

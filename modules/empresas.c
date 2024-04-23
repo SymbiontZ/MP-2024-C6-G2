@@ -9,8 +9,9 @@
 #include "complementos.h"
 #include "Productos.h"
 #include "pedidos.h"
+#include "lockers.h"
 
-// void listar_pedidos_prov(int id); void cambiar_estado_pedido(); void modificar_asig_transport();
+
 
 //	FUNCIONES DE INICIO DE SESION
 
@@ -24,18 +25,23 @@ void inicsesion_prov(admin_prov_vect provs, int pos){
 	int i = 3;
 	
 	clear();
-	printf("\nIntroduzca su contrasena: ");
-	scanf("%s", validar_contra);
-	terminador_cad(validar_contra);
+	do{
+		printf("\nIntroduzca su contrasena: ");
+		fgets(validar_contra, sizeof(validar_contra), stdin);
+		terminador_cad(validar_contra);
+	}while(strlen(validar_contra) == 0);
+		
 	do{
 		if(strcmp(provs.usuarios[pos].Contrasena, validar_contra) == 0){
 			menu_prov(provs, pos);
 			i = -1;
 		}
 		else{
-			printf("\nContrasena incorrecta, intentos restantes: %d\nVuelva a intentarlo: ", i);
-			scanf("%s", validar_contra);
-			terminador_cad(validar_contra);
+			do{
+				printf("\nContrasena incorrecta, intentos restantes: %d\nVuelva a intentarlo: ", i);
+				fgets(validar_contra, sizeof(validar_contra), stdin);
+				terminador_cad(validar_contra);
+			}while(strlen(validar_contra) == 0);
 			i--;
 		}
 	}while(i > 0);
@@ -55,19 +61,24 @@ void inicsesion_transport(transport_vect transports, int pos){
 	int i = 3;
 	
 	clear();
-	printf("\nIntroduzca su contrasena: ");
-	fflush(stdin);
-	fgets(validar_contra, sizeof(validar_contra), stdin);
-	terminador_cad(validar_contra);
+	do{
+		printf("\nIntroduzca su contrasena: ");
+		fflush(stdin);
+		fgets(validar_contra, sizeof(validar_contra), stdin);
+		terminador_cad(validar_contra);
+	}while(strlen(validar_contra) == 0);
+		
 	do{
 		if(strcmp(transports.transportistas[pos].Contrasena, validar_contra) == 0){
 			menu_transport(transports, pos);
 			i = -1;
 		}
 		else{
-			printf("\nContrasena incorrecta, intentos restantes: %d\nVuelva a intentarlo: ", i);
-			scanf("%s", validar_contra);
-			terminador_cad(validar_contra);
+			do{
+				printf("\nContrasena incorrecta, intentos restantes: %d\nVuelva a intentarlo: ", i);
+				scanf("%s", validar_contra);
+				terminador_cad(validar_contra);
+			}while(strlen(validar_contra) == 0);
 			i--;
 		}
 	}while(i > 0);
@@ -101,7 +112,7 @@ void menu_prov(admin_prov_vect provs, int pos){
 		printf("\nBienvenido, %s - ¿Qué desea hacer hoy?\n\n <1> Ver perfil.\n <2> Ver productos.\n <3> Administrar pedidos\n <0> Volver.\n Elija una opción: ", provs.usuarios[pos].email);
 		if(scanf("%i",&op)!=1){
 			fflush(stdin);
-			printf("\nError: introduzca una entrada válida.");
+			printf("\nError: introduzca una entrada válida: ");
 			Sleep(2000);
 			op=-1;
 		}
@@ -139,7 +150,7 @@ void menu_transport(transport_vect transports, int pos){
 		printf("\nBienvenido, %s - ¿Qué desea hacer hoy?\n\n <1> Ver perfil.\n <2> Ver repartos asignados.\n <3> Retornos.\n <0> Salir.\n Elija una opción: ", transports.transportistas[pos].email);
 		if(scanf("%i",&op)!=1){
 			fflush(stdin);
-			printf("\nError: introduzca una entrada válida.");
+			printf("\nError: introduzca una entrada válida: ");
 			Sleep(2000);
 			op=-1;
 		}
@@ -179,7 +190,7 @@ void ver_perfil(admin_prov_vect provs, int pos){
 		printf("\n¿Qué desea hacer?\n <1> Cambiar email.\n <2> Cambiar contraseña.\n <0> Volver.\n Elija una opción: ");
 		if(scanf("%i",&op)!=1){
 			fflush(stdin);
-			printf("\nError: introduzca una entrada válida.");
+			printf("\nError: introduzca una entrada válida: ");
 			Sleep(2000);
 			op = -1;
 		}
@@ -215,7 +226,7 @@ void ver_productos(admin_prov_vect provs, int pos){
 		printf("\nBienvenido al servicio de gestion de productos. Seleccione una opcion para continuar.\n\n <1> Ver mis productos.\n <2> Buscar un producto.\n <3> Modificar un producto\n <4> Añadir un producto al catalogo.\n <5> Retirar un producto del catalogo.\n Elija una opción: ", provs.usuarios[pos].email);
 		if(scanf("%i",&op)!=1){
 			fflush(stdin);
-			printf("\nError: introduzca una entrada válida.");
+			printf("\nError: introduzca una entrada válida: ");
 			Sleep(2000);
 			op=-1;
 		}
@@ -253,19 +264,19 @@ void ver_pedidos(admin_prov_vect provs, int pos){
 		
 		printf("\n	EMPRESA: %s\n", provs.usuarios[pos].Nombre);
 		
-		printf("\nBienvenido al servicio de gestion de peidos. Elija una opcion para continuar:\n\n <1> Ver pedidos asociados.\n <2> Cambiar estado de un pedido.\n <3> Modificar asignación de transportista.\n <4> Modificar asignación de locker. <0> Volver.\n Elija una opción: ", provs.usuarios[pos].email);
+		printf("\nBienvenido al servicio de gestion de pedidos. Elija una opcion para continuar:\n\n <1> Ver pedidos asociados.\n <2> Cambiar estado de un pedido.\n <3> Modificar asignación de transportista.\n <4> Modificar asignación de lockers. <0> Volver.\n Elija una opción: ", provs.usuarios[pos].email);
 		if(scanf("%i",&op)!=1){
 			fflush(stdin);
-			printf("\nError: introduzca una entrada válida.");
+			printf("\nError: introduzca una entrada válida: ");
 			Sleep(2000);
 			op=-1;
 		}
 		else{
 			switch(op){
-				case 1: listar_pedidos_prov(pos); break;
-				case 2: cambiar_estado_pedido(); break;
-				case 3: asig_transport(); break;
-				case 4: break;
+				case 1: listar_pedidos_prov(provs.usuarios[pos].Id_empresa); break;
+				case 2: cambiar_estado_pedido(provs.usuarios[pos].Id_empresa); break;
+				case 3: modificar_asig_transport_menu(provs.usuarios[pos].Id_empresa); break;
+				case 4: modificar_asig_lockers_menu(provs.usuarios[pos].Id_empresa); break;
 				case 0: break;
 				default: break;
 			}
@@ -305,24 +316,28 @@ void cambiar_contrasena(admin_prov_vect provs, int pos){
 	char nueva_contra[21], contra_compr[21];									// Cadenas donde guardamos la contraseña nueva, y su repetición.
 	int valido = 0, i = 0;
 	
-	printf("\nIntroduzca la contrasena actual: ");
-	fflush(stdin);
-	fgets(contra_compr, sizeof(contra_compr), stdin);
-	terminador_cad(contra_compr);
+	do{
+		printf("\nIntroduzca la contrasena actual: ");
+		fflush(stdin);
+		fgets(contra_compr, sizeof(contra_compr), stdin);
+		terminador_cad(contra_compr);
+	}while(strlen(contra_compr) == 0);
+	
 	if(strcmp(contra_compr, provs.usuarios[pos].Contrasena) == 0){							
 		do{
 			if(i > 3)
-				clear();
+				clear();	
+
 			printf("\nIndique la nueva contrasena: ");	
 			fflush(stdin);					
 			fgets(nueva_contra, sizeof(nueva_contra), stdin);
-			fflush(stdin);
 			terminador_cad(nueva_contra);
+
 			printf("\nIndiquela de nuevo de nuevo: ");
 			fflush(stdin);
 			fgets(contra_compr, sizeof(contra_compr), stdin);	
-			fflush(stdin);
 			terminador_cad(contra_compr);
+			
 			if(strcmp(nueva_contra,contra_compr) == 0)							// Si las contraseñas son iguales (el usuario no se ha equivocado), salimos del bucle.
 				valido = 1;
 			else	
@@ -359,18 +374,18 @@ void ver_perfil_t(transport_vect transports, int pos){
 	
 		printf("\nInformación de su perfil:\n ID DEL SISTEMA: %04d\n NOMBRE: %s\n EMAIL: %s\n EMPRESA: %s\n CIUDAD ASIGNADA: %s\n", transports.transportistas[pos].Id_transp, transports.transportistas[pos].Nombre, transports.transportistas[pos].email, transports.transportistas[pos].Nom_Emp, transports.transportistas[pos].Ciudad);
 		
-		printf("\n¿Qué desea hacer?\n <1> Cambiar nombre.\n <2> Cambiar email.\n <3> Cambiar contraseña.\n <0> Volver.\n Elija una opción: ");
+		printf("\n¿Qué desea hacer?\n <1> Cambiar nombre.\n <2> Cambiar contraseña.\n <0> Volver.\n Elija una opción: ");
 		if(scanf("%i",&op)!=1){
 			fflush(stdin);
-			printf("\nError: introduzca una entrada válida.");
+			printf("\nError: introduzca una entrada válida: ");
 			Sleep(2000);
 			op=-1;
 		}
 		else{
 			switch(op){
 				case 1: cambiar_nombre_t(transports, pos); break;
-				case 2: cambiar_email_t(transports, pos); break;
-				case 3: cambiar_contrasena_t(transports, pos); break;
+				//case 2: cambiar_email_t(transports, pos); break;
+				case 2: cambiar_contrasena_t(transports, pos); break;
 				case 0: break;
 				default: break;
 			}
@@ -400,7 +415,7 @@ void cambiar_nombre_t(transport_vect transports, int pos){
 }
 
 
-
+/*
 //Precondición: Recibe una estructura de tipo admin_prov_vect (el vector de usuarios tipo adminprov), y la posición a utilizar en él.
 //Postcondición: No devuelve nada. Se habrá cambiado el email del usuario guardado en el puntero.
 void cambiar_email_t(transport_vect transports, int pos){
@@ -419,8 +434,7 @@ void cambiar_email_t(transport_vect transports, int pos){
 	sprintf(transports.transportistas[pos].email, "%s@%s.com", nuevo_email, prefijo);
 	
 }
-
-
+*/
 
 //Precondición: Recibe una estructura de tipo admin_prov_vect (el vector de usuarios tipo adminprov), y la posición a utilizar en él.
 //Postcondición: No devuelve nada. Se habrá cambiado la contraseña del usuario guardada en el puntero, o no.
@@ -429,25 +443,28 @@ void cambiar_contrasena_t(transport_vect transports, int pos){
 	char nueva_contra[21], contra_compr[21];									// Cadenas donde guardamos la contraseña nueva, y su repetición.
 	int valido = 0, i = 0;
 	
-	printf("\nIntroduzca la contrasena actual: ");
-	fflush(stdin);
-	fgets(contra_compr, sizeof(contra_compr), stdin);
-	fflush(stdin);
-	terminador_cad(contra_compr);
+	do{
+		printf("\nIntroduzca la contrasena actual: ");
+		fflush(stdin);
+		fgets(contra_compr, sizeof(contra_compr), stdin);
+		terminador_cad(contra_compr);
+	}while(strlen(contra_compr) == 0);
+	
 	if(strcmp(contra_compr, transports.transportistas[pos].Contrasena) == 0){							
 		do{
 			if(i > 3)
 				clear();
+				
 			printf("\nIndique la nueva contrasena: ");						
 			fflush(stdin);
 			fgets(nueva_contra, sizeof(nueva_contra), stdin);
-			fflush(stdin);
 			terminador_cad(nueva_contra);
+			
 			printf("\nIndiquela de nuevo de nuevo: ");
 			fflush(stdin);
 			fgets(contra_compr, sizeof(contra_compr), stdin);	
-			fflush(stdin);
 			terminador_cad(contra_compr);
+			
 			if(strcmp(nueva_contra,contra_compr) == 0)							// Si las contraseñas son iguales (el usuario no se ha equivocado), salimos del bucle.
 				valido = 1;
 			else	
@@ -507,7 +524,7 @@ int buscar_prov(admin_prov_vect provs){
         while(opt > 2 || opt < 0){
             if(scanf("%i",&opt) != 1){
 				fflush(stdin);
-				printf("\nError: introduzca una entrada válida.");
+				printf("\nError: introduzca una entrada válida: ");
 				Sleep(2000);
 				opt = -1;
 			}
@@ -563,7 +580,7 @@ int buscar_prov_tipo(admin_prov_vect provs, int pos, int tipo){
             len = 21;
 
         for(i = 1; i < provs.tam; i++){           		// Búsqueda por nombre de empresa asociada.
-            if(strncmp(cad_busq, provs.usuarios[i].Nombre, len) == 0){
+            if(strncmp(cad_busq, provs.usuarios[i].Nombre, len) == 0 && strncmp(provs.usuarios[i].Perfil_usuario, "proveedor", strlen("proveedor")) == 0){
                 printf("<%d> %s | %s\n", n_coinc+1,  provs.usuarios[i].Nombre, provs.usuarios[i].email);
                 n_coinc++;
                 vect_coinc = (int*)realloc(vect_coinc, n_coinc*sizeof(int));
@@ -574,7 +591,7 @@ int buscar_prov_tipo(admin_prov_vect provs, int pos, int tipo){
         if(len > 31)
             len = 31;
         for(i = 1; i < provs.tam; i++){          		// Búsqueda por email.
-            if(strncmp(cad_busq, provs.usuarios[i].email, len) == 0){
+            if(strncmp(cad_busq, provs.usuarios[i].email, len) == 0 && strncmp(provs.usuarios[i].Perfil_usuario, "proveedor", strlen("proveedor")) == 0){
                 printf("<%d> %s | %s\n",n_coinc+1,  provs.usuarios[i].Nombre, provs.usuarios[i].email);
                 n_coinc++;
                 vect_coinc = (int*)realloc(vect_coinc, n_coinc*sizeof(int));
@@ -621,11 +638,11 @@ admin_prov_vect alta_prov(admin_prov_vect provs){
 	
 	clear();
     
-    printf("+------------------------------+\n");
-    printf("| SERVICIO DE ALTAS DE USUARIO |\n");
-    printf("+------------------------------+\n");
+    printf("+--------------------------------+\n");
+    printf("| SERVICIO DE ALTAS DE PROVEEDOR |\n");
+    printf("+--------------------------------+\n");
     
-    printf("\n+- Introduzca los datos del nuevo usuario del sistema -+\n\n");
+    printf("\n+- Introduzca los datos del nuevo proveedor del sistema -+\n\n");
     
 	provs.usuarios = realloc(provs.usuarios, (provs.tam + 1) * sizeof(admin_prov));	
 	provs.tam++;
@@ -636,7 +653,7 @@ admin_prov_vect alta_prov(admin_prov_vect provs){
         exit(33);
     }
     
-    prov_nombre(provs, provs.tam - 1);
+    (provs, provs.tam - 1);
     nueva_id = buscar_id_prov(provs, provs.usuarios[provs.tam - 1].Nombre);
     provs.usuarios[provs.tam - 1].Id_empresa = nueva_id;
     prov_email(provs, provs.tam - 1);    
@@ -676,7 +693,6 @@ admin_prov_vect baja_prov(admin_prov_vect provs, int id){
 		if(respuesta == 'S' || respuesta == 's'){
 			for (int i = id; i < provs.tam - 1; i++) {				// Desplazamos la posicion de los usuarios en el vector
 				provs.usuarios[i] = provs.usuarios[i + 1];
-				provs.usuarios[i].Id_empresa = i;				// Reasignamos el identificador de cada usuario
 			}
 			
 			provs.tam--;
@@ -724,18 +740,18 @@ admin_prov_vect modificar_prov(admin_prov_vect provs, int id){
 		printf("	EMAIL: %s\n", provs.usuarios[id].email);	
 		printf("	PRIVILEGIOS: %s\n\n", provs.usuarios[id].Perfil_usuario);	
 		
-		printf("Desea hacer algun cambio?\n\n <1> Cambiar empresa asociada.\n <2> Cambiar email de usuario.\n <3> Cambiar contrasena.\n \n <0> Volver.\n Seleccione una opcion: ");
+		printf("Desea hacer algun cambio?\n\n <1> Cambiar email de usuario.\n <2> Cambiar contrasena.\n \n <0> Volver.\n Seleccione una opcion: ");
 		if(scanf("%i",&op)!=1){
 			fflush(stdin);
-			printf("\nError: introduzca una entrada válida.");
+			printf("\nError: introduzca una entrada válida: ");
 			Sleep(2000);
 			op=-1;
 		}
 		else{
 			switch(op){
-				case 1: prov_nombre(provs, id); break;
-				case 2: prov_email(provs, id); break;
-				case 3: prov_contra(provs, id); break;
+				//case 1: prov_nombre(provs, id); break;
+				case 1: prov_email(provs, id); break;
+				case 2: prov_contra(provs, id); break;
 				//case 4: prov_privi(provs, id); break;
 				case 0: break;
 				default: break;
@@ -749,6 +765,7 @@ admin_prov_vect modificar_prov(admin_prov_vect provs, int id){
 }
 
 // ###################### SUBFUNCIONES DE GESTIÓN DE PROVEEDORES ######################
+
 
 //Precondición: Recibe una estructura de tipo admin_prov_vect (el vector de proveedores / administradores) ya rellena, y la 
 // ID del proveedor a registrar.
@@ -798,16 +815,19 @@ void prov_contra(admin_prov_vect provs, int id){
 	char contra[16], contra_rep[16];
 	int contra_valida = 0;
 	
-	printf("<3> Contrasena: ");
-	fflush(stdin);
-	fgets(contra, sizeof(contra), stdin);
-	
-	printf("	Repita la contrasena: ");
-	fflush(stdin);
-	fgets(contra_rep, sizeof(contra_rep), stdin);
-	
-	terminador_cad(contra);
-	terminador_cad(contra_rep);
+	do{
+		printf("<3> Contrasena: ");
+		fflush(stdin);
+		fgets(contra, sizeof(contra), stdin);
+		terminador_cad(contra);	
+	}while(strlen(contra) == 0);
+		
+	do{
+		printf("	Repita la contrasena: ");
+		fflush(stdin);
+		fgets(contra_rep, sizeof(contra_rep), stdin);
+		terminador_cad(contra_rep);	
+	}while(strlen(contra_rep) == 0);	
 	
 	if(strcmp(contra, contra_rep) == 0 && strlen(contra) != 0)
 		contra_valida = 1;
@@ -816,16 +836,19 @@ void prov_contra(admin_prov_vect provs, int id){
 		
 		contra_valida = 0;
 		
-		printf("	Contrasenas dispares. Contrasena: ");
-		fflush(stdin);
-		fgets(contra, sizeof(contra), stdin);
-	
-		printf("	Repita la contrasena: ");
-		fflush(stdin);
-		fgets(contra_rep, sizeof(contra_rep), stdin);
-	
-		terminador_cad(contra);
-		terminador_cad(contra_rep);
+		do{
+			printf("	Contrasenas dispares. Contrasena: ");
+			fflush(stdin);
+			fgets(contra, sizeof(contra), stdin);
+			terminador_cad(contra);
+		}while(strlen(contra) == 0);
+			
+		do{
+			printf("	Repita la contrasena: ");
+			fflush(stdin);
+			fgets(contra_rep, sizeof(contra_rep), stdin);
+			terminador_cad(contra_rep);
+		}while(strlen(contra_rep) == 0);
 	
 		if(strcmp(contra, contra_rep) == 0)
 			contra_valida = 1;
@@ -849,7 +872,7 @@ void prov_contra(admin_prov_vect provs, int id){
 	do{
 		if(scanf("%i",&op)!=1){
 			fflush(stdin);
-			printf("\nError: introduzca una entrada válida.");
+			printf("\nError: introduzca una entrada válida: ");
 			Sleep(2000);
 			op=-1;
 		}
@@ -910,7 +933,7 @@ void listar_pedidos_prov(int id){
 
 //Precondición: No recibe nada.
 //Postcondición: No devuelve nada. Cambia el estado de un pedido elegido dentro de la propia función, y guarda los cambios.
-void cambiar_estado_pedido(){
+void cambiar_estado_pedido(int id_prov){
 	int op = -1, id;
 	prod_pedidos prods_pedidos = cargar_prod_pedidos();
 	produ_vect prods = cargar_productos();
@@ -920,12 +943,12 @@ void cambiar_estado_pedido(){
 	}while(scanf("%i", &id) != 1);
 	
 	for(int i = 0; i < prods_pedidos.lon; i++){
-		if(id == prods_pedidos.prod_pedidos[i].id_pedido){
+		if(id == prods_pedidos.prod_pedidos[i].id_pedido && prods.produ[ prods_pedidos.prod_pedidos[i].id_prod ].id_gestor == id_prov){
 			do{
-				printf("\n\n Producto [%04d - %s].\nElija un estado para continuar:\n\n <1> En preparación.\n <2> Enviado.\n <0> Cancelar\n Elija una opción: ", prods_pedidos.prod_pedidos[i].id_prod, prods.produ[ prods_pedidos.prod_pedidos[i].id_prod ].nombre);
+				printf("\n\n {Pedido %04d} Producto [%04d - %s].\nElija un estado para continuar:\n\n <1> En preparación.\n <2> Enviado.\n <0> Cancelar\n Elija una opción: ", id, prods_pedidos.prod_pedidos[i].id_prod, prods.produ[ prods_pedidos.prod_pedidos[i].id_prod ].nombre);
 				if(scanf("%i",&op)!=1){
 					fflush(stdin);
-					printf("\nError: introduzca una entrada válida.");
+					printf("\nError: introduzca una entrada válida: ");
 					Sleep(2000);
 					op=-1;
 				}
@@ -955,15 +978,15 @@ void cambiar_estado_pedido(){
 
 //Precondición: No recibe nada.
 //Postcondición: No devuelve nada. Permite elegir al usuario entre buscar transportistas, listarlos o asignar alguno a un pedido.
-void asig_transport(){
+void modificar_asig_transport_menu(int id_prov){
 	int op = -1;
 	transport_vect transports = cargar_transportistas();
 		
 	do{
-		printf("\n\nElija una opcion para continuar.\n <1> Ver transportistas del sistema.\n <2> Buscar transporista.\n <3> Asignar transportista a pedido.\n <0> Volver.\n Elija una opción: ");
+		printf("\n\nElija una opcion para continuar.\n <1> Ver transportistas del sistema.\n <2> Buscar transportista.\n <3> Asignar transportista a pedido.\n <0> Volver.\n Elija una opción: ");
 		if(scanf("%i",&op)!=1){
 			fflush(stdin);
-			printf("\nError: introduzca una entrada válida.");
+			printf("\nError: introduzca una entrada válida: ");
 			Sleep(2000);
 			op=-1;
 		}
@@ -971,7 +994,7 @@ void asig_transport(){
 			switch(op){
 				case 1: listar_transport(transports); break;
 				case 2: buscar_transport(transports); break;
-				case 3: modificar_asig_transport(); break;
+				case 3: modificar_asig_transport(id_prov); break;
 				case 0: break;
 				default: break;
 			}
@@ -981,8 +1004,8 @@ void asig_transport(){
 }
 
 //Precondición: No recibe nada.
-//Postcondición: Devuelve 0 siempre por peculiaridades del código, que permite salir en cualquier momento.
-int modificar_asig_transport(){
+//Postcondición: Devuelve 0 si se completa la asignación de transportistas a un pedido, o -1 si se ha cancelado el proceso.
+int modificar_asig_transport(int id_prov){
 	prod_pedidos prods_pedidos = cargar_prod_pedidos();
 	transport_vect transports = cargar_transportistas();
 	produ_vect prods = cargar_productos();
@@ -993,17 +1016,17 @@ int modificar_asig_transport(){
 	}while(scanf("%i", &id) != 1);
 	
 	if(id == 0)
-		return 0;
+		return -1;
 		
-	for(int i = 0; i < prods_pedidos.lon; i++){																						// Buscamos el pedido...
-		if(id == prods_pedidos.prod_pedidos[i].id_pedido){
+	for(int i = 0; i < prods_pedidos.lon; i++){																					// Buscamos el pedido...
+		if(id == prods_pedidos.prod_pedidos[i].id_pedido && prods.produ[i].id_gestor == id_prov){
 			encontrado_ped = 1;				
 			i = prods_pedidos.lon;	
 		}
 	}
 	
 	if(!encontrado_ped)																											// Si no se encuentra el pedido...
-		printf("\nNo se ha podido encontrar el pedido y/o el producto solicitado.");
+		printf("\nNo se ha podido encontrar el pedido asociado a su empresa.");
 	else{																														// Si se encuentra...	
 		do{
 			do{
@@ -1011,12 +1034,12 @@ int modificar_asig_transport(){
 			}while(scanf("%i", &id_p) != 1);
 			
 			if(id_p == 0)
-				return 0;
+				return -1;
 			for(int i = 0; i < prods_pedidos.lon; i++){	
-				if(id_p == prods_pedidos.prod_pedidos[i].id_prod && id == prods_pedidos.prod_pedidos[i].id_pedido){								// Buscamos el producto dentro del pedido...
+				if(id_p == prods_pedidos.prod_pedidos[i].id_prod && id == prods_pedidos.prod_pedidos[i].id_pedido && prods.produ[i].id_gestor == id_prov){	// Buscamos el producto dentro del pedido...
 					encontrado_prod = 1;
 					if(strcmp(prods_pedidos.prod_pedidos[i].estado, "enPreparación") == 0) 												// Si se encuentra en preparación...
-						printf("\n{Pedido %d} El producto [%04d - %s] se encuentra en preparación, no es posible asignar un transportista todavia.", id, prods_pedidos.prod_pedidos[i].id_prod, prods.produ[ prods_pedidos.prod_pedidos[i].id_prod ].nombre);
+						printf("\n{Pedido %04d} El producto [%04d - %s] se encuentra en preparación, no es posible asignar un transportista todavia.", id, prods_pedidos.prod_pedidos[i].id_prod, prods.produ[ prods_pedidos.prod_pedidos[i].id_prod ].nombre);
 					else{
 						do{																												// Si no...
 							do{
@@ -1024,7 +1047,7 @@ int modificar_asig_transport(){
 							}while(scanf("%i", &id_t) != 1);
 							
 							if(id_t == 0)
-								return 0;
+								return -1;
 								
 							for(int j = 0; j < transports.tam; j++){																	// Buscamos al transportista en el vector.
 								if(id == transports.transportistas[j].Id_transp){														// Si se encuentra...
@@ -1051,7 +1074,108 @@ int modificar_asig_transport(){
 	return 0;
 }
 
+//Precondición: No recibe nada.
+//Postcondición: No devuelve nada. Permite elegir al usuario entre listar los lockers del sistema o asignar alguno a un pedido.
+void modificar_asig_lockers_menu(int id_prov){
+	
+	Vect_Lock lockers = Cargar_Lockers();
+	int op = -1;
+	
+	do{
+		printf("\n\nElija una opcion para continuar.\n <1> Ver lockers disponibles.\n <2> Asignar locker a pedido.\n <0> Volver.\n Elija una opción: ");
+		if(scanf("%i",&op)!=1){
+			fflush(stdin);
+			printf("\nError: introduzca una entrada válida: ");
+			Sleep(2000);
+			op=-1;
+		}
+		else{
+			switch(op){
+				case 1: Listar_Lockers(lockers); break;
+				case 2: modificar_asig_lockers(id_prov); break;
+				case 0: break;
+				default: break;
+			}
+		}
+	}while(op!=0);
+	
+}
 
+//Precondición: No recibe nada.
+//Postcondición: Devuelve 0 si se completa la asignación de lockers a un pedido, o -1 si se ha cancelado el proceso.
+int modificar_asig_lockers(int id_prov){
+	pedidos pedidos = cargar_pedidos();
+	prod_pedidos prods_pedidos = cargar_prod_pedidos();
+	produ_vect prods = cargar_productos();
+	Vect_Lock lockers = Cargar_Lockers();
+	int id_ped = 0, enc_ped = 0, enc_lock = 0, lock_disp = 0, num_prods = 0, num_prods_asig = 0;
+	char lock[11];
+	
+	do{
+		printf("Indique la ID del pedido, o pulse 0 para volver: ");
+	}while(scanf("%i", &id_ped) != 1);
+	
+	if(id_ped == 0)
+		return -1;
+	
+	for(int i = 0; i < prods_pedidos.lon; i++){																							// Buscamos el pedido...
+		if(id_ped == prods_pedidos.prod_pedidos[i].id_pedido && prods.produ[ prods_pedidos.prod_pedidos[i].id_prod ].id_gestor == id_prov){
+			enc_ped = 1;				
+			i = prods_pedidos.lon;	
+		}
+	}	
+					
+	if(enc_ped){
+		for(int i = 0; i < prods_pedidos.lon; i++){																						// Contamos los productos asociados al pedido.
+			if(id_ped == prods_pedidos.prod_pedidos[i].id_pedido && prods.produ[ prods_pedidos.prod_pedidos[i].id_prod ].id_gestor == id_prov)
+				num_prods++;
+		}
+		
+		printf("\n{Pedido %04d} Indique el locker a asignar: ", prods_pedidos.prod_pedidos[id_ped].id_pedido);
+		do{																																// Solicitamos lockers hasta que el usuario indique uno existente y con espacio disponible.
+			fgets(lock, sizeof(lock), stdin);
+			
+			for(int j = 0; j < lockers.tam; j++){																						// Buscamos el locker en el registro.
+				if(strcmp(lock, lockers.Lock[j].Id_locker) == 0){																		
+					j = lockers.tam;												
+					if(lockers.Lock[j].Num_compT - lockers.Lock[j].Num_compOkup < num_prods){											// Comprobamos si hay espacio disponible.
+						printf("\nEl locker indicado no tiene espacio suficiente (%i/%i para %i productos). Indique otro.", lockers.Lock[j].Num_compT - lockers.Lock[j].Num_compOkup,
+																															lockers.Lock[j].Num_compT, num_prods);
+					}else{
+						enc_lock = 1;
+						lockers.Lock[j].Num_compOkup++;
+						strcpy(pedidos.pedidos[id_ped].id_locker, lock);
+					}
+				}
+			}
+		}while(!enc_lock);	
+		
+		for(int i = 0; i < prods_pedidos.lon; i++){																									// Buscamos cada producto del pedido indicado.
+			if(id_ped == prods_pedidos.prod_pedidos[i].id_pedido && prods.produ[ prods_pedidos.prod_pedidos[i].id_prod ].id_gestor == id_prov){		// Si lo encontramos...
+				if(strcmp(prods_pedidos.prod_pedidos[i].estado, "enLocker") == 0){																	// Comprobamos si el pedido está en un estado en el que se le pueda asignar un locker.																													
+					printf("\n{Pedido %04d} Asignado el locker %s al producto [%04d - %s].", id_ped, lock, prods.produ[ prods_pedidos.prod_pedidos[i].id_prod ].id_prod, 
+																							 prods.produ[ prods_pedidos.prod_pedidos[i].id_prod ].nombre);
+					strcpy(prods_pedidos.prod_pedidos[i].cod_locker, lock);																			// Asignamos el locker indicado a aquellos productos del pedido que estén en un estado válido.
+					num_prods_asig++;
+				}else{
+					printf("\n{Pedido %04d} El producto [%04d - %s] no se encuentra en un estado válido para asignar lockers.", id_ped, prods.produ[ prods_pedidos.prod_pedidos[i].id_prod ].id_prod, 
+																																prods.produ[ prods_pedidos.prod_pedidos[i].id_prod ].nombre);
+				}		
+			}
+		}
+		printf("\n\n{Pedido %04d} Asignados %i productos al locker %s, de un total de %i revisados.", id_ped, num_prods_asig, num_prods);
+	}else{
+		printf("\nNo se ha encontrado el locker solicitado.");
+	}
+
+	guardar_pedido(pedidos);
+	guardar_productos_pedidos(prods_pedidos);
+	Guardar_Lockers(lockers);
+
+	Sleep(2000);
+	
+	return 0;
+}
 
 // FUNCIONES PARA LA GESTIÓN DE TRANSPORTISTAS
 
@@ -1099,7 +1223,7 @@ int buscar_transport(transport_vect transports){
         while(opt > 3 || opt < 0){
             if(scanf("%i",&opt) != 1){
 				fflush(stdin);
-				printf("\nError: introduzca una entrada válida.");
+				printf("\nError: introduzca una entrada válida: ");
 				Sleep(2000);
 				opt=-1;
 			}
@@ -1327,7 +1451,7 @@ transport_vect modificar_transport(transport_vect transports, int id){
 		printf("Desea hacer algun cambio?\n\n <1> Cambiar nombre.\n <2> Cambiar empresa asociada.\n <3> Cambiar email de usuario.\n <4> Cambiar contrasena.\n <5> Cambiar ciudad de reparto.\n <0> Volver.\n Seleccione una opcion: ");
 		if(scanf("%i",&op)!=1){
 			fflush(stdin);
-			printf("\nError: introduzca una entrada válida.");
+			printf("\nError: introduzca una entrada válida: ");
 			Sleep(2000);
 			op=-1;
 		}
@@ -1489,7 +1613,7 @@ admin_prov_vect cargar_adminprov(){
 	//COMPROBACION FICHERO VACIO//
 	char verif = fgetc(f_AdminProv);
 	if (verif == EOF){
-		fprintf(f_AdminProv,"0000-ESIZON-adminadmin@esizon.com-admin000-administrador\n");
+		fprintf(f_AdminProv,"0000-ESIZON-admin000@esizon.com-adminadmin-administrador\n");
 	}
 
 	rewind(f_AdminProv);																								

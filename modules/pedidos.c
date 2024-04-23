@@ -924,6 +924,103 @@ void listar_prod_clientes(int id_cliente, pedidos p, prod_pedidos prod_p){
     
 }
 
+void menu_listadoped_estado(){
+    prod_pedidos prod_ped = cargar_prod_pedidos();
+
+    int opt;
+
+    
+    do{
+        clear();
+        printf("+----------------------+\n");
+        printf("| LISTADO PEDIDOS POR: |\n");
+        printf("+----------------------+\n");
+        printf("| <1> EN PREPARACION   |\n");
+        printf("| <2> ENVIADO          |\n");
+        printf("| <3> EN REPARTO       |\n");
+        printf("| <4> EN LOCKER        |\n");
+        printf("| <5> ENTREGADO        |\n");
+        printf("| <6> DEVUELTO         |\n");
+        printf("| <7> TRANSPORTISTA    |\n");
+        printf("| <0> VOLVER           |\n");
+        printf("+----------------------+\n");
+
+        opt = input_int();
+
+        switch (opt){
+            case 1:
+                listadoped_estado(prod_ped, "enPreparacion\0");
+                break;
+            case 2:
+                listadoped_estado(prod_ped, "enviado\0");
+                break;
+            case 3:
+                listadoped_estado(prod_ped, "enReparto\0");
+                break;
+            case 4:
+                listadoped_estado(prod_ped, "enLocker\0");
+                break;
+            case 5:
+                listadoped_estado(prod_ped, "entregado\0");
+                break;
+            case 6:
+                listadoped_estado(prod_ped, "devuelto\0");
+                break;
+            case 7:
+                listadoped_estado(prod_ped, "transportista\0");
+                break;
+            case 0:
+                break;
+            default:
+                break;
+            }
+
+    } while (opt != 0);
+    
+}
+
+void listadoped_estado(prod_pedidos prod_p, char estado[]){
+    produ_vect prods = cargar_productos();
+    pedidos P = cargar_pedidos();
+    clients C = cargar_clientes();
+    int i,j, npeds=0,
+        id_cliente,
+        id_prod,
+        id_pedido;
+
+    clear();
+    printf("+------------------+\n");
+    printf("| LISTA DE PEDIDOS |\n");
+    printf("+------------------+---+----------------------------------------------------+----------+\n");
+    printf("| Nombre del cliente   | Producto                                           | Cantidad |\n");
+    printf("+----------------------+----------------------------------------------------+----------+\n");
+    for(i=1; i< prod_p.lon;i++){
+        if(strcmp(estado, prod_p.prod_pedidos[i].estado) == 0){
+            id_pedido = prod_p.prod_pedidos[i].id_pedido;
+
+            for(j=1;j<P.lon;j++){
+                if(id_pedido == P.pedidos[j].id_pedido)
+                    id_cliente = P.pedidos[j].id_cliente;
+            }
+            
+            id_prod = prod_p.prod_pedidos[i].id_prod;
+
+            printf("| %-20s | %-50s | %-8d |\n", 
+                    C.clients[id_cliente].Nom_cliente,
+                    prods.produ[id_prod].descrip,
+                    prod_p.prod_pedidos[i].num_unid);
+            npeds++;
+        }
+        
+    }
+    if(npeds == 0)
+        printf("|                          NO EXISTEN PEDIDOS CON ESTE ESTADO!                         |\n");
+
+    printf("+----------------------+----------------------------------------------------+----------+\n");
+    printf("Pulse [enter] para volver...");
+    getchar();
+}
+
 
 void listar_devoluciones(pedidos p, prod_pedidos prod_p, devoluciones d){
     int i, j,k,
@@ -968,4 +1065,3 @@ void listar_devoluciones(pedidos p, prod_pedidos prod_p, devoluciones d){
     }
 
 }
-

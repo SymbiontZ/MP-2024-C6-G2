@@ -1,0 +1,15 @@
+Cálculo de rutas (cualquiera de los tres métodos es válido):
+
+   <1> V(G) = Nº de Regiones = 5
+   <2> V(G) = NA - NN + 2 = 18 - 15 + 2 = 5
+   <3> V(G) = NNP + 1 = 4 + 1 = 5
+
+Rutas: Buscamos las cinco rutas básicas.
+
+   - R1) 1, 2, 3, 4, 5, 6
+   - R2) 1, 2, 3, 8, 9, 13, 14, 15
+   - R3) 1, 2, 3, 4, 7, 3, 5, 6
+   - R4) 1, 2, 3, 8, 9, 10, 11, 12, 9, 13, 14, 15
+   - R5) 1, 2, 3, 8, 9, 10, 12, 9, 13, 14, 15
+
+Hacemos pruebas que cubran todas las rutas.

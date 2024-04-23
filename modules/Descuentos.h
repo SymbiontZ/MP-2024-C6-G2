@@ -86,6 +86,9 @@ void Consultar_desc_cliente(int, int);
 void Gestionar_Descuentos(Descuentos, DescClientes);
 
 int desc_activo(char[] );
+
+void marcar_aplicado(int, char[]);
+
 //Precondición: Recibe la estructura Descuentos
 //Postcondición: Devuelve la estructura Descuentos con el descuento seleccionado eliminado
 Descuentos Baja_Descuentos(Descuentos);
@@ -102,9 +105,21 @@ Descuentos Listar_Descuentos(Descuentos);
 //Postcondición: Devuelve la estructura Descuentos con las modificaciones realizadas
 Descuentos Modificar_Descuentos(Descuentos);
 
-//Precondición: Recibe 2 estructuras (Descuentos, DescClientes)
-//Postcondición: Devuelve la estructura Descuentos con el descuento asignado al cliente indicado
-Descuentos Asignar_Descuentos(Descuentos, DescClientes);
+//Precondición: Recibe estrucutra DescuentosClientes, la cadena codigo desc, la id del cliente y una estructura fecha con la fecha de caducidad.
+//Postcondición: Asigna un descuento a un cliente correctamente
+void Asignar_Descuentos(DescClientes dc, int id_cliente, fecha fch_cad);
+
+//Precondición: Recibe estrucutra DescuentosClientes
+//Postcondición: Asigna un codigo promocional a todos los clientes del sistema
+DescClientes Asiganar_codpro(DescClientes);
+
+//Precondición: Recibe estrucutra DescuentosClientes
+//Postcondición: Muestra los descuentos asignados al cliente deseado
+void Listar_Descuentos_Asignados(DescClientes);
+
+//Precondición: Recibe estrucutra DescuentosClientes
+//Postcondición: Muestra todos los descuentos aplicados en el sistema
+void Listar_Descuentos_Aplicados(DescClientes);
 
 //Precondición: Recibe la estructura Descuentos
 //Postcondición: Devuelve la estructura Descuentos con un nuevo descuento

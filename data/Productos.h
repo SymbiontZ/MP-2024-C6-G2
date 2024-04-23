@@ -59,7 +59,7 @@ categ_vect eliminar_categorias (categ_vect);
 
 //PRECONDICIÓN:
 //POSTCONDICIÓN:
-void listar_categorias (categ_vect);
+categ_vect listar_categorias (categ_vect);
 
 //PRECONDICIÓN:
 //POSTCONDICIÓN:
@@ -108,14 +108,14 @@ int buscador_prodidcateg ();
 
 //PRECONDICIÓN:
 //POSTCONDICIÓN:
-produ_vect modificar_prodgestor (produ_vect, int);
+produ_vect modificar_prodgestor (produ_vect);
 
 //PRECONDICIÓN:
 //POSTCONDICIÓN:
-produ_vect eliminar_prodgestor (produ_vect, int);
+produ_vect eliminar_prodgestor (produ_vect);
 
 //PRECONDICIÓN:
 //POSTCONDICIÓN:
-void listar_prodgestor (produ_vect, int);
+produ_vect listar_prodgestor (produ_vect);
 
 #endif

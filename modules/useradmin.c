@@ -43,7 +43,7 @@ clients cargar_clientes(){
 
     //BUCLE PARA RELLENAR LA ESTRUCTURA DE CLIENTES//
     while(fgets(cad_linea, sizeof(cad_linea), f_clients) && i < n_clients){
-        campo_cliente = sscanf(cad_linea, "%d-%19[^-]-%49[^-]-%19[^-]-%19[^-]-%29[^-]-%14[^-]-%d",
+        campo_cliente = sscanf(cad_linea, "%d-%22[^-]-%52[^-]-%22[^-]-%22[^-]-%32[^-]-%17[^-]-%d",
             &C.clients[i].Id_cliente,
             C.clients[i].Nom_cliente,
             C.clients[i].Dir_cliente,
@@ -86,7 +86,7 @@ void guardar_clientes(clients C){
                 C.clients[i].Cartera);
     }
     fclose(f_clients);
-    printf("\n**Estructura guardada con %d clientes\n", C.n_clients -1);
+    //printf("\n**Estructura guardada con %d clientes\n", C.n_clients -1);
 }
 
 
@@ -114,9 +114,9 @@ void inicsesion_cliente(clients C, int pos){
 }
 
 void menucliente(clients C,int pos){
-    int opt = -1;    //AUXILIAR PARA MANEJO DE OPCIONES EN EL SWITCH
+    int opt;    //AUXILIAR PARA MANEJO DE OPCIONES EN EL SWITCH
 
-    while(opt != 0){
+    do{
         clear();
         titulo();
         printf("+------------------------------+\n");
@@ -136,32 +136,28 @@ void menucliente(clients C,int pos){
         switch (opt){
         case 1:
             C = gestionar_cliente(C ,pos, 1);
-            opt = -1;
             break;
         case 2:
             menucliente_prod();
-            opt = -1;
             break;
         case 3:
             //Consultar_desc_cliente(C, pos);
-            opt = -1;
             break;
         case 4:
             menucliente_ped(pos);
-            opt = -1;
             break;
         case 5:
             menucliente_dev(pos);
-            opt = -1;
             break;
         case 0:
+            free(C.clients);
             exit(EXIT_SUCCESS);
             break;
         default:
-            opt = -1;
             break;
         }
-    } 
+    }while(opt != 0);
+
 }
 
 void menucliente_prod(){
@@ -181,21 +177,19 @@ void menucliente_prod(){
         scanf("%d", &opt);
         fflush(stdin);
 
-        switch (opt)
-        {
-        case 1:
-            /* code */
-            opt = -1;
-            break;
-        case 2:
-            
-            opt = -1;
-            break;
-        case 0:
-            //CASO DE VUELTA AL MENU ANTERIOR
-            break;
-        default:
-            break;
+        switch (opt){
+            case 1:
+                /* code */
+                break;
+            case 2:
+                
+                break;
+            case 0:
+                free(prods.produ);
+                //CASO DE VUELTA AL MENU ANTERIOR
+                break;
+            default:
+                break;
         }
     } while (opt != 0);
 }
@@ -219,25 +213,23 @@ void menucliente_ped(int pos){
         scanf("%d", &opt);
         fflush(stdin);
 
-        switch (opt)
-        {
-        case 1:
-            /* code */
-            opt = -1;
-            break;
-        case 2:
-            listapedidos_cliente(prods_p, p, pos);
-            opt = -1;
-            break;
-        case 3:
+        switch (opt){
+            case 1:
+                /* code */
+                break;
+            case 2:
+                listapedidos_cliente(prods_p, p, pos);
+                break;
+            case 3:
 
-            opt = -1;
-            break;
-        case 0:
-            //CASO DE VUELTA AL MENU ANTERIOR
-            break;
-        default:
-            break;
+                break;
+            case 0:
+                free(prods_p.prod_pedidos);
+                free(p.pedidos);
+                //CASO DE VUELTA AL MENU ANTERIOR
+                break;
+            default:
+                break;
         }
     } while (opt != 0);
 }
@@ -264,15 +256,12 @@ void menucliente_dev(int pos){
         {
         case 1:
             /* code */
-            opt = -1;
             break;
         case 2:
 
-            opt = -1;
             break;
         case 3:
 
-            opt = -1;
             break;    
         case 0:
             //CASO DE VUELTA AL MENU ANTERIOR
@@ -280,7 +269,10 @@ void menucliente_dev(int pos){
         default:
             break;
         }
+        guardar_devoluciones(dev);
     } while (opt != 0);
+
+    free(dev.devoluciones);
 
 }
 
@@ -308,9 +300,9 @@ void inicsesion_admin(admin_prov_vect adminprov, int pos){
 }
 
 void menuadmin(admin_prov_vect admin, int pos){
-    int opt = -1;    //AUXILIAR PARA MANEJO DE OPCIONES EN EL SWITCH
+    int opt;    //AUXILIAR PARA MANEJO DE OPCIONES EN EL SWITCH
 
-    while(opt != 0){
+    do{
         clear();
         titulo();
         printf("+------------------------+\n");
@@ -340,105 +332,97 @@ void menuadmin(admin_prov_vect admin, int pos){
         switch (opt){
         case 1:
             admin = gestionar_admin(admin, pos, 1);
-            opt = -1;
             break;
         case 2:
             menuadmin_cliente();
-            opt = -1;
             break;
         case 3:
             menuadmin_prov(admin);
-            opt = -1;
             break;
         case 4:
-            opt = -1;
+            menuadmin_prod();
             break;
         case 5:
-            opt = -1;
+            menuadmin_cat();
             break;
         case 6:
-            opt = -1;
+            menuadmin_ped();
             break;
         case 7:
-            opt = -1;
+            menuadmin_transp();
             break;
         case 8:
-            opt = -1;
             break;
         case 9:
-            opt = -1;
             break;
         case 10:
             if(pos == 0)
                 menuadmin_admin(admin);
-            opt = -1;
             break;
         case 0:
+            free(admin.usuarios);
             exit(EXIT_SUCCESS);
             break;
         default:
             break;
         }
-    }
+    }while(opt != 0);
 }
 
 void menuadmin_cliente(){
     clients C = cargar_clientes();
-    int opt = -1;
+    int opt;
     char resp = '0';
     int pos;                            //Posicion del cliente al que se le realizan los cambios. 
 
-    while (opt < 0 || opt > 5){
+    do{
         //MOSTRAR INFORMACION//
         clear();
-        printf("+--------------------------------+\n");
-        printf("| QUE DESEA REALIZAR:            |\n");
-        printf("+--------------------------------+\n");
-        printf("| <1> Mostrar listado clientes   |\n");
-        printf("| <2> Dar de alta cliente        |\n");
-        printf("| <3> Dar de baja cliente        |\n");
-        printf("| <4> Modificar cliente          |\n");
-        printf("| <0> Volver                     |\n");
-        printf("+--------------------------------+\n");
-        scanf("%d", &opt);
+        printf("+-----------------------------+\n");
+        printf("| QUE DESEA REALIZAR:         |\n");
+        printf("+-----------------------------+\n");
+        printf("| <1> Listado de clientes     |\n");
+        printf("| <2> Dar de alta cliente     |\n");
+        printf("| <3> Dar de baja cliente     |\n");
+        printf("| <4> Modificar cliente       |\n");
+        printf("| <0> Volver                  |\n");
+        printf("+-----------------------------+\n");
+        opt = input_int();
         fflush(stdin);
         switch (opt){
             case 1:
                 mostrar_clientes(C);
-                opt = -1;   
                 break;
             case 2:
                 printf("Seguro que quiere agregar un cliente [s/n]: ");
                 resp = confirmacion();
                 if(resp == 'S'|| resp == 's')
                     C = agregar_cliente(C);
-                opt = -1;
                 break;
             case 3:
                 pos = busqueda_cliente();
                 if (pos != -1)
                     C = eliminar_cliente(C, pos);
-                opt = -1;
                 break;
             case 4:
                 pos = busqueda_cliente();
                 if (pos != -1)
                     C = gestionar_cliente(C, pos, 0);
-                opt = -1;
                 break;
-            
-            case 0:         //CASO DE SALIDA
+            case 0:        
+                 //CASO DE SALIDA
                 break;
             default:
-                printf("Seleccione una opcion valida: ");
                 break;
         }
         guardar_clientes(C);
-    }
+    }while(opt != 0);
+
+    free(C.clients);
 }
 
 void menuadmin_admin(admin_prov_vect admin){
-    int opt = -1;
+    int opt;
     char resp;
     int pos;                            //Posicion del admin al que se le realizan los cambios.
 
@@ -454,45 +438,41 @@ void menuadmin_admin(admin_prov_vect admin){
         printf("| <0> Salir                  |\n");
         printf("+----------------------------+\n");
 
-        scanf("%d", &opt);
-        fflush(stdin);
+        opt = input_int();
+
         switch (opt){
             case 1:
                 listar_admin(admin);
-                opt = -1;   
                 break;
             case 2:
                 printf("Seguro que quiere agregar un administrador [s/n]: ");
                 resp = confirmacion();
                 if(resp == 'S'|| resp == 's')
                     admin = agregar_admin(admin);
-                opt = -1;
                 break;
             case 3:
                 pos = buscar_admin(admin);
                 if (pos != -1)
                     admin = eliminar_admin(admin, pos);
-                opt = -1;
                 break;
             case 4:
                 pos = buscar_admin(admin);
                 if (pos != -1)
                     admin = gestionar_admin(admin, pos, 0);
-                opt = -1;
                 break;
             
             case 0:         //CASO DE SALIDA
                 break;
             default:
-                printf("Seleccione una opcion valida: ");
                 break;
         }
         guardar_adminprov(admin);
     }while (opt != 0);
+    
 }
 
 void menuadmin_prov(admin_prov_vect admin){
-    int opt = -1;
+    int opt;
     char resp;
     int pos;          //Posicion del proveedor al que se le realizan los cambios.
 
@@ -508,41 +488,365 @@ void menuadmin_prov(admin_prov_vect admin){
         printf("| <0> Volver                     |\n");
         printf("+--------------------------------+\n");
  
-        scanf("%d", &opt);
+        opt = input_int();
         fflush(stdin);
         switch (opt){
             case 1:
                 listar_prov(admin);
-                opt = -1;   
                 break;
             case 2:
                 printf("Seguro que quiere agregar un proveedor [s/n]: ");
                 resp = confirmacion();
                 if(resp == 'S'|| resp == 's')
                     admin = alta_prov(admin);
-                opt = -1;
                 break;
             case 3:
                 pos = buscar_prov(admin);
                 if (pos != -1)
                     admin = baja_prov(admin, pos);
-                opt = -1;
                 break;
             case 4:
                 pos = buscar_prov(admin);
                 if (pos != -1)
                     admin = modificar_prov(admin, pos);
-                opt = -1;
                 break;
             
             case 0:         //CASO DE SALIDA
                 break;
             default:
-                printf("Seleccione una opcion valida: ");
                 break;
         }
         guardar_adminprov(admin);
     }while (opt != 0);
+}
+
+void menuadmin_prod(){
+    produ_vect Produ = cargar_productos();
+    int opt;
+    char resp;
+    int pos;          //Posicion del proveedor al que se le realizan los cambios.
+
+    do{
+        clear();
+        printf("+--------------------------------+\n");
+        printf("| QUE DESEA REALIZAR:            |\n");
+        printf("+--------------------------------+\n");
+        printf("| <1> Mostrar listado productos  |\n");
+        printf("| <2> Dar de alta productos      |\n");
+        printf("| <3> Dar de baja productos      |\n");
+        printf("| <4> Modificar producto         |\n");
+        printf("| <0> Volver                     |\n");
+        printf("+--------------------------------+\n");
+ 
+        scanf("%d", &opt);
+        fflush(stdin);
+        switch (opt){
+            case 1:
+                listar_productos(Produ);   
+                break;
+            case 2:
+                printf("Seguro que quiere agregar un producto [s/n]: ");
+                resp = confirmacion();
+                if(resp == 'S'|| resp == 's')
+                    agregar_productos(Produ);
+                break;
+            case 3:
+                
+                if (pos != -1)
+                
+                break;
+            case 4:
+
+                if (pos != -1)
+                    
+                break;
+            
+            case 0:         //CASO DE SALIDA
+                break;
+            default:
+                break;
+        }
+        guardar_productos(Produ);
+    }while (opt != 0);
+}
+
+void menuadmin_cat(){
+    categ_vect Cat = cargar_categorias();
+    int opt;
+    char resp;
+    int pos;          //Posicion del proveedor al que se le realizan los cambios.
+
+    do{
+        clear();
+        printf("+---------------------------------+\n");
+        printf("| QUE DESEA REALIZAR:             |\n");
+        printf("+---------------------------------+\n");
+        printf("| <1> Mostrar listado categorias  |\n");
+        printf("| <2> Dar de alta categorias      |\n");
+        printf("| <3> Dar de baja categorias      |\n");
+        printf("| <4> Modificar categorias        |\n");
+        printf("| <0> Volver                      |\n");
+        printf("+---------------------------------+\n");
+ 
+        opt = input_int();
+        fflush(stdin);
+        switch (opt){
+            case 1:
+                listar_categorias(Cat);
+                break;
+            case 2:
+                printf("Seguro que quiere agregar una categoria [s/n]: ");
+                resp = confirmacion();
+                if(resp == 'S'|| resp == 's')
+                    Cat = agregar_categorias(Cat);
+                break;
+            case 3:
+                Cat = eliminar_categorias(Cat);
+                break;
+            case 4:
+                Cat = modificar_categorias(Cat);
+                break;
+            
+            case 0:         //CASO DE SALIDA
+                break;
+            default:
+                break;
+        }
+        guardar_categorias(Cat);
+    }while (opt != 0);
+    free(Cat.categ);
+}
+
+void menuadmin_ped(){
+    pedidos Ped = cargar_pedidos();
+    int opt;
+    char resp;
+    int pos;          //Posicion del proveedor al que se le realizan los cambios.
+
+    do{
+        clear();
+        printf("+----------------------------------+\n");
+        printf("| QUE DESEA REALIZAR:              |\n");
+        printf("+----------------------------------+\n");
+        printf("| <1> Lista completa de pedidos    |\n");
+        printf("| <2> Lista estado de pedidos      |\n");
+        printf("| <3> Dar de alta pedidos          |\n");
+        printf("| <4> Dar de baja pedidos          |\n");
+        printf("| <5> Modificar pedidos            |\n");
+        printf("| <6> Asignar transportista pedido |\n");
+        printf("| <7> Asignar locker pedido        |\n");
+        printf("| <0> Volver                       |\n");
+        printf("+----------------------------------+\n");
+ 
+        opt = input_int();
+        fflush(stdin);
+        switch (opt){
+            case 1:
+
+                break;
+            case 2:
+                printf("Seguro que quiere agregar un pedido [s/n]: ");
+                resp = confirmacion();
+                if(resp == 'S'|| resp == 's')
+                break;
+            case 3:
+                
+
+                break;
+            case 4:
+
+                if (pos != -1)
+                    
+                break;
+            
+            case 0:         //CASO DE SALIDA
+                break;
+            default:
+                break;
+        }
+        guardar_pedido(Ped);
+    }while (opt != 0);
+    free(Ped.pedidos);
+}
+
+void menuadmin_transp(){
+    transport_vect T = cargar_transportistas();
+    int opt;
+    char resp;
+    int pos;          //Posicion del proveedor al que se le realizan los cambios.
+
+    do{
+        clear();
+        printf("+---------------------------------+\n");
+        printf("| QUE DESEA REALIZAR:             |\n");
+        printf("+---------------------------------+\n");
+        printf("| <1> Listado transportista       |\n");
+        printf("| <2> Dar de alta transportista   |\n");
+        printf("| <3> Dar de baja transportista   |\n");
+        printf("| <4> Modificar transportista     |\n");
+        printf("| <0> Volver                      |\n");
+        printf("+---------------------------------+\n");
+ 
+        opt = input_int();
+        fflush(stdin);
+        switch (opt){
+            case 1:
+                listar_transport(T);
+                break;
+            case 2:
+                printf("Seguro que quiere agregar un transportista [s/n]: ");
+                resp = confirmacion();
+                if(resp == 'S'|| resp == 's')
+                    T = alta_transport(T);
+                break;
+            case 3:
+                pos = buscar_transport(T);
+                if(pos != -1)
+                    T= baja_transport(T, pos);
+                break;
+            case 4:
+                pos = buscar_transport(T);
+                if (pos != -1)
+                    T = modificar_transport(T,pos);
+                break;
+            
+            case 0:         //CASO DE SALIDA
+                break;
+            default:
+                break;
+        }
+        guardar_transportista(T);
+    }while (opt != 0);
+    free(T.transportistas);
+}
+
+void menuadmin_desc(){
+    DescClientes Dc = Cargar_DescuentosClientes();
+    Descuentos D = Cargar_Descuentos();
+    clients C = cargar_clientes();
+
+    fecha fch_cad;
+    fecha fch_act;
+    fch_act.dia = dia_sist();
+    fch_act.mes = mes_sist();
+    fch_act.anio = anio_sist();
+
+    int opt;
+    char resp;
+    int pos;          //Posicion del proveedor al que se le realizan los cambios.
+
+    do{
+        clear();
+        printf("+------------------------------------+\n");
+        printf("| QUE DESEA REALIZAR:                |\n");
+        printf("+------------------------------------+\n");
+        printf("| <1> Listado de descuentos          |\n");
+        printf("| <2> Dar de alta descuento          |\n");
+        printf("| <3> Dar de baja descuento          |\n");
+        printf("| <4> Modificar categorias           |\n");
+        printf("| <5> Lista clientes descuento       |\n");
+        printf("| <6> Lista clientes descuento usado |\n");
+        printf("| <7> Asignar cliente descuento      |\n");
+        printf("| <0> Volver                         |\n");
+        printf("+------------------------------------+\n");
+ 
+        opt = input_int();
+        fflush(stdin);
+        switch (opt){
+            case 1:
+                Listar_Descuentos(D);
+                break;
+            case 2:
+                printf("Seguro que quiere agregar un descuento [s/n]: ");
+                resp = confirmacion();
+                if(resp == 'S'|| resp == 's')
+                    D = Alta_Descuentos(D);
+                break;
+            case 3:
+                    D = Baja_Descuentos(D);
+                break;
+            case 4:
+                    D = Modificar_Descuentos(D);
+            case 5:
+
+                break;
+            case 6:
+                    
+                break;
+            case 7:
+                printf("Se va a proceder a buscar un cliente para asignar un codigo");
+                Sleep(2000);
+                pos = busqueda_cliente();
+                if(pos != -1){
+                    fch_cad = crear_fechacad(fch_act);
+                    Asignar_Descuentos(Dc, pos, fch_cad);
+                }
+                break;
+            
+            case 0:         //CASO DE SALIDA
+                break;
+            default:
+                break;
+        }
+        Guardar_Descuentos(D);
+        Guardar_DescuentosClientes(Dc);
+    }while (opt != 0);
+    free(D.Desc);
+    free(Dc.DescCliente);
+    free(C.clients);
+}
+
+void menuadmin_devol(){
+    devoluciones Dev = cargar_devoluciones();
+    int opt;
+    char resp;
+    int pos, ped;          //Posicion del proveedor al que se le realizan los cambios.
+
+    do{
+        clear();
+        printf("+---------------------------------+\n");
+        printf("| QUE DESEA REALIZAR:             |\n");
+        printf("+---------------------------------+\n");
+        printf("| <1> Listado devoluciones        |\n");
+        printf("| <2> Dar de alta devolucion      |\n");
+        printf("| <3> Dar de baja devolucion      |\n");
+        printf("| <4> Modificar devolucion        |\n");
+        printf("| <5> Aceptar devolucion          |\n");
+        printf("| <6> Marcar devolucion recibida  |\n");
+        printf("| <0> Volver                      |\n");
+        printf("+---------------------------------+\n");
+ 
+        opt = input_int();
+        fflush(stdin);
+        switch (opt){
+            case 1:
+                
+                break;
+            case 2:
+                printf("Para hacer una devolucion tiene que elegir un cliente.");
+                Sleep(2000);
+                pos = busqueda_cliente();
+                    if (pos != -1){
+                        printf("Ahora tienes que seleccionar un pedido.\n");
+                        Sleep(2000);
+                        //BUSCAR PEDIDO
+                        crear_devolucion(Dev, ped, pos);
+                    }
+                break;
+            case 3:
+
+                break;
+            case 4:
+                break;
+            
+            case 0:         //CASO DE SALIDA
+                break;
+            default:
+                break;
+        }
+        guardar_transportista(T);
+    }while (opt != 0);
+    free(T.transportistas);
 }
 
 void listar_admin(admin_prov_vect admin){
@@ -624,7 +928,7 @@ admin_prov_vect agregar_admin(admin_prov_vect admin){
     admin.usuarios[new_id].Id_empresa = 0;
     strcpy(admin.usuarios[new_id].Nombre, "ESIZON");
     admin = admin_email(admin, new_id, 0);
-    admin = admin_psw(admin, new_id, 0);
+    admin = admin_contr(admin, new_id, 0);
     strcpy(admin.usuarios[new_id].Perfil_usuario, "administrador");
 
     admin.tam++;
@@ -673,31 +977,36 @@ admin_prov_vect gestionar_admin (admin_prov_vect admin, int pos, int mod){
     //CAMBIO DE INFORMACION//
     int opt = -1;
 
-    while (opt != 0){
+    do{
         //MOSTRAR INFORMACION//
         clear();
-        printf("Email: %s\n", admin.usuarios[pos].email);
+        printf("+------------ TU INFORMACION ------------+\n");
+        printf("| Email: %-31s |\n", admin.usuarios[pos].email);
+        printf("+----------------------+-----------------+\n");
+        printf("| QUE DESEA MODIFICAR: |\n");
+        printf("+----------------------+\n");
+        printf("| <1> Email            |\n");
+        printf("| <2> Contrasena       |\n");
+        printf("| <0> Volver           |\n");
+        printf("+----------------------+\n");
 
-        printf("\n### QUE DESEA MODIFICAR: ###\n");
-        printf("1. Email\n2. Contrasena\n0. Salir\n############################\n");
         scanf("%d", &opt);
         switch (opt){
             case 1:
                 admin = admin_email(admin, pos, mod);
-                opt = -1;
+                
                 break;
             case 2:
-                admin = admin_psw(admin, pos, mod);
-                opt = -1;
+                admin = admin_contr(admin, pos, mod);
                 break;
-            case 0:         //CASO DE SALIDA
+            case 0:      
+                //CASO DE SALIDA
                 break;
             default:
-                printf("Seleccione una opcion valida: ");
                 break;
         }
         guardar_adminprov(admin);
-    }
+    }while(opt != 0);
     return admin;
 }
 
@@ -712,8 +1021,8 @@ admin_prov_vect admin_email(admin_prov_vect admin, int pos, int mod){
     
 
     if(mod == 1)
-        printf("\nEmail actual: %s\n", admin.usuarios[pos].email);
-    printf("Ingrese el identificador de su correo 'identificador@esizon.com' (MAX 19 CARACTERES): ");
+        printf("\nEmail actual: < %s >\n", admin.usuarios[pos].email);
+    printf("Ingrese el {usuario} de su correo '{usuario}@esizon.com' [ MAX 19 CARACTERES ]: ");
     
     do{
         emailvalid = 1;
@@ -742,13 +1051,13 @@ admin_prov_vect admin_email(admin_prov_vect admin, int pos, int mod){
     return admin;
 }
 
-admin_prov_vect admin_psw(admin_prov_vect admin, int pos, int mod){
+admin_prov_vect admin_contr(admin_prov_vect admin, int pos, int mod){
     char cad_contr[MAX_PSW], verif_contr[MAX_PSW];
 
     /***COMPROBAR CONTRASENA SI CLIENTE EXISTE Y LO MODIFICA EL MISMO***/
 
     if(mod == 1){
-        printf("Para poder cambiar la contrasena es necesario verificar la anterior: ");
+        printf("\nPara poder cambiar la contrasena es necesario verificar la anterior: ");
 
         do{
             fflush(stdin);
@@ -766,7 +1075,7 @@ admin_prov_vect admin_psw(admin_prov_vect admin, int pos, int mod){
     }
 
     do{
-        printf("Escriba la contrasena a tener: ");
+        printf("Escriba la nueva contrasena: ");
         
         fgets(cad_contr, MAX_PSW, stdin);
         terminador_cad(cad_contr);
@@ -776,8 +1085,10 @@ admin_prov_vect admin_psw(admin_prov_vect admin, int pos, int mod){
             return admin;
         else if(strcmp(cad_contr, admin.usuarios[pos].Contrasena) == 0)      //COMPROBAR SI NUEVA CONTRASENA IGUAL A LA ENTERIOR
             printf("La contrasena tiene que ser diferente a la anterior, si quiere salir escriba [exit].\n");
+        if(strlen(cad_contr) > 15)
+            printf("La contrasena tiene como maximo 15 caracteres. Vueva a intentarlo\n");
          
-    } while (strcmp(cad_contr, admin.usuarios[pos].Contrasena) == 0 || strlen(cad_contr) == 0);
+    } while (strcmp(cad_contr, admin.usuarios[pos].Contrasena) == 0 || strlen(cad_contr) == 0 || strlen(cad_contr) > 15);
 
     do{
         printf("Vuelva a introducir la nueva contrasena: ");
@@ -799,7 +1110,7 @@ admin_prov_vect admin_psw(admin_prov_vect admin, int pos, int mod){
 int busqueda_cliente(){
     clients C = cargar_clientes();
 
-    int pos = -2, opt = -1;             //Elijo -2 como pos predeter. ya que -1 es para cancelar la busqueda
+    int pos = -2, opt;             //Elijo -2 como pos predeter. ya que -1 es para cancelar la busqueda
     while (pos == -2){    //Solo va a salir del bucle cuando se selecciona la posicion de un cliente valido
         clear();
         printf("Para poder realizar esta accion tiene que seleccionar un cliente.\n");
@@ -809,28 +1120,30 @@ int busqueda_cliente(){
         printf("3. Por email.\n");
         printf("0. Cancelar.\n");
         
-        while(opt > 3 || opt < 0){ //Selecciona un filtro valido
-            scanf(" %d", &opt);
+        do{ //Selecciona un filtro valido
+            opt = input_int();
             switch (opt)
             {
             case 1:
                 pos = busqueda_clientetipo(C, pos, 1);  //Por nombre
+                opt = 0;
                 break;
             case 2:
                 pos = busqueda_clientetipo(C, pos, 2);  //Por localidad
+                opt = 0;
                 break;  
             case 3:
                 pos = busqueda_clientetipo(C, pos, 3);  //Por email
+                opt =0;
                 break;
             case 0:
                 pos = -1;
                 printf("Se ha cancelado la busqueda.\n");
                 Sleep(2000);
             default:
-                printf("Introduce una opcion valida: ");
                 break;
             }
-        }
+        }while(opt!=0);
 
     }
     return pos;
@@ -897,15 +1210,20 @@ int busqueda_clientetipo(clients C, int pos, int tipo){
     }
 
     printf("\nPor favor introduzca el numero <n> del que desea seleccionar o introduzca '0' para salir.\n");   //Elegir una opcion de coincidencia
-    scanf(" %d", &opt);
-    if(opt == 0){
-        return -1;
-    }
+    do
+    {
+        opt = input_int();
+        if(opt == 0){
+            printf("Se cancelo la busqueda.");
+            Sleep(2000);
+            return -1;
+        }
+        if(opt < 0 || opt > n_coinc)
+            printf("Introduzca una opcion valida: ");
+    } while (opt < 0 || opt > n_coinc);
     
-    while(opt < 0 || opt > n_coinc){
-        printf("Introduzca una opcion valida: ");
-        scanf(" %d", &opt);
-    }
+    
+    
     fflush(stdin);
     pos = vect_coinc[opt-1];
     free(vect_coinc);
@@ -992,12 +1310,12 @@ clients eliminar_cliente(clients C, int pos){
 
 clients gestionar_cliente(clients C, int pos, int mode){
     //CAMBIO DE INFORMACION//
-    int opt = -1;
+    int opt;
     char cad_loc[44] = "";
     strcat(cad_loc, C.clients[pos].Localidad);
     strcat(cad_loc, ", ");
     strcat(cad_loc, C.clients[pos].Provincia);
-    while (opt < 0 || opt > 5){
+    do{
         //MOSTRAR INFORMACION//
         clear();
         printf("\n+----------------- INFORMACION PERSONAL -----------------+\n");
@@ -1021,24 +1339,19 @@ clients gestionar_cliente(clients C, int pos, int mode){
         switch (opt){
             case 1:
                 C = cliente_nom(C, pos);
-                opt = -1;
                 break;
             case 2:
                 C = cliente_dir(C, pos, mode);
-                opt = -1;
                 break;
             case 3:
                 C = cliente_email(C, pos, mode);
-                opt = -1;
                 break;
 
             case 4:
                 C = cliente_contr(C, pos, mode);
-                opt = -1;
                 break;
             case 5:
-                C = cliente_cart(C, pos, mode);
-                opt = -1;
+                C = cliente_cart(C, pos, mode); 
                 break;
             case 0:         //CASO DE SALIDA
                 break;
@@ -1047,8 +1360,8 @@ clients gestionar_cliente(clients C, int pos, int mode){
                 break;
         }
         guardar_clientes(C);
-    }
-    printf("Salio correctamente. %d\n", opt);
+    }while(opt!=0);
+    
     return C;
 }
 
@@ -1098,24 +1411,27 @@ clients cliente_contr(clients C, int pos, int mod){
     
     do{
         printf("Escriba la contrasena a tener: ");
-        fgets(cad_contr, MAX_PSW, stdin);
+        fgets(cad_contr, MAX_PSW+5, stdin);
         terminador_cad(cad_contr);
         fflush(stdin);
 
         if(strcmp(cad_contr, "exit") == 0)                 //SALIR DE CAMBIO DE CONTRASENA
             return C;
-        else if(strcmp(cad_contr, C.clients[pos].Contrasena) == 0)   //COMPROBAR SI NUEVA CONTRASENA IGUAL A LA ENTERIOR
+        if(strcmp(cad_contr, C.clients[pos].Contrasena) == 0 && strlen(cad_contr) != 0)   //COMPROBAR SI NUEVA CONTRASENA IGUAL A LA ENTERIOR
             printf("La contrasena tiene que ser diferente a la anterior, si quiere salir escriba [exit].\n");
+        if(strlen(cad_contr) > 15)
+            printf("La contrasena tiene como maximo 15 caracteres. Vueva a intentarlo\n");
 
-    } while (strcmp(cad_contr, C.clients[pos].Contrasena) == 0);
+    } while (strcmp(cad_contr, C.clients[pos].Contrasena) == 0 || strlen(cad_contr) == 0 || strlen(cad_contr) > 15);
     
-    while (strcmp(cad_contr, verif_contr) != 0){
+    do{
+        fflush(stdin);
         printf("Vuelva a introducir la nueva contrasena: ");
         
-        fgets(verif_contr, MAX_PSW, stdin);
+        fgets(verif_contr, MAX_PSW+5, stdin);
         terminador_cad(verif_contr);
         fflush(stdin);
-    }
+    }while (strcmp(cad_contr, verif_contr) != 0);
     strcpy(C.clients[pos].Contrasena, cad_contr);
 
     return C;
@@ -1170,7 +1486,7 @@ clients cliente_email(clients C, int pos, int mod){
     int opt,i;
 
     if(mod == 1)
-        printf("\nEmail actual: %s\n", C.clients[pos].email);
+        printf("\nEmail actual: < %s >\n", C.clients[pos].email);
 
     printf("+----------------------------+\n");
     printf("| ELIJA PROVEEDOR DEL CORREO |\n");
@@ -1178,10 +1494,13 @@ clients cliente_email(clients C, int pos, int mod){
     printf("| <1> GMAIL (@gmail.com)     |\n");
     printf("| <2> OUTLOOK (@outlook.es)  |\n");
     printf("| <3> YAHOO (@yahoo.com)     |\n");
+
+    if(mod == 1)
     printf("| <4> CANCELAR               |\n");
+
     printf("+----------------------------+\n");
     do{
-    scanf("%d", &opt);
+    opt = input_int();
     switch (opt)
     {
     case 1:
@@ -1194,20 +1513,21 @@ clients cliente_email(clients C, int pos, int mod){
         strcpy(org, "@yahoo.com");
         break;
     case 4:
-        printf("Se ha cancelado cambio de correo");
-        Sleep(2000);
-        return C;
+        if(mod == 1){
+            printf("Se ha cancelado cambio de correo");
+            Sleep(2000);
+            return C;
+        }
         break;
 
     default:
         break;
     }
-    } while (opt < 1 || opt > 4);
+    } while (opt < 1 || opt > 3);
 
     int tam_email = (MAX_EMAIL- strlen(org));
     int emailvalid = 0;
     
-    printf("%s: %d\n", org, strlen(org));
     do{
         emailvalid = 1;
         printf("Ingrese el usuario del correo (Sin la terminacion del correo): ");
@@ -1258,3 +1578,4 @@ clients cliente_cart(clients C, int pos, int mod){
 
     return C;
 }
+

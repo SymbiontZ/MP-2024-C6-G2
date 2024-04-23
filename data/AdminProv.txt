@@ -1,5 +1,5 @@
-0000-ESIZON-adminadmin@esizon.com-admin000-administrador
-0000-ESIZON-admin01@esizon.com-admin01-administrador
+0000-ESIZON-admin000@esizon.com-admin000-administrador
+0000-ESIZON-admin1@esizon.com-admin01-administrador
 0000-ESIZON-admin02@esizon.com-admin02-administrador
 0000-ESIZON-antonio.martin@esizon.com-antmar01-administrador
 0001-DISTGEN-donato.lima@distgen.com-donlim04-proveedor
