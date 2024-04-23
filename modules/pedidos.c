@@ -285,19 +285,33 @@ int crear_pedido( pedidos p, int id_cliente, int modo){
 
     if(cheque=='s' || cheque == 'S'){
         //listar descuentos de ese cliente
-        printf("Introduce el codigo del descuento que deseas utilizar: ");
-        fflush(stdin);
-        fgets(cod_desc, 11, stdin);
-        conf = comprobar_descuento(cod_desc, id_cliente);
-        if(conf==0){
-            printf("el codigo de descuento introducido es correcto\n");
-            marcar_aplicado(id_cliente, cod_desc);
-            strcpy(p.pedidos[pos].id_cod, cod_desc);
-        }
-        else{
-            printf("el codigo de descuento introducido no es correcto\n");
-        
-        }  
+        do{
+            printf("Introduce el codigo del descuento que deseas utilizar: ");
+            fflush(stdin);
+            fgets(cod_desc, 11, stdin);
+            terminador_cad(cod_desc);
+
+            conf = comprobar_descuento(cod_desc, id_cliente);
+            if(conf==0){
+                printf("el codigo de descuento introducido es correcto\n");
+                strcpy(p.pedidos[pos].id_cod, cod_desc);
+                marcar_aplicado(id_cliente, cod_desc);
+                cheque='n';
+            }
+            else{
+                printf("el codigo de descuento introducido no es correcto\n");
+                printf("desea introducir otro codigo de descuento [s/n]: ");
+                cheque=confirmacion();
+                if(cheque == 'n' || cheque == 'N'){
+                    strcpy(p.pedidos[pos].id_cod, "nocod\0");
+                }
+                
+            
+            }  
+            printf("%c", cheque);
+            
+        }while(conf!=0 || (cheque !='s' || cheque !='S'));
+       
     }
     else{
         strcpy(p.pedidos[pos].id_cod, "nocod\0");
@@ -333,13 +347,49 @@ int crear_pedido( pedidos p, int id_cliente, int modo){
     return 1;
 }
 int comprobar_descuento(char cod_descuento[], int id_cliente){
-    int i, j;
+    int i, j,
+        comp; 
+
+    
     DescClientes des_c = Cargar_DescuentosClientes();
     Descuentos des=Cargar_Descuentos();
     produ_vect pro=cargar_productos();
+
+    fecha f_sist;
+    fecha f_cad;
+
+    //asignamos valores a las estructuras fechas
+    f_sist.dia=dia_sist();
+    f_sist.mes=mes_sist();
+    f_sist.anio=anio_sist();
+
+    for(i=0;i<des_c.tam;i++){
+        if(strcmp(cod_descuento, des_c.DescCliente[i].Id_cod)==0){
+            f_cad.dia=des_c.DescCliente[i].dia_cad;
+            f_cad.mes=des_c.DescCliente[i].mes_cad;
+            f_cad.anio=des_c.DescCliente[i].anio_cad;
+
+        }
+    }
+    
+    comp=comprobar_fecha(f_sist, f_cad);
+    
+    if(comp==1){
+        printf("el codigo no ha caducado\n");
+    }
+    else{
+        printf("el codigo esta caducado\n");
+        return 1;
+    }
+
+    //SACAR LA POSICION 
     for(i=0;i<des.tam;i++){
+        printf("cod descuento introducido: %s\n", cod_descuento);
+        printf("cod descuento del fichero: %s\n", des_c.DescCliente[i].Id_cod);
+        printf("%d",strcmp(cod_descuento, des.Desc[i].Id_cod));
         if(strcmp(cod_descuento, des.Desc[i].Id_cod)==0){
-            printf("el codigo de descuento introducido existe");
+            printf("prueba1\n");
+            printf("el codigo de descuento introducido existe\n");
             if(strcmp(des.Desc[i].Estado, "activo")==0){
                 printf("el descuento esta activo");
                 for(j=0;j<des_c.tam;j++){
@@ -348,11 +398,11 @@ int comprobar_descuento(char cod_descuento[], int id_cliente){
                         if(strcmp(cod_descuento, des_c.DescCliente[j].Id_cod)==0){
                             printf("el descuento pertenece al cliente\n");
                             if(des_c.DescCliente[j].Estado==0){
-                                printf("el descuento no ha sido aplicado por tanto lo puede usar el cliente");
+                                printf("el descuento no ha sido aplicado por tanto lo puede usar el cliente\n");
                                 return 0;
                             }
                             else{
-                                return 1;
+                                printf("el descuento no lo puede aplicar el cliente\n");
                             }
                                 
                         }
@@ -360,7 +410,10 @@ int comprobar_descuento(char cod_descuento[], int id_cliente){
                 }
             }
         }
+        
     }
+
+    return 1;
     
     
 }
@@ -569,25 +622,36 @@ void eliminar_pedidos_productos(prod_pedidos prod_p, pedidos p, int pos_ped){
 void eliminar_productos_ped(prod_pedidos prod_p, int pos_ped){
     int i,j=0,
         n_ped=0; //variable que almacena el numero de productos que hay del pedido
+
     for(i=pos_ped;i<prod_p.lon-1;i++){
         if(prod_p.prod_pedidos[i].id_pedido==pos_ped){
             n_ped++;
         }
     }
-    printf("numero de productos en el pedido: %d\n", n_ped);
 
-    do{
-        for(i=pos_ped;i<prod_p.lon-n_ped;i++){
-            prod_p.prod_pedidos[i]=prod_p.prod_pedidos[i+1];
+    for(i=0;i<prod_p.lon;i++){
+        if(prod_p.prod_pedidos[i].id_pedido==pos_ped){
+            for(j=i;j<prod_p.lon-1;j++){
+                prod_p.prod_pedidos[j]=prod_p.prod_pedidos[j+1];
+            }
+            prod_p.lon=prod_p.lon -1;
+            i=i-1;
         }
-        j++;
-    }while(j<n_ped);
-    
-    prod_p.lon=prod_p.lon-n_ped;
+    }
+
+    for(i=0;i<prod_p.lon;i++){
+        if(prod_p.prod_pedidos[i].id_pedido>pos_ped){
+            prod_p.prod_pedidos[i].id_pedido=prod_p.prod_pedidos[i].id_pedido -1;
+        }
+    }
+
+    //prod_p.lon=prod_p.lon-n_ped;
     prod_p.prod_pedidos=realloc(prod_p.prod_pedidos, prod_p.lon*sizeof(prod_pedido));
     if(prod_p.prod_pedidos==NULL){
         printf("No se pudo reasignar estructuras a productos pedidos\n");
     }
+
+    
 
     guardar_productos_pedidos(prod_p);
     printf("se han eliminado los productos del pedido correctamente\n");
@@ -957,4 +1021,49 @@ void listadoped_estado(prod_pedidos prod_p, char estado[]){
     printf("+----------------------+----------------------------------------------------+----------+\n");
     printf("Pulse [enter] para volver...");
     getchar();
+}
+
+
+void listar_devoluciones(pedidos p, prod_pedidos prod_p, devoluciones d){
+    int i, j,k,
+        id_pedido,
+        id_prod;
+    printf("+---------------------+\n");
+    printf("| DEVOLUCIONES        |\n");
+    printf("+---------------------+\n");
+
+    produ_vect prod = cargar_productos();
+    clients c =cargar_clientes();
+
+    for(i=1;i<d.lon;i++){
+        id_pedido=d.devoluciones[i].id_pedido;
+        
+        for(j=0;j<p.lon;j++){
+            if(id_pedido==p.pedidos[j].id_pedido){
+                for(k=0;k<c.n_clients;k++){
+                    if(p.pedidos[j].id_cliente==c.clients[k].Id_cliente){
+                        printf("nombre del cliente: %s", c.clients[k].Nom_cliente);
+                    }
+                }
+            }
+            
+        }
+        id_prod=d.devoluciones[i].id_prod;
+        for(j=0;prod.num_prod;j++){
+            if(id_prod==prod.produ[j].id_prod){
+                printf("nombre del producto: %s", prod.produ[j].nombre);
+            }
+        }
+
+        printf("estado de la devolucion: %s", d.devoluciones[i].estado);
+
+        printf("fecha aceptacion: %d/%d/%d",  d.devoluciones[i].f_aceptacion.dia,
+                                              d.devoluciones[i].f_aceptacion.mes,
+                                              d.devoluciones[i].f_aceptacion.anio);
+
+        printf("fecha caducidad: %d/%d/%d",   d.devoluciones[i].f_caducidad.dia,
+                                              d.devoluciones[i].f_caducidad.mes,
+                                              d.devoluciones[i].f_caducidad.anio);
+    }
+
 }
