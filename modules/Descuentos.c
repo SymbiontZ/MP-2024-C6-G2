@@ -562,8 +562,10 @@ Descuentos Modificar_Descuentos(Descuentos D){
     return D;
 }
 
-void Asignar_Descuentos(DescClientes dc, char cod_desc[], int id_cliente, fecha fch_cad){
-
+void Asignar_Descuentos(DescClientes dc, int id_cliente, fecha fch_cad){
+    Descuentos D = Cargar_Descuentos();
+    char cod_desc[11];
+    int i,cod_ok = 0;
     int new_pos = dc.tam;
     dc.DescCliente = realloc(dc.DescCliente, (dc.tam+1)*sizeof(DescCliente));											                // Se amplia la longitud del vector para añadir un descuento en la estructura
     if (dc.DescCliente == NULL){
@@ -572,6 +574,24 @@ void Asignar_Descuentos(DescClientes dc, char cod_desc[], int id_cliente, fecha 
         exit(EXIT_FAILURE);
     }
 
+    do
+    {
+        printf("Introduzca el codigo de descuento a asignar:");
+        fflush(stdin);
+        fgets(cod_desc, 11, stdin);
+        terminador_cad(cod_desc);
+
+        for(i=1;i<D.tam;i++){
+            if(strcmp(cod_desc, D.Desc[i].Id_cod)==0)
+                cod_ok = 1;
+        }
+
+        if (cod_ok != 1){
+            printf("Codigo de descuento no valido. Vuelva a intentarlo.\n");
+        }
+
+    } while (cod_ok != 1);
+    
     dc.DescCliente[new_pos].Id_cliente = id_cliente;
 
     strcpy(dc.DescCliente[new_pos].Id_cod, cod_desc);
@@ -606,6 +626,7 @@ void Asignar_Descuentos(DescClientes dc, char cod_desc[], int id_cliente, fecha 
 
     dc.tam++;
 
+    free(D.Desc);
     Guardar_DescuentosClientes(dc);
 }
 

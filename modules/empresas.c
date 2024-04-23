@@ -638,11 +638,11 @@ admin_prov_vect alta_prov(admin_prov_vect provs){
 	
 	clear();
     
-    printf("+------------------------------+\n");
-    printf("| SERVICIO DE ALTAS DE USUARIO |\n");
-    printf("+------------------------------+\n");
+    printf("+--------------------------------+\n");
+    printf("| SERVICIO DE ALTAS DE PROVEEDOR |\n");
+    printf("+--------------------------------+\n");
     
-    printf("\n+- Introduzca los datos del nuevo usuario del sistema -+\n\n");
+    printf("\n+- Introduzca los datos del nuevo proveedor del sistema -+\n\n");
     
 	provs.usuarios = realloc(provs.usuarios, (provs.tam + 1) * sizeof(admin_prov));	
 	provs.tam++;
@@ -1613,7 +1613,7 @@ admin_prov_vect cargar_adminprov(){
 	//COMPROBACION FICHERO VACIO//
 	char verif = fgetc(f_AdminProv);
 	if (verif == EOF){
-		fprintf(f_AdminProv,"0000-ESIZON-adminadmin@esizon.com-admin000-administrador\n");
+		fprintf(f_AdminProv,"0000-ESIZON-admin000@esizon.com-adminadmin-administrador\n");
 	}
 
 	rewind(f_AdminProv);																								
