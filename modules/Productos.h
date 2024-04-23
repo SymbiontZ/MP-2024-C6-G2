@@ -108,6 +108,10 @@ int buscador_prodcateg ();
 
 //PRECONDICIÓN:
 //POSTCONDICIÓN:
+produ_vect cambiar_stock (int, int);
+
+//PRECONDICIÓN:
+//POSTCONDICIÓN:
 produ_vect modificar_prodgestor (produ_vect, int);
 
 //PRECONDICIÓN:

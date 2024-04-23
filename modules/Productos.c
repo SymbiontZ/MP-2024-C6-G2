@@ -1352,6 +1352,16 @@ int buscador_prodcateg () {
 	return op;
 }
 
+produ_vect cambiar_stock (int id_prod, int num_uds) {
+	produ_vect p = cargar_productos ();
+	
+	p.produ[id_prod].stock = num_uds;
+	
+	guardar_productos (p);
+	
+	return p;
+}
+
 //Funciones para Santi:
 produ_vect modificar_prodgestor (produ_vect p, int id) {
 	int pos, op;
