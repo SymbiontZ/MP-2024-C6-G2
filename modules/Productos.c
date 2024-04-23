@@ -1308,7 +1308,7 @@ produ_vect modificar_prodgestor (produ_vect p, int id) {
 	Sleep (1000);
 	
 	if (p.produ[pos].id_gestor == id) {
-		printf ("Id de gestor coincide con id de producto, se permite la modificacion del producto...");
+		printf ("Id de gestor válida, se permite la modificacion del producto...");
 		printf ("\n\nEsta seguro que desea modificar el producto '%s-%s'? (S/N): ", p.produ[pos].nombre, p.produ[pos].descrip);
 		scanf ("%c", &respuesta);
 		fflush (stdin);
@@ -1380,7 +1380,7 @@ produ_vect modificar_prodgestor (produ_vect p, int id) {
 		}
 	}
 	else {
-		printf ("\nSu id de gestor no coincide con el id de producto, volviendo al menu anterior...\n");
+		printf ("\nSu id de gestor no coincide con la del producto seleccionado, volviendo al menu anterior...\n");
 	}
 	
 	return p;
@@ -1407,7 +1407,7 @@ produ_vect eliminar_prodgestor (produ_vect p, int id) {
 	Sleep (1000);
 	
 	if (p.produ[pos].id_gestor == id) {
-		printf ("Id de gestor coincide con id de producto, se permite la eliminacion del producto...");
+		printf ("Id de gestor válida, se permite la eliminacion del producto...");
 		printf ("\nEsta seguro que desea eliminar el producto '%s-%s'? (S/N): ", p.produ[pos].nombre, p.produ[pos].descrip);
 		scanf ("%c", &respuesta);
 		fflush (stdin);
@@ -1437,7 +1437,7 @@ produ_vect eliminar_prodgestor (produ_vect p, int id) {
 		}
 	}
 	else {
-		printf ("\nSu id de gestor no coincide con el id de producto, volviendo al menu anterior...\n");
+		printf ("\nSu id de gestor no coincide con la del producto seleccionado, volviendo al menu anterior...\n");
 	}
 	
 	return p;
