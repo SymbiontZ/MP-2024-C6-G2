@@ -30,7 +30,7 @@ Descuentos Cargar_Descuentos(){
     											// Se reserva memoria para el vector
 	rewind(f_descuentos);
 
-   
+
 	while((fgets(linea, sizeof(linea), f_descuentos) != NULL) ){
 		m = sscanf(linea, "%11[^-]-%51[^-]-%8[^-]-%9[^-]-%d-%7[^\n]\n",										// Se cargan los datos del fichero a la estructura
             vector_desc.Desc[i].Id_cod,
@@ -47,7 +47,7 @@ Descuentos Cargar_Descuentos(){
 			exit(EXIT_FAILURE);
 		}
 	}
-    
+
 	fclose(f_descuentos); 																	// Se cirra el fichero
 
     return vector_desc;
@@ -66,18 +66,18 @@ DescClientes Cargar_DescuentosClientes(){
 		printf("Error al abrir el fichero DescuentosClientes.txt.\n");
         Sleep(2000);
 	}
-    
+
 	vector_descClts.tam = 0;
-    
+
     rewind(f_DescClientes);
 
 	while(fgets(linea, sizeof(linea), f_DescClientes) != NULL)												// Contamos el numero de lineas del fichero
 	    vector_descClts.tam++;
-    
+
     vector_descClts.DescCliente = malloc((vector_descClts.tam) * sizeof(DescCliente));		    							// Se reserva memoria para el vector
 	rewind(f_DescClientes);
 
-    
+
 	while((fgets(linea, sizeof(linea), f_DescClientes) != NULL) ){
 		m = sscanf(linea, "%d-%11[^-]-%d/%d/%d-%d/%d/%d-%d\n",						// Se cargan los datos del fichero a la estructura
             &vector_descClts.DescCliente[i].Id_cliente,
@@ -89,7 +89,7 @@ DescClientes Cargar_DescuentosClientes(){
             &vector_descClts.DescCliente[i].mes_cad,
             &vector_descClts.DescCliente[i].anio_cad,
             &vector_descClts.DescCliente[i].Estado);
-				
+
 		if(m != 9){
 			printf("Error leyendo datos del fichero DescuentosClientes.txt. Linea: %d %d\n", i,m);
             getchar();
@@ -180,7 +180,7 @@ void Consultar_desc_cliente(int pos, int mode){
         n_desc=0,
         activo;
     clear();
-    
+
 
     if(mode == 0){
         printf("+---------------------------+\n");
@@ -248,10 +248,10 @@ void marcar_aplicado(int id_cliente, char cod[]){
 int desc_activo(char cod[]){
     Descuentos D = Cargar_Descuentos();
     int i, pos = -1;
-    
+
     for(i=0; i< D.tam; i++){
         if(strcmp(D.Desc[i].Id_cod, cod)== 0)
-            pos = i;           
+            pos = i;
     }
 
     if (pos == -1){
@@ -563,7 +563,7 @@ Descuentos Modificar_Descuentos(Descuentos D){
 }
 
 void Asignar_Descuentos(DescClientes dc, char cod_desc[], int id_cliente, fecha fch_cad){
-    
+
     int new_pos = dc.tam;
     dc.DescCliente = realloc(dc.DescCliente, (dc.tam+1)*sizeof(DescCliente));											                // Se amplia la longitud del vector para añadir un descuento en la estructura
     if (dc.DescCliente == NULL){
@@ -596,8 +596,8 @@ void Asignar_Descuentos(DescClientes dc, char cod_desc[], int id_cliente, fecha 
             fch_cad = crear_fechacad(fch_sist);
         }
     } while (fch_ok != 1);
-    
-    
+
+
     dc.DescCliente[new_pos].dia_cad = fch_cad.dia;
     dc.DescCliente[new_pos].mes_cad = fch_cad.mes;
     dc.DescCliente[new_pos].anio_cad = fch_cad.anio;
@@ -609,3 +609,26 @@ void Asignar_Descuentos(DescClientes dc, char cod_desc[], int id_cliente, fecha 
     Guardar_DescuentosClientes(dc);
 }
 
+
+DescClientes Asignar_codpro(DescClientes dc){
+
+    int i;
+    char cod_desc[11];
+
+    fecha fch_sist;
+    fch_sist.dia = dia_sist();
+    fch_sist.mes = mes_sist();
+    fch_sist.anio = anio_sist();
+
+    fecha fch_cad = crear_fechacad(fch_sist);
+    clients c = cargar_clientes();
+
+
+    strcpy(cod_desc, "codpro");
+
+    for(i=0; i<c.n_clients; i++){
+        Asignar_Descuentos(dc, cod_desc, c.clients[i].Id_cliente, fch_cad);
+    }
+
+    return dc;
+}
