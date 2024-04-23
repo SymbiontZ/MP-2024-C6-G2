@@ -1,9 +1,3 @@
 0000000-userdefault-defaultdir-defaultloc-defaultprov-defaultemail-defpsw-0
 0000001-Vivian-c/ejemplo7-Jerez-Cadiz-vivi21@gmail.com-12345678901234-863321
 0000002-Fabio Rojas-C/ejemplo2-Jerez-Cadiz-fabiorr1@yahoo.com-fabiorr1-99999999
-0000003-Lucia-C/ejemplo 2-Chiclana-Cadiz-luciagl512@gmail.comm-lucygl125-277
-0000004-Adrian Garcia-C/ejemplo 23-Jerez-Cadiz-adriangb156@gmail.com-medaigual-33
-0000005-Juanma-C/ejemplo 3-San Fernando-Cadiz-juanma1@gmail.com-juanma1-100
-0000006-David Peri-C/Hipercor 3-San Fernando-Cadiz-percoro@gmail.com-hipercor4-50
-0000007-Ale Ruiz-C/ Roble 3-Jerez-Cadiz-aleruiz3@outlook.es-aleruiz2-100
-0000008-David Usero-C/ Acacias 138-Chiclana-Cadiz-daviduserorod@yahoo.com-davidusero-100

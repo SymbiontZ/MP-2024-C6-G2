@@ -18,6 +18,9 @@ int main()
     //eliminar_pedidos_productos(Prod_P, P, 2);
 
     devoluciones d = cargar_devoluciones();
-    modificar_devoluciones(d, Prod_P, P);
+    int pos;
+    pos= buscar_devolucion(d, Prod_P, P);
+    printf("pos: %d\n", pos);
+    eliminar_devolucion(pos, d);
     return 0;
 }
