@@ -17,6 +17,50 @@
 
 
 
+//Precondición: No recibe nada.
+//Postcondición: Muestra el logotipo de la empresa. No devuelve nada.
+void esizon(){
+	
+printf(" EEEEEEEEEEEEEEEEEEEEEE   SSSSSSSSSSSSSSS IIIIIIIIIIZZZZZZZZZZZZZZZZZZZ     OOOOOOOOO     NNNNNNNN        NNNNNNNN\n");  
+printf(" E::::::::::::::::::::E SS:::::::::::::::SI::::::::IZ:::::::::::::::::Z   OO:::::::::OO   N:::::::N       N::::::N\n");  
+printf(" E::::::::::::::::::::ES:::::SSSSSS::::::SI::::::::IZ:::::::::::::::::Z OO:::::::::::::OO N::::::::N      N::::::N\n");  
+printf(" EE::::::EEEEEEEEE::::ES:::::S     SSSSSSSII::::::IIZ:::ZZZZZZZZ:::::Z O:::::::OOO:::::::ON:::::::::N     N::::::N\n");  
+printf(" E:::::E         EEEEEES:::::S              I::::I  ZZZZZ     Z:::::Z  O::::::O   O::::::ON::::::::::N    N::::::N\n");    
+printf(" E:::::E               S:::::S              I::::I          Z:::::Z    O:::::O     O:::::ON:::::::::::N   N::::::N\n");    
+printf(" E::::::EEEEEEEEEE      S::::SSSS           I::::I         Z:::::Z     O:::::O     O:::::ON:::::::N::::N  N::::::N\n");    
+printf(" E:::::::::::::::E       SS::::::SSSSS      I::::I        Z:::::Z      O:::::O     O:::::ON::::::N N::::N N::::::N\n");    
+printf(" E:::::::::::::::E         SSS::::::::SS    I::::I       Z:::::Z       O:::::O     O:::::ON::::::N  N::::N:::::::N\n");    
+printf(" E::::::EEEEEEEEEE            SSSSSS::::S   I::::I      Z:::::Z        O:::::O     O:::::ON::::::N   N:::::::::::N\n");    
+printf(" E:::::E                           S:::::S  I::::I     Z:::::Z         O:::::O     O:::::ON::::::N    N::::::::::N\n");    
+printf(" E:::::E       EEEEEE              S:::::S  I::::I  ZZZ:::::Z     ZZZZZO::::::O   O::::::ON::::::N     N:::::::::N\n");    
+printf(" EE::::::EEEEEEEE:::::ESSSSSSS     S:::::SII::::::IIZ::::::ZZZZZZZZ:::ZO:::::::OOO:::::::ON::::::N      N::::::::N\n");  
+printf(" E::::::::::::::::::::ES::::::SSSSSS:::::SI::::::::IZ:::::::::::::::::Z OO:::::::::::::OO N::::::N       N:::::::N\n");  
+printf(" E::::::::::::::::::::ES:::::::::::::::SS I::::::::IZ:::::::::::::::::Z   OO:::::::::OO   N::::::N        N::::::N\n");  
+printf(" EEEEEEEEEEEEEEEEEEEEEE SSSSSSSSSSSSSSS   IIIIIIIIIIZZZZZZZZZZZZZZZZZZZ     OOOOOOOOO     NNNNNNNN         NNNNNNN\n\n");
+
+
+
+printf("       ########  ######  #### ########  #######  ##    ## \n");
+printf("      ##       ##    ##  ##       ##  ##     ## ###   ## \n");
+printf("     ##       ##        ##      ##   ##     ## ####  ## \n");
+printf("    ######    ######   ##     ##    ##     ## ## ## ## \n");
+printf("   ##             ##  ##    ##     ##     ## ##  #### \n");
+printf("  ##       ##    ##  ##   ##      ##     ## ##   ### \n");
+printf(" ########  ######  #### ########  #######  ##    ## \n\n");                                                                 
+
+
+printf(" ########:: ######:: ####: ########:: #######:: ##::: ##:\n"); 
+printf(" ##.....::'##... ##:. ##::..... ##::'##.... ##: ###:: ##:\n"); 
+printf(" ##::::::: ##:::..::: ##:::::: ##::: ##:::: ##: ####: ##:\n"); 
+printf(" ######:::. ######::: ##::::: ##:::: ##:::: ##: ## ## ##:\n"); 
+printf(" ##...:::::..... ##:: ##:::: ##::::: ##:::: ##: ##. ####:\n"); 
+printf(" ##:::::::'##::: ##:: ##::: ##:::::: ##:::: ##: ##:. ###:\n"); 
+printf(" ########:. ######::'####: ########:. #######:: ##::. ##:\n\n"); 
+  
+}
+
+
+
 //Precondición: Recibe una estructura de tipo admin_prov_vect (el vector de usuarios tipo adminprov), y la posición a utilizar en él.
 //Postcondición: El usuario habrá iniciado sesión como proveedor en el sistema, o se habrá cerrado la sesión por fallar la contraseña muchas veces. No devuelve nada.
 void inicsesion_prov(admin_prov_vect provs, int pos){
