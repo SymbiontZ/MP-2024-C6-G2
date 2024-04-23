@@ -343,10 +343,13 @@ void menuadmin(admin_prov_vect admin, int pos){
             menuadmin_prod();
             break;
         case 5:
+            menuadmin_cat();
             break;
         case 6:
+            menuadmin_ped();
             break;
         case 7:
+            menuadmin_transp();
             break;
         case 8:
             break;
@@ -575,20 +578,21 @@ void menuadmin_cat(){
 
     do{
         clear();
-        printf("+--------------------------------+\n");
-        printf("| QUE DESEA REALIZAR:            |\n");
-        printf("+--------------------------------+\n");
-        printf("| <1> Mostrar listado productos  |\n");
-        printf("| <2> Dar de alta productos      |\n");
-        printf("| <3> Dar de baja productos      |\n");
-        printf("| <4> Modificar producto         |\n");
-        printf("| <0> Volver                     |\n");
-        printf("+--------------------------------+\n");
+        printf("+---------------------------------+\n");
+        printf("| QUE DESEA REALIZAR:             |\n");
+        printf("+---------------------------------+\n");
+        printf("| <1> Mostrar listado categorias  |\n");
+        printf("| <2> Dar de alta categorias      |\n");
+        printf("| <3> Dar de baja categorias      |\n");
+        printf("| <4> Modificar categorias        |\n");
+        printf("| <0> Volver                      |\n");
+        printf("+---------------------------------+\n");
  
-        scanf("%d", &opt);
+        opt = input_int();
         fflush(stdin);
         switch (opt){
-            case 1:  
+            case 1:
+                listar_categorias(Cat);
                 break;
             case 2:
                 printf("Seguro que quiere agregar un producto [s/n]: ");
@@ -612,6 +616,112 @@ void menuadmin_cat(){
         }
         guardar_categorias(Cat);
     }while (opt != 0);
+    free(Cat.categ);
+}
+
+void menuadmin_ped(){
+    pedidos Ped = cargar_pedidos();
+    int opt;
+    char resp;
+    int pos;          //Posicion del proveedor al que se le realizan los cambios.
+
+    do{
+        clear();
+        printf("+----------------------------------+\n");
+        printf("| QUE DESEA REALIZAR:              |\n");
+        printf("+----------------------------------+\n");
+        printf("| <1> Lista completa de pedidos    |\n");
+        printf("| <2> Lista estado de pedidos      |\n");
+        printf("| <3> Dar de alta pedidos          |\n");
+        printf("| <4> Dar de baja pedidos          |\n");
+        printf("| <5> Modificar pedidos            |\n");
+        printf("| <6> Asignar transportista pedido |\n");
+        printf("| <7> Asignar locker pedido        |\n");
+        printf("| <0> Volver                       |\n");
+        printf("+----------------------------------+\n");
+ 
+        opt = input_int();
+        fflush(stdin);
+        switch (opt){
+            case 1:
+
+                break;
+            case 2:
+                printf("Seguro que quiere agregar un producto [s/n]: ");
+                resp = confirmacion();
+                if(resp == 'S'|| resp == 's')
+                break;
+            case 3:
+                
+
+                break;
+            case 4:
+
+                if (pos != -1)
+                    
+                break;
+            
+            case 0:         //CASO DE SALIDA
+                break;
+            default:
+                break;
+        }
+        guardar_pedidos(Ped);
+    }while (opt != 0);
+    free(Ped.pedidos);
+}
+
+void menuadmin_transp(){
+    transport_vect T = cargar_transportistas();
+    int opt;
+    char resp;
+    int pos;          //Posicion del proveedor al que se le realizan los cambios.
+
+    do{
+        clear();
+        printf("+---------------------------------+\n");
+        printf("| QUE DESEA REALIZAR:             |\n");
+        printf("+---------------------------------+\n");
+        printf("| <1> Listado transportista       |\n");
+        printf("| <2> Dar de alta transportista   |\n");
+        printf("| <3> Dar de baja transportista   |\n");
+        printf("| <4> Modificar transportista     |\n");
+        printf("| <0> Volver                      |\n");
+        printf("+---------------------------------+\n");
+ 
+        opt = input_int();
+        fflush(stdin);
+        switch (opt){
+            case 1:
+                
+                break;
+            case 2:
+                printf("Seguro que quiere agregar un producto [s/n]: ");
+                resp = confirmacion();
+                if(resp == 'S'|| resp == 's')
+                break;
+            case 3:
+                
+
+                break;
+            case 4:
+
+                if (pos != -1)
+                    
+                break;
+            
+            case 0:         //CASO DE SALIDA
+                break;
+            default:
+                break;
+        }
+        guardar_transportista(T);
+    }while (opt != 0);
+    free(T.transportistas);
+}
+
+void menuadmin_desc(){
+    
 }
 
 void listar_admin(admin_prov_vect admin){
@@ -883,12 +993,15 @@ int busqueda_cliente(){
             {
             case 1:
                 pos = busqueda_clientetipo(C, pos, 1);  //Por nombre
+                opt = 0;
                 break;
             case 2:
                 pos = busqueda_clientetipo(C, pos, 2);  //Por localidad
+                opt = 0;
                 break;  
             case 3:
                 pos = busqueda_clientetipo(C, pos, 3);  //Por email
+                opt =0;
                 break;
             case 0:
                 pos = -1;
@@ -1320,3 +1433,4 @@ clients cliente_cart(clients C, int pos, int mod){
 
     return C;
 }
+

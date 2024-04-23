@@ -1600,7 +1600,7 @@ admin_prov_vect cargar_adminprov(){
 	
 	admin_prov_vect adminprov_sistema;
 	FILE *f_AdminProv;																							// Puntero al fichero a leer.
-	char ruta[] = ".\\data\\AdminProv.txt";																		// Ruta del fichero a leer.
+	char ruta[] = "..\\data\\AdminProv.txt";																		// Ruta del fichero a leer.
 	char linea[LONG_MAX_ADMINPROV];																				// Línea actual del fichero. Longitud máxima de una línea 86 caracteres.
 	char tipo_usuario[14];																						// Cadena auxiliar a convertir.
 	int i = 0, m; 
@@ -1648,7 +1648,7 @@ transport_vect cargar_transportistas(){
 	
 	transport_vect transport_sistema;
 	FILE *Transportistas;																						// Puntero al fichero a leer.
-	char ruta[] = "./data/Transportistas.txt";																	// Ruta del fichero a leer.
+	char ruta[] = "../data/Transportistas.txt";																	// Ruta del fichero a leer.
 	char linea[LONG_MAX_TRANSPORT];																				// Línea actual del fichero. Longitud máxima de una línea 113 caracteres.
 	int i = 0, m;
 

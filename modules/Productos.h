@@ -59,7 +59,7 @@ categ_vect eliminar_categorias (categ_vect);
 
 //PRECONDICIÓN:
 //POSCONDICIÓN:
-categ_vect listar_categorias (categ_vect);
+void listar_categorias (categ_vect);
 
 //PRECONDICIÓN:
 //POSCONDICIÓN:

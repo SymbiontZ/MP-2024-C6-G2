@@ -4,7 +4,7 @@
 
 //CATEGORIAS:
 categ_vect cargar_categorias () {
-	char filename[] = "Categorias.txt";   
+	char filename[] = "../data/Categorias.txt";   
     int num_cat = 0;                          //Numero de categorias registradas
     int i = 0;                          		
     char cad_linea[250];                      //Caracteres maximos que puede ocupar una linea en fichero
@@ -354,70 +354,22 @@ categ_vect eliminar_categorias (categ_vect c) {
 	return c;
 }
 
-categ_vect listar_categorias (categ_vect c) {
+void listar_categorias (categ_vect c) {
 	int i;
 	
 	clear ();
-	Sleep (1000);
-	printf ("---> LISTA DE CATEGORIAS: <---\n\n");
-	
-	for (i = 1; i < c.num_cat; i++) {
-		printf ("(%i) %04d-%s\n", i, c.categ[i].id_categ, c.categ[i].descrip);
-	}
-	
-	return c;
-}
+	printf("+----------------------+\n");
+	printf("| LISTADO DE PRODUCTOS |\n");
+	printf("+----------------------+---------------------------------+\n");
+	printf("| DESCRIPCION DE CATEGORIAS                              |\n");
+	printf("+--------------------------------------------------------+\n");
 
-void menu_categ (categ_vect c) {
-	int op;
-	char respuesta;
-	
-	do {
-		do{
-			printf ("Que desea hacer?\n\n");
-			Sleep (1000);
-			printf ("(1) Rellenar los datos de una nueva categoria\n");
-			printf ("(2) Modificar los datos de una categoria existente\n");
-			printf ("(3) Eliminar los datos de una categoria existente\n");
-			printf ("(4) Listar las categorias existentes\n");
-			printf ("(0) Salir del menu\n\n");
-			scanf ("%d", &op);
-			fflush (stdin);
-		}while (op < 0 || op > 4);
-		
-		switch (op) {
-			case 1:
-				c = agregar_categorias (c);
-			break;
-			
-			case 2:
-				c = modificar_categorias (c);
-			break;
-			
-			case 3:
-				c = eliminar_categorias (c);
-			break;
-			
-			case 4:
-				listar_categorias (c);
-			break;
-			
-			case 0:		//Caso de salida
-				respuesta = 'N';
-			break;
-			
-			default:	//Caso de error al seleccionar
-				printf ("Seleccione una opcion valida: ");
-			break;
-		}
-		
-		if (op != 0) {
-			printf ("\nDesea realizar algun cambio mas? (S/N): ");
-			scanf ("%c", &respuesta);
-			fflush (stdin);
-			clear ();
-		}
-	}while (respuesta == 'S' || respuesta == 's');
+	for (i = 1; i < c.num_cat; i++) {
+	printf ("| <%i> %-50s |\n", i, c.categ[i].descrip);
+	}
+	printf("+--------------------------------------------------------+\n");
+	printf("Pulse [enter] para volver...");
+	getchar();
 }
 
 //PRODUCTOS:
