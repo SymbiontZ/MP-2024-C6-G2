@@ -188,7 +188,7 @@ void Consultar_desc_cliente(int pos, int mode){
         for(i=1;i<desccl.tam;i++){
             if(Cliente.clients[pos].Id_cliente == desccl.DescCliente[i].Id_cliente){
                 if(desccl.DescCliente[i].Estado == 0)
-                    printf("| CODIGO: %-10s ASIGNADO: %02d/%02d/%04d CADUCADO: %02d/%02d/%04d --> Disponible |\n", desccl.DescCliente[i].Id_cod,
+                    printf("| CODIGO: %-10s ASIGNADO: %02d/%02d/%04d CADUCADO: %02d/%02d/%04d --> No aplicado |\n", desccl.DescCliente[i].Id_cod,
                                                                                                         desccl.DescCliente[i].dia_asig,
                                                                                                         desccl.DescCliente[i].mes_asig,
                                                                                                         desccl.DescCliente[i].anio_asig,
@@ -196,7 +196,7 @@ void Consultar_desc_cliente(int pos, int mode){
                                                                                                         desccl.DescCliente[i].mes_cad,
                                                                                                         desccl.DescCliente[i].anio_cad);
                 else
-                    printf("| CODIGO: %-10s ASIGNADO: %02d/%02d/%04d CADUCADO: %02d/%02d/%04d --> No disponible |\n", desccl.DescCliente[i].Id_cod,
+                    printf("| CODIGO: %-10s ASIGNADO: %02d/%02d/%04d CADUCADO: %02d/%02d/%04d --> Aplicado |\n", desccl.DescCliente[i].Id_cod,
                                                                                                         desccl.DescCliente[i].dia_asig,
                                                                                                         desccl.DescCliente[i].mes_asig,
                                                                                                         desccl.DescCliente[i].anio_asig,
@@ -594,7 +594,7 @@ Descuentos Modificar_Descuentos(Descuentos D){
     return D;
 }
 
-void Asignar_Descuentos(DescClientes dc, char cod_desc[], int id_cliente, fecha fch_cad){
+void Asignar_Descuentos(DescClientes dc, int id_cliente, fecha fch_cad){
     Descuentos D = Cargar_Descuentos();
     char cod_desc[11];
     int i,cod_ok = 0;
@@ -722,4 +722,16 @@ void Listar_Descuentos_Aplicados(DescClientes dc){
             }
         }
     }
+}
+
+int importe_descuento(char cod_desc[]){
+    Descuentos D = Cargar_Descuentos();
+    int i, importe;
+
+    for(i=0;i<D.tam;i++){
+        if(strcmp(cod_desc, D.Desc[i].Id_cod)== 0)
+            importe = D.Desc[i].Importe;
+    }
+
+    return importe;
 }
