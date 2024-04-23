@@ -306,6 +306,8 @@ int crear_pedido( pedidos p, int id_cliente, int modo){
                 
             
             }  
+            printf("%c", cheque);
+            
         }while(conf!=0 || (cheque !='s' || cheque !='S'));
        
     }
@@ -920,5 +922,50 @@ void listar_prod_clientes(int id_cliente, pedidos p, prod_pedidos prod_p){
     devoluciones d =cargar_devoluciones();
     crear_devolucion(d, pos_ped, pos_prod);
     
+}
+
+
+void listar_devoluciones(pedidos p, prod_pedidos prod_p, devoluciones d){
+    int i, j,k,
+        id_pedido,
+        id_prod;
+    printf("+---------------------+\n");
+    printf("| DEVOLUCIONES        |\n");
+    printf("+---------------------+\n");
+
+    produ_vect prod = cargar_productos();
+    clients c =cargar_clientes();
+
+    for(i=1;i<d.lon;i++){
+        id_pedido=d.devoluciones[i].id_pedido;
+        
+        for(j=0;j<p.lon;j++){
+            if(id_pedido==p.pedidos[j].id_pedido){
+                for(k=0;k<c.n_clients;k++){
+                    if(p.pedidos[j].id_cliente==c.clients[k].Id_cliente){
+                        printf("nombre del cliente: %s", c.clients[k].Nom_cliente);
+                    }
+                }
+            }
+            
+        }
+        id_prod=d.devoluciones[i].id_prod;
+        for(j=0;prod.num_prod;j++){
+            if(id_prod==prod.produ[j].id_prod){
+                printf("nombre del producto: %s", prod.produ[j].nombre);
+            }
+        }
+
+        printf("estado de la devolucion: %s", d.devoluciones[i].estado);
+
+        printf("fecha aceptacion: %d/%d/%d",  d.devoluciones[i].f_aceptacion.dia,
+                                              d.devoluciones[i].f_aceptacion.mes,
+                                              d.devoluciones[i].f_aceptacion.anio);
+
+        printf("fecha caducidad: %d/%d/%d",   d.devoluciones[i].f_caducidad.dia,
+                                              d.devoluciones[i].f_caducidad.mes,
+                                              d.devoluciones[i].f_caducidad.anio);
+    }
+
 }
 
