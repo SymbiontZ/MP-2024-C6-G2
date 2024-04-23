@@ -104,7 +104,7 @@ int buscador_prodnombre ();
 
 //PRECONDICIÓN:
 //POSTCONDICIÓN:
-int buscador_prodidcateg ();
+int buscador_prodcateg ();
 
 //PRECONDICIÓN:
 //POSTCONDICIÓN:
