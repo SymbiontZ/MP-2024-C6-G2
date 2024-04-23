@@ -88,6 +88,7 @@ void Gestionar_Descuentos(Descuentos, DescClientes);
 int desc_activo(char[] );
 
 void marcar_aplicado(int, char[]);
+
 //Precondición: Recibe la estructura Descuentos
 //Postcondición: Devuelve la estructura Descuentos con el descuento seleccionado eliminado
 Descuentos Baja_Descuentos(Descuentos);

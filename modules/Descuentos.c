@@ -470,18 +470,39 @@ Descuentos nuevo_imp(Descuentos D, int pos){
 
 
 Descuentos Baja_Descuentos(Descuentos D){
-    int tam = D.tam, i;
-    char Id_cod_busqueda[11];			                    								// Variables que serviran como filtro a la hora de buscar el descuento que se dara de baja
+    char Id_cod_busqueda[11];
+    int i, pos = -1;
 
-    printf("Introduzca el identificador del descuento que quiere dar de baja\n");
-    scanf("%s", &Id_cod_busqueda);
+    printf("Introduzca la id del descuento a eliminar: \n");
+    scanf("%s", &Id_cod_busqueda);                                                     //Se guarda la id del descuento que se quiere eliminar en la variable de busqueda
 
-    for(i=0; i<tam; i++){
-        if(strcmp(Id_cod_busqueda, D.Desc[i].Id_cod) == 0)
-            strcpy(D.Desc[i].Estado, "inactivo");												// Se actualiza el del descuento encontrado, dejandolo "inactivo" en caso de querer darlo de alta en el futuro
+    for(i=0; i<D.tam; i++){
+
+        if(strcmp(Id_cod_busqueda, D.Desc[i].Id_cod) == 0){                         //Una vez se encuentra una coincidencia de la id de busqueda en la estructura
+
+            for(pos = i; pos<D.tam; pos++){
+
+                D.Desc[pos] = D.Desc[pos+1];                                              //Se asignan los descuentos en la posicion anterior a partir de la instancia del descuento
+
+            }
+
+            D.Desc = realloc(D.Desc, (D.tam - 1)*sizeof(Descuentos));                       //Se reajusta la memoria asignada al vector de estructuras
+
+            if (D.Desc == NULL){
+                printf("No se pudo asignar la estructura de descuentosclientes");
+                getchar();
+                exit(EXIT_FAILURE);
+            }
+
+            D.tam = D.tam - 1;                                                            //Se reduce el tamaño total del vector de estructuras
+            break;
+        }
     }
 
+
+
     return D;
+
 }
 
 
