@@ -4,7 +4,7 @@
 
 //CATEGORIAS:
 categ_vect cargar_categorias () {
-	char filename[] = "../data/Categorias.txt";   
+	char filename[] = "Categorias.txt";   
     int num_cat = 0;                          //Numero de categorias registradas
     int i = 0;                          		
     char cad_linea[250];                      //Caracteres maximos que puede ocupar una linea en fichero
@@ -88,11 +88,19 @@ void guardar_categorias (categ_vect c) {
     }
     
     fclose (f_cat);
+    
+    if (c.num_cat == 1) {
+    	printf ("\n**Estructura guardada con 1 categoria\n");
+	}
+	else {
+		printf ("\n**Estructura guardada con %d categorias\n", c.num_cat - 1);
+	}	
 }
 
 categ_vect agregar_categorias (categ_vect c) {
 	int nueva_id = c.num_cat;		//IDENTIFICADOR DEL NUEVO PRODUCTO
-	char desc[51];
+	char desc [51];
+	
 	c.categ = (categorias*)realloc(c.categ, (nueva_id + 1)*sizeof(categorias));
 	
 	if (c.categ == NULL) {
@@ -102,19 +110,20 @@ categ_vect agregar_categorias (categ_vect c) {
 	}
 	
 	c.categ[nueva_id].id_categ = nueva_id;		//La id de la categoria se rellena automáticamente
-	do{
+	
+	do {
 		printf ("\nEscribe la descripcion de la categoria: ");
-		fflush(stdin);
+		fflush (stdin);
 		fgets (desc, 51, stdin);
 		fflush (stdin);
 		terminador_cad (desc);
-	} while (strlen(desc) == 0);
+	}while (strlen (desc) == 0);
 	
 	c.num_cat++;
 	guardar_categorias (c);
 	
 	printf ("Se ha registrado la categoria %04d correctamente", c.categ[nueva_id].id_categ);
-	Sleep(2000);
+	Sleep (2000);
 	
 	return c;
 }
@@ -300,7 +309,7 @@ categ_vect modificar_categorias (categ_vect c) {
 		guardar_categorias (c);
 	}
 	else {
-		printf ("\nVolviendo al menu anterior...\n");
+		printf ("Volviendo al menu anterior...\n");
 	}
 			
 	return c;
@@ -323,7 +332,10 @@ categ_vect eliminar_categorias (categ_vect c) {
 		return c;
 	}
 	
-	printf ("\nEsta seguro que desea eliminar la categoria '%04d-%s'? (S/N): ", c.categ[pos].id_categ, c.categ[pos].descrip);
+	clear ();
+	Sleep (1000);
+	
+	printf ("Esta seguro que desea eliminar la categoria '%04d-%s'? (S/N): ", c.categ[pos].id_categ, c.categ[pos].descrip);
 	scanf ("%c", &respuesta);
 	fflush (stdin);
 	
@@ -343,11 +355,11 @@ categ_vect eliminar_categorias (categ_vect c) {
         	exit (EXIT_FAILURE);
 		}
 		
+		printf ("\nCategoria eliminada correctamente\n");	
+			
 		guardar_categorias (c);
-	
-		printf ("\nCategoria eliminada correctamente\n");
-	}
-	else {
+	}	
+	else {                  
 		printf ("\nVolviendo al menu anterior...\n");
 	}
 	
@@ -358,6 +370,8 @@ void listar_categorias (categ_vect c) {
 	int i;
 	
 	clear ();
+	Sleep (1000);
+	
 	printf("+----------------------+\n");
 	printf("| LISTADO DE PRODUCTOS |\n");
 	printf("+----------------------+---------------------------------+\n");
@@ -365,16 +379,70 @@ void listar_categorias (categ_vect c) {
 	printf("+--------------------------------------------------------+\n");
 
 	for (i = 1; i < c.num_cat; i++) {
-	printf ("| <%i> %-50s |\n", i, c.categ[i].descrip);
+		printf ("| <%i> %-50s |\n", i, c.categ[i].descrip);
 	}
+	
 	printf("+--------------------------------------------------------+\n");
 	printf("Pulse [enter] para volver...");
+	
 	getchar();
+}
+
+void menu_categ (categ_vect c) {
+	int op;
+	char respuesta;
+	
+	do {
+		do{
+			printf ("Que desea hacer?\n\n");
+			Sleep (1000);
+			printf ("(1) Rellenar los datos de una nueva categoria\n");
+			printf ("(2) Modificar los datos de una categoria existente\n");
+			printf ("(3) Eliminar los datos de una categoria existente\n");
+			printf ("(4) Listar las categorias existentes\n");
+			printf ("(0) Ir al menu de productos\n\n");
+			scanf ("%d", &op);
+			fflush (stdin);
+		}while (op < 0 || op > 4);
+		
+		switch (op) {
+			case 1:
+				c = agregar_categorias (c);
+			break;
+			
+			case 2:
+				c = modificar_categorias (c);
+			break;
+			
+			case 3:
+				c = eliminar_categorias (c);
+			break;
+			
+			case 4:
+				listar_categorias (c);
+			break;
+			
+			case 0:		//Caso de salida
+				respuesta = 'N';
+			break;
+			
+			default:	//Caso de error al seleccionar
+				printf ("Seleccione una opcion valida: ");
+			break;
+		}
+		
+		if (op != 0) {
+			printf ("\nDesea realizar algun cambio mas? (S/N): ");
+			scanf ("%c", &respuesta);
+			fflush (stdin);
+			clear ();
+		}
+	}while (respuesta == 'S' || respuesta == 's');
 }
 
 //PRODUCTOS:
 produ_vect cargar_productos () {
-	char filename[] = "../data/Productos.txt";   
+	char filename[] = "Productos.txt";   
     int num_prod = 0;                         //Numero de productos registrados
     int i = 0;                          		
     char cad_linea[250];                      //Caracteres maximos que puede ocupar una linea en fichero
@@ -447,7 +515,7 @@ void guardar_productos (produ_vect p) {
 	int i;
 	
 	FILE *f_prod;
-	char filename[] = "../data/Productos.txt";
+	char filename[] = "Productos.txt";
 	f_prod = fopen (filename, "w");
 	
 	if (f_prod == NULL) {
@@ -526,7 +594,7 @@ produ_vect agregar_productos (produ_vect p) {
 	guardar_productos (p);
 	
 	printf ("Se ha registrado el producto %s correctamente", p.produ[nueva_id].nombre);
-	getchar ();
+	Sleep (2000);
 	
 	return p;
 }
@@ -876,7 +944,7 @@ produ_vect modificar_productos (produ_vect p) {
 			printf ("\n\n1. Nombre\n2. Descripcion\n3. Stock del producto\n4. Dias de compromiso de entrega\n5. Importe en euros\n0. Salir\n############################\n");	
 			scanf ("%d", &op);
 			fflush (stdin);
-		}while (op < 1 || op > 5);
+		}while (op < 0 || op > 5);
 	
 		switch (op) {
 			case 1:
@@ -917,7 +985,7 @@ produ_vect modificar_productos (produ_vect p) {
 			break;
 			
 			case 0:
-			printf ("\nVolviendo al menu anterior...\n");
+				printf ("\nVolviendo al menu anterior...\n");
 			break;
 			
 			default:
@@ -930,7 +998,7 @@ produ_vect modificar_productos (produ_vect p) {
 		guardar_productos (p);			
 	}                      
 	else {
-		printf ("\nVolviendo al menu anterior...\n");
+		printf ("Volviendo al menu anterior...\n");
 	}
 			
 	return p;
@@ -953,7 +1021,10 @@ produ_vect eliminar_productos (produ_vect p) {
 		return p;
 	}
 	
-	printf ("\nEsta seguro que desea eliminar el producto '%s-%s'? (S/N): ", p.produ[pos].nombre, p.produ[pos].descrip);
+	clear ();
+	Sleep (1000);
+	
+	printf ("Esta seguro que desea eliminar el producto '%s-%s'? (S/N): ", p.produ[pos].nombre, p.produ[pos].descrip);
 	scanf ("%c", &respuesta);
 	fflush (stdin);
 	
@@ -973,9 +1044,9 @@ produ_vect eliminar_productos (produ_vect p) {
         	exit (EXIT_FAILURE);
 		}
 		
-		guardar_productos (p);
-	
 		printf ("\nProducto eliminado correctamente\n");
+		
+		guardar_productos (p);
 	}
 	else {
 		printf ("\nVolviendo al menu anterior...\n");
@@ -1031,6 +1102,8 @@ void menu_prod (produ_vect p) {
 	
 	do {
 		do{
+			clear ();
+			Sleep (1000);
 			printf ("Que desea hacer?\n\n");
 			Sleep (1000);
 			printf ("(1) Rellenar los datos de un nuevo producto\n");
@@ -1077,7 +1150,7 @@ void menu_prod (produ_vect p) {
 	}while (respuesta == 'S' || respuesta == 's');
 }
 
-//Funciones para useradmin:
+//Funciones para Fabio:
 int buscador_prodnombre () {
 	produ_vect p = cargar_productos ();
 	int i, op, len, cont = 0, vaux[p.num_prod];
@@ -1136,7 +1209,7 @@ int buscador_prodnombre () {
 					else {
 						vaux[op] = op;
 					}
-				}while (op == -1);		//Repetir mientras el indice sea invalid
+				}while (op == -1);		//Repetir mientras el indice sea invalido
 			}
 		}
 		else {
@@ -1202,7 +1275,7 @@ int buscador_prodidcateg () {
 					else {
 						vaux[op] = op;
 					}
-				}while (op == -1);		//Repetir mientras el indice sea invalid
+				}while (op == -1);		//Repetir mientras el indice sea invalido
 			}
 		}
 		else {
@@ -1211,4 +1284,205 @@ int buscador_prodidcateg () {
 	}while (cont == 0);
 		
 	return op;
+}
+
+//Funciones para Santi:
+produ_vect modificar_prodgestor (produ_vect p, int id) {
+	int pos, op;
+	char respuesta;
+	
+	//MOSTRAR INFORMACION//
+	clear ();
+	Sleep (1000);
+	printf ("---> MODIFICADOR DE PRODUCTOS: <---\n\n");
+	printf ("Primero, busque el producto que desee modificar bajo uno de los siguientes criterios:");
+	
+	Sleep (1000);	
+	pos = buscar_productos (p);
+	
+	if (pos == -1) {
+		return p;
+	}
+	
+	clear ();
+	Sleep (1000);
+	
+	if (p.produ[pos].id_gestor == id) {
+		printf ("Id de gestor válida, se permite la modificacion del producto...");
+		printf ("\n\nEsta seguro que desea modificar el producto '%s-%s'? (S/N): ", p.produ[pos].nombre, p.produ[pos].descrip);
+		scanf ("%c", &respuesta);
+		fflush (stdin);
+		
+		clear ();
+		Sleep (1000);
+		
+		if (respuesta == 'S' || respuesta == 's') {
+			do {
+				printf ("Seleccione que es lo que quiere modificar del producto:");
+				printf ("\n\n1. Nombre\n2. Descripcion\n3. Stock del producto\n4. Dias de compromiso de entrega\n5. Importe en euros\n0. Salir\n############################\n");	
+				scanf ("%d", &op);
+				fflush (stdin);
+			}while (op < 0 || op > 5);
+		
+			switch (op) {
+				case 1:
+					printf ("\nNombre actual del producto: %s\n", p.produ[pos].nombre);
+					printf ("Ingrese el nuevo nombre (maximo 15 caracteres): ");
+					fgets (p.produ[pos].nombre, 16, stdin);
+					fflush (stdin);
+					terminador_cad (p.produ[pos].nombre);
+				break;
+			
+				case 2:
+					printf ("\nDescripcion actual del producto: %s\n", p.produ[pos].descrip);
+					printf ("Ingrese la nueva descripcion (maximo 50 caracteres): ");
+					fgets (p.produ[pos].descrip, 51, stdin);
+					fflush (stdin);
+					terminador_cad (p.produ[pos].descrip);
+				break;
+				
+				case 3:
+					printf ("\nStock actual del producto: %d\n", p.produ[pos].stock);
+					printf ("Ingrese el nuevo stock: ");
+					scanf ("%d", &p.produ[pos].stock);
+					fflush (stdin);
+				break;
+				
+				case 4:
+					printf ("\nDias de compromiso de entrega actuales del producto: %d\n", p.produ[pos].entrega);
+					printf ("Ingrese el nuevo numero de dias: ");
+					scanf ("%d", &p.produ[pos].entrega);
+					fflush (stdin);
+				break;
+			
+				case 5:
+					printf ("\nImporte actual en euros del producto: %d\n", p.produ[pos].importe);
+					printf ("Ingrese el nuevo importe en euros: ");
+					scanf ("%d", &p.produ[pos].importe);
+					fflush (stdin);
+				break;
+				
+				case 0:
+					printf ("\nVolviendo al menu anterior...\n");
+				break;
+				
+				default:
+					printf ("Seleccione una opcion valida: ");
+				break;
+			}
+			
+			printf ("\nProducto modificado correctamente\n");
+			
+			guardar_productos (p);			
+		}                      
+		else {
+			printf ("Volviendo al menu anterior...\n");
+		}
+	}
+	else {
+		printf ("\nSu id de gestor no coincide con la del producto seleccionado, volviendo al menu anterior...\n");
+	}
+	
+	return p;
+}
+
+produ_vect eliminar_prodgestor (produ_vect p, int id) {
+	int i, pos;
+	char respuesta;
+	
+	//MOSTRAR INFORMACION//
+	clear ();
+	Sleep (1000);
+	printf ("---> ELIMINADOR DE PRODUCTOS: <---\n\n");
+	printf ("Primero, busque el producto que desee eliminar bajo uno de los siguientes criterios:");
+	
+	Sleep (1000);	
+	pos = buscar_productos (p);
+	
+	if (pos == -1) {
+		return p;
+	}
+	
+	clear ();
+	Sleep (1000);
+	
+	if (p.produ[pos].id_gestor == id) {
+		printf ("Id de gestor válida, se permite la eliminacion del producto...");
+		printf ("\nEsta seguro que desea eliminar el producto '%s-%s'? (S/N): ", p.produ[pos].nombre, p.produ[pos].descrip);
+		scanf ("%c", &respuesta);
+		fflush (stdin);
+		
+		if (respuesta == 'S' || respuesta == 's') {
+			for (i = pos; i < p.num_prod - 1; i++) {
+				p.produ[i] = p.produ[i + 1];			//Desplazar elementos hacia atras
+				p.produ[i].id_prod = i;					//Reasignar las id de los productos
+			}
+		
+			p.num_prod--;			//Reducir la variable del numero de productos
+			
+			p.produ = (productos*)realloc(p.produ, p.num_prod*sizeof(productos));	//Reasignar el tamaño del vector
+		
+			if (p.produ == NULL) {
+				printf ("\nNo se pudo reasignar la estructura de productos");
+	        	getchar ();
+	        	exit (EXIT_FAILURE);
+			}
+			
+			printf ("\nProducto eliminado correctamente\n");
+			
+			guardar_productos (p);
+		}
+		else {
+			printf ("Volviendo al menu anterior...\n");
+		}
+	}
+	else {
+		printf ("\nSu id de gestor no coincide con la del producto seleccionado, volviendo al menu anterior...\n");
+	}
+	
+	return p;
+}
+
+void listar_prodgestor (produ_vect p, int id) {
+	int i,j,
+		id_cat,
+		id_gest;
+	categ_vect Cat = cargar_categorias();
+	admin_prov_vect adminprov = cargar_adminprov();
+	
+	
+	clear ();
+	printf("+--------------------+\n");
+	printf("| LISTA DE PRODUCTOS |\n");
+	printf("+-----------------+--+-------------------------------------------------+---------------------------+\n");
+	printf("| NOMBRE          | DESCRIPCION                                        | EMPRESA GESTORA           |\n");
+	printf("| STOCK           | CATEGORIA                                          | DIAS DE ENTREGA | IMPORTE |\n");
+	printf("+-----------------+----------------------------------------------------+---------------------------+\n");
+	
+	for (i = 1; i < p.num_prod; i++) {
+		for(j=1; j < Cat.num_cat; j++){
+			if(p.produ[i].id_categ == Cat.categ[j].id_categ)
+				id_cat = j;
+		}
+		for(j=1; j < adminprov.tam; j++){
+			if(p.produ[i].id_gestor == adminprov.usuarios[j].Id_empresa)
+				id_gest = j;
+		}
+		
+		if (p.produ[i].id_gestor == id) {
+			printf ("| %-15s | %-50s | %-25s |\n| %-15d | %-50s | %-15d | %-7d |\n",
+			p.produ[i].nombre,
+			p.produ[i].descrip,
+			adminprov.usuarios[id_gest].Nombre,
+			p.produ[i].stock, 
+			Cat.categ[id_cat].descrip,
+	
+			
+			p.produ[i].entrega, 
+			p.produ[i].importe);
+		}
+		printf("+-----------------+----------------------------------------------------+---------------------------+\n");
+	}
+	printf("Pulse [enter] para volver...");
+	getchar();
 }

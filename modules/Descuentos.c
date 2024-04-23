@@ -336,7 +336,8 @@ Descuentos nuevo_id(Descuentos D, int pos){
     printf("Ingrese el identificador: \n");
 
     fflush(stdin);
-    fgets(new_Id_cod, sizeof(new_Id_cod), stdin);
+    fgets(new_Id_cod, sizeof(new_Id_cod)+1, stdin);
+    terminador_cad(new_Id_cod);
 
     strcpy(D.Desc[pos].Id_cod, new_Id_cod);	                                        // Se escribe en la nueva posicion de la estructura la nueva id
 
@@ -354,7 +355,8 @@ Descuentos nueva_desc(Descuentos D, int pos){
     printf("Ingrese la descripción: \n");
 
     fflush(stdin);
-    fgets(new_Descrip, sizeof(new_Descrip), stdin);
+    fgets(new_Descrip, sizeof(new_Descrip)+1, stdin);
+    terminador_cad(new_Descrip);
 
     strcpy(D.Desc[pos].Descrip, new_Descrip);													// Se escribe en la nueva posicion de la estructura la nueva descripcion
 
@@ -462,7 +464,7 @@ Descuentos nuevo_imp(Descuentos D, int pos){
     printf("Introduzca el importe: \n");
     scanf("%d", &new_Importe);
 
-        D.Desc[pos].Importe = new_Importe;													// Se escribe en la nueva posicion de la estructura el importe introducido
+    D.Desc[pos].Importe = new_Importe;													// Se escribe en la nueva posicion de la estructura el importe introducido
 
     return D;
 }
@@ -473,11 +475,15 @@ Descuentos Baja_Descuentos(Descuentos D){
     int i, pos = -1;
 
     printf("Introduzca la id del descuento a eliminar: \n");
-    scanf("%s", &Id_cod_busqueda);                                                     //Se guarda la id del descuento que se quiere eliminar en la variable de busqueda
+
+                                                                                            //Se guarda la id del descuento que se quiere eliminar en la variable de busqueda
+    fflush(stdin);
+    fgets(Id_cod_busqueda, sizeof(Id_cod_busqueda)+1, stdin);
+    terminador_cad(Id_cod_busqueda);
 
     for(i=0; i<D.tam; i++){
 
-        if(strcmp(Id_cod_busqueda, D.Desc[i].Id_cod) == 0){                         //Una vez se encuentra una coincidencia de la id de busqueda en la estructura
+        if(strcmp(Id_cod_busqueda, D.Desc[i].Id_cod) == 0){                                 //Una vez se encuentra una coincidencia de la id de busqueda en la estructura
 
             for(pos = i; pos<D.tam; pos++){
 
@@ -511,7 +517,10 @@ Descuentos Busqueda_Descuentos(Descuentos D){
     char Id_cod_busqueda[11];															// Variable que servira como filtro a la hora de buscar el descuento deseado
 
     printf("Introduzca el identificador del descuento que quiere buscar\n");
-    scanf("%s", &Id_cod_busqueda);
+
+    fflush(stdin);
+    fgets(Id_cod_busqueda, sizeof(Id_cod_busqueda)+1, stdin);
+    terminador_cad(Id_cod_busqueda);
 
     for(i=0; i<tam; i++){
         if(strcmp(Id_cod_busqueda, D.Desc[i].Id_cod) == 0)
@@ -539,7 +548,10 @@ Descuentos Modificar_Descuentos(Descuentos D){
     char Id_cod_busqueda[11];															// Variable en la que se almacena el codigo del descuento a modificar
 
     printf("Introduzca el identificador del descuento que quiere modificar\n");
-    scanf("%s", &Id_cod_busqueda);
+
+    fflush(stdin);
+    fgets(Id_cod_busqueda, sizeof(Id_cod_busqueda)+1, stdin);
+    terminador_cad(Id_cod_busqueda);
 
     for(i=0; i<tam; i++){
         if(strcmp(Id_cod_busqueda, D.Desc[i].Id_cod) == 0){											// Cuando exista una coincidencia se despliega un menu con las distintas opciones de modificacion
@@ -582,7 +594,7 @@ Descuentos Modificar_Descuentos(Descuentos D){
     return D;
 }
 
-void Asignar_Descuentos(DescClientes dc, int id_cliente, fecha fch_cad){
+void Asignar_Descuentos(DescClientes dc, char cod_desc[], int id_cliente, fecha fch_cad){
     Descuentos D = Cargar_Descuentos();
     char cod_desc[11];
     int i,cod_ok = 0;
@@ -594,8 +606,8 @@ void Asignar_Descuentos(DescClientes dc, int id_cliente, fecha fch_cad){
         exit(EXIT_FAILURE);
     }
 
-    //ELEGIR CODIGO DE DESCUENTO
-    do{
+    do
+    {
         printf("Introduzca el codigo de descuento a asignar:");
         fflush(stdin);
         fgets(cod_desc, 11, stdin);
@@ -646,7 +658,6 @@ void Asignar_Descuentos(DescClientes dc, int id_cliente, fecha fch_cad){
 
     dc.tam++;
 
-    free(D.Desc);
     Guardar_DescuentosClientes(dc);
 }
 
@@ -672,4 +683,43 @@ DescClientes Asignar_codpro(DescClientes dc){
     }
 
     return dc;
+}
+
+void Listar_Descuentos_Asignados(DescClientes dc){
+
+    int i, j;
+    char Id_cod_busqueda[11];
+    clients c = cargar_clientes();
+
+    printf("Introduzca el identificador del descuento que quiera saber los clientes asignados\n");
+
+    fflush(stdin);
+    fgets(Id_cod_busqueda, sizeof(Id_cod_busqueda)+1, stdin);
+    terminador_cad(Id_cod_busqueda);
+
+    for(i = 0; i<dc.tam; i++){
+        if(strcpy(Id_cod_busqueda, dc.DescCliente[i].Id_cod ) == 0){
+            for(j = 0; j<c.n_clients; j++){
+                if(dc.DescCliente[i].Id_cliente == c.clients[j].Id_cliente){
+                    printf("Nombre del cliente: %s. Fecha de caducidad: %d/%d/%d \n", &c.clients[j].Nom_cliente, &dc.DescCliente[i].dia_cad, &dc.DescCliente[i].mes_cad, &dc.DescCliente[i].anio_cad);
+                }
+            }
+        }
+    }
+}
+
+void Listar_Descuentos_Aplicados(DescClientes dc){
+
+    int i, j;
+    clients c = cargar_clientes();
+
+    for(i = 0; i<dc.tam; i++){
+        if(dc.DescCliente[i].Estado != 0){
+            for(j = 0; j<c.n_clients; j++){
+                if(dc.DescCliente[i].Id_cliente == c.clients[j].Id_cliente){
+                    printf("Nombre del cliente: %s. Código del descuento: %s \n", &c.clients[j].Nom_cliente, &dc.DescCliente[i].Id_cod);
+                }
+            }
+        }
+    }
 }

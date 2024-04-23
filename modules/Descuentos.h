@@ -111,7 +111,15 @@ void Asignar_Descuentos(DescClientes dc, int id_cliente, fecha fch_cad);
 
 //Precondición: Recibe estrucutra DescuentosClientes
 //Postcondición: Asigna un codigo promocional a todos los clientes del sistema
-DescClientes Asiganar_codpro(DescClientes dc);
+DescClientes Asiganar_codpro(DescClientes);
+
+//Precondición: Recibe estrucutra DescuentosClientes
+//Postcondición: Muestra los descuentos asignados al cliente deseado
+void Listar_Descuentos_Asignados(DescClientes);
+
+//Precondición: Recibe estrucutra DescuentosClientes
+//Postcondición: Muestra todos los descuentos aplicados en el sistema
+void Listar_Descuentos_Aplicados(DescClientes);
 
 //Precondición: Recibe la estructura Descuentos
 //Postcondición: Devuelve la estructura Descuentos con un nuevo descuento

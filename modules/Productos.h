@@ -34,72 +34,88 @@ typedef struct {
 
 //---> CATEGORIAS: <---
 //PRECONDICIÓN:
-//POSCONDICIÓN:
+//POSTCONDICIÓN:
 categ_vect cargar_categorias ();
 
 //PRECONDICIÓN:
-//POSCONDICIÓN:
+//POSTCONDICIÓN:
 void guardar_categorias (categ_vect);
 
 //PRECONDICIÓN:
-//POSCONDICIÓN:
+//POSTCONDICIÓN:
 categ_vect agregar_categorias (categ_vect);
 
 //PRECONDICIÓN:
-//POSCONDICIÓN:
+//POSTCONDICIÓN:
 int buscar_categorias (categ_vect);
 
 //PRECONDICIÓN:
-//POSCONDICIÓN:
+//POSTCONDICIÓN:
 categ_vect modificar_categorias (categ_vect);
 
 //PRECONDICIÓN:
-//POSCONDICIÓN:
+//POSTCONDICIÓN:
 categ_vect eliminar_categorias (categ_vect);
 
 //PRECONDICIÓN:
-//POSCONDICIÓN:
+//POSTCONDICIÓN:
 void listar_categorias (categ_vect);
 
 //PRECONDICIÓN:
-//POSCONDICIÓN:
+//POSTCONDICIÓN:
 void menu_categ (categ_vect);
 
 //---> PRODUCTOS: <---
 //PRECONDICIÓN:
-//POSCONDICIÓN:
+//POSTCONDICIÓN:
 produ_vect cargar_productos ();
 
 //PRECONDICIÓN:
-//POSCONDICIÓN:
+//POSTCONDICIÓN:
 void guardar_productos (produ_vect);
 
 //PRECONDICIÓN:
-//POSCONDICIÓN:
+//POSTCONDICIÓN:
 produ_vect agregar_productos (produ_vect);
 
 //PRECONDICIÓN:
-//POSCONDICIÓN:
+//POSTCONDICIÓN:
 int buscar_productos (produ_vect);
 
 //PRECONDICIÓN:
-//POSCONDICIÓN:
+//POSTCONDICIÓN:
 produ_vect modificar_productos (produ_vect);
 
 //PRECONDICIÓN:
-//POSCONDICIÓN:
+//POSTCONDICIÓN:
 produ_vect eliminar_productos (produ_vect);
 
 //PRECONDICIÓN:
-//POSCONDICIÓN:
+//POSTCONDICIÓN:
 void listar_productos (produ_vect);
 
 //PRECONDICIÓN:
-//POSCONDICIÓN:
-produ_vect buscador_productos (produ_vect);
+//POSTCONDICIÓN:
+void menu_prod (produ_vect);
 
 //PRECONDICIÓN:
-//POSCONDICIÓN:
+//POSTCONDICIÓN:
+int buscador_prodnombre ();
+
+//PRECONDICIÓN:
+//POSTCONDICIÓN:
 int buscador_prodidcateg ();
+
+//PRECONDICIÓN:
+//POSTCONDICIÓN:
+produ_vect modificar_prodgestor (produ_vect, int);
+
+//PRECONDICIÓN:
+//POSTCONDICIÓN:
+produ_vect eliminar_prodgestor (produ_vect, int);
+
+//PRECONDICIÓN:
+//POSTCONDICIÓN:
+void listar_prodgestor (produ_vect, int);
 
 #endif
