@@ -1,3 +1,22 @@
+int buscar_id_prov(admin_prov_vect provs, char* empresa){
+	int i, 
+1		id= 0, 
+2		val = 0;
+3	for(i = 1; i < provs.tam-1; i++){	//Si empresa ya creada
+4		if(strcmp(empresa, provs.usuarios[i].Nombre) == 0){
+5			id = provs.usuarios[i].Id_empresa;
+6			return id;
+7		}	
+8	}
+9	for(i = 1; i < provs.tam-1; i++){
+10		if(id < provs.usuarios[i].Id_empresa)
+11			id = provs.usuarios[i].Id_empresa;
+12	}
+13
+14	id++;
+15	return id;
+}
+
 Cálculo de rutas (cualquiera de los tres métodos es válido):
 
    <1> V(G) = Nº de Regiones = 5
@@ -12,4 +31,18 @@ Rutas: Buscamos las cinco rutas básicas.
    - R4) 1, 2, 3, 8, 9, 10, 11, 12, 9, 13, 14, 15
    - R5) 1, 2, 3, 8, 9, 10, 12, 9, 13, 14, 15
 
-Hacemos pruebas que cubran todas las rutas.
+Hacemos pruebas que cubran todas las rutas:
+
+   - Ruta 1: Siendo el primer proveedor del vector de la empresa SANTANA, la cadena empresa será SANTANA. Cualquier empresa que figure en 
+el sistema seguirá esta ruta.
+
+   - Ruta 2: Siendo el vector provs de tamaño 2, se salta ambos bucles y devuelve 1 independientemente de la empresa del proveedor. 
+Este es un caso que no se va a dar jamás.
+
+   - Ruta 3: Siendo el segundo proveedor del vector de la empresa SANTANA y el primero de la empresa ESIZON, la cadena empresa será SANTANA. 
+La primera llamada no entrará en el cuerpo de la estructura selectiva, pero la segunda sí. 
+
+   - Ruta 4: Jamás se va a dar esta ruta. Si no entra en el primer bucle, tampoco entrará en el segundo y devolverá 0 independientemente de la
+cadena empresa.
+
+   - Ruta 5: Ídem. al caso anterior, no se va a dar jamás. Si no entra en un bucle, tampoco entra en el otro. Devolverá cero en tal caso.
