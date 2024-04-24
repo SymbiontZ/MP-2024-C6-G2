@@ -448,7 +448,8 @@ categ_vect listar_categorias (categ_vect c) {
 void menu_categ (categ_vect c) {
 	int op;
 	char respuesta;
-	
+	clear();
+	titulo();
 	do {
 		do{
 			printf ("Que desea hacer?\n\n");
