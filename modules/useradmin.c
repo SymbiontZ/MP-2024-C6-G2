@@ -150,7 +150,6 @@ void menucliente(clients C,int pos){
             menucliente_dev(pos);
             break;
         case 0:
-            free(C.clients);
             exit(EXIT_SUCCESS);
             break;
         default:
@@ -161,7 +160,6 @@ void menucliente(clients C,int pos){
 }
 
 void menucliente_prod(){
-    produ_vect prods = cargar_productos();
     int opt;
     do{
         clear();
@@ -179,13 +177,12 @@ void menucliente_prod(){
 
         switch (opt){
             case 1:
-                /* code */
+                buscador_prodnombre();
                 break;
             case 2:
-                
+                buscador_prodidcateg();
                 break;
             case 0:
-                free(prods.produ);
                 //CASO DE VUELTA AL MENU ANTERIOR
                 break;
             default:
@@ -215,7 +212,7 @@ void menucliente_ped(int pos){
 
         switch (opt){
             case 1:
-                /* code */
+                p = crear_pedido(p, pos);
                 break;
             case 2:
                 listapedidos_cliente(prods_p, p, pos);
@@ -224,18 +221,21 @@ void menucliente_ped(int pos){
 
                 break;
             case 0:
-                free(prods_p.prod_pedidos);
-                free(p.pedidos);
+                
                 //CASO DE VUELTA AL MENU ANTERIOR
                 break;
             default:
                 break;
         }
+        guardar_pedido(p);
     } while (opt != 0);
+
+    free(prods_p.prod_pedidos);
+    free(p.pedidos);
 }
 
 void menucliente_dev(int pos){
-    devoluciones dev = cargar_devoluciones();
+    devoluciones Dev = cargar_devoluciones();
     int opt;
     do{
         clear();
@@ -249,11 +249,10 @@ void menucliente_dev(int pos){
         printf("| <0> Volver                            |\n");
         printf("+---------------------------------------+\n");
 
-        scanf("%d", &opt);
+        opt = input_int();
         fflush(stdin);
 
-        switch (opt)
-        {
+        switch (opt){
         case 1:
             /* code */
             break;
@@ -261,7 +260,7 @@ void menucliente_dev(int pos){
 
             break;
         case 3:
-
+            listar_devolpend(Dev,pos);
             break;    
         case 0:
             //CASO DE VUELTA AL MENU ANTERIOR
@@ -269,10 +268,9 @@ void menucliente_dev(int pos){
         default:
             break;
         }
-        guardar_devoluciones(dev);
+        
     } while (opt != 0);
-
-    free(dev.devoluciones);
+    guardar_devoluciones(Dev);
 
 }
 
@@ -624,7 +622,7 @@ void menuadmin_ped(){
     pedidos Ped = cargar_pedidos();
     int opt;
     char resp;
-    int pos;          //Posicion del proveedor al que se le realizan los cambios.
+    int pos;          //Posicion del cliente al que se le realizan los cambios.
 
     do{
         clear();
@@ -633,9 +631,9 @@ void menuadmin_ped(){
         printf("+----------------------------------+\n");
         printf("| <1> Lista completa de pedidos    |\n");
         printf("| <2> Lista estado de pedidos      |\n");
-        printf("| <3> Dar de alta pedidos          |\n");
-        printf("| <4> Dar de baja pedidos          |\n");
-        printf("| <5> Modificar pedidos            |\n");
+        printf("| <3> Realizar pedido              |\n");
+        printf("| <4> Eliminar pedido              |\n");
+        printf("| <5> Modificar pedido             |\n");
         printf("| <6> Asignar transportista pedido |\n");
         printf("| <7> Asignar locker pedido        |\n");
         printf("| <0> Volver                       |\n");
@@ -653,8 +651,11 @@ void menuadmin_ped(){
                 if(resp == 'S'|| resp == 's')
                 break;
             case 3:
-                
-
+                printf("Para poder realizar un pedido es necesario seleccionar el cliente.\n");
+                Sleep(3000);
+                pos = busqueda_cliente();
+                if(pos!= -1)
+                    Ped = crear_pedido(Ped, pos);
                 break;
             case 4:
 

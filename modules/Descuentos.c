@@ -25,7 +25,7 @@ Descuentos Cargar_Descuentos(){
 	vector_desc.tam = 0;
 	while(fgets(linea, sizeof(linea), f_descuentos) != NULL)												// Contamos el número de líneas del fichero
 	    vector_desc.tam++;
-	printf("Descuentos almacenados en Descuentos.txt: %d \n", vector_desc.tam);
+	//printf("Descuentos almacenados en Descuentos.txt: %d \n", vector_desc.tam);
     vector_desc.Desc = malloc((vector_desc.tam + 1) * sizeof(Descuento));
     											// Se reserva memoria para el vector
 	rewind(f_descuentos);
@@ -179,34 +179,43 @@ void Consultar_desc_cliente(int pos, int mode){
         n_desc=0,
         activo;
     clear();
-
+    printf("+---------------------------+\n");
+    printf("|    TUS DESCUENTOS         |\n");
 
     if(mode == 0){
-        printf("+---------------------------+\n");
-        printf("|    TUS DESCUENTOS         |\n");
-        printf("+---------------------------+\n");
+        
+        printf("+------------+--------------+---+-----------------+-----------+\n");
+        printf("| CODIGO     | FECHA ASIGNACION | FECHA CADUCIDAD | APLICADO? |\n");
+        printf("+------------+------------------+-----------------+-----------+\n");
         for(i=1;i<desccl.tam;i++){
             if(Cliente.clients[pos].Id_cliente == desccl.DescCliente[i].Id_cliente){
                 if(desccl.DescCliente[i].Estado == 0)
-                    printf("| CODIGO: %-10s ASIGNADO: %02d/%02d/%04d CADUCADO: %02d/%02d/%04d --> No aplicado |\n", desccl.DescCliente[i].Id_cod,
-                                                                                                        desccl.DescCliente[i].dia_asig,
-                                                                                                        desccl.DescCliente[i].mes_asig,
-                                                                                                        desccl.DescCliente[i].anio_asig,
-                                                                                                        desccl.DescCliente[i].dia_cad,
-                                                                                                        desccl.DescCliente[i].mes_cad,
-                                                                                                        desccl.DescCliente[i].anio_cad);
+                    printf("| %-10s | %02d/%02d/%04d       | %02d/%02d/%04d      | NO        |\n", 
+                    desccl.DescCliente[i].Id_cod,
+                    desccl.DescCliente[i].dia_asig,
+                    desccl.DescCliente[i].mes_asig,
+                    desccl.DescCliente[i].anio_asig,
+                    desccl.DescCliente[i].dia_cad,
+                    desccl.DescCliente[i].mes_cad,
+                    desccl.DescCliente[i].anio_cad);
                 else
-                    printf("| CODIGO: %-10s ASIGNADO: %02d/%02d/%04d CADUCADO: %02d/%02d/%04d --> Aplicado |\n", desccl.DescCliente[i].Id_cod,
-                                                                                                        desccl.DescCliente[i].dia_asig,
-                                                                                                        desccl.DescCliente[i].mes_asig,
-                                                                                                        desccl.DescCliente[i].anio_asig,
-                                                                                                        desccl.DescCliente[i].dia_cad,
-                                                                                                        desccl.DescCliente[i].mes_cad,
-                                                                                                        desccl.DescCliente[i].anio_cad);
+                    printf("| %-10s | %02d/%02d/%04d       | %02d/%02d/%04d      | SI        |\n", 
+                    desccl.DescCliente[i].Id_cod,
+                    desccl.DescCliente[i].dia_asig,
+                    desccl.DescCliente[i].mes_asig,
+                    desccl.DescCliente[i].anio_asig,
+                    desccl.DescCliente[i].dia_cad,
+                    desccl.DescCliente[i].mes_cad,
+                    desccl.DescCliente[i].anio_cad);
             n_desc++;
+
             }
+            
         }
+        printf("+------------+------------------+-----------------+-----------+\n");
     }else{
+        printf("+---------------------------+\n");
+        
         for(i=1;i<desccl.tam;i++){
             if(Cliente.clients[pos].Id_cliente == desccl.DescCliente[i].Id_cliente){
                 if(desccl.DescCliente[i].Estado == 0 && desc_activo(desccl.DescCliente[i].Id_cod) == 1)
@@ -218,8 +227,10 @@ void Consultar_desc_cliente(int pos, int mode){
 
     if(n_desc == 0){
         printf("| NO TIENES CUPONES DISPONIBLES |\n");
-        printf("+-------------------------------+");
+        
     }
+    printf("Pulse [enter] para volver...");
+    getchar();
 
 }
 

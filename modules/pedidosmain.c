@@ -8,7 +8,7 @@ int main()
 {
     pedidos P=cargar_pedidos();
     prod_pedidos Prod_P=cargar_prod_pedidos();
-    P=crear_pedido(P, 1, 1);
+    P=crear_pedido(P, 1);
     /*devoluciones D=cargar_devoluciones();
     printf("se ha cargado el fichero Devoluciones.txt correctamente\n");*/
    
