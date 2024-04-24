@@ -3,9 +3,7 @@
 #include"useradmin.h"
 #include"Descuentos.h"
 
-//Cabecera: pedidos cargar_pedidos()
-//Precondición: el fichero debe existir y la estructura de cada pedido
-//Postcondición: guarda en un vector de tipo pedido cada pedido que hay en el fichero.
+
 
 pedidos cargar_pedidos(){
     
@@ -64,10 +62,8 @@ pedidos cargar_pedidos(){
     return p;
 }
 
-//Cabecera: void crear_pedido(int id_cliente, pedidos p)
-//Precondicion: estrcutura pedidos cargada con datos del fichero Pedidos.txt y el id del cliente que ha realizado pedido, lo sabemos cuando ha iniciado sesión en la aplicación
-//Postcondicion: se crea un nuevo pedido realizado por un cliente y se guarda en la estructura pedidos, ademas de escribirlo en el fichero Pedidos.txt
-pedidos crear_pedido( pedidos p, int id_cliente){
+
+pedidos crear_pedido( pedidos p, int id_cliente, int modo){
     //Cargar estructuras necesarias de otros modulos
     clients c = cargar_clientes();
     prod_pedidos Prod_P = cargar_prod_pedidos();
@@ -234,7 +230,7 @@ pedidos crear_pedido( pedidos p, int id_cliente){
     printf("1. DOMICILIO\n");
     printf("2. LOCKER\n");
     printf("su opcion : ");
-    lugar = input_int();
+    lugar=input_int();
     switch(lugar){
         case 1:
             strcpy(p.pedidos[pos].lugar, "Domicilio");
@@ -413,9 +409,7 @@ int comprobar_descuento(char cod_descuento[], int id_cliente){
     
     
 }
-//Cabecera guardar_pedido(pedidos p, int pos)
-//Precondición: estructura pedidos cargada con los datos del ultimo pedido realizado
-//Postcondicion: se guarda en el fichero la estructura pedidos
+
 void guardar_pedido(pedidos p){
     int i;
 
@@ -443,9 +437,7 @@ void guardar_pedido(pedidos p){
     fclose(f_ped);
 }
 
-//Cabecera: prod_pedidos cargar_prod_pedidos()
-//Precondicion:
-//Postcondicion: carga en la estructura prod_pedidos los datos del fichero ProductosPedidos.txt
+
 prod_pedidos cargar_prod_pedidos(){
     int n_prod_ped=0, i=0, campo_prod_ped;
     char cad_aux[200];
@@ -507,9 +499,7 @@ prod_pedidos cargar_prod_pedidos(){
     return prod_p;
 }
 
-//Cabecera: guardar_producto_pedido()
-//Precondicion:
-//Postcondicion: rellena la estructura con un nuevo producto pedido y lo escribe en el fichero
+
 void guardar_productos_pedidos(prod_pedidos prod_p){
     int i;
 
@@ -587,9 +577,10 @@ void crear_producto_pedido(pedidos p, int product, int id_pedido, prod_pedidos p
     Sleep(2000);
 }
 
-void eliminar_pedidos_productos(prod_pedidos prod_p, pedidos p, int pos_ped){
+void eliminar_pedidos(prod_pedidos prod_p, pedidos p, int pos_ped){
     int i;
     char resp;
+    prod_pedidos prod_p = cargar_prod_pedidos();
     printf("Estas seguro de elimar el pedido? [s/n]: ");
     resp=confirmacion();
     if(resp =='S' || resp=='s'){
@@ -657,9 +648,6 @@ void eliminar_productos_ped(prod_pedidos prod_p, int pos_ped){
 }
       
 
-//Cabecera: devoluciones cargar_devoluciones()
-//Precondicion:
-//Postcondicion: carga en la estructura devoluciones los datos que hay en el fichero Devoluciones.txt
 
 devoluciones cargar_devoluciones(){
     int n_dev=0, i=0, campo_devoluciones;
@@ -752,7 +740,7 @@ void guardar_devoluciones(devoluciones d){
     }
 }
 
-void crear_devolucion(devoluciones d, int id_pedido, int id_producto){
+devoluciones crear_devolucion(devoluciones d, int id_pedido, int id_producto){
     int i, pos, id_ped, producto;
     char motivo[50]; //motivo que escribe el cliente para devolver el producto
     pos=d.lon;
@@ -787,6 +775,7 @@ void crear_devolucion(devoluciones d, int id_pedido, int id_producto){
     guardar_devoluciones(d);
     printf("Se han guardado los datos correctamente\n");
 
+    return d;
 
 }
 
@@ -857,7 +846,7 @@ void listapedidos_cliente(prod_pedidos prods_p,pedidos p, int id_cliente){
     getchar();
 }
 
-void listar_prod_clientes(int id_cliente, pedidos p, prod_pedidos prod_p){
+devoluciones nueva_devolucion_prod(int id_cliente, devoluciones d){
     int i,j,k,
         id_prod,     //variable para almacenar los id de los productos que han sido entregados al cliente
         n_coinc = 0, //variable para almacenar el numero de coincidencias que hay
@@ -865,6 +854,8 @@ void listar_prod_clientes(int id_cliente, pedidos p, prod_pedidos prod_p){
         pos_prod,
         pos_ped;
 
+    pedidos p = cargar_pedidos();
+    prod_pedidos prod_p = cargar_prod_pedidos();
     int *v_prod, //vector auxiliar que almacena los productos que han sido entregados al cliente
         *v_ped; //vector auxiliar que almacena los pedidos a los que pertenecen los productos entregados del cliente
     
@@ -916,14 +907,15 @@ void listar_prod_clientes(int id_cliente, pedidos p, prod_pedidos prod_p){
     }
 
     printf("\nIntroduzca el numero <n> que desea seleccionar: ");
-    scanf("%d", &op);
+    op=input_int();
     fflush(stdin);
     pos_prod=v_prod[op-1];
     pos_ped=v_ped[op-1];
     
 
-    devoluciones d =cargar_devoluciones();
-    crear_devolucion(d, pos_ped, pos_prod);
+    
+    d= crear_devolucion(d, pos_ped, pos_prod);
+    return d;
     
 }
 
@@ -1025,87 +1017,374 @@ void listadoped_estado(prod_pedidos prod_p, char estado[]){
 }
 
 
-void listar_devoluciones(pedidos p, prod_pedidos prod_p, devoluciones d){
-    int i, j,k,
-        id_pedido,
-        id_prod;
-    printf("+---------------------+\n");
-    printf("| DEVOLUCIONES        |\n");
-    printf("+---------------------+\n");
-
+void listar_devoluciones( devoluciones d){
+    int i, j,l,k,
+        id_ped,
+        id_prod,
+        pos;
+    char nom_cliente[21];
+    char nom_prod[16];
+    pedidos p = cargar_pedidos();
+    prod_pedidos prod_p = cargar_prod_pedidos();
+    printf("+--------------------------------------------------------------------------------------+\n");
+    printf("| LISTA DE DEVOLUCIONES                                                                |\n");
+    printf("+--------------------------------------------------------------------------------------+\n");
+    printf("| <n> nombre cliente - nombre_producto - estado - fecha aceptacion - fehca caducidad   |\n");
+    printf("+--------------------------------------------------------------------------------------+\n");
     produ_vect prod = cargar_productos();
-    clients c =cargar_clientes();
+    clients c = cargar_clientes();
 
+    
     for(i=1;i<d.lon;i++){
-        id_pedido=d.devoluciones[i].id_pedido;
-        
-        for(j=0;j<p.lon;j++){
-            if(id_pedido==p.pedidos[j].id_pedido){
-                for(k=0;k<c.n_clients;k++){
+       
+        //obtener nombre del cliente
+        id_ped=d.devoluciones[i].id_pedido;
+       
+        for(j=1;j<p.lon;j++){
+           
+            if(id_ped==p.pedidos[j].id_pedido){
+                for(k=1;k<c.n_clients;k++){
                     if(p.pedidos[j].id_cliente==c.clients[k].Id_cliente){
-                        printf("nombre del cliente: %s", c.clients[k].Nom_cliente);
+                        
+                        strcpy(nom_cliente, c.clients[k].Nom_cliente); //guardo el nombre del cliente que corresponde a esa devolucion
+                        
                     }
+                    
                 }
+                
             }
             
         }
+        
+
+        //obtener nombre del producto
         id_prod=d.devoluciones[i].id_prod;
-        for(j=0;prod.num_prod;j++){
-            if(id_prod==prod.produ[j].id_prod){
-                printf("nombre del producto: %s", prod.produ[j].nombre);
+        for(l=0;l<prod.num_prod;l++){
+            if(id_prod==prod.produ[l].id_prod){
+                strcpy(nom_prod, prod.produ[l].nombre); //guardo el nombre del producto que corresponde a esa devolucion
             }
         }
 
-        printf("estado de la devolucion: %s", d.devoluciones[i].estado);
+        printf("| <%d> %s - %s - %s - %d/%d/%d - %d/%d/%d\n", i,
+                                                            nom_cliente,
+                                                            nom_prod,
+                                                            d.devoluciones[i].estado,
+                                                            d.devoluciones[i].f_aceptacion.dia,
+                                                            d.devoluciones[i].f_aceptacion.mes,
+                                                            d.devoluciones[i].f_aceptacion.anio,
+                                                            d.devoluciones[i].f_caducidad.dia,
+                                                            d.devoluciones[i].f_caducidad.mes,
+                                                            d.devoluciones[i].f_caducidad.anio);
 
-        printf("fecha aceptacion: %d/%d/%d",  d.devoluciones[i].f_aceptacion.dia,
-                                              d.devoluciones[i].f_aceptacion.mes,
-                                              d.devoluciones[i].f_aceptacion.anio);
+    }
+    
 
-        printf("fecha caducidad: %d/%d/%d",   d.devoluciones[i].f_caducidad.dia,
-                                              d.devoluciones[i].f_caducidad.mes,
-                                              d.devoluciones[i].f_caducidad.anio);
+
+}
+
+int buscar_devolucion(devoluciones d){
+    int pos;
+    listar_devoluciones(d);
+    printf("introduce el numero n de la devolucion que desea modificar\n");
+    pos=input_int();
+    return pos;
+
+}
+
+void eliminar_devolucion(int pos, devoluciones d){
+    int i; 
+    char resp;
+    printf("Estas seguro de eliminar la devolucion? [s/n]: ");
+    resp=confirmacion();
+    if(resp=='s'||resp=='S'){
+        for(i=pos;i<d.lon;i++){
+            d.devoluciones[i]=d.devoluciones[i+1];
+        }
+        d.lon--;
+        d.devoluciones=realloc(d.devoluciones, d.lon*sizeof(devolucion));
+        if(d.devoluciones== NULL){
+            printf("no se pudo reasignar la estructura pedidos\n");
+            getchar();
+            exit(EXIT_FAILURE);
+        }
+        guardar_devoluciones(d);
+        printf("se ha eliminado la devolucion correctamente");
+    }
+}
+
+
+devoluciones modificar_devolucion(devoluciones d, int pos){
+    int i, resp, op;
+    
+    char estado[11];
+
+    printf("+----QUE DESEA MODIFICAR----+\n");
+    printf("| 1) ESTADO                 |\n");
+    printf("| 2) FECHA CADUCIDAD        |\n");
+    printf("+---------------------------+\n");
+
+    printf("introduce su opcion: ");
+    scanf("%d", &resp);
+
+    switch(resp){
+        case 1: 
+            printf("--ESTADOS POSIBLES--\n");
+            printf("1. PENDIENTE\n");
+            printf("2. ACEPTADO\n");
+            printf("3. ENVIADO\n");
+            printf("4. RECIBIDO");
+
+            printf("introduce una opcion: ");
+            op=input_int();
+            switch(op){
+                case 1: 
+                    strcpy(d.devoluciones[pos].estado, "pendiente");
+                    break;
+                case 2:
+                    strcpy(d.devoluciones[pos].estado, "aceptado");
+                    break;
+                case 3:
+                    strcpy(d.devoluciones[pos].estado, "enviado");
+                    break;
+                case 4:
+                    strcpy(d.devoluciones[pos].estado, "recibido");
+                    break;
+                default:
+                    printf("opcion incorrecta\n");
+            }
+
+            break;
+        case 2:
+            d.devoluciones[pos].f_caducidad=crear_fechacad(d.devoluciones[pos].f_aceptacion);
+            break;
+        default:
+            printf("opcion incorrecta\n");
+
+    }
+
+    return d;
+}
+
+void listar_dev_cliente(int id_cliente, devoluciones d){
+    int i,j,k,
+        id_ped,
+        id_prod;
+    char nom_prod[16];
+    produ_vect prod = cargar_productos();
+    prod_pedidos prod_p = cargar_prod_pedidos();
+    pedidos p = cargar_pedidos();
+
+    printf("+--------------------------------------------------------------------------------------+\n");
+    printf("| LISTA DE DEVOLUCIONES                                                                |\n");
+    printf("+--------------------------------------------------------------------------------------+\n");
+    printf("| <n> nombre_producto - estado - fecha aceptacion - fehca caducidad   |\n");
+    printf("+--------------------------------------------------------------------------------------+\n");
+    
+    for(i=1;i<d.lon;i++){
+        for(j=1;j<p.lon;j++){
+            //obtengo la id del pedido a la que pertenece el cliente
+            if(id_cliente==p.pedidos[j].id_cliente && p.pedidos[j].id_pedido==d.devoluciones[i].id_pedido){
+                printf("id cliente del pedido: %d\n", p.pedidos[j].id_cliente);
+                
+                id_ped=p.pedidos[j].id_pedido;
+                printf("id ped: %d\n", id_ped);
+
+                //obtener el nombre del producto de esa devolucion
+                if(d.devoluciones[i].id_pedido==id_ped){
+                    id_prod=d.devoluciones[i].id_prod;
+                    for(k=1;k<prod.num_prod;k++){
+                        if(id_prod==prod.produ[k].id_prod){
+                            strcpy(nom_prod, prod.produ[k].nombre);
+                        }
+                    }
+                }
+
+
+
+                printf("| <%d>  %s - %s - %d/%d/%d - %d/%d/%d\n", i,
+                                                            nom_prod,
+                                                            d.devoluciones[i].estado,
+                                                            d.devoluciones[i].f_aceptacion.dia,
+                                                            d.devoluciones[i].f_aceptacion.mes,
+                                                            d.devoluciones[i].f_aceptacion.anio,
+                                                            d.devoluciones[i].f_caducidad.dia,
+                                                            d.devoluciones[i].f_caducidad.mes,
+                                                            d.devoluciones[i].f_caducidad.anio);
+            }
+        }
+        
+         
+    
+
+        
+    }
+}
+
+void listar_pedidos(pedidos p){
+    int i, j;
+    char nom_client[21];
+
+    clients c = cargar_clientes();
+
+    printf("+--------------------------------------------------------+\n");
+    printf("| LISTA DE TODOS LOS PEDIDOS                             |\n");
+    printf("|--------------------------------------------------------+\n");
+    printf("| <n> nombre cliente - fecha pedido - codigo promocional |\n");
+    printf("+--------------------------------------------------------+\n");
+
+    for(i=1;i<p.lon;i++){
+        for(j=1;j<c.n_clients;j++){
+            if(p.pedidos[i].id_cliente==c.clients[j].Id_cliente){
+                strcpy(nom_client, c.clients[j].Nom_cliente);
+            }
+
+        }
+
+        printf("| <%d> %s - %d/%d/%d - %s\n", i,
+                                              nom_client,
+                                              p.pedidos[i].f_pedido.dia,
+                                              p.pedidos[i].f_pedido.mes,
+                                              p.pedidos[i].f_pedido.anio,
+                                              p.pedidos[i].id_cod);                                    
+                                                            
     }
 
 }
 
-void listar_devolpend(devoluciones Dev, int id_cliente){
-        produ_vect Prod = cargar_productos();
-        clients C = cargar_clientes();
-        pedidos Ped = cargar_pedidos();
-        int i,j,k,
-            id_pedido,
-            id_producto;
-        char nom_prod[16];
-        clear();
-        printf("+-----------------------------+\n");
-        printf("| TUS DEVOLUCIONES PENDIENTES |\n");
-        printf("+-----------------+-----------+------+\n");
-        printf("| NOMBRE PRODUCTO | FECHA DEVOLUCION |\n");
-        printf("+-----------------+------------------+\n");
+
+pedidos modificar_pedidos(pedidos p){
+    int pos, //posicion del pedido que el usuario quiere modificar
+        op, //opcion de lo que desea modificar el usuario
+        lugar;//opcion del lugar donde entregar el pedido
+    
+    char locker[11];
+    listar_pedidos(p);
+    printf("introduce el numero <n> del pedido que deseas modificar: \n");
+    pos=input_int();
+
+    printf("+-------- QUE DESEA MODIFICAR----------+\n");
+    printf("| 1) LUGAR DE ENTREGA                  |\n");
+    printf("| 2) LOCKER                            |\n");
+    printf("+--------------------------------------+\n");
+
+    printf("introduzca una opcion: ");
+    op=input_int();
+
+    switch(op){
+        case 1:
+            printf("Lugar de entrega actual: %s\n", p.pedidos[pos].lugar);
+            printf("1. DOMICILIO\n");
+            printf("2 .LOCKER\n");
+            printf("introduzca una opcion: \n");
+            lugar=input_int();
+            switch(lugar){
+                case 1:
+                    strcpy(p.pedidos[pos].lugar, "Domicilio");
+                    strcpy(p.pedidos[pos].id_locker, "noLocker");
+                    break;
+                case 2:
+                    strcpy(p.pedidos[pos].lugar, "Locker");
+                    strcpy(p.pedidos[pos].id_locker, "pendLock"); //esta pendiente de asignación de locker
+                    //añadir un id del locker y un codigo del locker
+                    //funciones modulo lockers para mirar locker libres
+                    break;
+                default:
+                    printf("opcion no valida");
+            }
+            break;
+        case 2:
+            printf("Locker actual: %s\n", p.pedidos[pos].id_locker);
+            printf("introduce el nuevo locker: ");
+            fflush(stdin);
+            fgets(locker, 11, stdin);
+            strcpy(p.pedidos[pos].id_locker, locker);
+            break;
+        default:
+            printf("opcion no valida\n");
+
+    }
+}
+
+void listar_dev_pendientes(devoluciones d){
+
+    printf("+-----------------------------------------------------------------+\n");
+    printf("+----------- LISTA DEVOLUCIONES PENDIENTES DE ACEPTACION----------+\n");
+    printf("+-----------------------------------------------------------------+\n");
+    printf("| <n> nombre cliente - nombre producto - fecha realizo devolucion |\n");
+    printf("+-----------------------------------------------------------------+\n");
+    
+    int i,j,k,l,
+        id_ped,
+        id_prod;
+
+    char nom_cliente[21],
+         nom_prod[16];
+
+    clients c = cargar_clientes();
+    produ_vect prod= cargar_productos();
+    pedidos p = cargar_pedidos();
 
 
-        for(i=1;i<Dev.lon;i++){             //COMPROBAR DEVOLUCION PERTENEZCA AL CLIENTE
-            for(j=1;j<Ped.lon;j++){
-                if(id_cliente == Ped.pedidos[j].id_cliente && Ped.pedidos[j].id_pedido == Dev.devoluciones[i].id_pedido){
-                    
-                    for(k=1;k<Prod.num_prod;k++){                   //BUSCAR NOMBRE DEL PRODUCTO
-                        if(id_producto == Prod.produ[k].id_prod)
-                            strcpy(nom_prod,Prod.produ[k].nombre);
+    for(i=1;i<d.lon;i++){
+       
+        //obtener nombre del cliente
+        id_ped=d.devoluciones[i].id_pedido;
+       
+        for(j=1;j<p.lon;j++){
+           
+            if(id_ped==p.pedidos[j].id_pedido){
+                for(k=1;k<c.n_clients;k++){
+                    if(p.pedidos[j].id_cliente==c.clients[k].Id_cliente){
+                        
+                        strcpy(nom_cliente, c.clients[k].Nom_cliente); //guardo el nombre del cliente que corresponde a esa devolucion
+                        
                     }
-
-                    printf("| %-15s | %02d/%02d/%04d       |\n",
-                            nom_prod,
-                            Dev.devoluciones[i].f_devol.dia,
-                            Dev.devoluciones[i].f_devol.mes,
-                            Dev.devoluciones[i].f_devol.anio);
+                    
                 }
                 
             }
-
             
         }
-        printf("+-----------------+------------------+\n");
-        printf("Pulse [enter] para volver...");
-        getchar();
+        //obtener nombre del producto
+        id_prod=d.devoluciones[i].id_prod;
+        for(l=1;l<prod.num_prod;l++){
+            if(id_prod==prod.produ[l].id_prod){
+                strcpy(nom_prod, prod.produ[l].nombre); //guardo el nombre del producto que corresponde a esa devolucion
+            }
+        }
+        printf("%s\n",nom_prod );
+
+        if(strcmp(d.devoluciones[i].estado, "pendiente")==0){
+            printf("| <%d> %s - %s - %d/%d/%d\n", i,
+                                                  nom_cliente,
+                                                  nom_prod,
+                                                  d.devoluciones[i].f_devol.dia,
+                                                  d.devoluciones[i].f_devol.mes,
+                                                  d.devoluciones[i].f_devol.anio);
+        }
+
+    }
+
 }
+
+devoluciones aceptar_dev(devoluciones d){
+    int pos;
+    listar_dev_pendientes(d);
+    printf("introduce el numero <n> de la devolucion que deseas aceptar: ");
+    pos=input_int();
+
+    strcpy(d.devoluciones[pos].estado, "aceptada");
+
+    d.devoluciones[pos].f_aceptacion.dia=dia_sist();
+    d.devoluciones[pos].f_aceptacion.mes=mes_sist();
+    d.devoluciones[pos].f_aceptacion.anio=anio_sist();
+
+    d.devoluciones[pos].f_caducidad=crear_fechacad(d.devoluciones[pos].f_aceptacion);
+    
+}
+
+
+//lockers
+//terminar modificar devoluciones
+//marcar aceptada parte administracion ¿en devoluciones?
+    //seleccionar devolucion y automaticamente se pone como aceptada

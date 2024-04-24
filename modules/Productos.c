@@ -172,7 +172,7 @@ int buscar_categorias (categ_vect c) {
 					}
 					else {
 						printf ("\nSe encontraron %d categorias con el id especificado:\n", cont);
-						//Mostrar los productos encontrados
+						//Mostrar las categorias encontradas
 						for (i = 1; i < c.num_cat; i++) {
 							if (vaux[i] == i) {
 								printf ("\n%d. %04d-%s", i, c.categ[vaux[i]].id_categ, c.categ[vaux[i]].descrip);
@@ -220,7 +220,7 @@ int buscar_categorias (categ_vect c) {
 				if (cont != 0) {
 					if (cont == 1) {
 						printf ("\nSe encontro una categoria con la descripcion especificada:\n");				
-						//Mostrar el producto encontrado
+						//Mostrar la categoria encontrada
 						for (i = 1; i < c.num_cat; i++) {
 							if (vaux[i] == i) {
 								printf ("\n%d. %04d-%s\n", i, c.categ[vaux[i]].id_categ, c.categ[vaux[i]].descrip);
@@ -230,7 +230,7 @@ int buscar_categorias (categ_vect c) {
 					}
 					else {
 						printf ("\nSe encontraron %d categorias con la descripcion especificada:\n", cont);
-						//Mostrar los productos encontrados
+						//Mostrar las categorias encontradas
 						for (i = 1; i < c.num_cat; i++) {
 							if (vaux[i] == i) {
 								printf ("\n%d. %04d-%s", i, c.categ[vaux[i]].id_categ, c.categ[vaux[i]].descrip);
@@ -238,7 +238,7 @@ int buscar_categorias (categ_vect c) {
 						}
 					
 						do {
-							//Permitir al usuario seleccionar un producto
+							//Permitir al usuario seleccionar una categoria
 							printf ("\n\nSeleccione la categoria que este buscando escribiendo su respectivo indice: ");
 							scanf ("%d", &op2);
 							fflush (stdin);
@@ -378,8 +378,72 @@ categ_vect listar_categorias (categ_vect c) {
 		printf ("(%i) %04d-%s\n", i, c.categ[i].id_categ, c.categ[i].descrip);
 	}
 	
-	return c;
+	printf("+--------------------------------------------------------+\n");
+	printf("Pulse [enter] para volver...");
+	
+	getchar();
 }
+
+/*categ_vect seleccionar_categorias (categ_vect c) {
+	int pos, op1, op2;
+	char respuesta;
+	
+	//MOSTRAR INFORMACION//
+	listar_categorias (c);
+	
+	do {
+		printf ("\n\nQue desea hacer:\n1. Seleccionar una categoria ya existente\n2. Crear una nueva categoria");
+		scanf ("%d", &op1);
+	}while (op1 < 1 || op1 > 2);
+	
+	switch (op1) {
+		case 1:
+			clear ();
+			Sleep (1000);
+			printf ("---> SELECCIONADOR DE CATEGORIAS: <---\n\n");
+			printf ("Busque la categoria que desee seleccionar bajo uno de los siguientes criterios:");
+			
+			Sleep (1000);	
+			pos = buscar_categorias (c);
+			
+			if (pos == -1) {
+				return c;
+			}
+			
+			printf ("\nEsta seguro que desea modificar la categoria '%04d-%s'? (S/N): ", c.categ[pos].id_categ, c.categ[pos].descrip);
+			scanf ("%c", &respuesta);
+			fflush (stdin);
+			
+			clear ();
+			Sleep (1000);
+			
+			if (respuesta == 'S' || respuesta == 's') {
+				printf ("\n\nDescripcion actual de la categoria: %s\n", c.categ[pos].descrip);
+				printf ("Ingrese la nueva descripcion (maximo 50 caracteres): ");
+				fgets (c.categ[pos].descrip, 51, stdin);
+				fflush (stdin);
+				terminador_cad (c.categ[pos].descrip);
+				
+				printf ("\nCategoria modificada correctamente\n");	
+					
+				guardar_categorias (c);
+			}
+			else {
+				printf ("Volviendo al menu anterior...\n");
+			}
+		break;
+		
+		case 2:
+			
+		break;
+		
+		default:
+			printf ("Seleccione una opcion valida: ");
+		break;
+	}
+			
+	return c;
+}*/
 
 void menu_categ (categ_vect c) {
 	int op;
@@ -553,19 +617,18 @@ produ_vect agregar_productos (produ_vect p) {
 	
 	p.produ[nueva_id].id_prod = nueva_id;		//La id del producto se rellena automáticamente
 	
-	printf ("\nPrimero, escribe el nombre del producto: ");
+	printf ("\nPrimero, escriba el nombre del producto: ");
 	fgets (p.produ[nueva_id].nombre, 16, stdin);
 	fflush (stdin);
 	terminador_cad (p.produ[nueva_id].nombre);
 	
-	printf ("\nSengundo, escribe la descripcion del producto: ");
+	printf ("\nSengundo, escriba la descripcion del producto: ");
 	fgets (p.produ[nueva_id].descrip, 51, stdin);
 	fflush (stdin);
 	terminador_cad (p.produ[nueva_id].descrip);
 	
-	printf ("\nTemporal, escribe el id de la categoria del producto: ");
-	scanf ("%d", &p.produ[nueva_id].id_categ);
-	fflush (stdin);
+	printf ("\nTercero, seleccione el id de la categoria del producto o cree uno nuevo para este:\n\n");
+	//seleccionar_categorias (); 
 	
 	printf ("\nTercero, escribe el id del gestor del producto: ");
 	scanf ("%d", &p.produ[nueva_id].id_gestor);
@@ -1147,7 +1210,7 @@ void menu_prod (produ_vect p) {
 int buscador_prodnombre () {
 	produ_vect p = cargar_productos ();
 	int i, op, len, cont = 0, vaux[p.num_prod];
-	char saux [16];
+	char saux[16];
 	
 	for (i = 0; i < p.num_prod; i++) {	//Inicializa todos los elementos del vector a 0
 		vaux[i] = 0;
@@ -1155,7 +1218,7 @@ int buscador_prodnombre () {
 	
 	printf ("---> BUSCADOR DE PRODUCTOS: <---\n\n");
 	do {
-		printf ("\nIntroduzca el nombre del producto que este buscando: ");
+		printf ("Introduzca el nombre del producto que este buscando: ");
 		fgets (saux, 16, stdin);
 		fflush (stdin);
 		terminador_cad (saux);
@@ -1213,9 +1276,11 @@ int buscador_prodnombre () {
 	return op;
 }
 
-int buscador_prodidcateg () {
+int buscador_prodcateg () {
+	categ_vect c = cargar_categorias ();
 	produ_vect p = cargar_productos ();
-	int i, op, naux, cont = 0, vaux[p.num_prod];
+	int i, j, op, len, cont = 0, vaux[p.num_prod];
+	char saux[51];
 	
 	for (i = 0; i < p.num_prod; i++) {	//Inicializa todos los elementos del vector a 0
 		vaux[i] = 0;
@@ -1223,20 +1288,24 @@ int buscador_prodidcateg () {
 	
 	printf ("---> BUSCADOR DE PRODUCTOS: <---\n\n");
 	do {
-		printf ("\nIntroduzca el id de la categoria del producto que este buscando: ");
-		scanf ("%d", &naux);
+		printf ("Introduzca la descripcion de la categoria del producto que este buscando: ");
+		fgets (saux, 51, stdin);
 		fflush (stdin);
+		terminador_cad (saux);
+		len = strlen (saux);
 	
 		for (i = 1; i < p.num_prod; i++) {
-			if (naux == p.produ[i].id_categ) {
-				vaux[i] = i;
-				cont++;
+			for (j = 1; j < c.num_cat; j++) {
+				if (p.produ[i].id_categ == c.categ[j].id_categ && strncmp (saux, c.categ[j].descrip, len) == 0) {
+					vaux[i] = i;
+					cont++;
+				}
 			}
 		}
-	
+		
 		if (cont != 0) {
 			if (cont == 1) {
-				printf ("\nSe encontro un producto con el id de la categoria especificado:\n");				
+				printf ("\nSe encontro un producto con la descripcion de la categoria especificada:\n");				
 				//Mostrar el producto encontrado
 				for (i = 1; i < p.num_prod; i++) {
 					if (vaux[i] == i) {
@@ -1246,7 +1315,7 @@ int buscador_prodidcateg () {
 				}
 			}
 			else {
-				printf ("\nSe encontraron %d productos con el id de la categoria especificado:\n", cont);
+				printf ("\nSe encontraron %d productos con la descripcion de la categoria especificada:\n", cont);
 				//Mostrar los productos encontrados
 				for (i = 1; i < p.num_prod; i++) {
 					if (vaux[i] == i) {
@@ -1272,11 +1341,21 @@ int buscador_prodidcateg () {
 			}
 		}
 		else {
-			printf ("No se encontro ningun producto con el id de la categoria especificado, pruebe con un id distinto:\n\n");
+			printf ("No se encontro ningun producto con la descripcion de la categoria especificada, pruebe con una descripcion distinta:\n\n");
 		}
 	}while (cont == 0);
 		
 	return op;
+}
+
+produ_vect cambiar_stock (int id_prod, int num_uds) {
+	produ_vect p = cargar_productos ();
+	
+	p.produ[id_prod].stock = num_uds;
+	
+	guardar_productos (p);
+	
+	return p;
 }
 
 //Funciones para Santi:
@@ -1300,7 +1379,7 @@ produ_vect modificar_prodgestor (produ_vect p) {
 	clear ();
 	Sleep (1000);
 	
-	if (p.produ[pos].id_gestor == p.produ[pos].id_prod) {
+	if (p.produ[pos].id_gestor == id) {
 		printf ("Id de gestor coincide con id de producto, se permite la modificacion del producto...");
 		printf ("\n\nEsta seguro que desea modificar el producto '%s-%s'? (S/N): ", p.produ[pos].nombre, p.produ[pos].descrip);
 		scanf ("%c", &respuesta);
@@ -1399,7 +1478,7 @@ produ_vect eliminar_prodgestor (produ_vect p) {
 	clear ();
 	Sleep (1000);
 	
-	if (p.produ[pos].id_gestor == p.produ[pos].id_prod) {
+	if (p.produ[pos].id_gestor == id) {
 		printf ("Id de gestor coincide con id de producto, se permite la eliminacion del producto...");
 		printf ("\nEsta seguro que desea eliminar el producto '%s-%s'? (S/N): ", p.produ[pos].nombre, p.produ[pos].descrip);
 		scanf ("%c", &respuesta);
