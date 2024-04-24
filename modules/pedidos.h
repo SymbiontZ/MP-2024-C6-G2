@@ -87,4 +87,6 @@ void modificar_devolucion(devoluciones, int);
 void listar_dev_cliente(int, devoluciones, prod_pedidos, pedidos);
 void listar_pedidos(pedidos);
 void modificar_pedido(pedidos);
+devoluciones aceptar_dev(devoluciones);
+void listar_dev_pendientes(devoluciones);
 #endif

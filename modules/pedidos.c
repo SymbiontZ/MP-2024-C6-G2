@@ -1136,7 +1136,7 @@ void eliminar_devolucion(int pos, devoluciones d){
 }
 
 
-void modificar_devolucion(devoluciones d, int pos){
+/*void modificar_devolucion(devoluciones d, int pos){
     int i, resp;
     
     char estado[11];
@@ -1162,7 +1162,7 @@ void modificar_devolucion(devoluciones d, int pos){
         case 3:
 
     }
-}
+}*/
 
 void listar_dev_cliente(int id_cliente, devoluciones d, prod_pedidos prod_p, pedidos p){
     int i,j,k,
@@ -1300,10 +1300,84 @@ void modificar_pedidos(pedidos p){
         default:
             printf("opcion no valida\n");
 
+    }
+}
+
+void listar_dev_pendientes(devoluciones d){
+    int i,j,k,l,
+        id_ped,
+        id_prod;
+
+    char nom_cliente[21],
+         nom_prod[16];
+
+    clients c = cargar_clientes();
+    produ_vect prod= cargar_productos();
+    pedidos p = cargar_pedidos();
 
 
+    for(i=1;i<d.lon;i++){
+       
+        //obtener nombre del cliente
+        id_ped=d.devoluciones[i].id_pedido;
+       
+        for(j=1;j<p.lon;j++){
+           
+            if(id_ped==p.pedidos[j].id_pedido){
+                for(k=1;k<c.n_clients;k++){
+                    if(p.pedidos[j].id_cliente==c.clients[k].Id_cliente){
+                        
+                        strcpy(nom_cliente, c.clients[k].Nom_cliente); //guardo el nombre del cliente que corresponde a esa devolucion
+                        
+                    }
+                    
+                }
+                
+            }
+            
+        }
+        //obtener nombre del producto
+        id_prod=d.devoluciones[i].id_prod;
+        for(l=1;l<prod.num_prod;l++){
+            if(id_prod==prod.produ[l].id_prod){
+                strcpy(nom_prod, prod.produ[l].nombre); //guardo el nombre del producto que corresponde a esa devolucion
+            }
+        }
+        printf("%s\n",nom_prod );
+
+        if(strcmp(d.devoluciones[i].estado, "pendiente")==0){
+            printf("| <%d> %s - %s - %d/%d/%d - %d/%d/%d\n", i,
+                                                            nom_cliente,
+                                                            nom_prod,
+                                                            d.devoluciones[i].f_aceptacion.dia,
+                                                            d.devoluciones[i].f_aceptacion.mes,
+                                                            d.devoluciones[i].f_aceptacion.anio,
+                                                            d.devoluciones[i].f_caducidad.dia,
+                                                            d.devoluciones[i].f_caducidad.mes,
+                                                            d.devoluciones[i].f_caducidad.anio);
+        }
+
+    }
 
 }
+
+devoluciones aceptar_dev(devoluciones d){
+    int pos;
+    listar_dev_pendientes(d);
+    printf("introduce el numero <n> de la devolucion que deseas aceptar: ");
+    scanf("%d", &pos);
+
+    strcpy(d.devoluciones[pos].estado, "aceptada");
+
+    d.devoluciones[pos].f_aceptacion.dia=dia_sist();
+    d.devoluciones[pos].f_aceptacion.mes=mes_sist();
+    d.devoluciones[pos].f_aceptacion.anio=anio_sist();
+
+    d.devoluciones[pos].f_caducidad=crear_fechacad(d.devoluciones[pos].f_aceptacion);
+    
+}
+
+
 //lockers
 //terminar modificar devoluciones
 //marcar aceptada parte administracion ¿en devoluciones?
