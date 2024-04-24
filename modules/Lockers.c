@@ -455,23 +455,23 @@ Vect_CompLock Recogida_Locker(Vect_CompLock cl, int pos, int n_comp){
         if((strcpy(p.pedidos[pos].id_locker, cl.CompLock[i].Id_locker) == 0) && cl.CompLock[i].Num_comp == n_comp && fch == 1){     //Se comprueba que exista el compartimento deseado
 
             do{
-                printf("Introduzca el código de seguridad del locker: \n");                                                         //Se introduce el código de seguridad
+                printf("Introduzca el cï¿½digo de seguridad del locker: \n");                                                         //Se introduce el cï¿½digo de seguridad
                 scanf("%d", &Cod_locker_check);
 
-                if(Cod_locker_check == cl.CompLock[i].Cod_locker){                                                                  //Se comprueba el código de seguridad
-                    printf("Código introducido correctamente \n");
-                    printf("Se ha abierto el compartimento número %d \n", &n_comp);
-                    strcpy(cl.CompLock[i].Estado, "vacío");
+                if(Cod_locker_check == cl.CompLock[i].Cod_locker){                                                                  //Se comprueba el cï¿½digo de seguridad
+                    printf("Cï¿½digo introducido correctamente \n");
+                    printf("Se ha abierto el compartimento nï¿½mero %d \n", &n_comp);
+                    strcpy(cl.CompLock[i].Estado, "vacï¿½o");
 
                 }
                 else{
-                    printf("Código incorrecto, inténtelo nuevamente: \n \n");
+                    printf("Cï¿½digo incorrecto, intï¿½ntelo nuevamente: \n \n");
                 }
                 cont++;
             }while(cont < 3);
 
             if(cont == 3)
-                printf("Se ha quedado sin intentos, cancelando operación... \n");                                                   //En caso de fallar el código 3 veces el sistema cancela la operación
+                printf("Se ha quedado sin intentos, cancelando operaciï¿½n... \n");                                                   //En caso de fallar el cï¿½digo 3 veces el sistema cancela la operaciï¿½n
 
         }
     }

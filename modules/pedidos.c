@@ -63,7 +63,7 @@ pedidos cargar_pedidos(){
 }
 
 
-pedidos crear_pedido( pedidos p, int id_cliente, int modo){
+pedidos crear_pedido( pedidos p, int id_cliente){
     //Cargar estructuras necesarias de otros modulos
     clients c = cargar_clientes();
     prod_pedidos Prod_P = cargar_prod_pedidos();

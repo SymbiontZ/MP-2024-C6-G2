@@ -254,9 +254,10 @@ void menucliente_dev(int pos){
 
         switch (opt){
         case 1:
-            /* code */
+            Dev = nueva_devolucion_prod(pos, Dev);
             break;
         case 2:
+            listar_dev_cliente(pos, Dev);
 
             break;
         case 3:
@@ -644,10 +645,10 @@ void menuadmin_ped(){
         fflush(stdin);
         switch (opt){
             case 1:
-
+                listar_pedidos(Ped);
                 break;
             case 2:
-                printf("Seguro que quiere agregar un pedido [s/n]: ");
+                menu_listadoped_estado();
                 resp = confirmacion();
                 if(resp == 'S'|| resp == 's')
                 break;
@@ -659,19 +660,27 @@ void menuadmin_ped(){
                     Ped = crear_pedido(Ped, pos);
                 break;
             case 4:
-
-                if (pos != -1)
-                    
+                printf("Para poder eliminar un pedido es necesario seleccionar el cliente.\n");
+                Sleep(3000);
+                Ped = eliminar_pedidos(Prod_P, Ped);
+            case 5:
+                Ped = modificar_pedido(Ped);
                 break;
-            
+            case 6:
+                modificar_asig_transport()
+                break;
+            case 7:
+
             case 0:         //CASO DE SALIDA
                 break;
             default:
                 break;
         }
         guardar_pedido(Ped);
+        guardar_productos_pedidos(Prod_P);
     }while (opt != 0);
     free(Ped.pedidos);
+    free(Prod_P.prod_pedidos);
 }
 
 void menuadmin_transp(){
@@ -805,7 +814,7 @@ void menuadmin_devol(){
     devoluciones Dev = cargar_devoluciones();
     int opt;
     char resp;
-    int pos, ped;          //Posicion del proveedor al que se le realizan los cambios.
+    int pos, ped;          //Posicion del cliente al que se le realizan los cambios.
 
     do{
         clear();
@@ -825,7 +834,7 @@ void menuadmin_devol(){
         fflush(stdin);
         switch (opt){
             case 1:
-                
+                listar_devoluciones(Dev);
                 break;
             case 2:
                 printf("Para hacer una devolucion tiene que elegir un cliente.");
@@ -835,15 +844,20 @@ void menuadmin_devol(){
                         printf("Ahora tienes que seleccionar un pedido.\n");
                         Sleep(2000);
                         //BUSCAR PEDIDO
-                        crear_devolucion(Dev, ped, pos);
+                        Dev = nueva_devolucion_prod(pos, Dev);
                     }
                 break;
             case 3:
-
+                
+                eliminar_devolucion(,Dev)
                 break;
             case 4:
+                modificar_devolucion(Dev)
                 break;
-            
+            case 5:
+                aceptar_dev(Dev);
+            case 6:
+                
             case 0:         //CASO DE SALIDA
                 break;
             default:

@@ -52,8 +52,12 @@ typedef struct
     //POSCONDICION: Vuelca datos en el fichero pero no devuelve nada.
     void guardar_clientes(clients );
 
-
+    //PRECONDICION:
+    //POSCONDICION:
     int busqueda_cliente();
+
+    //PRECONDICION:
+    //POSCONDICION:
     int busqueda_clientetipo(clients , int ,int );
 
     //PRECONDICION: Se le pasa la estructura tipo clients cargada y la posicion del cliente en la estructura
@@ -64,6 +68,8 @@ typedef struct
     //POSCONDICION: Almacena un nuevo cliente en la estructura y la guarda en el fichero.
     clients agregar_cliente(clients );
 
+    //PRECONDICION:
+    //POSCONDICION:
     clients eliminar_cliente(clients , int );
 
     
@@ -77,8 +83,17 @@ typedef struct
     //POSCONDICION: Ninguna
     void menucliente(clients ,int );
 
+    //PRECONDICION:Ninguna
+    //POSCONDICION:Ninguna
+    //FUNCION:Acceder a listas de productos segun el nombre o la categoria
     void menucliente_prod();
+
+    //PRECONDICION:Le paso la id del cliente
+    //POSCONDICION:Accedemos a diversas funciones para 
     void menucliente_ped(int );
+
+    //PRECONDICION:
+    //POSCONDICION:
     void menucliente_dev(int );
 
     //GESTION DATOS ESPECIFICOS USUARIOS//
@@ -121,6 +136,4 @@ typedef struct
 CAMBIOS PENDIENTES
 
 > cambiar interfaces
-> agregar comprobacion de enteros
-> arreglar flujo de cambio de contrasena en mod admin
 */

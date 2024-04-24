@@ -76,7 +76,7 @@ void guardar_pedido(pedidos);
 //Cabecera: void crear_pedido(int id_cliente, pedidos p)
 //Precondicion: estrcutura pedidos cargada con datos del fichero Pedidos.txt y el id del cliente que ha realizado pedido, lo sabemos cuando ha iniciado sesión en la aplicación
 //Postcondicion: se crea un nuevo pedido realizado por un cliente y se guarda en la estructura pedidos, ademas de escribirlo en el fichero Pedidos.txt
-pedidos crear_pedido(pedidos, int, int);
+pedidos crear_pedido(pedidos, int);
 
 //Cabecera: comprobar_descuento(char[], int)
 //Precondicion: se le pasa un codigo de descuento a través de una cadena y la id del usuario
