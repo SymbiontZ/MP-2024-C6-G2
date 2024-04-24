@@ -19,6 +19,6 @@ int main()
 
     devoluciones d = cargar_devoluciones();
     int pos;
-    listar_dev_cliente(1, d, Prod_P, P);
+    listar_pedidos(P);
     return 0;
 }

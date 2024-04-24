@@ -73,7 +73,7 @@ void guardar_devoluciones(devoluciones);
 void crear_devolucion(devoluciones, int, int);
 void listapedidos_cliente(prod_pedidos, pedidos, int);
 fecha fecha_entrega(fecha, int);
-void listar_prod_clientes(int, pedidos, prod_pedidos);
+void nueva_devolucion_prod(int, pedidos, prod_pedidos);
 int comprobar_descuento(char[], int);
 void eliminar_pedidos_productos(prod_pedidos, pedidos, int);
 void eliminar_productos_ped(prod_pedidos, int);
@@ -85,5 +85,5 @@ int buscar_devolucion(devoluciones, prod_pedidos, pedidos);
 void eliminar_devolucion(int, devoluciones);
 void modificar_devolucion(devoluciones, int);
 void listar_dev_cliente(int, devoluciones, prod_pedidos, pedidos);
-
+void listar_pedidos(pedidos);
 #endif

@@ -874,7 +874,7 @@ void listapedidos_cliente(prod_pedidos prods_p,pedidos p, int id_cliente){
     getchar();
 }
 
-void listar_prod_clientes(int id_cliente, pedidos p, prod_pedidos prod_p){
+void nueva_devolucion_prod(int id_cliente, pedidos p, prod_pedidos prod_p){
     int i,j,k,
         id_prod,     //variable para almacenar los id de los productos que han sido entregados al cliente
         n_coinc = 0, //variable para almacenar el numero de coincidencias que hay
@@ -1180,26 +1180,25 @@ void listar_dev_cliente(int id_cliente, devoluciones d, prod_pedidos prod_p, ped
     for(i=1;i<d.lon;i++){
         for(j=1;j<p.lon;j++){
             //obtengo la id del pedido a la que pertenece el cliente
-            if(id_cliente==p.pedidos[j].id_cliente){
+            if(id_cliente==p.pedidos[j].id_cliente && p.pedidos[j].id_pedido==d.devoluciones[i].id_pedido){
                 printf("id cliente del pedido: %d\n", p.pedidos[j].id_cliente);
                 
                 id_ped=p.pedidos[j].id_pedido;
                 printf("id ped: %d\n", id_ped);
-            }
-        }
-        //obtener el nombre del producto de esa devolucion
-        if(d.devoluciones[i].id_pedido==id_ped){
-            id_prod=d.devoluciones[i].id_prod;
-            for(k=1;k<prod.num_prod;k++){
-                if(id_prod==prod.produ[k].id_prod){
-                    strcpy(nom_prod, prod.produ[k].nombre);
-                }
-            }
-        }
-         
-    
 
-        printf("| <%d>  %s - %s - %d/%d/%d - %d/%d/%d\n", i,
+                //obtener el nombre del producto de esa devolucion
+                if(d.devoluciones[i].id_pedido==id_ped){
+                    id_prod=d.devoluciones[i].id_prod;
+                    for(k=1;k<prod.num_prod;k++){
+                        if(id_prod==prod.produ[k].id_prod){
+                            strcpy(nom_prod, prod.produ[k].nombre);
+                        }
+                    }
+                }
+
+
+
+                printf("| <%d>  %s - %s - %d/%d/%d - %d/%d/%d\n", i,
                                                             nom_prod,
                                                             d.devoluciones[i].estado,
                                                             d.devoluciones[i].f_aceptacion.dia,
@@ -1208,10 +1207,48 @@ void listar_dev_cliente(int id_cliente, devoluciones d, prod_pedidos prod_p, ped
                                                             d.devoluciones[i].f_caducidad.dia,
                                                             d.devoluciones[i].f_caducidad.mes,
                                                             d.devoluciones[i].f_caducidad.anio);
+            }
+        }
+        
+         
+    
+
+        
     }
 }
 
-//listar devoluciones de un solo cliente
+void listar_pedidos(pedidos p){
+    int i, j;
+    char nom_client[21];
+
+    clients c = cargar_clientes();
+
+    printf("+--------------------------------------------------------+\n");
+    printf("| LISTA DE TODOS LOS PEDIDOS                             |\n");
+    printf("|--------------------------------------------------------+\n");
+    printf("| <n> nombre cliente - fecha pedido - codigo promocional |\n");
+    printf("+--------------------------------------------------------+\n");
+
+    for(i=1;i<p.lon;i++){
+        for(j=1;j<c.n_clients;j++){
+            if(p.pedidos[i].id_cliente==c.clients[j].Id_cliente){
+                strcpy(nom_client, c.clients[j].Nom_cliente);
+            }
+
+        }
+
+        printf("| <%d> %s - %d/%d/%d - %s\n", i,
+                                              nom_client,
+                                              p.pedidos[i].f_pedido.dia,
+                                              p.pedidos[i].f_pedido.mes,
+                                              p.pedidos[i].f_pedido.anio,
+                                              p.pedidos[i].id_cod);                                    
+                                                            
+    }
+
+}
+
+
 //lockers
 //terminar modificar devoluciones
 //modificar pedidos
