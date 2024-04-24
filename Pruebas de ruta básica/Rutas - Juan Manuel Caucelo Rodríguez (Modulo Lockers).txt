@@ -1,0 +1,16 @@
+Función: Locker_Dispo
+
+Cálculo de rutas (cualquiera de los tres métodos es válido):
+
+   <1> V(G) = Nº de Regiones = 3
+   <2> V(G) = NA - NN + 2 = 13 - 12 + 2 = 3
+   <3> V(G) = NNP + 1 = 2 + 1 = 3
+
+Rutas: Buscamos las cinco rutas básicas.
+
+   - R1) 1, 2, 3, 4, 6, 7, 8, 11, 12
+   - R2) 1, 2, 3, 4, 5, 4, 6, 7, 9, 10, 11, 12
+   - R3) 1, 2, 3, 4, 5, 4, 6, 7, 8, 11, 12
+
+   
+Hacemos pruebas que cubran todas las rutas.
