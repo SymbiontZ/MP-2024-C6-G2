@@ -104,7 +104,11 @@ int buscador_prodnombre ();
 
 //PRECONDICIÓN:
 //POSTCONDICIÓN:
-int buscador_prodidcateg ();
+int buscador_prodcateg ();
+
+//PRECONDICIÓN:
+//POSTCONDICIÓN:
+produ_vect cambiar_stock (int, int);
 
 //PRECONDICIÓN:
 //POSTCONDICIÓN:
