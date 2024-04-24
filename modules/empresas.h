@@ -124,6 +124,10 @@ typedef struct{
  //Precondición: No recibe nada.
  //Postcondición: Devuelve 0 si se completa la asignación de lockers a un pedido, o -1 si se ha cancelado el proceso.
  int modificar_asig_lockers(int id_prov);
+ 
+ //Precondición: No recibe nada.
+ //Postcondición: Devuelve -1 si se cancela la operación, o cero si no. En el segundo caso se habrá asignado un nuevo transportista a un producto de un pedido.
+ int modificar_asig_transport_admin();
 
 
 // --------------- FUNCIONES PARA EL MENU DE TRANSPORTISTA ---------------
@@ -166,6 +170,10 @@ typedef struct{
  //Precondición: Recibe la ID del transportista acutal.
  //Postcondición: Devuelve -1 si se cancela la operación, o la posición en el vector del pedido si se cambia su estado de "enRepart" a "enLocker" (es decir, si se entrega un paquete en un locker). 
  int entrega_locker_t(int pos);
+ 
+ void menu_retornos_t(int pos);
+ 
+ 
  
 // --------------- FUNCIONES PARA LA GESTIÓN DE PROVEEDORES ---------------
 
