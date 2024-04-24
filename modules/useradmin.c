@@ -622,6 +622,7 @@ void menuadmin_cat(){
 
 void menuadmin_ped(){
     pedidos Ped = cargar_pedidos();
+    prod_pedidos Prod_P = cargar_prod_pedidos();
     int opt;
     char resp;
     int pos;          //Posicion del proveedor al que se le realizan los cambios.
