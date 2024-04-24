@@ -91,7 +91,7 @@ void listapedidos_cliente(prod_pedidos, pedidos, int);
 //Cabecera: eliminar_pedidos(prod_pedidos, pedidos, int)
 //Precondicion: estructuras prod_pedidos, pedidos cargadas y se le pasa la posicion del pedido se desea eliminar
 //Postcondicion: elimina el pedido 
-void eliminar_pedidos(prod_pedidos, pedidos, int);
+void eliminar_pedidos(prod_pedidos, pedidos);
 
 //Cabecera: menu_listadoped_estado()
 //Precondicion
@@ -112,6 +112,11 @@ void listar_pedidos(pedidos);
 //Precondicion: la estructura pedidos tiene que estar cargada
 //Postcondicion: modifica un pedido que ha seleccionado el cliente
 pedidos modificar_pedido(pedidos);
+
+//Cabecera: busqueda_pedidos(pedidos p)
+//Precondicion: estructura pedidos cargada
+//Postcondicion: devuelve la posicion del pedido que introduce el usuario
+int busqueda_pedidos(pedidos p);
 
 //FUNCIONES PRODUCTOS PEDIDOS
 
@@ -176,13 +181,26 @@ int buscar_devolucion(devoluciones);
 //Cabecera: void eliminar_devolucion(int, devoluciones)
 //Precondicion: se le pasa la posicion de la devolucion a eliminar y la estructura devoluciones cargada
 //Postcondicion: se elimina la devolucion correspondiente a la posicion indicada
-void eliminar_devolucion(int, devoluciones);
+void eliminar_devolucion(devoluciones);
 
 //Cabecera: devoluciones modificar_devolucion(devoluciones, int)
-//Precondicion: 
-devoluciones modificar_devolucion(devoluciones, int);
+//Precondicion: se le pasa la estructura devoluciones cargadas y la posicion de la que se va a modificar
+//Postcondicion: devuelve la estructura devoluciones modificada
+devoluciones modificar_devolucion(devoluciones);
+
+//Cabecera: void listar_dev_cliente(int, devoluciones)
+//Precondicion: se le pasa la id del cliente y la estructura de devoluciones cargada
+//Postcondicion: muestra las devoluciones del cliente indicado
 void listar_dev_cliente(int, devoluciones);
+
+//Precondicion: devoluciones aceptar_dev(devoluciones)
+//Precondicion: estructura devoluciones cargada
+//Postcondcicion: cambia el estado de la devolucion de pendiente a aceptada
 devoluciones aceptar_dev(devoluciones);
+
+//Cabecera: void listar_dev_pendientes(devoluciones)
+//Precondicion: estructura devoluciones cargada
+//Postcondicion: muestra las devoluciones que estan pendientes
 void listar_dev_pendientes(devoluciones);
 
 

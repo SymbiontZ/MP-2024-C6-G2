@@ -577,9 +577,10 @@ void crear_producto_pedido(pedidos p, int product, int id_pedido, prod_pedidos p
     Sleep(2000);
 }
 
-void eliminar_pedidos(prod_pedidos prod_p, pedidos p, int pos_ped){
+void eliminar_pedidos(prod_pedidos prod_p, pedidos p){
     int i;
     char resp;
+    int pos_ped=busqueda_pedidos(p);
     prod_pedidos prod_p = cargar_prod_pedidos();
     printf("Estas seguro de elimar el pedido? [s/n]: ");
     resp=confirmacion();
@@ -1085,15 +1086,19 @@ void listar_devoluciones( devoluciones d){
 int buscar_devolucion(devoluciones d){
     int pos;
     listar_devoluciones(d);
-    printf("introduce el numero n de la devolucion que desea modificar\n");
-    pos=input_int();
-    return pos;
+    do{
+        printf("introduce el numero n de la devolucion que desea modificar\n");
+        pos=input_int();
+        return pos;
+    }while(pos<d.lon && pos>0);
+    
 
 }
 
-void eliminar_devolucion(int pos, devoluciones d){
+void eliminar_devolucion(devoluciones d){
     int i; 
     char resp;
+    int pos = buscar_devolucion(d);
     printf("Estas seguro de eliminar la devolucion? [s/n]: ");
     resp=confirmacion();
     if(resp=='s'||resp=='S'){
@@ -1113,8 +1118,9 @@ void eliminar_devolucion(int pos, devoluciones d){
 }
 
 
-devoluciones modificar_devolucion(devoluciones d, int pos){
+devoluciones modificar_devolucion(devoluciones d){
     int i, resp, op;
+    int pos=buscar_devolucion(d);
     
     char estado[11];
 
@@ -1251,6 +1257,16 @@ void listar_pedidos(pedidos p){
 
 }
 
+int busqueda_pedidos(pedidos p){
+    int pos;
+    listar_pedidos(p);
+    do{
+        printf("introduce el numero <n> del pedido que deseas modificar: \n");
+        pos=input_int();
+        return pos;
+    }while(pos<p.lon && pos>1);
+    
+}
 
 pedidos modificar_pedidos(pedidos p){
     int pos, //posicion del pedido que el usuario quiere modificar
@@ -1258,9 +1274,7 @@ pedidos modificar_pedidos(pedidos p){
         lugar;//opcion del lugar donde entregar el pedido
     
     char locker[11];
-    listar_pedidos(p);
-    printf("introduce el numero <n> del pedido que deseas modificar: \n");
-    pos=input_int();
+    pos=busqueda_pedidos(p);
 
     printf("+-------- QUE DESEA MODIFICAR----------+\n");
     printf("| 1) LUGAR DE ENTREGA                  |\n");
