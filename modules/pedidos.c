@@ -1136,7 +1136,7 @@ void eliminar_devolucion(int pos, devoluciones d){
 }
 
 
-/*void modificar_devolucion(devoluciones d, int pos){
+void modificar_devolucion(devoluciones d, int pos){
     int i, resp;
     
     char estado[11];
@@ -1162,7 +1162,7 @@ void eliminar_devolucion(int pos, devoluciones d){
         case 3:
 
     }
-}*/
+}
 
 void listar_dev_cliente(int id_cliente, devoluciones d, prod_pedidos prod_p, pedidos p){
     int i,j,k,
@@ -1249,8 +1249,62 @@ void listar_pedidos(pedidos p){
 }
 
 
+void modificar_pedidos(pedidos p){
+    int pos, //posicion del pedido que el usuario quiere modificar
+        op, //opcion de lo que desea modificar el usuario
+        lugar;//opcion del lugar donde entregar el pedido
+    
+    char locker[11];
+    listar_pedidos(p);
+    printf("introduce el numero <n> del pedido que deseas modificar: \n");
+    scanf("%d", &pos);
+
+    printf("+-------- QUE DESEA MODIFICAR----------+\n");
+    printf("| 1) LUGAR DE ENTREGA                  |\n");
+    printf("| 2) LOCKER                            |\n");
+    printf("+--------------------------------------+\n");
+
+    printf("introduzca una opcion: ");
+    scanf("%d", &op);
+
+    switch(op){
+        case 1:
+            printf("Lugar de entrega actual: %s\n", p.pedidos[pos].lugar);
+            printf("1. DOMICILIO\n");
+            printf("2 .LOCKER\n");
+            printf("introduzca una opcion: \n");
+            scanf("%d", &lugar);
+
+            switch(lugar){
+                case 1:
+                    strcpy(p.pedidos[pos].lugar, "Domicilio");
+                    strcpy(p.pedidos[pos].id_locker, "noLocker");
+                    break;
+                case 2:
+                    strcpy(p.pedidos[pos].lugar, "Locker");
+                    strcpy(p.pedidos[pos].id_locker, "pendLock"); //esta pendiente de asignación de locker
+                    //añadir un id del locker y un codigo del locker
+                    //funciones modulo lockers para mirar locker libres
+                    break;
+                default:
+                    printf("opcion no valida");
+            }
+            break;
+        case 2:
+            printf("Locker actual: %s\n", p.pedidos[pos].id_locker);
+            printf("introduce el nuevo locker: ");
+            fflush(stdin);
+            fgets(locker, 11, stdin);
+            strcpy(p.pedidos[pos].id_locker, locker);
+            break;
+        default:
+            printf("opcion no valida\n");
+
+
+
+
+}
 //lockers
 //terminar modificar devoluciones
-//modificar pedidos
-//listar todos los pedidos
-//marcar aceptada parte administracion
+//marcar aceptada parte administracion ¿en devoluciones?
+    //seleccionar devolucion y automaticamente se pone como aceptada
