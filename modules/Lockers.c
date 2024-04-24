@@ -435,12 +435,24 @@ Vect_CompLock Asignar_Compartimentos(Vect_Lock L, Vect_CompLock C){
 
 Vect_CompLock Recogida_Locker(Vect_CompLock cl, int pos, int n_comp){
 
-    int cont = 0, i, Cod_locker_check;
+    int cont = 0, i, Cod_locker_check, fch;
+
+    fecha fch_comprobar;
+    fch_comprobar.dia = cl.CompLock[i].dia_cad;
+    fch_comprobar.mes = cl.CompLock[i].mes_cad;
+    fch_comprobar.anio = cl.CompLock[i].anio_cad;
+
+    fecha fch_sist;
+    fch_sist.dia = dia_sist();
+    fch_sist.mes = mes_sist();
+    fch_sist.anio = anio_sist();
+
+    fch = comprobar_fecha(fch_sist, fch_comprobar);                                                                                 //Se comprueba que la fecha de caducidad no se haya sobrepasado
 
     pedidos p = cargar_pedidos();                                                                                                   //Se carga la estructuta CompartimentosLockers
 
     for(i = 0; i<cl.tam; i++){
-        if((strcpy(p.pedidos[pos].id_locker, cl.CompLock[i].Id_locker) == 0) && cl.CompLock[i].Num_comp == n_comp){                 //Se comprueba que exista el compartimento deseado
+        if((strcpy(p.pedidos[pos].id_locker, cl.CompLock[i].Id_locker) == 0) && cl.CompLock[i].Num_comp == n_comp && fch == 1){     //Se comprueba que exista el compartimento deseado
 
             do{
                 printf("Introduzca el código de seguridad del locker: \n");                                                         //Se introduce el código de seguridad
