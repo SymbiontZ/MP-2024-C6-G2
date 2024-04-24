@@ -433,3 +433,39 @@ Vect_CompLock Asignar_Compartimentos(Vect_Lock L, Vect_CompLock C){
         return C;
 }
 
+Vect_CompLock Recogida_Locker(Vect_CompLock cl, int pos, int n_comp){
+
+    int cont = 0, i, Cod_locker_check;
+
+    pedidos p = cargar_pedidos();                                                                                                   //Se carga la estructuta CompartimentosLockers
+
+    for(i = 0; i<cl.tam; i++){
+        if((strcpy(p.pedidos[pos].id_locker, cl.CompLock[i].Id_locker) == 0) && cl.CompLock[i].Num_comp == n_comp){                 //Se comprueba que exista el compartimento deseado
+
+            do{
+                printf("Introduzca el código de seguridad del locker: \n");                                                         //Se introduce el código de seguridad
+                scanf("%d", &Cod_locker_check);
+
+                if(Cod_locker_check == cl.CompLock[i].Cod_locker){                                                                  //Se comprueba el código de seguridad
+                    printf("Código introducido correctamente \n");
+                    printf("Se ha abierto el compartimento número %d \n", &n_comp);
+                    strcpy(cl.CompLock[i].Estado, "vacío");
+
+                }
+                else{
+                    printf("Código incorrecto, inténtelo nuevamente: \n \n");
+                }
+                cont++;
+            }while(cont < 3);
+
+            if(cont == 3)
+                printf("Se ha quedado sin intentos, cancelando operación... \n");                                                   //En caso de fallar el código 3 veces el sistema cancela la operación
+
+        }
+    }
+
+    return cl;
+
+}
+
+
