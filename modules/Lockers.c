@@ -386,6 +386,7 @@ void Listar_Lockers(Vect_Lock L){
 
     int i;
     clear();
+    titulo();
     printf("+---------------------------------+\n");
     printf("| LOCKERS EN EL SISTEMA           |\n");
     printf("+---------------------------------+\n");
