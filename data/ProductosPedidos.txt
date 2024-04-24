@@ -1,14 +1,8 @@
 0-0-0-0/0/0-0-default-0-default-default-0/0/0
-1-1-3-30/5/2024-21-entregado-0-000000000-default-0/0/0
-1-2-2-24/4/2024-12-en Preparacion-0-000000000-default-0/0/0
-2-3-7-8/5/2024-12-entregado-0-000000000-default-0/0/0
-3-1-4-30/5/2024-21-en Preparacion-0-000000000-default-0/0/0
-3-1-4-30/5/2024-21-en Preparacion-0-000000000-default-0/0/0
-3-1-4-30/5/2024-21-en Preparacion-0-000000000-default-0/0/0
-3-2-7-24/4/2024-12-en Preparacion-0-000000000-default-0/0/0
-4-1-2-31/5/2024-21-en Preparacion-0-000000000-default-0/0/0
-1-3-1-23/4/2024-9000-en Preparacion-0-noLocker-pendcod-0/0/0
-2-2-2-23/4/2024-2000-en Preparacion-0-noLocker-pendcod-0/0/0
-3-2-1-23/4/2024-2000-en Preparacion-0-noLocker-pendcod-0/0/0
-6-1-2-26/4/2024-9000-enPreparacion-0-noLocker-pendcod-0/0/0
-7-1-11-26/4/2024-9000-enPreparacion-0-noLocker-pendcod-0/0/0
+1-6-1-24/4/2024-250-enPreparacion-0-noLocker-pendcod-0/0/0
+2-4-1-26/4/2024-2000-enPreparacion-0-noLocker-pendcod-0/0/0
+3-4-1-26/4/2024-2000-enPreparacion-0-pendLock-pendcod-0/0/0
+4-4-1-26/4/2024-2000-enPreparacion-0-noLocker-pendcod-0/0/0
+4-4-1-26/4/2024-2000-enPreparacion-0-noLocker-pendcod-0/0/0
+5-6-4-24/4/2024-250-enPreparacion-0-pendLock-pendcod-0/0/0
+5-4-1-26/4/2024-2000-enPreparacion-0-pendLock-pendcod-0/0/0

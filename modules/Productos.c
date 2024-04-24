@@ -366,20 +366,16 @@ categ_vect eliminar_categorias (categ_vect c) {
 	return c;
 }
 
-void listar_categorias (categ_vect c) {
+categ_vect listar_categorias (categ_vect c) {
 	int i;
 	
 	clear ();
 	Sleep (1000);
 	
-	printf("+----------------------+\n");
-	printf("| LISTADO DE PRODUCTOS |\n");
-	printf("+----------------------+---------------------------------+\n");
-	printf("| DESCRIPCION DE CATEGORIAS                              |\n");
-	printf("+--------------------------------------------------------+\n");
-
+	printf ("---> LISTA DE CATEGORIAS: <---\n\n");
+	
 	for (i = 1; i < c.num_cat; i++) {
-		printf ("| <%i> %-50s |\n", i, c.categ[i].descrip);
+		printf ("(%i) %04d-%s\n", i, c.categ[i].id_categ, c.categ[i].descrip);
 	}
 	
 	printf("+--------------------------------------------------------+\n");
@@ -503,7 +499,7 @@ void menu_categ (categ_vect c) {
 
 //PRODUCTOS:
 produ_vect cargar_productos () {
-	char filename[] = "../data/Productos.txt";   
+	char filename[] = "Productos.txt";   
     int num_prod = 0;                         //Numero de productos registrados
     int i = 0;                          		
     char cad_linea[250];                      //Caracteres maximos que puede ocupar una linea en fichero
@@ -1363,7 +1359,7 @@ produ_vect cambiar_stock (int id_prod, int num_uds) {
 }
 
 //Funciones para Santi:
-produ_vect modificar_prodgestor (produ_vect p, int id) {
+produ_vect modificar_prodgestor (produ_vect p) {
 	int pos, op;
 	char respuesta;
 	
@@ -1458,11 +1454,11 @@ produ_vect modificar_prodgestor (produ_vect p, int id) {
 	else {
 		printf ("\nSu id de gestor no coincide con el id de producto, volviendo al menu anterior...\n");
 	}
-	
+			
 	return p;
 }
 
-produ_vect eliminar_prodgestor (produ_vect p, int id) {
+produ_vect eliminar_prodgestor (produ_vect p) {
 	int i, pos;
 	char respuesta;
 	
@@ -1519,46 +1515,19 @@ produ_vect eliminar_prodgestor (produ_vect p, int id) {
 	return p;
 }
 
-void listar_prodgestor (produ_vect p, int id) {
-	int i,j,
-		id_cat,
-		id_gest;
-	categ_vect Cat = cargar_categorias();
-	admin_prov_vect adminprov = cargar_adminprov();
-	
+produ_vect listar_prodgestor (produ_vect p) {
+	int i;
 	
 	clear ();
-	printf("+--------------------+\n");
-	printf("| LISTA DE PRODUCTOS |\n");
-	printf("+-----------------+--+-------------------------------------------------+---------------------------+\n");
-	printf("| NOMBRE          | DESCRIPCION                                        | EMPRESA GESTORA           |\n");
-	printf("| STOCK           | CATEGORIA                                          | DIAS DE ENTREGA | IMPORTE |\n");
-	printf("+-----------------+----------------------------------------------------+---------------------------+\n");
+	Sleep (1000);
+	
+	printf ("---> LISTA DE PRODUCTOS: <---\n\n");
 	
 	for (i = 1; i < p.num_prod; i++) {
-		for(j=1; j < Cat.num_cat; j++){
-			if(p.produ[i].id_categ == Cat.categ[j].id_categ)
-				id_cat = j;
+		if (p.produ[i].id_gestor == p.produ[i].id_prod) {
+			printf ("Su id coincide con el del producto: %07d-%s-%s-%04d-%04d-%d-%d-%d\n", p.produ[i].id_prod,  p.produ[i].nombre,  p.produ[i].descrip,  p.produ[i].id_categ,  p.produ[i].id_gestor,  p.produ[i].stock,  p.produ[i].entrega,  p.produ[i].importe);
 		}
-		for(j=1; j < adminprov.tam; j++){
-			if(p.produ[i].id_gestor == adminprov.usuarios[j].Id_empresa)
-				id_gest = j;
-		}
-		
-		if (p.produ[i].id_gestor == id) {
-			printf ("| %-15s | %-50s | %-25s |\n| %-15d | %-50s | %-15d | %-7d |\n",
-			p.produ[i].nombre,
-			p.produ[i].descrip,
-			adminprov.usuarios[id_gest].Nombre,
-			p.produ[i].stock, 
-			Cat.categ[id_cat].descrip,
-	
-			
-			p.produ[i].entrega, 
-			p.produ[i].importe);
-		}
-		printf("+-----------------+----------------------------------------------------+---------------------------+\n");
 	}
-	printf("Pulse [enter] para volver...");
-	getchar();
+	
+	return p;
 }

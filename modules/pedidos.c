@@ -104,7 +104,6 @@ pedidos crear_pedido( pedidos p, int id_cliente, int modo){
 
     int credito_c=c.clients[id_cliente].Cartera;
 
-    
 
     //SELECCIONAR PRODUCTO
     
@@ -120,12 +119,12 @@ pedidos crear_pedido( pedidos p, int id_cliente, int modo){
         
         //SELECCIONAR UNIDADES DE CADA PRODUCTO
         v_uds=(int*)realloc(v_uds, n_products*sizeof(int));
-        printf("Stock del producto: %d\n",productos.produ[id_producto].stock);
-        printf("introduce el numero de unidades que desea del producto: \n");
+        printf("-- Stock disponible del producto [ %d ] --\n",productos.produ[id_producto].stock);
+        printf("Introduce el numero de uds que desea del producto: \n");
         n_uds = input_int();
 
         //comprobar unidades del producto validas
-        printf("unidades seleccionadas: %d\n", n_uds);
+        printf("Uds seleccionadas: %d\n", n_uds);
         while(n_uds>productos.produ[id_producto].stock || n_uds<1){
             printf("ERROR: ha introducido una opcion válida\n");
             printf("Introduzca una opcion válida\n");
@@ -134,8 +133,9 @@ pedidos crear_pedido( pedidos p, int id_cliente, int modo){
         
 
         importe_uds=productos.produ[id_producto].importe*n_uds; //importe de cada producto
-        printf("el importe es: %d\n", importe_uds);
-        printf("el credito del cliente es: %d\n",credito_c);
+        printf("-- Credito que dispondria [ %d ] --\n",credito_c);
+        printf("El importe del producto: %d\n", importe_uds);
+        
         //Comprobamos importe del pedido es menor que credito del cliente
         
         if(importe_uds>=credito_c){ 
@@ -146,9 +146,7 @@ pedidos crear_pedido( pedidos p, int id_cliente, int modo){
             if(importe_uds==credito_c){ //opcion para cuando el importe es igual que el credito del cliente
                 printf("3. Terminar compra\n");
             }
-            printf("introduzca una opcion: \n");
-            int resp;
-            resp = input_int();
+            int resp = input_int();
 
             switch(resp){
                 case 1:
@@ -161,11 +159,11 @@ pedidos crear_pedido( pedidos p, int id_cliente, int modo){
                     }
                     cantidad=cantidad-1;
                     if(cantidad==0){ //si la cantidad es 0 el cliente no puede comprar ese producto
-                        printf("no puede comprar ninguna unidad de este producto\n");
+                        printf("No puede comprar ninguna unidad de este producto\n");
                     }
                     else{
-                        printf("puede comprar %d unidades del producto\n", cantidad);
-                        printf("desea añadir el producto [s/n]: \n");
+                        printf("Puede comprar %d unidades del producto\n", cantidad);
+                        printf("Desea añadir el producto [s/n]: \n");
                         char aux=confirmacion();
                         if(aux=='s' || aux=='S'){
                             printf("cuantas unidades desea introducir: \n"); //preguntar al usuario cuantas unidades quiere del producto 
@@ -183,18 +181,14 @@ pedidos crear_pedido( pedidos p, int id_cliente, int modo){
 
                 case 3:
                     compra=0;
-                    printf("no desea agregar mas productos al pedido\n");
-                    printf("continuamos con el pedido\n");
+                    printf("Presione [enter] para continuar con el pedido...\n");
                     break;
                 
             }
 
         }
         else{
-            credito_c=credito_c-importe_uds; //le resto al credito del cliente el import
-            printf("el importe es menor que el credito del cliente\n");
-
-            
+            credito_c=credito_c-importe_uds; //le resto al credito del cliente el importe
         }
         
         v_prod[n_products-1]=id_producto; //guardar en el vector dinamico el id del producto que ha seleccionado el cliente
@@ -217,20 +211,12 @@ pedidos crear_pedido( pedidos p, int id_cliente, int modo){
         }
 
     }while(compra != 0);
-    //RESUMEN DE LOS PRODUCTOS QUE HA PEDIDO Y EL IMPORTE TOTAL
-    
     
     //ALMACENAR EN LA ESTRUCTURA PEDIDO LOS DATOS DEL PEDIDO
     p.pedidos[pos].id_pedido=nueva_id;
 
     
-    if(modo==0){
-        printf("crear pedido como administrador\n");
-        p.pedidos[pos].id_cliente=busqueda_cliente();
-    }
-    else{
-        printf("crear pedido como cliente\n");
-    }
+    
     p.pedidos[pos].id_cliente=id_cliente;
 
     p.pedidos[pos].f_pedido.dia=dia_sist();
@@ -253,12 +239,13 @@ pedidos crear_pedido( pedidos p, int id_cliente, int modo){
         case 2:
             strcpy(p.pedidos[pos].lugar, "Locker");
             strcpy(p.pedidos[pos].id_locker, "pendLock"); //esta pendiente de asignación de locker
-            //añadir un id del locker y un codigo del locker
-            //funciones modulo lockers para mirar locker libres
             break;
         default:
-            printf("opcion no valida");
+            break;
     }
+    printf("Ha elegido como destino del pedido %s\n",p.pedidos[pos].lugar );
+    printf("Presione [enter] para continuar con el pedido...");
+    getchar();
 
     /*** CHEQUE Y CODIGO DE DESCUENTO ***/
     int l,k, 
@@ -272,7 +259,7 @@ pedidos crear_pedido( pedidos p, int id_cliente, int modo){
     cheque=confirmacion();
 
     if(cheque=='s' || cheque == 'S'){
-        //listar descuentos de ese cliente
+        Consultar_desc_cliente(id_cliente, 1);
         do{
             printf("Introduce el codigo del descuento que deseas utilizar: ");
             fflush(stdin);
@@ -281,22 +268,23 @@ pedidos crear_pedido( pedidos p, int id_cliente, int modo){
 
             conf = comprobar_descuento(cod_desc, id_cliente);
             if(conf==0){
-                printf("el codigo de descuento introducido es correcto\n");
+                printf("El codigo de descuento introducido es valido.\n");
                 strcpy(p.pedidos[pos].id_cod, cod_desc);
                 
                 imp_desc = importe_descuento(cod_desc);
-                printf("Se va descontar %d euros del pedido", imp_desc);
+                printf("Se va descontar %d euros del pedido.", imp_desc);
                 importe_total -= imp_desc;
-                Sleep(2000);
+                Sleep(3000);
                 
                 cheque_ok = 1;
             }
             else{
-                printf("el codigo de descuento introducido no es correcto\n");
-                printf("desea introducir otro codigo de descuento [s/n]: ");
+                printf("El codigo de descuento introducido no es valido.\n");
+                printf("Desea introducir otro codigo de descuento [s/n]: ");
                 cheque=confirmacion();
                 if(cheque == 'n' || cheque == 'N'){
-                    strcpy(p.pedidos[pos].id_cod, "nocod\0");
+                    strcpy(cod_desc, "nocod\0");
+                    strcpy(p.pedidos[pos].id_cod, cod_desc); 
                     cheque_ok = 1;
                 }   
             }
@@ -304,60 +292,60 @@ pedidos crear_pedido( pedidos p, int id_cliente, int modo){
        
     }
     else{
-        strcpy(p.pedidos[pos].id_cod, "nocod\0");
-        
+        strcpy(cod_desc, "nocod\0");
+        strcpy(p.pedidos[pos].id_cod, cod_desc);  
     }
-
+    printf("Presione [enter] para continuar con el pedido...");
+    getchar();
+    
+    //RESUMEN DE LOS PRODUCTOS QUE HA PEDIDO Y EL IMPORTE TOTAL
+    
     clear();
-
     printf("\n---RESUMEN DEL PEDIDO---\n");
     for(j=0;j<n_products;j++){ 
         id=v_prod[j];
         strcpy(nombre, productos.produ[id].nombre);
-        printf("-nombre del producto: %s\n", nombre);
-        printf("-unidades de ese producto: %d\n", v_uds[j]);
+        printf(" <%d> Nombre del producto: %s\n", j+1, nombre);
+        printf(" <%d> Numero de unidades del producto: %d\n", j+1, v_uds[j]);
     }
-    printf("-el numero de productos del pedido es: %d\n",n_products);
-    printf("-el importe total del pedido es: %d\n", importe_total);
+    printf(" TOTAL DE PRODUCTOS: %d\n",n_products);
+    printf(" IMPORTE TOTAL: %d euros\n", importe_total);
     
     printf("Desea confirmar la compra? [s/n]: ");
     op = confirmacion();
-    if (op == 'n' && op == 'N'){
+    if (op == 'n' || op == 'N'){
+        p = cargar_pedidos(); //Rechazo los cambios del nuevo pedido cargando la estructura previa 
         guardar_pedido(p);
         return p;
     }
+
+    //CAMBIOS NECESARIOS SI REALIZA PEDIDO
         
 
-    if(strcmp(cod_desc, "nocod\0") == 0)
+    if(strcmp(cod_desc, "nocod\0") != 0)
         marcar_aplicado(id_cliente, cod_desc);
 
-    
     p.lon=p.lon+1; //actualiza el numero de pedidos que hay 
-
-    guardar_pedido(p);
-
+    
     printf("Se acaba de descontar %d euros de su cartera", importe_total);
     c.clients[id_cliente].Cartera -= importe_total;
 
     guardar_clientes(c);
-    
 
     //CREAR PRODUCTO PEDIDO Y GUARDARLO EN LA ESTRUCTURA
    int id_pro, n_unidades;
-    for(j=0;j<n_products+1;j++){
+    for(j=0;j<n_products;j++){
         prod_pedidos Prod_P=cargar_prod_pedidos();
-        /*printf("productos pedidos: %d\n", n_products);
-        printf("j: %d\n", j);
-        printf("\npara llamar a la funcion crear producto pedido\n");*/
         id_pro=v_prod[j];
-        
-        //printf("id producto: %d\n",id_pro);
         n_unidades=v_uds[j];
-        //printf("unidades de ese productos: %d\n", n_unidades);
+        printf("%d, %d \n", id_pro, n_unidades);
+
         crear_producto_pedido(p, id_pro, nueva_id, Prod_P, n_unidades);
 
     }
-    
+    printf("Pedido completo realizado correctamente...");
+    getchar();
+    guardar_pedido(p);
     return p;
 }
 int comprobar_descuento(char cod_descuento[], int id_cliente){
@@ -388,37 +376,27 @@ int comprobar_descuento(char cod_descuento[], int id_cliente){
     
     comp=comprobar_fecha(f_sist, f_cad);
     
-    if(comp==1){
-        printf("el codigo no ha caducado\n");
-    }
-    else{
-        printf("el codigo esta caducado\n");
+    if(comp==0){
+        printf("El codigo esta caducado\n");
         return 1;
     }
 
     //SACAR LA POSICION 
     for(i=0;i<des.tam;i++){
-        printf("cod descuento introducido: %s\n", cod_descuento);
-        printf("cod descuento del fichero: %s\n", des_c.DescCliente[i].Id_cod);
-        printf("%d",strcmp(cod_descuento, des.Desc[i].Id_cod));
-        if(strcmp(cod_descuento, des.Desc[i].Id_cod)==0){
-            printf("prueba1\n");
-            printf("el codigo de descuento introducido existe\n");
-            if(strcmp(des.Desc[i].Estado, "activo")==0){
-                printf("el descuento esta activo");
+        if(strcmp(cod_descuento, des.Desc[i].Id_cod)==0){//Comprobacion si cod_desc existe
+
+            if(strcmp(des.Desc[i].Estado, "activo")==0){   //Comprobacion si cod_desc esta activo
+
                 for(j=0;j<des_c.tam;j++){
-                    if(id_cliente==des_c.DescCliente[j].Id_cliente){
-                        printf("cliente tiene asociado descuento\n");
-                        if(strcmp(cod_descuento, des_c.DescCliente[j].Id_cod)==0){
-                            printf("el descuento pertenece al cliente\n");
-                            if(des_c.DescCliente[j].Estado==0){
-                                printf("el descuento no ha sido aplicado por tanto lo puede usar el cliente\n");
+                    if(id_cliente==des_c.DescCliente[j].Id_cliente){    //Comprobacion si cod_desc esta asignado al cliente
+
+                        if(strcmp(cod_descuento, des_c.DescCliente[j].Id_cod)==0){  
+
+                            if(des_c.DescCliente[j].Estado==0){         //Comprobacion si cod_desc no ha sido aplicado antes
+
                                 return 0;
                             }
-                            else{
-                                printf("el descuento no lo puede aplicar el cliente\n");
-                            }
-                                
+     
                         }
                     }
                 }
@@ -595,6 +573,8 @@ void crear_producto_pedido(pedidos p, int product, int id_pedido, prod_pedidos p
     printf("\nproductos pedidos: %d\n", prod_p.lon);
     
     guardar_productos_pedidos(prod_p);
+    printf("El producto %s se ha pedido correctamente...\n",productos.produ[product].nombre);
+    Sleep(2000);
 }
 
 void eliminar_pedidos(prod_pedidos prod_p, pedidos p){
@@ -686,7 +666,6 @@ devoluciones cargar_devoluciones(){
 
     if(fgetc(f_dev) == EOF){
         fprintf(f_dev, default_dev);
-        fclose(f_dev);
     }
     
     rewind(f_dev);
@@ -697,12 +676,12 @@ devoluciones cargar_devoluciones(){
     rewind(f_dev);
 
     devoluciones dev;
-
+    dev.devoluciones=malloc(1*sizeof(devolucion));
     dev.lon=n_dev;
-    dev.devoluciones=malloc(n_dev*sizeof(devolucion));
+    dev.devoluciones=realloc(dev.devoluciones,n_dev * sizeof(devolucion));
 
     while(fgets(cad_aux, sizeof(cad_aux), f_dev) && i<n_dev){
-        campo_devoluciones=sscanf(cad_aux, "%d-%d-%d/%d/%d-%50[^-]-%10[^-]-%d/%d/%d-%d/%d/%d",
+        campo_devoluciones=sscanf(cad_aux, "%d-%d-%d/%d/%d-%51[^-]-%11[^-]-%d/%d/%d-%d/%d/%d",
         &dev.devoluciones[i].id_pedido,
         &dev.devoluciones[i].id_prod,
         &dev.devoluciones[i].f_devol.dia,
@@ -725,10 +704,7 @@ devoluciones cargar_devoluciones(){
     
     i++;
     }
-
-    printf("devoluciones: %d\n", n_dev);
     return dev;
-
 }
 
 void guardar_devoluciones(devoluciones d){
@@ -739,9 +715,16 @@ void guardar_devoluciones(devoluciones d){
     if(f_dev==NULL){
         printf("ERROR");
     }
+    printf("%d",d.lon);
+    getchar();
 
     for(i=0;i<d.lon;i++){
-        fprintf(f_dev,"%d-%d-%d/%d/%d-%s-%s-%d/%d/%d-%d/%d/%d\n",
+        printf("%s", d.devoluciones[i].motivo);
+    }
+    getchar();
+
+    for(i=0;i<d.lon;i++){
+        fprintf(f_dev,"%07d-%d-%d/%d/%d-%s-%s-%d/%d/%d-%d/%d/%d\n",
         d.devoluciones[i].id_pedido,
         d.devoluciones[i].id_prod,
         d.devoluciones[i].f_devol.dia,
@@ -835,7 +818,7 @@ void listapedidos_cliente(prod_pedidos prods_p,pedidos p, int id_cliente){
 
     for(i=1;i< p.lon; i++){
         if(id_cliente == p.pedidos[i].id_cliente){  //Mostrar pedidos solo del cliente
-            printf("| <%d> FECHA: %d / %d / %d LUGAR:%-9s                                               |\n", i,
+            printf("| <%d> FECHA: %d / %d / %d LUGAR:%-9s                                              |\n", i,
                                                                             p.pedidos[i].f_pedido.dia,
                                                                             p.pedidos[i].f_pedido.mes,
                                                                             p.pedidos[i].f_pedido.anio, 

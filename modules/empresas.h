@@ -51,7 +51,10 @@ typedef struct{
 
 // --------------- FUNCIONES DE INICIO DE SESION ---------------
 
-
+ //Precondición: No recibe nada.
+ //Postcondición: Muestra el logotipo de la empresa. No devuelve nada.
+ void esizon();
+ 
  //Precondición: Recibe una estructura de tipo admin_prov_vect (el vector de usuarios tipo adminprov), y la posición a utilizar en él.
  //Postcondición: El usuario habrá iniciado sesión como proveedor en el sistema, o se habrá cerrado la sesión por fallar la contraseña muchas veces. No devuelve nada.
  void inicsesion_prov(admin_prov_vect provs, int pos);
@@ -121,6 +124,10 @@ typedef struct{
  //Precondición: No recibe nada.
  //Postcondición: Devuelve 0 si se completa la asignación de lockers a un pedido, o -1 si se ha cancelado el proceso.
  int modificar_asig_lockers(int id_prov);
+ 
+ //Precondición: No recibe nada.
+ //Postcondición: Devuelve -1 si se cancela la operación, o cero si no. En el segundo caso se habrá asignado un nuevo transportista a un producto de un pedido.
+ int modificar_asig_transport_admin();
 
 
 // --------------- FUNCIONES PARA EL MENU DE TRANSPORTISTA ---------------
@@ -142,6 +149,31 @@ typedef struct{
  //Postcondición: No devuelve nada. Se habrá cambiado la contraseña del usuario guardada en el puntero, o no.
  void cambiar_contrasena_t(transport_vect transports, int pos);
 
+ //Precondición: Recibe la ID del transportista acutal.
+ //Postcondición: No devuelve nada. Permite elegir al transportista entre ver sus repartos asignados, marcar recogida a domicilio fallida, recoger pedido y asignar locker a pedido
+ void menu_repartos_t(int pos);
+ 
+ //Precondición: Recibe la ID del transportista al que se le muestra el listado.
+ //Postcondición: No devuelve nada. Muestra por pantalla el listado de repartos asignados al transportista con la ID pasada.
+ void listar_repartos_t(int pos);
+ 
+ //Precondición: Recibe la ID del transportista acutal.
+ //Postcondición: Devuelve 0 si se cancela la operación, o la posición en el vector del producto si se cambia su estado de "enReparto" a "transportista" (es decir, si se avisa que no se ha podido entregar 
+ // un paquete a domicilio).
+ int fallo_recoger_pedido_t(int pos);
+ 
+ //Precondición: Recibe la ID del transportista acutal.
+ //Postcondición: Devuelve 0 si se cancela la operación, o la posición en el vector del producto si se cambia su estado de "enPreparacion" a "enReparto" (es decir, si se responsabiliza de la entrega de 
+ // un paquete).
+ int recoger_pedido_t(int pos);
+ 
+ //Precondición: Recibe la ID del transportista acutal.
+ //Postcondición: Devuelve -1 si se cancela la operación, o la posición en el vector del pedido si se cambia su estado de "enRepart" a "enLocker" (es decir, si se entrega un paquete en un locker). 
+ int entrega_locker_t(int pos);
+ 
+ void menu_retornos_t(int pos);
+ 
+ 
  
 // --------------- FUNCIONES PARA LA GESTIÓN DE PROVEEDORES ---------------
 
