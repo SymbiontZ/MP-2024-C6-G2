@@ -19,8 +19,6 @@ int main()
 
     devoluciones d = cargar_devoluciones();
     int pos;
-    pos= buscar_devolucion(d, Prod_P, P);
-    printf("pos: %d\n", pos);
-    eliminar_devolucion(pos, d);
+    listar_dev_cliente(1, d, Prod_P, P);
     return 0;
 }

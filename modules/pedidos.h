@@ -84,5 +84,6 @@ void listadoped_estado(prod_pedidos , char[]);
 int buscar_devolucion(devoluciones, prod_pedidos, pedidos);
 void eliminar_devolucion(int, devoluciones);
 void modificar_devolucion(devoluciones, int);
+void listar_dev_cliente(int, devoluciones, prod_pedidos, pedidos);
 
 #endif

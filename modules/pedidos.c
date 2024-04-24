@@ -1136,7 +1136,7 @@ void eliminar_devolucion(int pos, devoluciones d){
 }
 
 
-void modificar_devolucion(devoluciones d, int pos){
+/*void modificar_devolucion(devoluciones d, int pos){
     int i, resp;
     
     char estado[11];
@@ -1161,6 +1161,53 @@ void modificar_devolucion(devoluciones d, int pos){
         
         case 3:
 
+    }
+}*/
+
+void listar_dev_cliente(int id_cliente, devoluciones d, prod_pedidos prod_p, pedidos p){
+    int i,j,k,
+        id_ped,
+        id_prod;
+    char nom_prod[16];
+    produ_vect prod = cargar_productos();
+
+     printf("+--------------------------------------------------------------------------------------+\n");
+    printf("| LISTA DE DEVOLUCIONES                                                                |\n");
+    printf("+--------------------------------------------------------------------------------------+\n");
+    printf("| <n> nombre_producto - estado - fecha aceptacion - fehca caducidad   |\n");
+    printf("+--------------------------------------------------------------------------------------+\n");
+    
+    for(i=1;i<d.lon;i++){
+        for(j=1;j<p.lon;j++){
+            //obtengo la id del pedido a la que pertenece el cliente
+            if(id_cliente==p.pedidos[j].id_cliente){
+                printf("id cliente del pedido: %d\n", p.pedidos[j].id_cliente);
+                
+                id_ped=p.pedidos[j].id_pedido;
+                printf("id ped: %d\n", id_ped);
+            }
+        }
+        //obtener el nombre del producto de esa devolucion
+        if(d.devoluciones[i].id_pedido==id_ped){
+            id_prod=d.devoluciones[i].id_prod;
+            for(k=1;k<prod.num_prod;k++){
+                if(id_prod==prod.produ[k].id_prod){
+                    strcpy(nom_prod, prod.produ[k].nombre);
+                }
+            }
+        }
+         
+    
+
+        printf("| <%d>  %s - %s - %d/%d/%d - %d/%d/%d\n", i,
+                                                            nom_prod,
+                                                            d.devoluciones[i].estado,
+                                                            d.devoluciones[i].f_aceptacion.dia,
+                                                            d.devoluciones[i].f_aceptacion.mes,
+                                                            d.devoluciones[i].f_aceptacion.anio,
+                                                            d.devoluciones[i].f_caducidad.dia,
+                                                            d.devoluciones[i].f_caducidad.mes,
+                                                            d.devoluciones[i].f_caducidad.anio);
     }
 }
 
