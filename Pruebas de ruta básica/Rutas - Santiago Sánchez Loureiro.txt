@@ -1,3 +1,5 @@
+//Precondición: Recibe una estructura de tipo admin_prov_vect (el vector de usuarios tipo adminprov), y una cadena a comparar.
+//Postcondición: Devuelve la ID de empresa del proveedor dado de alta en la plataforma según la empresa a la que pertenezca.
 int buscar_id_prov(admin_prov_vect provs, char* empresa){
 	int i, 
 1		id= 0, 
