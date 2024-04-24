@@ -92,9 +92,9 @@ int Comp_Dispo(Vect_Lock, Vect_CompLock, int);
 //Postcondición: Devuelve la estructura CompartimentosLockers asignada al locker correspondiente
 Vect_CompLock Asignar_Compartimentos(Vect_Lock, Vect_CompLock);
 
-//Precondición: Recibe las estructura CompartimentosLockers, la posicion del pedido a recoger y el numero de compartimento en el que se encuentra el pedido
+//Precondición: Recibe las estructura CompartimentosLockers y el id del cliente que quiere recoger el pedido
 //Postcondición: Devuelve la estructura CompartimentosLockers con el estado del compartimento actualizado
-Vect_CompLock Recogida_Locker(Vect_CompLock, int, int);
+Vect_CompLock Recogida_Locker(Vect_CompLock, int);
 
 //Precondición: Recibe la estructura Lockers
 //Postcondición: Devuelve la estructura Lockers con un Locker nuevo
