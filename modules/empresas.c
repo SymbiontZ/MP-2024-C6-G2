@@ -201,7 +201,7 @@ void menu_transport(transport_vect transports, int pos){
 		else{
 			switch(op){
 				case 1: ver_perfil_t(transports, pos); break;
-				case 2: break;
+				case 2: menu_repartos_t(pos); break;
 				case 3: break;
 				case 0: break;
 				default: break;
@@ -398,6 +398,187 @@ void cambiar_contrasena(admin_prov_vect provs, int pos){
 
 
 
+//Precondición: Recibe la ID del proveedor para asegurar que sólo ve sus pedidos.
+//Postcondición: No devuelve nada. Muestra por pantalla todos los pedidos asociados a productos de su empresa.
+void listar_pedidos_prov(int id){
+	produ_vect prods = cargar_productos();
+	pedidos pedidos = cargar_pedidos();
+	prod_pedidos prods_pedidos = cargar_prod_pedidos();
+	int i;
+	
+	printf("+-------------------+\n");
+	printf("| PEDIDOS ASOCIADOS |\n");
+	printf("+-------------------+--------------------+-----------+--------------------------------------+\n");
+	printf("| PRODUCTO          | UNIDADES PEDIDAS   | IMPORTE   | ESTADO             | PEDIDO ASOCIADO |\n");
+	printf("+-------------------+--------------------+-----------+--------------------+-----------------+\n");	
+
+	for(i = 0; i < prods_pedidos.lon; i++){
+		if(id == prods.produ[prods_pedidos.prod_pedidos[i].id_prod].id_gestor)
+			printf("| %-17s | %-18d | %-6dx%-2d | %-18s | %-15d |\n", prods.produ[ prods_pedidos.prod_pedidos[i].id_prod ].nombre, prods_pedidos.prod_pedidos[i].num_unid, prods_pedidos.prod_pedidos[i].importe, prods_pedidos.prod_pedidos[i].num_unid, prods_pedidos.prod_pedidos[i].estado, prods_pedidos.prod_pedidos[i].id_pedido);
+	}
+	printf("+-------------------+--------------------+-----------+--------------------+-----------------+\n");	
+	printf("Presione [enter] para volver...");
+	getchar();
+	
+}
+
+
+
+//Precondición: No recibe nada.
+//Postcondición: No devuelve nada. Cambia el estado de un pedido elegido dentro de la propia función, y guarda los cambios.
+void cambiar_estado_pedido(int id_prov){
+	int op = -1, id, modif = 0;
+	prod_pedidos prods_pedidos = cargar_prod_pedidos();
+	produ_vect prods = cargar_productos();
+	
+	clear();
+	
+	printf("\nIndique la ID del pedido: ");
+	id = input_int();
+	
+	for(int i = 0; i < prods_pedidos.lon; i++){
+		if(id == prods_pedidos.prod_pedidos[i].id_pedido && prods.produ[ prods_pedidos.prod_pedidos[i].id_prod ].id_gestor == id_prov){
+			do{
+				printf("\n {Pedido %04d} Producto [%04d - %s].\n Elija un estado para continuar:\n\n <1> En preparación.\n <2> Enviado.\n <0> Cancelar\n Elija una opción: ", id, prods_pedidos.prod_pedidos[i].id_prod, prods.produ[ prods_pedidos.prod_pedidos[i].id_prod ].nombre);
+				if(scanf("%i",&op)!=1){
+					fflush(stdin);
+					printf("\n Error: introduzca una entrada válida.");
+					Sleep(2000);
+					op=-1;
+				}
+				else{
+					switch(op){
+						case 1: strcpy(prods_pedidos.prod_pedidos[i].estado, "enPreparación\0"); break;
+						case 2: strcpy(prods_pedidos.prod_pedidos[i].estado, "enviado\0"); break;
+						case 0: break;
+						default: break;
+					}
+				}
+			}while(op!=0 && op!=1 && op!=2);
+			modif = 1;
+			op = -1;
+		}		
+	}
+	if(!modif)
+		printf("\nNo se ha podido encontrar el pedido solicitado en su empresa.");
+	else{
+		printf("\nCambios realizados satisfactoriamente.");
+		guardar_productos_pedidos(prods_pedidos);
+	}
+	
+	Sleep(2000);
+}
+
+
+
+//Precondición: No recibe nada.
+//Postcondición: No devuelve nada. Permite elegir al usuario entre buscar transportistas, listarlos o asignar alguno a un pedido.
+void modificar_asig_transport_menu(int id_prov){
+	int op = -1;
+	transport_vect transports = cargar_transportistas();
+	
+	
+	do{
+		clear();
+		printf("\nElija una opcion para continuar.\n <1> Ver transportistas del sistema.\n <2> Asignar transportista a pedido.\n <0> Volver.\n Elija una opción: ");
+		if(scanf("%i",&op)!=1){
+			fflush(stdin);
+			printf("\nError: introduzca una entrada válida.");
+			Sleep(2000);
+			op=-1;
+		}
+		else{
+			switch(op){
+				case 1: listar_transport(transports); break;
+				case 2: modificar_asig_transport(id_prov); break;
+				case 0: break;
+				default: break;
+			}
+		}
+	}while(op!=0);
+	
+}
+
+
+
+//Precondición: No recibe nada.
+//Postcondición: Devuelve 0 si se completa la asignación de transportistas a un pedido, o -1 si se ha cancelado el proceso.
+int modificar_asig_transport(int id_prov){
+	prod_pedidos prods_pedidos = cargar_prod_pedidos();
+	transport_vect transports = cargar_transportistas();
+	produ_vect prods = cargar_productos();
+	int i, n_coinc = 0, num_t = 0, encontrado = 0, salida = 0;      //Contador de coincidencias encontradas
+    int *vect_coinc;  									 //Vector que contiene las ids de las coincidencias
+	
+	clear();
+	
+	vect_coinc = (int*)malloc(1*sizeof(int));
+	
+	for(i = 1; i < prods_pedidos.lon; i++){
+		if(id_prov == prods.produ[ prods_pedidos.prod_pedidos[i].id_prod ].id_gestor && strcmp(prods_pedidos.prod_pedidos[i].estado, "enPreparacion") == 0){
+			printf(" <%i> {Pedido %04d | Producto %04d - %s} Estado: %s | Entrega: %02d/%02d/%d\n", n_coinc + 1, prods_pedidos.prod_pedidos[i].id_pedido, prods_pedidos.prod_pedidos[i].id_prod, prods.produ[ prods_pedidos.prod_pedidos[i].id_prod ].nombre, prods_pedidos.prod_pedidos[i].estado, prods_pedidos.prod_pedidos[i].f_entrega.dia, prods_pedidos.prod_pedidos[i].f_entrega.mes, prods_pedidos.prod_pedidos[i].f_entrega.anio);
+			n_coinc++;
+            vect_coinc = (int*)realloc(vect_coinc, n_coinc*sizeof(int));
+            vect_coinc[n_coinc-1] = i;
+			encontrado = 1;
+		}
+		if(id_prov == prods.produ[ prods_pedidos.prod_pedidos[i].id_prod ].id_gestor && strcmp(prods_pedidos.prod_pedidos[i].estado, "enReparto") == 0){
+			printf(" <%i> {Pedido %04d | Producto %04d - %s} Estado: %s | Transport.: %04d - %s | Entrega: %02d/%02d/%d\n", n_coinc + 1, prods_pedidos.prod_pedidos[i].id_pedido, prods_pedidos.prod_pedidos[i].id_prod, prods.produ[ prods_pedidos.prod_pedidos[i].id_prod ].nombre, prods_pedidos.prod_pedidos[i].estado, prods_pedidos.prod_pedidos[i].id_transp, transports.transportistas[ prods_pedidos.prod_pedidos[i].id_transp ].Nombre, prods_pedidos.prod_pedidos[i].f_entrega.dia, prods_pedidos.prod_pedidos[i].f_entrega.mes, prods_pedidos.prod_pedidos[i].f_entrega.anio);
+			n_coinc++;
+            vect_coinc = (int*)realloc(vect_coinc, n_coinc*sizeof(int));
+            vect_coinc[n_coinc-1] = i;
+			encontrado = 1;
+		}
+	}
+	
+	if(!encontrado){
+		printf("\nNo hay pedidos asociados a su empresa en un estado modificable.");	// No tiene sentido cambiar el transportista de un pedido entregado, enviado, devuelto o en locker.
+	}else{
+
+		i = -1;
+		do{
+			printf("\nElija el producto (numero entre <>) al que desea asignar otro transportista, o pulse 0 para volver.\n");
+			printf("Producto: ");
+			i = input_int();
+		}while(i < 0 || i > n_coinc);
+		
+		if(i == 0)
+			return -1;
+			
+		salida = vect_coinc[i - 1];
+		
+		printf("\nTransportistas disponibles:\n");
+		for(i = 1; i < transports.tam; i++){
+			printf("\n <%i> Transportista %04d: %s | Email: %s | %s | %s\n", num_t+1, transports.transportistas[i].Id_transp, transports.transportistas[i].Nombre, transports.transportistas[i].email, transports.transportistas[i].Nom_Emp, transports.transportistas[i].Ciudad);
+			num_t++;
+		}
+		do{
+			printf("\nElija el transportista a asignar, o pulse 0 para volver.\n");
+			printf("Transportista: ");
+			i = input_int();
+		}while(i < 0 || i > transports.tam);
+		
+		if(i == 0)
+			return -1;
+		
+		if(strcmp(prods_pedidos.prod_pedidos[salida].estado, "enPreparacion") == 0){
+			strcpy(prods_pedidos.prod_pedidos[salida].estado, "enReparto");
+			printf("\n{Pedido %04d | Producto %04d - %s} Estado cambiado de 'enPreparacion' a 'enReparto'.", prods_pedidos.prod_pedidos[salida].id_pedido, prods_pedidos.prod_pedidos[salida].id_prod, prods.produ[ prods_pedidos.prod_pedidos[salida].id_prod ].nombre);
+		}
+
+		prods_pedidos.prod_pedidos[salida].id_transp = i;
+		printf("\nTransportista asignado con exito.");	
+	}
+	
+	if(encontrado)
+		guardar_productos_pedidos(prods_pedidos);
+		
+	Sleep(2000);
+	return 0;
+}
+
+
+
 //	FUNCIONES PARA EL MENÚ DE TRANSPORTISTA
 
 
@@ -458,6 +639,7 @@ void cambiar_nombre_t(transport_vect transports, int pos){
 }
 
 
+
 /*
 //Precondición: Recibe una estructura de tipo admin_prov_vect (el vector de usuarios tipo adminprov), y la posición a utilizar en él.
 //Postcondición: No devuelve nada. Se habrá cambiado el email del usuario guardado en el puntero.
@@ -478,6 +660,8 @@ void cambiar_email_t(transport_vect transports, int pos){
 	
 }
 */
+
+
 
 //Precondición: Recibe una estructura de tipo admin_prov_vect (el vector de usuarios tipo adminprov), y la posición a utilizar en él.
 //Postcondición: No devuelve nada. Se habrá cambiado la contraseña del usuario guardada en el puntero, o no.
@@ -521,6 +705,284 @@ void cambiar_contrasena_t(transport_vect transports, int pos){
 		printf("\nContrasena errónea. Pruebe otra vez o contacte con un administrador.\n");
 		Sleep(3000);															// Esperamos tres segundos antes de limpiar la pantalla para poder leer el mensaje anterior.		
 	}
+	
+}
+
+
+
+//Precondición: Recibe la ID del transportista acutal.
+//Postcondición: No devuelve nada. Permite elegir al transportista entre ver sus repartos asignados, marcar recogida a domicilio fallida, recoger pedido y asignar locker a pedido
+void menu_repartos_t(int pos){
+	int op = -1;
+	
+	do{
+		clear();
+		
+		printf("	####################################\n");
+		printf("	## SISTEMA DE GESTION DE REPARTOS ##\n");
+		printf("	####################################\n");
+		
+		printf("\nBienvenido al sistema de gestion de repartos. Elija una opcion para continuar.\n\n <1> Ver todos los repartos asignados.\n <2> Marcar recogida a domicilio fallida.\n <3> Recoger pedido.\n <4> Asignar locker a pedido.\n <0> Volver.\n Elija una opción: ");
+		if(scanf("%i",&op)!=1){
+			fflush(stdin);
+			printf("\nError: introduzca una entrada válida.");
+			Sleep(2000);
+			op=-1;
+		}
+		else{
+			switch(op){
+				case 1: listar_repartos_t(pos); break;
+				case 2: fallo_recoger_pedido_t(pos); break;
+				case 3: recoger_pedido_t(pos); break;
+				case 4: entrega_locker_t(pos); break;
+				case 0: break;
+				default: break;
+			}
+		}
+	}while(op!=0);
+	
+}
+
+
+
+//Precondición: Recibe la ID del transportista al que se le muestra el listado.
+//Postcondición: No devuelve nada. Muestra por pantalla el listado de repartos asignados al transportista con la ID pasada.
+void listar_repartos_t(int pos){
+	prod_pedidos prods_pedidos = cargar_prod_pedidos();
+	produ_vect prods = cargar_productos();
+	int i, encontrado = 0;
+	
+	clear();
+	
+	printf("+--------------------------------+\n");
+	printf("| REPARTOS ASOCIADOS A SU CUENTA |\n");
+	printf("+----------------------+---------+---------------+------------------------+\n");
+	printf("| ID DE PEDIDO         | NOMBRE DEL PRODUCTO     | FECHA DE ENTREGA       |\n");
+	printf("| ID DE PRODUCTO       | UNIDADES                |                        |\n");
+	printf("+----------------------+-------------------------+------------------------+\n");
+	for(i = 1; i < prods_pedidos.lon; i++){
+		if(pos == prods_pedidos.prod_pedidos[i].id_transp){
+			printf("| %-20d | %-23s | %02d/%02d/%-16d |\n", prods_pedidos.prod_pedidos[i].id_pedido, prods.produ[ prods_pedidos.prod_pedidos[i].id_prod ].nombre, prods_pedidos.prod_pedidos[i].f_entrega.dia, prods_pedidos.prod_pedidos[i].f_entrega.mes, prods_pedidos.prod_pedidos[i].f_entrega.anio);
+			printf("| %-20d | %-23d |                        |\n", prods_pedidos.prod_pedidos[i].id_prod, prods_pedidos.prod_pedidos[i].num_unid);
+			printf("+----------------------+-------------------------+------------------------+\n");
+			encontrado = 1;
+		}
+	}
+	
+	if(!encontrado)
+		printf("\nNo tiene repartos asignados. ");
+	printf("Presione [enter] para volver...");
+	getchar();
+	
+}
+
+
+
+//Precondición: Recibe la ID del transportista acutal.
+//Postcondición: Devuelve 0 si se cancela la operación, o la posición en el vector del producto si se cambia su estado de "enReparto" a "transportista" (es decir, si se avisa que no se ha podido entregar 
+// un paquete a domicilio).
+int fallo_recoger_pedido_t(int pos){
+	prod_pedidos prods_pedidos = cargar_prod_pedidos();
+	pedidos pedidos = cargar_pedidos();
+	produ_vect prods = cargar_productos();
+    int i, n_coinc = 0, encontrado = 0, salida = 0;      //Contador de coincidencias encontradas
+    int *vect_coinc;                   					 //Vector que contiene las ids de las coincidencias
+	
+	clear();
+	
+	vect_coinc = (int*)malloc(1*sizeof(int));
+	
+	for(i = 1; i < prods_pedidos.lon; i++){
+		if(pos == prods_pedidos.prod_pedidos[i].id_transp && strcmp(pedidos.pedidos[ prods_pedidos.prod_pedidos[i].id_pedido ].lugar, "Domicilio") == 0 && strcmp(prods_pedidos.prod_pedidos[i].estado, "enReparto") == 0){
+			printf(" <%i> {Pedido %04d | Producto %04d - %s} Unidades: %d | Entrega: %02d/%02d/%d\n", n_coinc + 1, prods_pedidos.prod_pedidos[i].id_pedido, prods_pedidos.prod_pedidos[i].id_prod, prods.produ[ prods_pedidos.prod_pedidos[i].id_prod ].nombre, prods_pedidos.prod_pedidos[i].num_unid, prods_pedidos.prod_pedidos[i].f_entrega.dia, prods_pedidos.prod_pedidos[i].f_entrega.mes, prods_pedidos.prod_pedidos[i].f_entrega.anio);
+			n_coinc++;
+            vect_coinc = (int*)realloc(vect_coinc, n_coinc*sizeof(int));
+            vect_coinc[n_coinc-1] = i;
+			encontrado = 1;
+		}
+	}
+	
+	i = -1;
+	
+	if(!encontrado){
+		printf("\nNo tiene repartos a domicilio asignados. ");
+		free(vect_coinc);	
+		salida = -1;
+	}	
+	else{
+		encontrado = 0;
+		do{
+			printf("\nElija el pedido (numero entre <>) que no haya podido ser recogido por el cliente para marcar como 'transportista', o pulse 0 para volver.\n");
+			printf("Pedido: ");
+			i = input_int();
+		}while(i < 0 || i > n_coinc);
+		
+		if(i == 0)
+			return 0;
+			
+		salida = vect_coinc[i - 1];
+		
+	    free(vect_coinc);
+		strcpy(prods_pedidos.prod_pedidos[salida].estado, "transportista");
+		printf("\n{Pedido %04d | Producto %04d - %s} Estado actualizado con exito.", prods_pedidos.prod_pedidos[salida].id_pedido, prods_pedidos.prod_pedidos[salida].id_prod, prods.produ[ prods_pedidos.prod_pedidos[salida].id_prod ].nombre);
+	}
+	Sleep(2000);
+	guardar_productos_pedidos(prods_pedidos);
+	return salida;
+}
+    
+
+
+//Precondición: Recibe la ID del transportista acutal.
+//Postcondición: Devuelve 0 si se cancela la operación, o la posición en el vector del pedido si se cambia su estado de "enPreparacion" a "enReparto" (es decir, si el transportista se responsabiliza de
+// la entrega de un paquete). 
+int recoger_pedido_t(int pos){
+	prod_pedidos prods_pedidos = cargar_prod_pedidos();
+	produ_vect prods = cargar_productos();
+    int i, n_coinc = 0, encontrado = 0, salida = 0;      //Contador de coincidencias encontradas
+    int *vect_coinc;                   					 //Vector que contiene las ids de las coincidencias
+	
+	clear();
+	
+	vect_coinc = (int*)malloc(1*sizeof(int));
+	
+	for(i = 1; i < prods_pedidos.lon; i++){
+		if(strcmp(prods_pedidos.prod_pedidos[i].estado, "enPreparacion") == 0){
+			printf(" <%i> {Pedido %04d | Producto %04d - %s} Unidades: %d | Entrega: %02d/%02d/%d\n", n_coinc + 1, prods_pedidos.prod_pedidos[i].id_pedido, prods_pedidos.prod_pedidos[i].id_prod, prods.produ[ prods_pedidos.prod_pedidos[i].id_prod ].nombre, prods_pedidos.prod_pedidos[i].num_unid, prods_pedidos.prod_pedidos[i].f_entrega.dia, prods_pedidos.prod_pedidos[i].f_entrega.mes, prods_pedidos.prod_pedidos[i].f_entrega.anio);
+			n_coinc++;
+            vect_coinc = (int*)realloc(vect_coinc, n_coinc*sizeof(int));
+            vect_coinc[n_coinc-1] = i;
+			encontrado = 1;
+		}
+	}
+	
+	i = -1;
+	
+	if(!encontrado){
+		printf("\nNo tiene repartos a domicilio asignados. ");
+		free(vect_coinc);	
+		salida = -1;
+	}	
+	else{
+		do{
+			printf("\nElija el pedido (numero entre <>) que desea asignar a su cargo, o pulse 0 para volver.\n");
+			printf("Pedido: ");
+			i = input_int();
+		}while(i < 0 || i > n_coinc);
+		
+		if(i == 0)
+			return 0;
+			
+		salida = vect_coinc[i - 1];
+		
+	    free(vect_coinc);
+	    prods_pedidos.prod_pedidos[salida].id_transp = pos;
+		strcpy(prods_pedidos.prod_pedidos[salida].estado, "enReparto");
+		printf("\n{Pedido %04d | Producto %04d - %s} Pedido actualizado con exito.", prods_pedidos.prod_pedidos[salida].id_pedido, prods_pedidos.prod_pedidos[salida].id_prod, prods.produ[ prods_pedidos.prod_pedidos[salida].id_prod ].nombre);
+	}
+	Sleep(2000);
+	guardar_productos_pedidos(prods_pedidos);
+	return salida;
+}
+
+
+//Precondición: Recibe la ID del transportista acutal.
+//Postcondición: Devuelve -1 si se cancela la operación, o la posición en el vector del pedido si se cambia su estado de "enRepart" a "enLocker" (es decir, si se entrega un paquete en un locker). 
+int entrega_locker_t(int pos){
+	pedidos pedidos = cargar_pedidos();
+	Vect_Lock lockers = Cargar_Lockers();
+	prod_pedidos prods_pedidos = cargar_prod_pedidos();
+	produ_vect prods = cargar_productos();
+    int i, n_coinc = 0, encontrado = 0, enc_lock = 0, salida = 0, n_prod = 0;    // Contador de coincidencias encontradas
+    int *vect_coinc;                   										  	 // Vector que contiene las ids de las coincidencias
+    char lock[11];																 // Cadena de búsqueda de lockers
+	
+	clear();
+	
+	vect_coinc = (int*)malloc(1*sizeof(int));
+	
+	for(i = 1; i < prods_pedidos.lon; i++){										 // Mostramos por pantalla los pedidos asignados al transportista que se encuentran en reparto.
+		if(strcmp(prods_pedidos.prod_pedidos[i].estado, "enReparto") == 0 && prods_pedidos.prod_pedidos[i].id_transp == pos){
+			printf(" <%i> {Pedido %04d | Producto %04d - %s} Unidades: %d | Entrega: %02d/%02d/%d\n", n_coinc + 1, prods_pedidos.prod_pedidos[i].id_pedido, prods_pedidos.prod_pedidos[i].id_prod, prods.produ[ prods_pedidos.prod_pedidos[i].id_prod ].nombre, prods_pedidos.prod_pedidos[i].num_unid, prods_pedidos.prod_pedidos[i].f_entrega.dia, prods_pedidos.prod_pedidos[i].f_entrega.mes, prods_pedidos.prod_pedidos[i].f_entrega.anio);
+			n_coinc++;
+            vect_coinc = (int*)realloc(vect_coinc, n_coinc*sizeof(int));
+            vect_coinc[n_coinc-1] = i;											 // Aquellos elementos que cumplan el "if" se guardan en el vector de coincidencias para elegirlos después.
+			encontrado = 1;
+		}
+	}
+	
+	i = -1;
+	
+	if(!encontrado){
+		printf("\nNo tiene repartos asignados.");
+		free(vect_coinc);	
+		salida = -1;
+	}	
+	else{
+		do{
+			printf("\nElija el pedido (numero entre <>) que desea asignar a un locker, o pulse 0 para volver.\n");
+			printf("Pedido: ");
+			i = input_int();
+		}while(i < 0 || i > n_coinc);
+		
+		if(i == 0)
+			return -1;
+			
+		salida = vect_coinc[i - 1];
+		
+		for(i = 0; i < prods_pedidos.lon; i++){
+			if(prods_pedidos.prod_pedidos[i].id_pedido == prods_pedidos.prod_pedidos[salida].id_pedido)
+				n_prod++;
+		}
+		
+		free(vect_coinc);
+		
+		for(i = 0; i < lockers.tam; i++){
+			printf("\nID Locker: %s | Compartimentos: %d | Comp. Ocupados: %d | Provincia, localidad: %s, %s | Ubicacion: %s", lockers.Lock[i].Id_locker, lockers.Lock[i].Num_compT, lockers.Lock[i].Num_compOkup, lockers.Lock[i].Provincia, lockers.Lock[i].Localidad, lockers.Lock[i].Ubica);
+		}
+		
+		do{
+			do{
+				printf("\nElija el un locker para asignar, o pulse 0 para volver.\n");
+				printf("ID de locker: ");
+				fflush(stdin);
+				fgets(lock, sizeof(lock), stdin);
+				terminador_cad(lock);
+			}while(strlen(lock) == 0);
+			
+			if(strcmp(lock, "0") == 0)
+				return -1;
+			
+			for(i = 0; i < prods_pedidos.lon; i++){
+				if(prods_pedidos.prod_pedidos[i].id_pedido == prods_pedidos.prod_pedidos[salida].id_pedido)
+					n_prod++;
+			}
+			
+			for(i = 0; i < lockers.tam; i++){
+				if(strcmp(lock, lockers.Lock[i].Id_locker) == 0 && n_prod <= lockers.Lock[i].Num_compT - lockers.Lock[i].Num_compOkup){
+					enc_lock = i;
+					i = lockers.tam;
+				}
+			}
+			
+			if(!enc_lock)
+				printf("\nEl locker indicado no figura en el sistema o no tiene espacio disponible. Pruebe otro.");
+		}while(!enc_lock);
+		
+		for(i = 0; i < prods_pedidos.lon; i++){
+				if(prods_pedidos.prod_pedidos[i].id_pedido == prods_pedidos.prod_pedidos[salida].id_pedido){
+					strcpy(prods_pedidos.prod_pedidos[salida].id_locker, lock);
+					strcpy(prods_pedidos.prod_pedidos[salida].estado, "enLocker");	
+				}
+			}
+		lockers.Lock[enc_lock].Num_compOkup += n_prod;
+		strcpy(pedidos.pedidos[ prods_pedidos.prod_pedidos[salida].id_pedido ].id_locker, lock);
+		printf("\n{Pedido %04d} Estado actualizado con exito.", prods_pedidos.prod_pedidos[salida].id_pedido);
+	}
+	
+	guardar_productos_pedidos(prods_pedidos);
+	Sleep(2000);
+	return salida;
 	
 }
 
@@ -666,7 +1128,6 @@ int buscar_prov_tipo(admin_prov_vect provs, int pos, int tipo){
     pos = vect_coinc[opt-1];
     free(vect_coinc);
 
-	printf("%d", pos);
     return pos;
 }
 
@@ -805,6 +1266,122 @@ admin_prov_vect modificar_prov(admin_prov_vect provs, int id){
 	guardar_adminprov(provs);
 	
 	return provs;
+}
+
+
+
+//Precondición: No recibe nada.
+//Postcondición: No devuelve nada. Permite elegir al usuario entre listar los lockers del sistema o asignar alguno a un pedido.
+void modificar_asig_lockers_menu(int id_prov){
+	
+	Vect_Lock lockers = Cargar_Lockers();
+	int op = -1;
+	
+	do{
+		clear();
+		printf("\n\nElija una opcion para continuar.\n <1> Ver lockers disponibles.\n <2> Asignar locker a pedido.\n <0> Volver.\n Elija una opción: ");
+		if(scanf("%i",&op)!=1){
+			fflush(stdin);
+			printf("\nError: introduzca una entrada válida.");
+			Sleep(2000);
+			op=-1;
+		}
+		else{
+			switch(op){
+				case 1: Listar_Lockers(lockers); break;
+				case 2: modificar_asig_lockers(id_prov); break;
+				case 0: break;
+				default: break;
+			}
+		}
+	}while(op!=0);
+	
+}
+
+
+
+//Precondición: No recibe nada.
+//Postcondición: Devuelve 0 si se completa la asignación de lockers a un pedido, o -1 si se ha cancelado el proceso.
+int modificar_asig_lockers(int id_prov){
+	pedidos pedidos = cargar_pedidos();
+	prod_pedidos prods_pedidos = cargar_prod_pedidos();
+	produ_vect prods = cargar_productos();
+	Vect_Lock lockers = Cargar_Lockers();
+	int id_ped = 0, enc_ped = 0, enc_lock = 0, lock_disp = 0, num_prods = 0, num_prods_asig = 0;
+	char lock[11];
+	
+	clear();
+	printf("Indique la ID del pedido, o pulse 0 para volver: ");
+	id_ped = input_int();
+	
+	if(id_ped == 0)
+		return -1;
+	
+	for(int i = 0; i < prods_pedidos.lon; i++){																							// Buscamos el pedido...
+		if(id_ped == prods_pedidos.prod_pedidos[i].id_pedido && prods.produ[ prods_pedidos.prod_pedidos[i].id_prod ].id_gestor == id_prov){
+			enc_ped = 1;				
+			i = prods_pedidos.lon;	
+		}
+	}	
+					
+	if(enc_ped){
+		for(int i = 0; i < prods_pedidos.lon; i++){																						// Contamos los productos asociados al pedido.
+			if(id_ped == prods_pedidos.prod_pedidos[i].id_pedido && prods.produ[ prods_pedidos.prod_pedidos[i].id_prod ].id_gestor == id_prov)
+				num_prods++;
+		}
+		
+		do{	
+			do{
+				printf("\n{Pedido %04d} Indique el locker a asignar, o pulse 0 para volver: ", prods_pedidos.prod_pedidos[id_ped].id_pedido);
+				fflush(stdin);																											// Solicitamos lockers hasta que el usuario indique uno existente y con espacio disponible.
+				fgets(lock, sizeof(lock), stdin);
+				terminador_cad(lock);
+			}while(strlen(lock) == 0);
+			
+			if(strcmp(lock, "0") == 0)
+				return -1;
+			
+			for(int j = 0; j < lockers.tam; j++){																						// Buscamos el locker en el registro.
+				if(strcmp(lock, lockers.Lock[j].Id_locker) == 0){																		
+					j = lockers.tam;												
+					if(lockers.Lock[j].Num_compT - lockers.Lock[j].Num_compOkup < num_prods){											// Comprobamos si hay espacio disponible.
+						printf("\nEl locker indicado no tiene espacio suficiente (%i/%i para %i productos). Indique otro.", lockers.Lock[j].Num_compT - lockers.Lock[j].Num_compOkup,
+																															lockers.Lock[j].Num_compT, num_prods);
+					}else{
+						enc_lock = 1;
+						lockers.Lock[j].Num_compOkup += num_prods;
+						strcpy(pedidos.pedidos[id_ped].id_locker, lock);
+					}
+				}
+			}
+		}while(!enc_lock);	
+		
+		for(int i = 0; i < prods_pedidos.lon; i++){																									// Buscamos cada producto del pedido indicado.
+			if(id_ped == prods_pedidos.prod_pedidos[i].id_pedido && prods.produ[ prods_pedidos.prod_pedidos[i].id_prod ].id_gestor == id_prov){		// Si lo encontramos...
+				if(strcmp(prods_pedidos.prod_pedidos[i].estado, "enLocker") == 0){																	// Comprobamos si el pedido está en un estado en el que se le pueda asignar un locker.																													
+					printf("\n{Pedido %04d} Asignado el locker %s al producto [%04d - %s].", id_ped, lock, prods_pedidos.prod_pedidos[i].id_prod, 
+																							 prods.produ[ prods_pedidos.prod_pedidos[i].id_prod ].nombre);
+					strcpy(prods_pedidos.prod_pedidos[i].cod_locker, lock);																			// Asignamos el locker indicado a aquellos productos del pedido que estén en un estado válido.
+					num_prods_asig++;
+				}else{
+					printf("\n{Pedido %04d} El producto [%04d - %s] no se encuentra en un estado válido para asignar lockers: %s.", id_ped, prods_pedidos.prod_pedidos[i].id_prod, 
+																																prods.produ[ prods_pedidos.prod_pedidos[i].id_prod ].nombre), prods_pedidos.prod_pedidos[i].estado;
+				}		
+			}
+		}
+		printf("\n\n{Pedido %04d} Asignados %i productos al locker %s, de un total de %i revisados.", id_ped, num_prods_asig, num_prods);
+	}else{
+		printf("\nNo se ha encontrado el pedido asociado a su empresa solicitado.");
+	}
+
+	guardar_pedido(pedidos);
+	guardar_productos_pedidos(prods_pedidos);
+	Guardar_Lockers(lockers);
+
+	printf("Presione [enter] para volver...");
+	getchar();
+	
+	return 0;
 }
 
 
@@ -955,286 +1532,7 @@ int buscar_id_prov(admin_prov_vect provs, char* empresa){
 	return id;
 }
 
-//Precondición: Recibe la ID del proveedor para asegurar que sólo ve sus pedidos.
-//Postcondición: No devuelve nada. Muestra por pantalla todos los pedidos asociados a productos de su empresa.
-void listar_pedidos_prov(int id){
-	produ_vect prods = cargar_productos();
-	pedidos pedidos = cargar_pedidos();
-	prod_pedidos prods_pedidos = cargar_prod_pedidos();
-	int i;
-	
-	printf("+-------------------+\n");
-	printf("| PEDIDOS ASOCIADOS |\n");
-	printf("+-------------------+--------------------+-----------+--------------------------------------+\n");
-	printf("| PRODUCTO          | UNIDADES PEDIDAS   | IMPORTE   | ESTADO             | PEDIDO ASOCIADO |\n");
-	printf("+-------------------+--------------------+-----------+--------------------+-----------------+\n");	
 
-	for(i = 0; i < prods_pedidos.lon; i++){
-		if(id == prods.produ[prods_pedidos.prod_pedidos[i].id_prod].id_gestor)
-			printf("| %-17s | %-18d | %-6dx%-2d | %-18s | %-15d |\n", prods.produ[ prods_pedidos.prod_pedidos[i].id_prod ].nombre, prods_pedidos.prod_pedidos[i].num_unid, prods_pedidos.prod_pedidos[i].importe, prods_pedidos.prod_pedidos[i].num_unid, prods_pedidos.prod_pedidos[i].estado, prods_pedidos.prod_pedidos[i].id_pedido);
-	}
-	printf("+-------------------+--------------------+-----------+--------------------+-----------------+\n");	
-	printf("Presione [enter] para volver...");
-	getchar();
-	
-}
-
-//Precondición: No recibe nada.
-//Postcondición: No devuelve nada. Cambia el estado de un pedido elegido dentro de la propia función, y guarda los cambios.
-void cambiar_estado_pedido(int id_prov){
-	int op = -1, id, modif = 0;
-	prod_pedidos prods_pedidos = cargar_prod_pedidos();
-	produ_vect prods = cargar_productos();
-	
-	printf("\nIndique la ID del pedido: ");
-	id = input_int();
-	
-	for(int i = 0; i < prods_pedidos.lon; i++){
-		if(id == prods_pedidos.prod_pedidos[i].id_pedido && prods.produ[ prods_pedidos.prod_pedidos[i].id_prod ].id_gestor == id_prov){
-			do{
-				printf("\n {Pedido %04d} Producto [%04d - %s].\n Elija un estado para continuar:\n\n <1> En preparación.\n <2> Enviado.\n <0> Cancelar\n Elija una opción: ", id, prods_pedidos.prod_pedidos[i].id_prod, prods.produ[ prods_pedidos.prod_pedidos[i].id_prod ].nombre);
-				if(scanf("%i",&op)!=1){
-					fflush(stdin);
-					printf("\n Error: introduzca una entrada válida.");
-					Sleep(2000);
-					op=-1;
-				}
-				else{
-					switch(op){
-						case 1: strcpy(prods_pedidos.prod_pedidos[i].estado, "enPreparación\0"); break;
-						case 2: strcpy(prods_pedidos.prod_pedidos[i].estado, "enviado\0"); break;
-						case 0: break;
-						default: break;
-					}
-				}
-			}while(op!=0 && op!=1 && op!=2);
-			modif = 1;
-			op = -1;
-		}		
-	}
-	if(!modif)
-		printf("\nNo se ha podido encontrar el pedido solicitado en su empresa.");
-	else{
-		printf("\nCambios realizados satisfactoriamente.");
-		guardar_productos_pedidos(prods_pedidos);
-	}
-	
-	Sleep(2000);
-}
-
-//Precondición: No recibe nada.
-//Postcondición: No devuelve nada. Permite elegir al usuario entre buscar transportistas, listarlos o asignar alguno a un pedido.
-void modificar_asig_transport_menu(int id_prov){
-	int op = -1;
-	transport_vect transports = cargar_transportistas();
-	
-	
-	do{
-		clear();
-		printf("\nElija una opcion para continuar.\n <1> Ver transportistas del sistema.\n <2> Buscar transportista.\n <3> Asignar transportista a pedido.\n <0> Volver.\n Elija una opción: ");
-		if(scanf("%i",&op)!=1){
-			fflush(stdin);
-			printf("\nError: introduzca una entrada válida.");
-			Sleep(2000);
-			op=-1;
-		}
-		else{
-			switch(op){
-				case 1: listar_transport(transports); break;
-				case 2: buscar_transport(transports); break;
-				case 3: modificar_asig_transport(id_prov); break;
-				case 0: break;
-				default: break;
-			}
-		}
-	}while(op!=0);
-	
-}
-
-//Precondición: No recibe nada.
-//Postcondición: Devuelve 0 si se completa la asignación de transportistas a un pedido, o -1 si se ha cancelado el proceso.
-int modificar_asig_transport(int id_prov){
-	prod_pedidos prods_pedidos = cargar_prod_pedidos();
-	transport_vect transports = cargar_transportistas();
-	produ_vect prods = cargar_productos();
-	int id, id_p, id_t, encontrado_ped = 0, encontrado_prod = 0, encontrado_t = 0, cont = 0;
-	
-	printf("\n\nIndique la ID del pedido, o pulse 0 si desea salir: ");
-	id = input_int();
-	
-	if(id == 0)
-		return -1;
-		
-	for(int i = 0; i < prods_pedidos.lon; i++){																					// Buscamos el pedido...
-		if(id == prods_pedidos.prod_pedidos[i].id_pedido && prods.produ[i].id_gestor == id_prov){
-			encontrado_ped = 1;				
-			i = prods_pedidos.lon;	
-		}
-	}
-	
-	if(!encontrado_ped)																											// Si no se encuentra el pedido...
-		printf("\nNo se ha podido encontrar el pedido asociado a su empresa.");
-	else{																														// Si se encuentra...	
-		do{
-			clear();
-			printf("\nAhora indique la ID del producto dentro del pedido, o pulse 0 si desea salir: ");
-			id_p = input_int();
-			
-			if(id_p == 0)
-				return -1;
-				
-			for(int i = 0; i < prods_pedidos.lon; i++){	
-				if(id_p == prods_pedidos.prod_pedidos[i].id_prod && id == prods_pedidos.prod_pedidos[i].id_pedido && prods.produ[ prods_pedidos.prod_pedidos[i].id_prod ].id_gestor == id_prov){	// Buscamos el producto dentro del pedido...
-					encontrado_prod = 1;
-					if(strcmp(prods_pedidos.prod_pedidos[i].estado, "enPreparacion\0") == 0) 												// Si se encuentra en preparación...
-						printf("\n{Pedido %04d} El producto [%04d - %s] se encuentra en preparación, no es posible asignar un transportista todavia.", id, prods_pedidos.prod_pedidos[i].id_prod, prods.produ[ prods_pedidos.prod_pedidos[i].id_prod ].nombre);
-					else{
-						do{																												// Si no...
-							printf("{Pedido %04d} | [Producto %04d - %s] - Indique la ID del transportista a asociar, o pulse 0 para salir: ", id, prods_pedidos.prod_pedidos[i].id_prod, prods.produ[ prods_pedidos.prod_pedidos[i].id_prod ].nombre);
-							id_t = input_int();
-							
-							if(id_t == 0)
-								return -1;
-								
-							for(int j = 1; j < transports.tam; j++){																	// Buscamos al transportista en el vector.
-								if(id_t == transports.transportistas[j].Id_transp){														// Si se encuentra...
-									encontrado_t = 1;
-									prods_pedidos.prod_pedidos[i].id_transp = id_t;														
-								}
-							}
-							
-							if(!encontrado_t)																							// Si no se encuentra...
-								printf("\nNo se ha podido encontrar el transportista solicitado. Pruebe otro.\n");
-							else
-								printf("\nTransportista asignado.\n\n");
-						}while(!encontrado_t);		
-					}
-				}
-			}
-			if(!encontrado_prod){
-				printf("\nNo se ha podido encontrar el producto asociado a su empresa en el sistema de pedidos.");
-				Sleep(2000);
-			}
-		}while(!encontrado_prod);
-	}
-	
-	guardar_productos_pedidos(prods_pedidos);
-	Sleep(2000);
-	
-	return 0;
-}
-
-//Precondición: No recibe nada.
-//Postcondición: No devuelve nada. Permite elegir al usuario entre listar los lockers del sistema o asignar alguno a un pedido.
-void modificar_asig_lockers_menu(int id_prov){
-	
-	Vect_Lock lockers = Cargar_Lockers();
-	int op = -1;
-	
-	do{
-		clear();
-		printf("\n\nElija una opcion para continuar.\n <1> Ver lockers disponibles.\n <2> Asignar locker a pedido.\n <0> Volver.\n Elija una opción: ");
-		if(scanf("%i",&op)!=1){
-			fflush(stdin);
-			printf("\nError: introduzca una entrada válida.");
-			Sleep(2000);
-			op=-1;
-		}
-		else{
-			switch(op){
-				case 1: Listar_Lockers(lockers); break;
-				case 2: modificar_asig_lockers(id_prov); break;
-				case 0: break;
-				default: break;
-			}
-		}
-	}while(op!=0);
-	
-}
-
-//Precondición: No recibe nada.
-//Postcondición: Devuelve 0 si se completa la asignación de lockers a un pedido, o -1 si se ha cancelado el proceso.
-int modificar_asig_lockers(int id_prov){
-	pedidos pedidos = cargar_pedidos();
-	prod_pedidos prods_pedidos = cargar_prod_pedidos();
-	produ_vect prods = cargar_productos();
-	Vect_Lock lockers = Cargar_Lockers();
-	int id_ped = 0, enc_ped = 0, enc_lock = 0, lock_disp = 0, num_prods = 0, num_prods_asig = 0;
-	char lock[11];
-	
-	clear();
-	printf("Indique la ID del pedido, o pulse 0 para volver: ");
-	id_ped = input_int();
-	
-	if(id_ped == 0)
-		return -1;
-	
-	for(int i = 0; i < prods_pedidos.lon; i++){																							// Buscamos el pedido...
-		if(id_ped == prods_pedidos.prod_pedidos[i].id_pedido && prods.produ[ prods_pedidos.prod_pedidos[i].id_prod ].id_gestor == id_prov){
-			enc_ped = 1;				
-			i = prods_pedidos.lon;	
-		}
-	}	
-					
-	if(enc_ped){
-		for(int i = 0; i < prods_pedidos.lon; i++){																						// Contamos los productos asociados al pedido.
-			if(id_ped == prods_pedidos.prod_pedidos[i].id_pedido && prods.produ[ prods_pedidos.prod_pedidos[i].id_prod ].id_gestor == id_prov)
-				num_prods++;
-		}
-		
-		do{	
-			do{
-				printf("\n{Pedido %04d} Indique el locker a asignar, o pulse 0 para volver: ", prods_pedidos.prod_pedidos[id_ped].id_pedido);
-				fflush(stdin);																											// Solicitamos lockers hasta que el usuario indique uno existente y con espacio disponible.
-				fgets(lock, sizeof(lock), stdin);
-				terminador_cad(lock);
-			}while(strlen(lock) == 0);
-			
-			if(strcmp(lock, "0") == 0)
-				return -1;
-			
-			for(int j = 0; j < lockers.tam; j++){																						// Buscamos el locker en el registro.
-				if(strcmp(lock, lockers.Lock[j].Id_locker) == 0){																		
-					j = lockers.tam;												
-					if(lockers.Lock[j].Num_compT - lockers.Lock[j].Num_compOkup < num_prods){											// Comprobamos si hay espacio disponible.
-						printf("\nEl locker indicado no tiene espacio suficiente (%i/%i para %i productos). Indique otro.", lockers.Lock[j].Num_compT - lockers.Lock[j].Num_compOkup,
-																															lockers.Lock[j].Num_compT, num_prods);
-					}else{
-						enc_lock = 1;
-						lockers.Lock[j].Num_compOkup += num_prods;
-						strcpy(pedidos.pedidos[id_ped].id_locker, lock);
-					}
-				}
-			}
-		}while(!enc_lock);	
-		
-		for(int i = 0; i < prods_pedidos.lon; i++){																									// Buscamos cada producto del pedido indicado.
-			if(id_ped == prods_pedidos.prod_pedidos[i].id_pedido && prods.produ[ prods_pedidos.prod_pedidos[i].id_prod ].id_gestor == id_prov){		// Si lo encontramos...
-				if(strcmp(prods_pedidos.prod_pedidos[i].estado, "enLocker") == 0){																	// Comprobamos si el pedido está en un estado en el que se le pueda asignar un locker.																													
-					printf("\n{Pedido %04d} Asignado el locker %s al producto [%04d - %s].", id_ped, lock, prods_pedidos.prod_pedidos[i].id_prod, 
-																							 prods.produ[ prods_pedidos.prod_pedidos[i].id_prod ].nombre);
-					strcpy(prods_pedidos.prod_pedidos[i].cod_locker, lock);																			// Asignamos el locker indicado a aquellos productos del pedido que estén en un estado válido.
-					num_prods_asig++;
-				}else{
-					printf("\n{Pedido %04d} El producto [%04d - %s] no se encuentra en un estado válido para asignar lockers: %s.", id_ped, prods_pedidos.prod_pedidos[i].id_prod, 
-																																prods.produ[ prods_pedidos.prod_pedidos[i].id_prod ].nombre), prods_pedidos.prod_pedidos[i].estado;
-				}		
-			}
-		}
-		printf("\n\n{Pedido %04d} Asignados %i productos al locker %s, de un total de %i revisados.", id_ped, num_prods_asig, num_prods);
-	}else{
-		printf("\nNo se ha encontrado el pedido asociado a su empresa solicitado.");
-	}
-
-	guardar_pedido(pedidos);
-	guardar_productos_pedidos(prods_pedidos);
-	Guardar_Lockers(lockers);
-
-	printf("Presione [enter] para volver...");
-	getchar();
-	
-	return 0;
-}
 
 // FUNCIONES PARA LA GESTIÓN DE TRANSPORTISTAS
 
