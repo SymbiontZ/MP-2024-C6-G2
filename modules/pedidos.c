@@ -1304,6 +1304,13 @@ void modificar_pedidos(pedidos p){
 }
 
 void listar_dev_pendientes(devoluciones d){
+
+    printf("+-----------------------------------------------------------------+\n");
+    printf("+----------- LISTA DEVOLUCIONES PENDIENTES DE ACEPTACION----------+\n");
+    printf("+-----------------------------------------------------------------+\n");
+    printf("| <n> nombre cliente - nombre producto - fecha realizo devolucion |\n");
+    printf("+-----------------------------------------------------------------+\n");
+    
     int i,j,k,l,
         id_ped,
         id_prod;
@@ -1346,15 +1353,12 @@ void listar_dev_pendientes(devoluciones d){
         printf("%s\n",nom_prod );
 
         if(strcmp(d.devoluciones[i].estado, "pendiente")==0){
-            printf("| <%d> %s - %s - %d/%d/%d - %d/%d/%d\n", i,
-                                                            nom_cliente,
-                                                            nom_prod,
-                                                            d.devoluciones[i].f_aceptacion.dia,
-                                                            d.devoluciones[i].f_aceptacion.mes,
-                                                            d.devoluciones[i].f_aceptacion.anio,
-                                                            d.devoluciones[i].f_caducidad.dia,
-                                                            d.devoluciones[i].f_caducidad.mes,
-                                                            d.devoluciones[i].f_caducidad.anio);
+            printf("| <%d> %s - %s - %d/%d/%d\n", i,
+                                                  nom_cliente,
+                                                  nom_prod,
+                                                  d.devoluciones[i].f_devol.dia,
+                                                  d.devoluciones[i].f_devol.mes,
+                                                  d.devoluciones[i].f_devol.anio);
         }
 
     }
