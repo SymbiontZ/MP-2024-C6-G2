@@ -179,6 +179,7 @@ void Consultar_desc_cliente(int pos, int mode){
         n_desc=0,
         activo;
     clear();
+    titulo();
     printf("+---------------------------+\n");
     printf("|    TUS DESCUENTOS         |\n");
 
