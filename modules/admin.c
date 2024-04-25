@@ -514,10 +514,10 @@ void menuadmin_desc(){
             case 4:
                     D = Modificar_Descuentos(D);
             case 5:
-
+                    Listar_Descuentos_Asignados(Dc);
                 break;
             case 6:
-                    
+                    Listar_Descuentos_Aplicados(Dc);
                 break;
             case 7:
                 printf("Se va a proceder a buscar un cliente para asignar un codigo");
@@ -582,7 +582,7 @@ void menuadmin_devol(){
                 break;
             case 3:
                 
-                Dev = eliminar_devolucion(,Dev);
+                Dev = eliminar_devolucion(Dev);
                 break;
             case 4:
                 Dev = modificar_devolucion(Dev);

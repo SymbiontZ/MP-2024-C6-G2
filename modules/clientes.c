@@ -218,7 +218,7 @@ void menucliente_ped(int pos){
                 listapedidos_cliente(prods_p, p, pos);
                 break;
             case 3:
-                Pedido
+                
                 break;
             case 0:
                 
