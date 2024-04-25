@@ -17,50 +17,6 @@
 
 
 
-//Precondición: No recibe nada.
-//Postcondición: Muestra el logotipo de la empresa. No devuelve nada.
-void esizon(){
-	
-printf(" EEEEEEEEEEEEEEEEEEEEEE   SSSSSSSSSSSSSSS IIIIIIIIIIZZZZZZZZZZZZZZZZZZZ     OOOOOOOOO     NNNNNNNN        NNNNNNNN\n");  
-printf(" E::::::::::::::::::::E SS:::::::::::::::SI::::::::IZ:::::::::::::::::Z   OO:::::::::OO   N:::::::N       N::::::N\n");  
-printf(" E::::::::::::::::::::ES:::::SSSSSS::::::SI::::::::IZ:::::::::::::::::Z OO:::::::::::::OO N::::::::N      N::::::N\n");  
-printf(" EE::::::EEEEEEEEE::::ES:::::S     SSSSSSSII::::::IIZ:::ZZZZZZZZ:::::Z O:::::::OOO:::::::ON:::::::::N     N::::::N\n");  
-printf(" E:::::E         EEEEEES:::::S              I::::I  ZZZZZ     Z:::::Z  O::::::O   O::::::ON::::::::::N    N::::::N\n");    
-printf(" E:::::E               S:::::S              I::::I          Z:::::Z    O:::::O     O:::::ON:::::::::::N   N::::::N\n");    
-printf(" E::::::EEEEEEEEEE      S::::SSSS           I::::I         Z:::::Z     O:::::O     O:::::ON:::::::N::::N  N::::::N\n");    
-printf(" E:::::::::::::::E       SS::::::SSSSS      I::::I        Z:::::Z      O:::::O     O:::::ON::::::N N::::N N::::::N\n");    
-printf(" E:::::::::::::::E         SSS::::::::SS    I::::I       Z:::::Z       O:::::O     O:::::ON::::::N  N::::N:::::::N\n");    
-printf(" E::::::EEEEEEEEEE            SSSSSS::::S   I::::I      Z:::::Z        O:::::O     O:::::ON::::::N   N:::::::::::N\n");    
-printf(" E:::::E                           S:::::S  I::::I     Z:::::Z         O:::::O     O:::::ON::::::N    N::::::::::N\n");    
-printf(" E:::::E       EEEEEE              S:::::S  I::::I  ZZZ:::::Z     ZZZZZO::::::O   O::::::ON::::::N     N:::::::::N\n");    
-printf(" EE::::::EEEEEEEE:::::ESSSSSSS     S:::::SII::::::IIZ::::::ZZZZZZZZ:::ZO:::::::OOO:::::::ON::::::N      N::::::::N\n");  
-printf(" E::::::::::::::::::::ES::::::SSSSSS:::::SI::::::::IZ:::::::::::::::::Z OO:::::::::::::OO N::::::N       N:::::::N\n");  
-printf(" E::::::::::::::::::::ES:::::::::::::::SS I::::::::IZ:::::::::::::::::Z   OO:::::::::OO   N::::::N        N::::::N\n");  
-printf(" EEEEEEEEEEEEEEEEEEEEEE SSSSSSSSSSSSSSS   IIIIIIIIIIZZZZZZZZZZZZZZZZZZZ     OOOOOOOOO     NNNNNNNN         NNNNNNN\n\n");
-
-
-
-printf("       ########  ######  #### ########  #######  ##    ## \n");
-printf("      ##       ##    ##  ##       ##  ##     ## ###   ## \n");
-printf("     ##       ##        ##      ##   ##     ## ####  ## \n");
-printf("    ######    ######   ##     ##    ##     ## ## ## ## \n");
-printf("   ##             ##  ##    ##     ##     ## ##  #### \n");
-printf("  ##       ##    ##  ##   ##      ##     ## ##   ### \n");
-printf(" ########  ######  #### ########  #######  ##    ## \n\n");                                                                 
-
-
-printf(" ########:: ######:: ####: ########:: #######:: ##::: ##:\n"); 
-printf(" ##.....::'##... ##:. ##::..... ##::'##.... ##: ###:: ##:\n"); 
-printf(" ##::::::: ##:::..::: ##:::::: ##::: ##:::: ##: ####: ##:\n"); 
-printf(" ######:::. ######::: ##::::: ##:::: ##:::: ##: ## ## ##:\n"); 
-printf(" ##...:::::..... ##:: ##:::: ##::::: ##:::: ##: ##. ####:\n"); 
-printf(" ##:::::::'##::: ##:: ##::: ##:::::: ##:::: ##: ##:. ###:\n"); 
-printf(" ########:. ######::'####: ########:. #######:: ##::. ##:\n\n"); 
-  
-}
-
-
-
 //Precondición: Recibe una estructura de tipo admin_prov_vect (el vector de usuarios tipo adminprov), y la posición a utilizar en él.
 //Postcondición: El usuario habrá iniciado sesión como proveedor en el sistema, o se habrá cerrado la sesión por fallar la contraseña muchas veces. No devuelve nada.
 void inicsesion_prov(admin_prov_vect provs, int pos){
@@ -69,6 +25,9 @@ void inicsesion_prov(admin_prov_vect provs, int pos){
 	int i = 3;
 	
 	clear();
+	
+	titulo();
+	
 	do{
 		printf("\nIntroduzca su contrasena: ");
 		fgets(validar_contra, sizeof(validar_contra), stdin);
@@ -105,6 +64,9 @@ void inicsesion_transport(transport_vect transports, int pos){
 	int i = 3;
 	
 	clear();
+	
+	titulo();
+	
 	do{
 		printf("\nIntroduzca su contrasena: ");
 		fflush(stdin);
@@ -147,6 +109,8 @@ void menu_prov(admin_prov_vect provs, int pos){
 	do{
 		clear();
 		
+		titulo();
+		
 		printf("	#######################\n");
 		printf("	## MENU DE PROVEEDOR ##\n");
 		printf("	#######################\n");
@@ -184,6 +148,8 @@ void menu_transport(transport_vect transports, int pos){
 	do{
 		clear();
 		
+		titulo();
+		
 		printf("	###########################\n");
 		printf("	## MENU DE TRANSPORTISTA ##\n");
 		printf("	###########################\n");
@@ -202,7 +168,7 @@ void menu_transport(transport_vect transports, int pos){
 			switch(op){
 				case 1: ver_perfil_t(transports, pos); break;
 				case 2: menu_repartos_t(pos); break;
-				case 3: break;
+				case 3: menu_retornos_t(pos); break;
 				case 0: break;
 				default: break;
 			}
@@ -224,6 +190,8 @@ void ver_perfil(admin_prov_vect provs, int pos){
 	
 	do{
 		clear();
+		
+		titulo();
 		
 		printf("	############\n");
 		printf("	## PERFIL ##\n");
@@ -260,6 +228,8 @@ void ver_productos(admin_prov_vect provs, int pos){
 	
 	do{
 		clear();
+		
+		titulo();
 		
 		printf("	######################################\n");
 		printf("	## SERVICIO DE GESTIÓN DE PRODUCTOS ##\n");
@@ -300,6 +270,8 @@ void ver_pedidos(admin_prov_vect provs, int pos){
 	
 	do{
 		clear();
+		
+		titulo();
 		
 		printf("	####################################\n");
 		printf("	## SERVICIO DE GESTION DE PEDIDOS ##\n");
@@ -433,6 +405,8 @@ void cambiar_estado_pedido(int id_prov){
 	
 	clear();
 	
+	titulo();
+	
 	printf("\nIndique la ID del pedido: ");
 	id = input_int();
 	
@@ -477,9 +451,9 @@ void modificar_asig_transport_menu(int id_prov){
 	int op = -1;
 	transport_vect transports = cargar_transportistas();
 	
-	
 	do{
 		clear();
+		titulo();
 		printf("\nElija una opcion para continuar.\n <1> Ver transportistas del sistema.\n <2> Asignar transportista a pedido.\n <0> Volver.\n Elija una opción: ");
 		if(scanf("%i",&op)!=1){
 			fflush(stdin);
@@ -511,6 +485,8 @@ int modificar_asig_transport(int id_prov){
     int *vect_coinc;  									 //Vector que contiene las ids de las coincidencias
 	
 	clear();
+	
+	titulo();
 	
 	vect_coinc = (int*)malloc(1*sizeof(int));
 	
@@ -592,6 +568,8 @@ void ver_perfil_t(transport_vect transports, int pos){
 	do{
 		clear();
 		
+		titulo();
+		
 		printf("	############\n");
 		printf("	## PERFIL ##\n");
 		printf("	############\n");
@@ -650,6 +628,8 @@ int modificar_asig_transport_admin(){
     int *vect_coinc;  									 //Vector que contiene las ids de las coincidencias
 	
 	clear();
+	
+	titulo();
 	
 	vect_coinc = (int*)malloc(1*sizeof(int));
 	
@@ -796,6 +776,8 @@ void menu_repartos_t(int pos){
 	do{
 		clear();
 		
+		titulo();
+		
 		printf("	####################################\n");
 		printf("	## SISTEMA DE GESTION DE REPARTOS ##\n");
 		printf("	####################################\n");
@@ -832,6 +814,8 @@ void listar_repartos_t(int pos){
 	
 	clear();
 	
+	titulo();
+	
 	printf("+--------------------------------+\n");
 	printf("| REPARTOS ASOCIADOS A SU CUENTA |\n");
 	printf("+----------------------+---------+---------------+------------------------+\n");
@@ -867,6 +851,8 @@ int fallo_recoger_pedido_t(int pos){
     int *vect_coinc;                   					 //Vector que contiene las ids de las coincidencias
 	
 	clear();
+	
+	titulo();
 	
 	vect_coinc = (int*)malloc(1*sizeof(int));
 	
@@ -922,6 +908,8 @@ int recoger_pedido_t(int pos){
 	
 	clear();
 	
+	titulo();
+	
 	vect_coinc = (int*)malloc(1*sizeof(int));
 	
 	for(i = 1; i < prods_pedidos.lon; i++){
@@ -972,11 +960,14 @@ int entrega_locker_t(int pos){
 	Vect_Lock lockers = Cargar_Lockers();
 	prod_pedidos prods_pedidos = cargar_prod_pedidos();
 	produ_vect prods = cargar_productos();
+	Vect_CompLock comps = Cargar_CompartimentosLockers();
     int i, n_coinc = 0, encontrado = 0, enc_lock = 0, salida = 0, n_prod = 0;    // Contador de coincidencias encontradas
-    int *vect_coinc;                   										  	 // Vector que contiene las ids de las coincidencias
-    char lock[11];																 // Cadena de búsqueda de lockers
+    int *vect_coinc;                   										  	 		  // Vector que contiene las ids de las coincidencias
+    char lock[11];																 		  // Cadena de búsqueda de lockers
 	
 	clear();
+	
+	titulo();
 	
 	vect_coinc = (int*)malloc(1*sizeof(int));
 	
@@ -1051,10 +1042,21 @@ int entrega_locker_t(int pos){
 		for(i = 0; i < prods_pedidos.lon; i++){
 				if(prods_pedidos.prod_pedidos[i].id_pedido == prods_pedidos.prod_pedidos[salida].id_pedido){
 					strcpy(prods_pedidos.prod_pedidos[salida].id_locker, lock);
-					strcpy(prods_pedidos.prod_pedidos[salida].estado, "enLocker");	
+					strcpy(prods_pedidos.prod_pedidos[salida].estado, "enLocker");
+						
 				}
 			}
 		lockers.Lock[enc_lock].Num_compOkup += n_prod;
+		
+		for(i = 0; i < comps.tam && n_prod > 0; i++, n_prod--){
+			if(strcmp(comps.CompLock[i].Id_locker, lock) == 0){
+				comps.CompLock[i].anio_okup = anio_sist();
+				comps.CompLock[i].mes_okup = mes_sist();
+				comps.CompLock[i].dia_okup = dia_sist();
+				strcpy(comps.CompLock[i].Estado, "ocupado");
+			}
+		}
+		
 		strcpy(pedidos.pedidos[ prods_pedidos.prod_pedidos[salida].id_pedido ].id_locker, lock);
 		printf("\n{Pedido %04d} Estado actualizado con exito.", prods_pedidos.prod_pedidos[salida].id_pedido);
 	}
@@ -1067,17 +1069,21 @@ int entrega_locker_t(int pos){
 
 
 
+//Precondición: Recibe la ID del transportista acutal.
+//Postcondición: No devuelve nada. Permite elegir al transportista entre ver pedidos en lockers caducados, buscar lockers y vaciar algún locker caducado.
 void menu_retornos_t(int pos){
 	int op = -1;
 	
 	do{
 		clear();
 		
+		titulo();
+		
 		printf("	####################################\n");
 		printf("	## SISTEMA DE GESTION DE RETORNOS ##\n");
 		printf("	####################################\n");
 		
-		printf("\nBienvenido al sistema de gestion de retornos. Elija una opcion para continuar.\n\n <1> Ver todos los repartos asignados.\n <2> Marcar recogida a domicilio fallida.\n <3> Recoger pedido.\n <4> Asignar locker a pedido.\n <0> Volver.\n Elija una opción: ");
+		printf("\nBienvenido al sistema de gestion de retornos. Elija una opcion para continuar.\n\n <1> Ver todos los pedidos en lockers caducados.\n <2> Buscar lockers por localidad.\n <3> Marcar producto caducado como recogido.\n <0> Volver.\n Elija una opción: ");
 		if(scanf("%i",&op)!=1){
 			fflush(stdin);
 			printf("\nError: introduzca una entrada válida.");
@@ -1086,15 +1092,205 @@ void menu_retornos_t(int pos){
 		}
 		else{
 			switch(op){
-				case 1: break;
-				case 2: break;
-				case 3: break;
-				case 4: break;
+				case 1: listar_lockers_cad(); break;
+				case 2: buscar_localidad_t(); break;
+				case 3: recoger_prod_cad(pos); break;
 				case 0: break;
 				default: break;
 			}
 		}
 	}while(op!=0);
+}
+
+
+
+//Precondición: No recibe nada.
+//Postcondición: No devuelve nada. Muestra por pantalla el listado de lockers con productos caducados.
+void listar_lockers_cad(){
+	prod_pedidos prods_pedidos = cargar_prod_pedidos();
+	Vect_Lock locks = Cargar_Lockers();
+	produ_vect prods = cargar_productos();
+	int i, encontrado = 0;
+	
+	clear();
+	
+	titulo();
+	
+	printf("+--------------------------------+\n");
+	printf("| REPARTOS ASOCIADOS A SU CUENTA |\n");
+	printf("+----------------------+---------+------------+-----------------------+-----------------------------+\n");
+	printf("| ID DE LOCKER         | ID DE PEDIDO         | PRODUCTOxCANT         | COMPARTIMENTOS CADUCADOS    |\n");
+	printf("+----------------------+----------------------+-----------------------+-----------------------------+\n");
+
+	for(i = 1; i < locks.tam; i++){
+		if(caducado(locks.Lock[i].Id_locker) > 0){
+			for(int j = 0; j < prods_pedidos.lon; j++){
+				if(strcmp(locks.Lock[i].Id_locker, prods_pedidos.prod_pedidos[j].cod_locker) == 0){
+					printf("| %-20s | %-20d | %-16sx%-4d | %-24d |\n", locks.Lock[i].Id_locker, prods_pedidos.prod_pedidos[j].id_pedido, prods.produ[ prods_pedidos.prod_pedidos[j].id_prod ].nombre, prods_pedidos.prod_pedidos[i].num_unid, caducado(locks.Lock[i].Id_locker));
+					printf("+----------------------+----------------------+-----------------------+-----------------------------+\n");
+					encontrado = 1;
+				}		
+			}
+		}
+	}
+	
+	if(!encontrado)
+		printf("\nNo hay lockers caducados. ");
+	printf("Presione [enter] para volver...");
+	getchar();
+}
+
+
+
+//Precondición: No recibe nada.
+//Postcondición: No devuelve nada. Muestra por pantalla el listado de lockers con productos caducados en la localidad que busque el usuario.
+int buscar_localidad_t(){
+	int len = 0, i;
+    char cad_busq[35]; 
+    int n_coinc = 0;                      					// Contador de coincidencias encontradas
+    Vect_Lock lockers = Cargar_Lockers();
+	
+	do{
+		printf("Por favor, introduzca su busqueda, o 0 si desea volver: ");
+	    fflush(stdin);
+	    fgets(cad_busq, sizeof(cad_busq), stdin);         	// Cadena por la que se va a buscar la localidad
+	    fflush(stdin);
+	    terminador_cad(cad_busq);
+	}while(strlen(cad_busq) == 0); 
+	
+	if(strcmp(cad_busq, "0") == 0)
+		return -1;
+	
+    len = strlen(cad_busq);
+
+    if(len > 21)
+        len = 21;
+
+    for(i = 1; i < lockers.tam; i++){           			    // Búsqueda por localidad.
+        if(strncmp(cad_busq, lockers.Lock[i].Localidad, len) == 0 && caducado(lockers.Lock[i].Id_locker) > 0){
+            printf("ID Locker: %s | Ubicacion: %s\n", lockers.Lock[i].Id_locker, lockers.Lock[i].Ubica);
+			n_coinc++;
+        }
+    }
+    
+    if(n_coinc == 0){
+        printf("No se ha encontrado ninguna coincidencia.\n");
+        Sleep(2000);
+        return -1;
+    }
+
+    return 0;
+}
+
+
+
+//Precondición: Recibe la ID de un locker.
+//Postcondición: Devuelve el numero de compartimentos caducados en un locker.
+int caducado(char id_lock[11]){
+	Vect_CompLock comps = Cargar_CompartimentosLockers();
+	int cad = 0;
+	for(int i = 1; i < comps.tam; i++){
+		if(strcmp(id_lock, comps.CompLock[i].Id_locker) == 0 && strcmp("ocupado", comps.CompLock[i].Estado) == 0){
+			if(comps.CompLock[i].anio_cad > comps.CompLock[i].anio_okup)
+				cad++;
+			else{
+				if(comps.CompLock[i].mes_cad > comps.CompLock[i].mes_okup)
+					cad++;
+				else{
+					if(comps.CompLock[i].dia_cad > comps.CompLock[i].dia_okup)
+						cad++;
+				}
+			}
+		}
+	}
+	return cad;
+}
+
+
+
+//Precondición: Recibe la ID del transportista actual.
+//Postcondición: Devuelve -1 o 0 según se salga prematuramente o se complete el vaciado de un locker.
+int recoger_prod_cad(int pos){
+	prod_pedidos prods_pedidos = cargar_prod_pedidos();
+	produ_vect prods = cargar_productos();
+	Vect_Lock locks = Cargar_Lockers();
+	Vect_CompLock comps = Cargar_CompartimentosLockers();
+    int i, n_coinc = 0, encontrado = 0, salida = 0;      //Contador de coincidencias encontradas
+    int *vect_coinc;                   					 //Vector que contiene las ids de las coincidencias
+	
+	clear();
+	
+	titulo();
+	
+	vect_coinc = (int*)malloc(1*sizeof(int));
+	
+	
+	for(i = 1; i < locks.tam; i++){						// Vamos llenando el vectr de coincidencias con cada locker que tenga compartimentos caducados, y mostramos cada pedido asociado.
+		if(caducado(locks.Lock[i].Id_locker) > 0){
+			for(int j = 0; j < prods_pedidos.lon; j++){
+				if(strcmp(locks.Lock[i].Id_locker, prods_pedidos.prod_pedidos[j].cod_locker) == 0){
+					printf(" <%i> { %s } Pedido %04d | Compartimentos: %d | Caducados: %d\n", n_coinc, locks.Lock[i].Id_locker, prods_pedidos.prod_pedidos[j].id_pedido, locks.Lock[i].Num_compT, caducado(locks.Lock[i].Id_locker) );
+					n_coinc++;
+		            vect_coinc = (int*)realloc(vect_coinc, n_coinc*sizeof(int));
+		            vect_coinc[n_coinc-1] = i;
+					encontrado = 1;;
+				}		
+			}
+		}
+	}
+	
+	i = -1;
+	
+	if(!encontrado){
+		printf("\nNo hay lockers caducados. ");
+		free(vect_coinc);	
+		salida = -1;
+	}	
+	else{
+		do{
+			printf("\nElija el locker (numero entre <>) que desea vaciar, o pulse 0 para volver.\n");
+			printf("Locker: ");
+			i = input_int();
+		}while(i < 0 || i > n_coinc);
+		
+		if(i == 0)
+			return 0;
+			
+		salida = vect_coinc[i - 1];
+	    free(vect_coinc);
+	    for(i = 0; i < prods_pedidos.lon; i++){
+	    	if(strcmp(prods_pedidos.prod_pedidos[i].cod_locker, locks.Lock[salida].Id_locker) == 0){		// Asignamos el transportista al pedido y actualizamos su estado.
+	    		prods_pedidos.prod_pedidos[i].id_transp = pos;
+	    		strcpy(prods_pedidos.prod_pedidos[i].estado, "transportista");
+	    		strcpy(prods_pedidos.prod_pedidos[i].id_locker, "noLocker");
+	    		strcpy(prods_pedidos.prod_pedidos[i].cod_locker, "pendcod");
+	    		i = prods_pedidos.lon;
+			}
+		}
+	    
+	    actualizar_lock_ret(locks.Lock[salida].Id_locker);
+		
+		printf("\n{%s} Locker actualizado con exito.", locks.Lock[salida].Id_locker);
+	}
+	Sleep(2000);
+	Guardar_Lockers(locks);
+	guardar_productos_pedidos(prods_pedidos);
+	return salida;
+}
+
+
+//Precondición: Recibe la ID de un locker.
+//Postcondición: No devuelve nada. Resetea los valores de los compartimentos caducados del locker con ID dada.
+void actualizar_lock_ret(char id_lock[11]){
+	Vect_CompLock comps = Cargar_CompartimentosLockers();
+	for(int i = 0; i < comps.tam; i++){
+		if(strcmp(id_lock, comps.CompLock[i].Id_locker) == 0){
+			strcpy(comps.CompLock[i].Estado, "vacío");
+			comps.CompLock[i].anio_cad = comps.CompLock[i].mes_cad = comps.CompLock[i].dia_cad = comps.CompLock[i].anio_okup = comps.CompLock[i].mes_okup = comps.CompLock[i].dia_okup = 0;
+			comps.CompLock[i].Cod_locker = 0;
+		}
+	}
+	Guardar_CompartimentosLockers(comps);
 }
 
 
@@ -1108,6 +1304,8 @@ void menu_retornos_t(int pos){
 void listar_prov(admin_prov_vect provs){
 	int i;
 	clear();
+	
+	titulo();
 	
 	printf("+---------------------------------------+\n");
 	printf("| PROVEEDORES REGISTRADOS EN EL SISTEMA |\n");
@@ -1129,8 +1327,11 @@ void listar_prov(admin_prov_vect provs){
 int buscar_prov(admin_prov_vect provs){
 	int pos = -2, opt = -1;             // Elijo -2 como pos predeter. ya que -1 es para cancelar la busqueda
 	clear();
+	
+	titulo();
     while (pos == -2){    				// Solo va a salir del bucle cuando se selecciona la posicion de un cliente valido
         clear();
+        titulo();
         printf("Busqueda de proveedores. Seleccione un metodo de busqueda para continuar.\n");
         printf("¿Como desea buscar?\n");
         printf("1. Por nombre de la empresa asociada.\n");
@@ -1252,6 +1453,8 @@ admin_prov_vect alta_prov(admin_prov_vect provs){
 	char empresa[21];
 	
 	clear();
+	
+	titulo();
     
     printf("+------------------------------+\n");
     printf("| SERVICIO DE ALTAS DE USUARIO |\n");
@@ -1347,6 +1550,8 @@ admin_prov_vect modificar_prov(admin_prov_vect provs, int id){
 		
 		clear();
 		
+		titulo();
+		
 		printf("	############################\n");
 		printf("	## INFORMACION DE USUARIO ##\n");
 		printf("	############################\n");
@@ -1390,6 +1595,8 @@ void modificar_asig_lockers_menu(int id_prov){
 	
 	do{
 		clear();
+		
+		titulo();
 		printf("\n\nElija una opcion para continuar.\n <1> Ver lockers disponibles.\n <2> Asignar locker a pedido.\n <0> Volver.\n Elija una opción: ");
 		if(scanf("%i",&op)!=1){
 			fflush(stdin);
@@ -1422,6 +1629,7 @@ int modificar_asig_lockers(int id_prov){
 	char lock[11];
 	
 	clear();
+	titulo();
 	printf("Indique la ID del pedido, o pulse 0 para volver: ");
 	id_ped = input_int();
 	
@@ -1654,6 +1862,7 @@ int buscar_id_prov(admin_prov_vect provs, char* empresa){
 void listar_transport(transport_vect transports){
 	
 	clear();
+	titulo();
 	
 	printf("+------------------------------------------+\n");
 	printf("| TRANSPORTISTAS REGISTRADOS EN EL SISTEMA |\n");
@@ -1679,9 +1888,11 @@ int buscar_transport(transport_vect transports){
 	int pos = -2, opt = -1;             // Elijo -2 como pos predeter. ya que -1 es para cancelar la busqueda
 	
 	clear();
+	titulo();
     
 	while (pos == -2){    				// Solo va a salir del bucle cuando se selecciona la posicion de un cliente valido
         clear();
+        titulo();
         printf("Busqueda de transportistas. Seleccione un metodo de busqueda para continuar.\n");
         printf("¿Como desea buscar?\n");
         printf("1. Por nombre.\n");
@@ -1735,6 +1946,7 @@ int buscar_transport_tipo(transport_vect transports, int pos, int tipo){
     int *vect_coinc;                    				// Vector de guardado de IDs con coincidencias
 	
 	clear();
+	titulo();
 	
     vect_coinc = (int*)malloc(1*sizeof(int)); 
     do{
@@ -1817,6 +2029,8 @@ transport_vect alta_transport(transport_vect transports){
 	int nueva_id = transports.tam;
 	
 	clear();
+	
+	titulo();
 	
 	printf("\n	##################################\n");
     printf("	## SERVICIO DE ALTAS DE USUARIO ##\n");
@@ -1907,6 +2121,8 @@ transport_vect modificar_transport(transport_vect transports, int id){
 	do{
 		
 		clear();
+		
+		titulo();
 		
 		printf("	############################\n");
 		printf("	## INFORMACION DE USUARIO ##\n");

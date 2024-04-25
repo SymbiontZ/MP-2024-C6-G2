@@ -1,6 +1,6 @@
 #include<stdio.h>
 #include"pedidos.h"
-#include"useradmin.h"
+#include"clientes.h"
 #include"Descuentos.h"
 
 
@@ -63,7 +63,7 @@ pedidos cargar_pedidos(){
 }
 
 
-pedidos crear_pedido( pedidos p, int id_cliente, int modo){
+pedidos crear_pedido( pedidos p, int id_cliente){
     //Cargar estructuras necesarias de otros modulos
     clients c = cargar_clientes();
     prod_pedidos Prod_P = cargar_prod_pedidos();
@@ -109,6 +109,7 @@ pedidos crear_pedido( pedidos p, int id_cliente, int modo){
     
     do{ //bucle para seleccionar todos los productos y rellenar los vectores dinámicos
         clear();
+        titulo();
         printf("---AGREGAR PRODUCTO AL PEDIDO---\n");
         n_uds=0;
         fflush(stdin);
@@ -226,6 +227,7 @@ pedidos crear_pedido( pedidos p, int id_cliente, int modo){
     getchar();
     /***LUGAR DE ENTREGA Y CHEQUES***/
     clear();
+    titulo();
     printf("Selecciona un lugar de entrega: \n");
     printf("1. DOMICILIO\n");
     printf("2. LOCKER\n");
@@ -255,6 +257,7 @@ pedidos crear_pedido( pedidos p, int id_cliente, int modo){
     char cod_desc[11];
 
     clear();
+    titulo();
     printf("Desea utilizar un cheque de descuento [s/n]: \n");
     cheque=confirmacion();
 
@@ -301,6 +304,7 @@ pedidos crear_pedido( pedidos p, int id_cliente, int modo){
     //RESUMEN DE LOS PRODUCTOS QUE HA PEDIDO Y EL IMPORTE TOTAL
     
     clear();
+    titulo();
     printf("\n---RESUMEN DEL PEDIDO---\n");
     for(j=0;j<n_products;j++){ 
         id=v_prod[j];
@@ -812,6 +816,7 @@ void listapedidos_cliente(prod_pedidos prods_p,pedidos p, int id_cliente){
     produ_vect prods = cargar_productos();
 
     clear();
+    titulo();
     printf("+---------------+\n");
     printf("|  TUS PEDIDOS  |\n");
     printf("+---------------+-----------------------------------------------------------------------+\n");
@@ -928,6 +933,7 @@ void menu_listadoped_estado(){
     
     do{
         clear();
+        titulo();
         printf("+----------------------+\n");
         printf("| LISTADO PEDIDOS POR: |\n");
         printf("+----------------------+\n");
@@ -985,6 +991,7 @@ void listadoped_estado(prod_pedidos prod_p, char estado[]){
         id_pedido;
 
     clear();
+    titulo();
     printf("+------------------+\n");
     printf("| LISTA DE PEDIDOS |\n");
     printf("+------------------+---+----------------------------------------------------+----------+\n");

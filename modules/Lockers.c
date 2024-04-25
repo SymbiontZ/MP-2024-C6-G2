@@ -4,88 +4,135 @@
 #include "Lockers.h"
 #include "complementos.h"
 
+
+
 Vect_Lock Cargar_Lockers(){
+	
+	char filename[] = "../data/Lockers.txt";
+    char default_lock[] = "Lockdef-pobldefault-defaultprov-defaultubica-00000-00000";    //Locker por defecto
+    int tam = 0;                          //Numero de lockers registrados
+    int i = 0;                          
+    char cad_linea[MAX_LOCK];                        //Caracteres maximos que puede ocupar una linea en fichero
+    int campo_lock;                          //Entero que verifica no. campos de la estructura lockers.       
 
-    Vect_Lock vector_lock;
-	FILE *f_lockers;                                                                                                        // Puntero al fichero
-	char ruta[] = "..\\ESIZON-main\\data\\Lockers.txt";                                                                     // Ruta del fichero a leer
-	char linea[MAX_LOCK];                                                                                                   // Lï¿½nea a leer
-    int i = 0, m;
+    FILE *f_locker;
+    f_locker = fopen(filename, "a+");
 
-	if((f_lockers = fopen(ruta, "a+")) == NULL){
-		printf("Error al abrir el fichero Lockers.txt.\n");
-		exit(33);
-	}
+    if(f_locker == NULL){                          //Excepcion si no encuentra fichero
+        printf("No se pudo abrir el archivo de clientes. Se ha creado un nuevo archivo.\n");
+        Sleep(2000);
+    }
 
-	vector_lock.tam = 0;
-	while(fgets(linea, sizeof(linea), f_lockers) != NULL)                                                                   // Contamos el nï¿½mero de lï¿½neas del fichero
-	    vector_lock.tam++;
-	printf("Descuentos almacenados en Lockers.txt: %d \n", vector_lock.tam);
-    vector_lock.Lock = malloc((vector_lock.tam + 1) * sizeof(Lockers));
-	rewind(f_lockers);
+    rewind(f_locker);
 
-	while((fgets(linea, sizeof(linea), f_lockers) != NULL) ){
-		m = sscanf(linea, "%10[^-]-%20[^-]-%20[^-]-%20[^-]-%d[^-]-%d[^\n]\n",                                               // Se cargan los datos del fichero a la estructura
-			&vector_lock.Lock[i].Id_locker,
-			vector_lock.Lock[i].Localidad,
-			vector_lock.Lock[i].Provincia,
-			vector_lock.Lock[i].Ubica,
-			vector_lock.Lock[i].Num_compT,
-			vector_lock.Lock[i].Num_compOkup);
+    if(fgetc(f_locker) == EOF){                    //Si fichero vacio
+        f_locker = fopen(filename, "w");
+        fprintf(f_locker, default_lock);           //AÃ±adimos locker predeterminado
+        fclose(f_locker);
+    }
+    
+    while(fgets(cad_linea, sizeof(cad_linea), f_locker)){      //Contador de lockers en el programa a partir de fichero 
+        tam++;
+    }
+    rewind(f_locker);                                          //Necesario para volver a leer el fichero
+    
+    Vect_Lock L;            
+    L.tam = tam;
+    L.Lock = malloc(L.tam * sizeof(Lockers));           //Asignacion de memoria dinamica 
+    
+    if(L.Lock == NULL){  
+        printf("No se ha podido asignar memoria a la estructura clientes");
+        getchar();
+        exit(EXIT_FAILURE);
+    }
 
-			i++;
-		if(m != 6){
-			printf("Error leyendo datos del fichero Lockers.txt. Linea: %d\n", i + 1);
-			exit(EXIT_FAILURE);
-		}
-	}
-	fclose(f_lockers);                                                                                                      // Se cirra el fichero
+    //BUCLE PARA RELLENAR LA ESTRUCTURA DE CLIENTES//
+    while(fgets(cad_linea, sizeof(cad_linea), f_locker) && i < tam){
+        campo_lock = sscanf(cad_linea, "%10[^-]-%20[^-]-%20[^-]-%20[^-]-%d[^-]-%d[^\n]\n",                                               // Se cargan los datos del fichero a la estructura
+			&L.Lock[i].Id_locker,
+			L.Lock[i].Localidad,
+			L.Lock[i].Provincia,
+			L.Lock[i].Ubica,
+			L.Lock[i].Num_compT,
+			L.Lock[i].Num_compOkup);
 
-    return vector_lock;
+        if(campo_lock != 8){                                     //Excepcion si fallo en dato de locker
+            printf("Se produjo un error con datos de un usario. ID_cliente: %d\n", i);
+            getchar();
+            exit(EXIT_FAILURE);
+        }
+        i++;
+    }
+
+    fclose(f_locker);
+    return L;  
 }
 
+
 Vect_CompLock Cargar_CompartimentosLockers(){
+    
+    char filename[] = "../data/Lockers.txt";
+    char default_complock[] = "Lockdef-00000-00000-vacio-00/00/0000-00/00/0000";    //Compartimento por defecto
+    int tam = 0;                          //Numero de Compartimentos registrados
+    int i = 0;                          
+    char cad_linea[MAX_COMPLOCK];                        //Caracteres maximos que puede ocupar una linea en fichero
+    int campo_clock;                          //Entero que verifica no. campos de la estructura CompartimentosLockers.       
 
-    Vect_CompLock vector_complock;
-	FILE *f_compartimentoslockers;                                                                                          // Puntero al fichero
-	char ruta[] = "..\\ESIZON-main\\data\\CompartimentosLockers.txt";                                                       // Ruta del fichero a leer
-	char linea[MAX_COMPLOCK];                                                                                               // Lï¿½nea a leer
-    int i = 0, m;
+    FILE *f_clocker;
+    f_clocker = fopen(filename, "a+");
 
-	if((f_compartimentoslockers = fopen(ruta, "r+")) == NULL){
-		printf("Error al abrir el fichero CompartimentosLockers.txt.\n");
-		exit(33);
-	}
+    if(f_clocker == NULL){                          //Excepcion si no encuentra fichero
+        printf("No se pudo abrir el archivo de clientes. Se ha creado un nuevo archivo.\n");
+        Sleep(2000);
+    }
 
-	vector_complock.tam = 0;
-	while(fgets(linea, sizeof(linea), f_compartimentoslockers) != NULL)                                                     // Contamos el nï¿½mero de lï¿½neas del fichero
-	    vector_complock.tam++;
-	printf("Descuentos almacenados en CompartimentosLockers.txt: %d \n", vector_complock.tam);
-    vector_complock.CompLock = malloc((vector_complock.tam + 1) * sizeof(CompartimentosLockers));
-	rewind(f_compartimentoslockers);
+    rewind(f_clocker);
 
-	while((fgets(linea, sizeof(linea), f_compartimentoslockers) != NULL) ){
-		m = sscanf(linea, "%d[^-]-%d[^-]-%d[^-]-%7[^-]-%d[^-]-%d[^-]-%d[^-]-%d[^-]-%d[^-]-%d[^\n]\n",                       // Se cargan los datos del fichero a la estructura
-			&vector_complock.CompLock[i].Id_locker,
-			vector_complock.CompLock[i].Num_comp,
-			vector_complock.CompLock[i].Cod_locker,
-			vector_complock.CompLock[i].Estado,
-			vector_complock.CompLock[i].dia_okup,
-			vector_complock.CompLock[i].mes_okup,
-			vector_complock.CompLock[i].anio_okup,
-			vector_complock.CompLock[i].dia_cad,
-			vector_complock.CompLock[i].mes_cad,
-			vector_complock.CompLock[i].anio_cad);
+    if(fgetc(f_clocker) == EOF){                    //Si fichero vacio
+        f_clocker = fopen(filename, "w");
+        fprintf(f_clocker, default_complock);           //AÃ±adimos Compartimento predeterminado
+        fclose(f_clocker);
+    }
+    
+    while(fgets(cad_linea, sizeof(cad_linea), f_clocker)){      //Contador de Compartimentos en el programa a partir de fichero 
+        tam++;
+    }
+    rewind(f_clocker);                                          //Necesario para volver a leer el fichero
+    
+    Vect_CompLock C;            
+    C.tam = tam;
+    C.CompLock = malloc(C.tam * sizeof(CompartimentosLockers));           //Asignacion de memoria dinamica 
+    
+    if(C.CompLock == NULL){  
+        printf("No se ha podido asignar memoria a la estructura clientes");
+        getchar();
+        exit(EXIT_FAILURE);
+    }
 
-			i++;
-		if(m != 6){
-			printf("Error leyendo datos del fichero CompartimentosLockers.txt. Linea: %d\n", i + 1);
-			exit(EXIT_FAILURE);
-		}
-	}
-	fclose(f_compartimentoslockers);                                                                                        // Se cirra el fichero
+    //BUCLE PARA RELLENAR LA ESTRUCTURA DE CLIENTES//
+    while(fgets(cad_linea, sizeof(cad_linea), f_clocker) && i < tam){
+        campo_clock = sscanf(cad_linea, "%d[^-]-%d[^-]-%d[^-]-%7[^-]-%d[^-]-%d[^-]-%d[^-]-%d[^-]-%d[^-]-%d[^\n]\n",                       // Se cargan los datos del fichero a la estructura
+			&C.CompLock[i].Id_locker,
+			C.CompLock[i].Num_comp,
+			C.CompLock[i].Cod_locker,
+			C.CompLock[i].Estado,
+			C.CompLock[i].dia_okup,
+			C.CompLock[i].mes_okup,
+			C.CompLock[i].anio_okup,
+			C.CompLock[i].dia_cad,
+			C.CompLock[i].mes_cad,
+			C.CompLock[i].anio_cad);
 
-    return vector_complock;
+        if(campo_clock != 8){                                     //Excepcion si fallo en dato de Compartimento
+            printf("Se produjo un error con datos de un usario. ID_cliente: %d\n", i);
+            getchar();
+            exit(EXIT_FAILURE);
+        }
+        i++;
+    }
+
+    fclose(f_clocker);
+    return C;  
 
 }
 
@@ -94,7 +141,7 @@ void Guardar_Lockers(Vect_Lock lockers){
 
     FILE *f_lockers;                                                                                                        // Puntero al fichero a leer
 	char ruta[] = "..\\ESIZON-main\\data\\Lockers.txt";                                                                     // Ruta del fichero a leer
-	char linea[MAX_LOCK];                                                                                                   // Lï¿½nea actual del fichero
+	char linea[MAX_LOCK];                                                                                                   // LÃ­nea actual del fichero
 	char aux[14];
 
 	if((f_lockers = fopen(ruta, "a+")) == NULL){
@@ -121,7 +168,7 @@ void Guardar_CompartimentosLockers(Vect_CompLock compartimentoslockers){
 
     FILE *f_complockers;                                                                                                    // Puntero al fichero a leer
 	char ruta[] = "..\\ESIZON-main\\data\\CompartimentosLockers.txt";                                                       // Ruta del fichero a leer
-	char linea[MAX_COMPLOCK];                                                                                               // Lï¿½nea actual del fichero
+	char linea[MAX_COMPLOCK];                                                                                               // LÃ­nea actual del fichero
 	char aux[14];
 
 	if((f_complockers = fopen(ruta, "a+")) == NULL){
@@ -151,7 +198,7 @@ void Gestionar_Lockers(Vect_Lock L){
 
     int op;
 
-    printf("###ï¿½Quï¿½ desea hacer?###\n\n");															// Menu de seleccion de funciones relacionadas a lockers
+    printf("###Â¿QuÃ© desea hacer?###\n\n");															// Menu de seleccion de funciones relacionadas a lockers
     printf("1. Crear locker\n");
     printf("2. Eliminar locker\n");
     printf("3. Listar lockers\n");
@@ -183,7 +230,7 @@ Vect_Lock Alta_Lockers(Vect_Lock L){
 
     int tam = L.tam;
 
-    L.Lock = realloc(L.Lock, L.tam+1*sizeof(Vect_Lock));											// Se amplia la longitud del vector para aï¿½adir un locker en la estructura
+    L.Lock = realloc(L.Lock, L.tam+1*sizeof(Vect_Lock));											// Se amplia la longitud del vector para aÃ±adir un locker en la estructura
     if (L.Lock == NULL){
         printf("No se pudo asignar la estructura de lockers");
         getchar();
@@ -324,7 +371,7 @@ Vect_Lock Baja_Lockers(Vect_Lock L){
                 exit(EXIT_FAILURE);
             }
 
-            L.tam = L.tam - 1;                                                            //Se reduce el tamaï¿½o total del vector de estructuras
+            L.tam = L.tam - 1;                                                            //Se reduce el tamaÃ±o total del vector de estructuras
             break;
         }
     }
@@ -339,6 +386,7 @@ void Listar_Lockers(Vect_Lock L){
 
     int i;
     clear();
+    titulo();
     printf("+---------------------------------+\n");
     printf("| LOCKERS EN EL SISTEMA           |\n");
     printf("+---------------------------------+\n");
@@ -366,7 +414,7 @@ int Locker_Dispo(Vect_Lock L, int pos){
         res = i;
 
     else
-        printf("No existe ningï¿½n locker disponible en tu localidad \n");
+        printf("No existe ningÃºn locker disponible en tu localidad \n");
 
     return res;
 
@@ -413,7 +461,7 @@ Vect_CompLock Asignar_Compartimentos(Vect_Lock L, Vect_CompLock C){
                     do{
 
                         strcpy(C.CompLock[cont].Id_locker, Id_locker_busqueda);
-                        strcpy(C.CompLock[cont].Estado, "vacï¿½o");
+                        strcpy(C.CompLock[cont].Estado, "vacÃ­o");
                         C.CompLock[cont].Num_comp = n_comp;
                         C.CompLock[cont].dia_okup = 0;
                         C.CompLock[cont].mes_okup = 0;
@@ -433,9 +481,9 @@ Vect_CompLock Asignar_Compartimentos(Vect_Lock L, Vect_CompLock C){
         return C;
 }
 
-Vect_CompLock Recogida_Locker(Vect_CompLock cl, int pos, int n_comp){
+Vect_CompLock Recogida_Locker(Vect_CompLock cl, int Id_cliente){
 
-    int cont = 0, i, Cod_locker_check, fch;
+    int cont = 0, i, j, k, Cod_locker_check, fch;
 
     fecha fch_comprobar;
     fch_comprobar.dia = cl.CompLock[i].dia_cad;
@@ -450,30 +498,30 @@ Vect_CompLock Recogida_Locker(Vect_CompLock cl, int pos, int n_comp){
     fch = comprobar_fecha(fch_sist, fch_comprobar);                                                                                 //Se comprueba que la fecha de caducidad no se haya sobrepasado
 
     pedidos p = cargar_pedidos();                                                                                                   //Se carga la estructuta CompartimentosLockers
+	prod_pedidos p_p = cargar_prod_pedidos();
 
-    for(i = 0; i<cl.tam; i++){
-        if((strcpy(p.pedidos[pos].id_locker, cl.CompLock[i].Id_locker) == 0) && cl.CompLock[i].Num_comp == n_comp && fch == 1){     //Se comprueba que exista el compartimento deseado
-
-            do{
-                printf("Introduzca el código de seguridad del locker: \n");                                                         //Se introduce el código de seguridad
-                scanf("%d", &Cod_locker_check);
-
-                if(Cod_locker_check == cl.CompLock[i].Cod_locker){                                                                  //Se comprueba el código de seguridad
-                    printf("Código introducido correctamente \n");
-                    printf("Se ha abierto el compartimento número %d \n", &n_comp);
-                    strcpy(cl.CompLock[i].Estado, "vacío");
-
-                }
-                else{
-                    printf("Código incorrecto, inténtelo nuevamente: \n \n");
-                }
-                cont++;
-            }while(cont < 3);
-
-            if(cont == 3)
-                printf("Se ha quedado sin intentos, cancelando operación... \n");                                                   //En caso de fallar el código 3 veces el sistema cancela la operación
-
-        }
+	
+    for(i = 0; i<p.lon; i++){
+    	
+    	if(p.pedidos[i].id_cliente == Id_cliente){
+    		
+    		for(j = 0; j<p_p.lon; j++){
+        		if(p.pedidos[i].id_pedido == p_p.prod_pedidos[j].id_pedido){
+        			for(k = 0; k<cl.tam; k++){
+        				if(strcmp(cl.CompLock[k].Id_locker, p_p.prod_pedidos[j].id_locker) == 0){
+        					printf("Introduzca el cÃ³digo del locker: \n");
+        					scanf("%d", &Cod_locker_check);
+        					if(cl.CompLock[k].Cod_locker == Cod_locker_check){
+        						printf("CÃ³digo correcto \n");
+        						strcpy(cl.CompLock[k].Estado, "vacÃ­o");
+							}
+						}
+					}
+				}
+			}
+		
+		}
+        
     }
 
     return cl;

@@ -50,10 +50,6 @@ typedef struct{
 } transport_vect;
 
 // --------------- FUNCIONES DE INICIO DE SESION ---------------
-
- //Precondición: No recibe nada.
- //Postcondición: Muestra el logotipo de la empresa. No devuelve nada.
- void esizon();
  
  //Precondición: Recibe una estructura de tipo admin_prov_vect (el vector de usuarios tipo adminprov), y la posición a utilizar en él.
  //Postcondición: El usuario habrá iniciado sesión como proveedor en el sistema, o se habrá cerrado la sesión por fallar la contraseña muchas veces. No devuelve nada.
@@ -171,9 +167,29 @@ typedef struct{
  //Postcondición: Devuelve -1 si se cancela la operación, o la posición en el vector del pedido si se cambia su estado de "enRepart" a "enLocker" (es decir, si se entrega un paquete en un locker). 
  int entrega_locker_t(int pos);
  
+ //Precondición: Recibe la ID del transportista acutal.
+ //Postcondición: No devuelve nada. Permite elegir al transportista entre ver pedidos en lockers caducados, buscar lockers y vaciar algún locker caducado.
  void menu_retornos_t(int pos);
  
+ //Precondición: No recibe nada.
+ //Postcondición: No devuelve nada. Muestra por pantalla el listado de lockers con productos caducados.
+ void listar_lockers_cad();
  
+ //Precondición: No recibe nada.
+ //Postcondición: No devuelve nada. Muestra por pantalla el listado de lockers con productos caducados en la localidad que busque el usuario.
+ int buscar_localidad_t();
+ 
+ //Precondición: Recibe la ID de un locker.
+ //Postcondición: Devuelve el numero de compartimentos caducados en un locker.
+ int caducado(char id_lock[11]);
+ 
+ //Precondición: Recibe la ID del transportista actual.
+ //Postcondición: Devuelve -1 o 0 según se salga prematuramente o se complete el vaciado de un locker.
+ int recoger_prod_cad(int pos);
+ 
+ //Precondición: Recibe la ID de un locker.
+ //Postcondición: No devuelve nada. Resetea los valores de los compartimentos caducados del locker con ID dada.
+ void actualizar_lock_ret(char id_lock[11]);
  
 // --------------- FUNCIONES PARA LA GESTIÓN DE PROVEEDORES ---------------
 

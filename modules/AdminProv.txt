@@ -1,0 +1,9 @@
+0000-ESIZON-admin000@esizon.com-admin000-administrador
+0000-ESIZON-admin1@esizon.com-admin01-administrador
+0000-ESIZON-admin02@esizon.com-admin02-administrador
+0000-ESIZON-antonio.martin@esizon.com-antmar01-administrador
+0001-DISTGEN-donato.lima@distgen.com-donlim04-proveedor
+0002-SANTANA-percorb04@esizon.com-percorb04-proveedor
+0000-ESIZON-provesizon@esizon.com-prov1-proveedor
+0001-DISTGEN-jaimerz@distgen.com-jaime1-proveedor
+0003-PCCOM-jorgeprov@pccom.com-jorg2-proveedor

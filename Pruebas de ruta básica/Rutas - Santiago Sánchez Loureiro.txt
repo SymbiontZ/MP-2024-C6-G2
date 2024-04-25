@@ -1,3 +1,24 @@
+//Precondición: Recibe una estructura de tipo admin_prov_vect (el vector de usuarios tipo adminprov), y una cadena a comparar.
+//Postcondición: Devuelve la ID de empresa del proveedor dado de alta en la plataforma según la empresa a la que pertenezca.
+int buscar_id_prov(admin_prov_vect provs, char* empresa){
+	int i, 
+1		id= 0, 
+2		val = 0;
+3	for(i = 1; i < provs.tam-1; i++){	//Si empresa ya creada
+4		if(strcmp(empresa, provs.usuarios[i].Nombre) == 0){
+5			id = provs.usuarios[i].Id_empresa;
+6			return id;
+7		}	
+8	}
+9	for(i = 1; i < provs.tam-1; i++){
+10		if(id < provs.usuarios[i].Id_empresa)
+11			id = provs.usuarios[i].Id_empresa;
+12	}
+13
+14	id++;
+15	return id;
+}
+
 Cálculo de rutas (cualquiera de los tres métodos es válido):
 
    <1> V(G) = Nº de Regiones = 5
@@ -12,4 +33,84 @@ Rutas: Buscamos las cinco rutas básicas.
    - R4) 1, 2, 3, 8, 9, 10, 11, 12, 9, 13, 14, 15
    - R5) 1, 2, 3, 8, 9, 10, 12, 9, 13, 14, 15
 
-Hacemos pruebas que cubran todas las rutas.
+Hacemos pruebas que cubran todas las rutas:
+
+   - Ruta 1: Siendo el primer proveedor del vector de la empresa SANTANA, la cadena empresa será SANTANA. Cualquier empresa que figure en 
+el sistema seguirá esta ruta.
+
+   - Ruta 2: Siendo el vector provs de tamaño 2, se salta ambos bucles y devuelve 1 independientemente de la empresa del proveedor. 
+Este es un caso que no se va a dar jamás.
+
+   - Ruta 3: Siendo el segundo proveedor del vector de la empresa SANTANA y el primero de la empresa ESIZON, la cadena empresa será SANTANA. 
+La primera llamada no entrará en el cuerpo de la estructura selectiva, pero la segunda sí. 
+
+   - Ruta 4: Jamás se va a dar esta ruta. Si no entra en el primer bucle, tampoco entrará en el segundo y devolverá 0 independientemente de la
+cadena empresa.
+
+   - Ruta 5: Ídem. al caso anterior, no se va a dar jamás. Si no entra en un bucle, tampoco entra en el otro. Devolverá cero en tal caso.
+
+Probamos otra función:
+
+//Precondición: Recibe la ID del transportista acutal.
+//Postcondición: Devuelve 0 si se cancela la operación, o la posición en el vector del producto si se cambia su estado de "enReparto" a "transportista" (es decir, si se avisa que no se ha podido entregar 
+// un paquete a domicilio).
+int fallo_recoger_pedido_t(int pos){
+	prod_pedidos prods_pedidos = cargar_prod_pedidos();
+	pedidos pedidos = cargar_pedidos();
+	produ_vect prods = cargar_productos();
+    int i, n_coinc = 0, encontrado = 0, salida = 0;      //Contador de coincidencias encontradas
+    int *vect_coinc;                   					 //Vector que contiene las ids de las coincidencias
+	
+	clear();
+	
+	titulo();
+	
+	vect_coinc = (int*)malloc(1*sizeof(int));
+	
+	for(i = 1; i < prods_pedidos.lon; i++){
+		if(pos == prods_pedidos.prod_pedidos[i].id_transp && strcmp(pedidos.pedidos[ prods_pedidos.prod_pedidos[i].id_pedido ].lugar, "Domicilio") == 0 && strcmp(prods_pedidos.prod_pedidos[i].estado, "enReparto") == 0){
+			printf(" <%i> {Pedido %04d | Producto %04d - %s} Unidades: %d | Entrega: %02d/%02d/%d\n", n_coinc + 1, prods_pedidos.prod_pedidos[i].id_pedido, prods_pedidos.prod_pedidos[i].id_prod, prods.produ[ prods_pedidos.prod_pedidos[i].id_prod ].nombre, prods_pedidos.prod_pedidos[i].num_unid, prods_pedidos.prod_pedidos[i].f_entrega.dia, prods_pedidos.prod_pedidos[i].f_entrega.mes, prods_pedidos.prod_pedidos[i].f_entrega.anio);
+			n_coinc++;
+            vect_coinc = (int*)realloc(vect_coinc, n_coinc*sizeof(int));
+            vect_coinc[n_coinc-1] = i;
+			encontrado = 1;
+		}
+	}
+	
+	i = -1;
+	
+	if(!encontrado){
+		printf("\nNo tiene repartos a domicilio asignados. ");
+		free(vect_coinc);	
+		salida = -1;
+	}	
+	else{
+		encontrado = 0;
+		do{
+			printf("\nElija el pedido (numero entre <>) que no haya podido ser recogido por el cliente para marcar como 'transportista', o pulse 0 para volver.\n");
+			printf("Pedido: ");
+			i = input_int();
+		}while(i < 0 || i > n_coinc);
+		
+		if(i == 0)
+			return 0;
+			
+		salida = vect_coinc[i - 1];
+		
+	    free(vect_coinc);
+		strcpy(prods_pedidos.prod_pedidos[salida].estado, "transportista");
+		printf("\n{Pedido %04d | Producto %04d - %s} Estado actualizado con exito.", prods_pedidos.prod_pedidos[salida].id_pedido, prods_pedidos.prod_pedidos[salida].id_prod, prods.produ[ prods_pedidos.prod_pedidos[salida].id_prod ].nombre);
+	}
+	Sleep(2000);
+	guardar_productos_pedidos(prods_pedidos);
+	return salida;
+}
+
+Pruebas realizadas:
+
+ 1. Introducimos pos > provs.tam o pos < 0 ===> Se muestra por pantalla el mensaje "No tiene repartos a domicilio asignados".
+ 2. Introducimos i > longitud de vect_coinc o i < 0 ===> Se vuelve a solicitar un valor válido (dentro de vect_coinc) para i. Ningún error.
+ 3. Introducimos un carácter o cadena de caracteres en i ===> Se vuelve a solicitar un valor válido para i. La función input_int asegura
+recepción válida.
+ 4. Introducimos pos como una cadena o un carácter ===> Interpreta el carácter (o la primera posición de la cadena) como un entero (toma 
+su codificación), luego depende si el valor del carácter en decimal tiene un equivalente en el vector de transportistas. En tal caso, el programa continúa normalmente. Este caso no se va a dar jamás.
