@@ -171,8 +171,8 @@ void Consultar_Descuentos(DescClientes descuentosclientes){
 }
 
 void Consultar_desc_cliente(int pos, int mode){
-    clients Cliente = cargar_clientes();
-    DescClientes desccl = Cargar_DescuentosClientes();
+    clients Cliente = cargar_clientes();																//Se cargan las estructuras Lientes y Descuentos Clientes
+    DescClientes desccl = Cargar_DescuentosClientes();			
 
     int i,
         n_desc=0,
@@ -188,7 +188,7 @@ void Consultar_desc_cliente(int pos, int mode){
         printf("| CODIGO     | FECHA ASIGNACION | FECHA CADUCIDAD | APLICADO? |\n");
         printf("+------------+------------------+-----------------+-----------+\n");
         for(i=1;i<desccl.tam;i++){
-            if(Cliente.clients[pos].Id_cliente == desccl.DescCliente[i].Id_cliente){
+            if(Cliente.clients[pos].Id_cliente == desccl.DescCliente[i].Id_cliente){											//Se busca una coincidencia de id_cliente
                 if(desccl.DescCliente[i].Estado == 0)
                     printf("| %-10s | %02d/%02d/%04d       | %02d/%02d/%04d      | NO        |\n", 
                     desccl.DescCliente[i].Id_cod,
@@ -218,8 +218,8 @@ void Consultar_desc_cliente(int pos, int mode){
         
         for(i=1;i<desccl.tam;i++){
             if(Cliente.clients[pos].Id_cliente == desccl.DescCliente[i].Id_cliente){
-                if(desccl.DescCliente[i].Estado == 0 && desc_activo(desccl.DescCliente[i].Id_cod) == 1)
-                    printf("| CODIGO: %-10s |\n", desccl.DescCliente[i].Id_cod);
+                if(desccl.DescCliente[i].Estado == 0 && desc_activo(desccl.DescCliente[i].Id_cod) == 1)			//Si el estado no esta aplicado y esta activo
+                    printf("| CODIGO: %-10s |\n", desccl.DescCliente[i].Id_cod);					//Se imprime el codigo por pantalla
             n_desc++;
             }
         }
@@ -239,12 +239,12 @@ void marcar_aplicado(int id_cliente, char cod[]){
     int i,pos = -1;
 
     for(i=1; i< DescC.tam ; i++){
-        if(DescC.DescCliente[i].Id_cliente == id_cliente && strcmp(DescC.DescCliente[i].Id_cod, cod) == 0)
+        if(DescC.DescCliente[i].Id_cliente == id_cliente && strcmp(DescC.DescCliente[i].Id_cod, cod) == 0)				//Si la id_cliente y el id_cod coinciden
             pos = i;
     }
 
     if(pos != -1){
-        DescC.DescCliente[pos].Estado = 1;
+        DescC.DescCliente[pos].Estado = 1;												//Si ya esta apicado
     }else{
         printf("No se pudo marcar el descuento como aplicado.\n");
         getchar();
@@ -260,7 +260,7 @@ int desc_activo(char cod[]){
     int i, pos = -1;
 
     for(i=0; i< D.tam; i++){
-        if(strcmp(D.Desc[i].Id_cod, cod)== 0)
+        if(strcmp(D.Desc[i].Id_cod, cod)== 0)												//Se busca el descuento con id_cod coincidente con cod
             pos = i;
     }
 
