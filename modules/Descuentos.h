@@ -85,8 +85,12 @@ void Consultar_desc_cliente(int, int);
 //Postcondición: Muestra un menú con las funcionalidades referentes a los descuentos
 void Gestionar_Descuentos(Descuentos, DescClientes);
 
+//Precondición: Recibe el codigo de descuento
+//Postcondición: Devuelve un entero, 1 si el descuento esta activo y 0 sino
 int desc_activo(char[] );
 
+//Precondición: Recibe la id_del cliente y el codigo de descuento
+//Postcondición: Marca como aplicado el descuento coincidente con el codigo, para el cliente con id_cliente
 void marcar_aplicado(int, char[]);
 
 //Precondición: Recibe el código del descuento
