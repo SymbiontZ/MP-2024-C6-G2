@@ -1,6 +1,7 @@
 fecha crear_fechacad(fecha fch_base){
     fecha fch_cad;                                                                                  |
     int fch_ok;     //Variable para comprobar la fecha es valida                                    | 1
+    
     do{                                                                                             | 2
 
         printf("FECHA ACTUAL: %02d / %02d / %04d\n", fch_base.dia, fch_base.mes, fch_base.anio);    |
