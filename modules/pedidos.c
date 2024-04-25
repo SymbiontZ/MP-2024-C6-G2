@@ -1100,7 +1100,7 @@ int buscar_devolucion(devoluciones d){
 
 }
 
-void eliminar_devolucion(devoluciones d){
+devoluciones eliminar_devolucion(devoluciones d){
     int i; 
     char resp;
     int pos = buscar_devolucion(d);
@@ -1119,7 +1119,9 @@ void eliminar_devolucion(devoluciones d){
         }
         guardar_devoluciones(d);
         printf("se ha eliminado la devolucion correctamente");
+        Sleep(2000);
     }
+    return d;
 }
 
 

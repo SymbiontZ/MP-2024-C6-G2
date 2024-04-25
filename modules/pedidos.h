@@ -181,7 +181,7 @@ int buscar_devolucion(devoluciones);
 //Cabecera: void eliminar_devolucion(int, devoluciones)
 //Precondicion: se le pasa la posicion de la devolucion a eliminar y la estructura devoluciones cargada
 //Postcondicion: se elimina la devolucion correspondiente a la posicion indicada
-void eliminar_devolucion(devoluciones);
+devoluciones eliminar_devolucion(devoluciones);
 
 //Cabecera: devoluciones modificar_devolucion(devoluciones, int)
 //Precondicion: se le pasa la estructura devoluciones cargadas y la posicion de la que se va a modificar
