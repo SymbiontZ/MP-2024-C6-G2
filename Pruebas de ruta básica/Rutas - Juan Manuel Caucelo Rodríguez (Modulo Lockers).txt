@@ -1,4 +1,26 @@
-Función: Locker_Dispo
+//Precondición: Recibe la estructura Lockers y la posicion de la estructura pedidos del pedido que quiere asignarse en un locker
+//Postcondición: Devuelve la posicion del primer locker coincidente con la ciudad deseada
+
+int Locker_Dispo(Vect_Lock L, int pos){
+
+1     int i = 0 
+2      res = -1;
+
+3     clients c = cargar_clientes();                                                                                              //Se carga la estructura clientes
+
+4     while((i<=L.tam) && (L.Lock[i].Localidad != c.clients[pos].Localidad) && (L.Lock[i].Num_compOkup < L.Lock[i].Num_compT))
+5         i++;
+6 
+7     if(L.Lock[i].Localidad == c.clients[pos].Localidad)                                                                         //Se busca una coincidencia de localidades
+8         res = i;
+
+9     else
+10        printf("No existe ningún locker disponible en tu localidad \n");
+11
+12    return res;
+
+}
+
 
 Cálculo de rutas (cualquiera de los tres métodos es válido):
 
@@ -13,4 +35,10 @@ Rutas: Buscamos las cinco rutas básicas.
    - R3) 1, 2, 3, 4, 5, 4, 6, 7, 8, 11, 12
 
    
-Hacemos pruebas que cubran todas las rutas.
+Hacemos pruebas que cubran todas las rutas:
+
+	- Ruta 1: No existen lockers en Lockers.txt, la localidad del cliente no coincide con ninguna de las localidades de los lockers o el ocker en cuestión no tiene huecos libres.
+
+	- Ruta 2: No existe ningún locker disponible en la localidad del cliente.
+	
+	- Ruta 3: Hay lockers disponibles en la localidad del cliente.
