@@ -59,7 +59,7 @@ categ_vect eliminar_categorias (categ_vect);
 
 //PRECONDICIÓN:
 //POSTCONDICIÓN:
-categ_vect listar_categorias (categ_vect);
+void listar_categorias (categ_vect);
 
 //PRECONDICIÓN:
 //POSTCONDICIÓN:
@@ -76,7 +76,31 @@ void guardar_productos (produ_vect);
 
 //PRECONDICIÓN:
 //POSTCONDICIÓN:
-produ_vect agregar_productos (produ_vect);
+produ_vect seleccionar_categprod (produ_vect, categ_vect, int);
+
+//PRECONDICIÓN:
+//POSTCONDICIÓN:
+produ_vect agregar_productos (produ_vect, int);
+
+//PRECONDICIÓN:
+//POSTCONDICIÓN:
+int buscar_auxnom (produ_vect);
+
+//PRECONDICIÓN:
+//POSTCONDICIÓN:
+int buscar_auxdesc (produ_vect);
+
+//PRECONDICIÓN:
+//POSTCONDICIÓN:
+int buscar_auxstock (produ_vect);
+
+//PRECONDICIÓN:
+//POSTCONDICIÓN:
+int buscar_auxentrega (produ_vect);
+
+//PRECONDICIÓN:
+//POSTCONDICIÓN:
+int buscar_auximporte (produ_vect);
 
 //PRECONDICIÓN:
 //POSTCONDICIÓN:
@@ -96,7 +120,7 @@ void listar_productos (produ_vect);
 
 //PRECONDICIÓN:
 //POSTCONDICIÓN:
-void menu_prod (produ_vect);
+void menu_prod (produ_vect, int);
 
 //PRECONDICIÓN:
 //POSTCONDICIÓN:
@@ -112,14 +136,14 @@ produ_vect cambiar_stock (int, int);
 
 //PRECONDICIÓN:
 //POSTCONDICIÓN:
-produ_vect modificar_prodgestor (produ_vect);
+produ_vect modificar_prodgestor (produ_vect, int);
 
 //PRECONDICIÓN:
 //POSTCONDICIÓN:
-produ_vect eliminar_prodgestor (produ_vect);
+produ_vect eliminar_prodgestor (produ_vect, int);
 
 //PRECONDICIÓN:
 //POSTCONDICIÓN:
-produ_vect listar_prodgestor (produ_vect);
+void listar_prodgestor (produ_vect, int);
 
 #endif

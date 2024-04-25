@@ -88,13 +88,6 @@ void guardar_categorias (categ_vect c) {
     }
     
     fclose (f_cat);
-    
-    if (c.num_cat == 1) {
-    	printf ("\n**Estructura guardada con 1 categoria\n");
-	}
-	else {
-		printf ("\n**Estructura guardada con %d categorias\n", c.num_cat - 1);
-	}	
 }
 
 categ_vect agregar_categorias (categ_vect c) {
@@ -109,20 +102,25 @@ categ_vect agregar_categorias (categ_vect c) {
         exit (EXIT_FAILURE);
 	}
 	
+	clear ();
+	Sleep (1000);
+	
 	c.categ[nueva_id].id_categ = nueva_id;		//La id de la categoria se rellena automáticamente
 	
 	do {
-		printf ("\nEscribe la descripcion de la categoria: ");
+		printf ("Escriba la descripcion de la categoria: ");
 		fflush (stdin);
 		fgets (desc, 51, stdin);
 		fflush (stdin);
 		terminador_cad (desc);
 	}while (strlen (desc) == 0);
 	
+	strcpy (c.categ[nueva_id].descrip, desc);
+	
 	c.num_cat++;
 	guardar_categorias (c);
 	
-	printf ("Se ha registrado la categoria %04d correctamente", c.categ[nueva_id].id_categ);
+	printf ("\nSe ha registrado la categoria %04d correctamente", c.categ[nueva_id].id_categ);
 	Sleep (2000);
 	
 	return c;
@@ -366,16 +364,20 @@ categ_vect eliminar_categorias (categ_vect c) {
 	return c;
 }
 
-categ_vect listar_categorias (categ_vect c) {
+void listar_categorias (categ_vect c) {
 	int i;
 	
 	clear ();
 	Sleep (1000);
 	
-	printf ("---> LISTA DE CATEGORIAS: <---\n\n");
-	
+	printf("+----------------------+\n");
+	printf("| LISTADO DE PRODUCTOS |\n");
+	printf("+----------------------+---------------------------------+\n");
+	printf("| DESCRIPCION DE CATEGORIAS                              |\n");
+	printf("+--------------------------------------------------------+\n");
+
 	for (i = 1; i < c.num_cat; i++) {
-		printf ("(%i) %04d-%s\n", i, c.categ[i].id_categ, c.categ[i].descrip);
+		printf ("| <%i> %-50s |\n", i, c.categ[i].descrip);
 	}
 	
 	printf("+--------------------------------------------------------+\n");
@@ -383,67 +385,6 @@ categ_vect listar_categorias (categ_vect c) {
 	
 	getchar();
 }
-
-/*categ_vect seleccionar_categorias (categ_vect c) {
-	int pos, op1, op2;
-	char respuesta;
-	
-	//MOSTRAR INFORMACION//
-	listar_categorias (c);
-	
-	do {
-		printf ("\n\nQue desea hacer:\n1. Seleccionar una categoria ya existente\n2. Crear una nueva categoria");
-		scanf ("%d", &op1);
-	}while (op1 < 1 || op1 > 2);
-	
-	switch (op1) {
-		case 1:
-			clear ();
-			Sleep (1000);
-			printf ("---> SELECCIONADOR DE CATEGORIAS: <---\n\n");
-			printf ("Busque la categoria que desee seleccionar bajo uno de los siguientes criterios:");
-			
-			Sleep (1000);	
-			pos = buscar_categorias (c);
-			
-			if (pos == -1) {
-				return c;
-			}
-			
-			printf ("\nEsta seguro que desea modificar la categoria '%04d-%s'? (S/N): ", c.categ[pos].id_categ, c.categ[pos].descrip);
-			scanf ("%c", &respuesta);
-			fflush (stdin);
-			
-			clear ();
-			Sleep (1000);
-			
-			if (respuesta == 'S' || respuesta == 's') {
-				printf ("\n\nDescripcion actual de la categoria: %s\n", c.categ[pos].descrip);
-				printf ("Ingrese la nueva descripcion (maximo 50 caracteres): ");
-				fgets (c.categ[pos].descrip, 51, stdin);
-				fflush (stdin);
-				terminador_cad (c.categ[pos].descrip);
-				
-				printf ("\nCategoria modificada correctamente\n");	
-					
-				guardar_categorias (c);
-			}
-			else {
-				printf ("Volviendo al menu anterior...\n");
-			}
-		break;
-		
-		case 2:
-			
-		break;
-		
-		default:
-			printf ("Seleccione una opcion valida: ");
-		break;
-	}
-			
-	return c;
-}*/
 
 void menu_categ (categ_vect c) {
 	int op;
@@ -595,16 +536,98 @@ void guardar_productos (produ_vect p) {
     }
     
     fclose (f_prod);
-    
-    if (p.num_prod == 1) {
-    	printf ("\n**Estructura guardada con 1 producto\n");
-	}
-	else {
-		printf ("\n**Estructura guardada con %d productos\n", p.num_prod - 1);
-	}
 }
 
-produ_vect agregar_productos (produ_vect p) {
+produ_vect seleccionar_categprod (produ_vect p, categ_vect c, int nueva_id) {
+	categ_vect c_old;
+	int pos, op, i, nueva_pos;
+	char respuesta, volver;
+	
+	//MOSTRAR INFORMACION//
+	do {
+		do {
+			printf ("1. Seleccionar una categoria ya existente\n2. Crear una nueva categoria\n3. Ver las categorias ya existentes\n############################\n");
+			scanf ("%d", &op);
+		}while (op < 1 || op > 3);
+		
+		switch (op) {
+			case 1:
+				clear ();
+				Sleep (1000);
+				printf ("---> SELECCIONADOR DE CATEGORIAS: <---\n\n");
+				printf ("Busque la categoria que desee seleccionar bajo uno de los siguientes criterios:");
+				
+				Sleep (1000);	
+				pos = buscar_categorias (c);
+				
+				if (pos == -1) {
+					return p;
+				}
+				
+				printf ("\nEsta seguro que desea seleccionar la categoria '%04d-%s'? (S/N): ", c.categ[pos].id_categ, c.categ[pos].descrip);
+				scanf ("%c", &respuesta);
+				fflush (stdin);
+				
+				clear ();
+				Sleep (1000);
+				
+				if (respuesta == 'S' || respuesta == 's') {
+					p.produ[nueva_id].id_categ = c.categ[pos].id_categ;
+					
+					printf ("Categoria seleccionada correctamente\n");	
+						
+					guardar_productos (p);
+				}
+				else {
+					printf ("Volviendo al menu anterior...\n");
+				}
+			break;
+			
+			case 2:
+			    c = agregar_categorias (c);
+				
+			    nueva_pos = c.num_cat - 1;
+			    
+			    p.produ[nueva_id].id_categ = c.categ[nueva_pos].id_categ;
+			    
+			    guardar_productos (p);
+			break;
+			
+			case 3:
+				clear ();
+				Sleep (1000);
+				
+				printf("+----------------------+\n");
+				printf("| LISTADO DE PRODUCTOS |\n");
+				printf("+----------------------+---------------------------------+\n");
+				printf("| DESCRIPCION DE CATEGORIAS                              |\n");
+				printf("+--------------------------------------------------------+\n");
+			
+				for (i = 1; i < c.num_cat; i++) {
+					printf ("| <%i> %-50s |\n", i, c.categ[i].descrip);
+				}
+				
+				printf("+--------------------------------------------------------+\n");
+				printf("Pulse [enter] para volver...");
+				scanf ("%c", &volver);
+				
+				getchar();
+				
+				clear ();
+				Sleep (1000);
+			break;
+			
+			default:
+				printf ("Seleccione una opcion valida: ");
+			break;
+		}
+	}while (op == 3);
+				
+	return p;
+}
+
+produ_vect agregar_productos (produ_vect p, int gestor) {
+	categ_vect c = cargar_categorias ();
 	int nueva_id = p.num_prod;		//IDENTIFICADOR DEL NUEVO PRODUCTO
 	
 	p.produ = (productos*)realloc(p.produ, (nueva_id + 1)*sizeof(productos));
@@ -615,9 +638,12 @@ produ_vect agregar_productos (produ_vect p) {
         exit (EXIT_FAILURE);
 	}
 	
+	clear ();
+	Sleep (1000);
+	
 	p.produ[nueva_id].id_prod = nueva_id;		//La id del producto se rellena automáticamente
 	
-	printf ("\nPrimero, escriba el nombre del producto: ");
+	printf ("Primero, escriba el nombre del producto: ");
 	fgets (p.produ[nueva_id].nombre, 16, stdin);
 	fflush (stdin);
 	terminador_cad (p.produ[nueva_id].nombre);
@@ -627,41 +653,361 @@ produ_vect agregar_productos (produ_vect p) {
 	fflush (stdin);
 	terminador_cad (p.produ[nueva_id].descrip);
 	
-	printf ("\nTercero, seleccione el id de la categoria del producto o cree uno nuevo para este:\n\n");
-	//seleccionar_categorias (); 
-	
-	printf ("\nTercero, escribe el id del gestor del producto: ");
-	scanf ("%d", &p.produ[nueva_id].id_gestor);
-	fflush (stdin);
-	
-	printf ("\nCuarto, escribe el stock del producto: ");
+	printf ("\nTercero, escriba el stock del producto: ");
 	scanf ("%d", &p.produ[nueva_id].stock);
 	fflush (stdin);
 	
-	printf ("\nQuinto, escribe el compromiso de entrega en dias: ");
+	printf ("\nCuarto, escriba el compromiso de entrega en dias: ");
 	scanf ("%d", &p.produ[nueva_id].entrega);
 	fflush (stdin);
 	
-	printf ("\nPor ultimo, escribe el importe del producto en euros: ");
+	printf ("\nQuinto, escriba el importe del producto en euros: ");
 	scanf ("%d", &p.produ[nueva_id].importe);
 	fflush (stdin);
+	
+	p.produ[nueva_id].id_gestor = gestor;
+	fflush (stdin);
+	
+	printf ("\nPor ultimo, seleccione el id de la categoria del producto o cree uno nuevo para seleccionar:\n\n");
+	p = seleccionar_categprod (p, c, nueva_id); 
 	
 	p.num_prod++;
 	guardar_productos (p);
 	
-	printf ("Se ha registrado el producto %s correctamente", p.produ[nueva_id].nombre);
+	printf ("\nSe ha registrado el producto %s correctamente", p.produ[nueva_id].nombre);
 	Sleep (2000);
 	
 	return p;
 }
 
-int buscar_productos (produ_vect p) {
-	int i, op1, op2, len, naux, cont = 0, vaux[p.num_prod];	
+int buscar_auxnom (produ_vect p) {
+	int i, op2, len, cont = 0, vaux[p.num_prod];	
 	char saux[51];
 	
 	for (i = 0; i < p.num_prod; i++) {	//Inicializa todos los elementos del vector a 0
 		vaux[i] = 0;
 	}
+	
+	do {
+		printf ("\nIntroduzca el nombre del producto que este buscando: ");
+		fgets (saux, 16, stdin);
+		fflush (stdin);
+		terminador_cad (saux);
+		len = strlen (saux);
+	
+		for (i = 1; i < p.num_prod; i++) {
+			if (strncmp (saux, p.produ[i].nombre, len) == 0) {
+				vaux[i] = i;
+				cont++;
+			}
+		}
+	
+		if (cont != 0) {
+			if (cont == 1) {
+				printf ("\nSe encontro un producto con el nombre especificado:\n");				
+				//Mostrar el producto encontrado
+				for (i = 1; i < p.num_prod; i++) {
+					if (vaux[i] == i) {
+						printf ("\n%d. %s-%s-%d-%d-%d\n", i, p.produ[vaux[i]].nombre, p.produ[vaux[i]].descrip, p.produ[vaux[i]].stock, p.produ[vaux[i]].entrega, p.produ[vaux[i]].importe);
+						op2 = i;
+					}
+				}
+			}
+			else {
+				printf ("\nSe encontraron %d productos con el nombre especificado:\n", cont);
+				//Mostrar los productos encontrados
+				for (i = 1; i < p.num_prod; i++) {
+					if (vaux[i] == i) {
+						printf ("\n%d. %s-%s-%d-%d-%d", i, p.produ[vaux[i]].nombre, p.produ[vaux[i]].descrip, p.produ[vaux[i]].stock, p.produ[vaux[i]].entrega, p.produ[vaux[i]].importe);
+					}
+				}
+			
+				do {
+					//Permitir al usuario seleccionar un producto
+					printf ("\n\nSeleccione el producto que este buscando escribiendo su respectivo indice: ");
+					scanf ("%d", &op2);
+					fflush (stdin);
+					
+					//Verificar si el indice ingresado es valido
+					if (op2 < 1 || op2 >= p.num_prod || vaux[op2] != op2) {
+						printf ("Indice invalido. Por favor, seleccione un indice valido\n");
+						op2 = -1;	//Reiniciar op2 para repetir el bucle
+					}
+					else {
+						vaux[op2] = op2;
+					}
+				}while (op2 == -1);		//Repetir mientras el indice sea invalido	
+			}
+		}
+		else {
+			printf ("No se encontro ningun producto con el nombre especificado, pruebe con un nombre distinto:\n\n");
+		}
+	}while (cont == 0);
+	
+	return op2;
+}
+
+int buscar_auxdesc (produ_vect p) {
+	int i, op2, len, cont = 0, vaux[p.num_prod];	
+	char saux[51];
+	
+	for (i = 0; i < p.num_prod; i++) {	//Inicializa todos los elementos del vector a 0
+		vaux[i] = 0;
+	}
+	
+	do {
+		printf ("\nIntroduzca la descripcion del producto que este buscando: ");
+		fgets (saux, 51, stdin);
+		fflush (stdin);
+		terminador_cad (saux);
+		len = strlen (saux);
+	
+		for (i = 1; i < p.num_prod; i++) {
+			if (strncmp (saux, p.produ[i].descrip, len) == 0) {
+				vaux[i] = i;
+				cont++;
+			}
+		}
+	
+		if (cont != 0) {
+			if (cont == 1) {
+				printf ("\nSe encontro un producto con la descripcion especificada:\n");				
+				//Mostrar el producto encontrado
+				for (i = 1; i < p.num_prod; i++) {
+					if (vaux[i] == i) {
+						printf ("\n%d. %s-%s-%d-%d-%d\n", i, p.produ[vaux[i]].nombre, p.produ[vaux[i]].descrip, p.produ[vaux[i]].stock, p.produ[vaux[i]].entrega, p.produ[vaux[i]].importe);
+						op2 = i;
+					}
+				}
+			}
+			else {
+				printf ("\nSe encontraron %d productos con la descripcion especificada:\n", cont);
+				//Mostrar los productos encontrados
+				for (i = 1; i < p.num_prod; i++) {
+					if (vaux[i] == i) {
+						printf ("\n%d. %s-%s-%d-%d-%d", i, p.produ[vaux[i]].nombre, p.produ[vaux[i]].descrip, p.produ[vaux[i]].stock, p.produ[vaux[i]].entrega, p.produ[vaux[i]].importe);
+					}
+				}
+			
+				do {
+					//Permitir al usuario seleccionar un producto
+					printf ("\n\nSeleccione el producto que este buscando escribiendo su respectivo indice: ");
+					scanf ("%d", &op2);
+					fflush (stdin);
+					
+					//Verificar si el indice ingresado es valido
+					if (op2 < 1 || op2 >= p.num_prod || vaux[op2] != op2) {
+						printf ("Indice invalido. Por favor, seleccione un indice valido\n");
+						op2 = -1;	//Reiniciar op2 para repetir el bucle
+					}
+					else {
+						vaux[op2] = op2;
+					}
+				}while (op2 == -1);		//Repetir mientras el indice sea invalido	
+			}
+		}
+		else {
+			printf ("No se encontro ningun producto con la descripcion especificada, pruebe con una descripcion distinta:\n\n");
+		}
+	}while (cont == 0);
+	
+	return op2;
+}
+
+int buscar_auxstock (produ_vect p) {
+	int i, op2, naux, cont = 0, vaux[p.num_prod];
+	
+	for (i = 0; i < p.num_prod; i++) {	//Inicializa todos los elementos del vector a 0
+		vaux[i] = 0;
+	}
+	
+	do {
+		printf ("\nIntroduzca el stock del producto que este buscando: ");
+		scanf ("%d", &naux);
+		fflush (stdin);
+	
+		for (i = 1; i < p.num_prod; i++) {
+			if (naux == p.produ[i].stock) {
+				vaux[i] = i;
+				cont++;
+			}
+		}
+	
+		if (cont != 0) {
+			if (cont == 1) {
+				printf ("\nSe encontro un producto con el stock especificado:\n");				
+				//Mostrar el producto encontrado
+				for (i = 1; i < p.num_prod; i++) {
+					if (vaux[i] == i) {
+						printf ("\n%d. %s-%s-%d-%d-%d\n", i, p.produ[vaux[i]].nombre, p.produ[vaux[i]].descrip, p.produ[vaux[i]].stock, p.produ[vaux[i]].entrega, p.produ[vaux[i]].importe);
+						op2 = i;
+					}
+				}
+			}
+			else {
+				printf ("\nSe encontraron %d productos con el stock especificado:\n", cont);
+				//Mostrar los productos encontrados
+				for (i = 1; i < p.num_prod; i++) {
+					if (vaux[i] == i) {
+						printf ("\n%d. %s-%s-%d-%d-%d", i, p.produ[vaux[i]].nombre, p.produ[vaux[i]].descrip, p.produ[vaux[i]].stock, p.produ[vaux[i]].entrega, p.produ[vaux[i]].importe);
+					}
+				}
+			
+				do {
+					//Permitir al usuario seleccionar un producto
+					printf ("\n\nSeleccione el producto que este buscando escribiendo su respectivo indice: ");
+					scanf ("%d", &op2);
+					fflush (stdin);
+					
+					//Verificar si el indice ingresado es valido
+					if (op2 < 1 || op2 >= p.num_prod || vaux[op2] != op2) {
+						printf ("Indice invalido. Por favor, seleccione un indice valido\n");
+						op2 = -1;	//Reiniciar op2 para repetir el bucle
+					}
+					else {
+						vaux[op2] = op2;
+					}
+				}while (op2 == -1);		//Repetir mientras el indice sea invalido	
+			}
+		}
+		else {
+			printf ("No se encontro ningun producto con el stock especificado, pruebe con un stock distinto:\n\n");
+		}
+	}while (cont == 0);
+	
+	return op2;
+}
+
+int buscar_auxentrega (produ_vect p) {
+	int i, op2, naux, cont = 0, vaux[p.num_prod];
+	
+	for (i = 0; i < p.num_prod; i++) {	//Inicializa todos los elementos del vector a 0
+		vaux[i] = 0;
+	}
+	
+	do {
+		printf ("\nIntroduzca los dias de compromiso de entrega del producto que este buscando: ");
+		scanf ("%d", &naux);
+		fflush (stdin);
+	
+		for (i = 1; i < p.num_prod; i++) {
+			if (naux == p.produ[i].entrega) {
+				vaux[i] = i;
+				cont++;
+			}
+		}
+	
+		if (cont != 0) {
+			if (cont == 1) {
+				printf ("\nSe encontro un producto con los dias de compromiso de entrega especificados:\n");				
+				//Mostrar el producto encontrado
+				for (i = 1; i < p.num_prod; i++) {
+					if (vaux[i] == i) {
+						printf ("\n%d. %s-%s-%d-%d-%d\n", i, p.produ[vaux[i]].nombre, p.produ[vaux[i]].descrip, p.produ[vaux[i]].stock, p.produ[vaux[i]].entrega, p.produ[vaux[i]].importe);
+						op2 = i;
+					}
+				}
+			}
+			else {
+				printf ("\nSe encontraron %d productos con los dias de compromiso de entrega especificados:\n", cont);
+				//Mostrar los productos encontrados
+				for (i = 1; i < p.num_prod; i++) {
+					if (vaux[i] == i) {
+						printf ("\n%d. %s-%s-%d-%d-%d", i, p.produ[vaux[i]].nombre, p.produ[vaux[i]].descrip, p.produ[vaux[i]].stock, p.produ[vaux[i]].entrega, p.produ[vaux[i]].importe);
+					}
+				}
+			
+				do {
+					//Permitir al usuario seleccionar un producto
+					printf ("\n\nSeleccione el producto que este buscando escribiendo su respectivo indice: ");
+					scanf ("%d", &op2);
+					fflush (stdin);
+					
+					//Verificar si el indice ingresado es valido
+					if (op2 < 1 || op2 >= p.num_prod || vaux[op2] != op2) {
+						printf ("Indice invalido. Por favor, seleccione un indice valido\n");
+						op2 = -1;	//Reiniciar op2 para repetir el bucle
+					}
+					else {
+						vaux[op2] = op2;
+					}
+				}while (op2 == -1);		//Repetir mientras el indice sea invalido	
+			}
+		}
+		else {
+			printf ("No se encontro ningun producto con los dias especificados, pruebe con una cantidad de dias distinta:\n\n");
+		}
+	}while (cont == 0);
+	
+	return op2;
+}
+
+int buscar_auximporte (produ_vect p) {
+	int i, op2, naux, cont = 0, vaux[p.num_prod];
+	
+	for (i = 0; i < p.num_prod; i++) {	//Inicializa todos los elementos del vector a 0
+		vaux[i] = 0;
+	}
+	
+	do {
+		printf ("\nIntroduzca el importe en euros del producto que este buscando: ");
+		scanf ("%d", &naux);
+		fflush (stdin);
+	
+		for (i = 1; i < p.num_prod; i++) {
+			if (naux == p.produ[i].importe) {
+				vaux[i] = i;
+				cont++;
+			}
+		}
+	
+		if (cont != 0) {
+			if (cont == 1) {
+				printf ("\nSe encontro un producto con el importe especificado:\n");				
+				//Mostrar el producto encontrado
+				for (i = 1; i < p.num_prod; i++) {
+					if (vaux[i] == i) {
+						printf ("\n%d. %s-%s-%d-%d-%d\n", i, p.produ[vaux[i]].nombre, p.produ[vaux[i]].descrip, p.produ[vaux[i]].stock, p.produ[vaux[i]].entrega, p.produ[vaux[i]].importe);
+						op2 = i;
+					}
+				}
+			}
+			else {
+				printf ("\nSe encontraron %d productos con el importe especificado:\n", cont);
+				//Mostrar los productos encontrados
+				for (i = 1; i < p.num_prod; i++) {
+					if (vaux[i] == i) {
+						printf ("\n%d. %s-%s-%d-%d-%d", i, p.produ[vaux[i]].nombre, p.produ[vaux[i]].descrip, p.produ[vaux[i]].stock, p.produ[vaux[i]].entrega, p.produ[vaux[i]].importe);
+					}
+				}
+			
+				do {
+					//Permitir al usuario seleccionar un producto
+					printf ("\n\nSeleccione el producto que este buscando escribiendo su respectivo indice: ");
+					scanf ("%d", &op2);
+					fflush (stdin);
+					
+					//Verificar si el indice ingresado es valido
+					if (op2 < 1 || op2 >= p.num_prod || vaux[op2] != op2) {
+						printf ("Indice invalido. Por favor, seleccione un indice valido\n");
+						op2 = -1;	//Reiniciar op2 para repetir el bucle
+					}
+					else {
+						vaux[op2] = op2;
+					}
+				}while (op2 == -1);		//Repetir mientras el indice sea invalido	
+			}
+		}
+		else {
+			printf ("No se encontro ningun producto con el importe especificado, pruebe con un importe distinto:\n\n");
+		}
+	}while (cont == 0);
+	
+	return op2;
+}
+
+int buscar_productos (produ_vect p) {
+	int op1, op2;
 	
 	//Primero, busque el producto que desee modificar bajo uno de los siguientes criterios:
 	//Primero, busque el producto que desee eliminar bajo uno de los siguientes criterios:
@@ -674,287 +1020,23 @@ int buscar_productos (produ_vect p) {
 	
 	switch (op1) {
 		case 1:
-			do {
-				printf ("\nIntroduzca el nombre del producto que este buscando: ");
-				fgets (saux, 16, stdin);
-				fflush (stdin);
-				terminador_cad (saux);
-				len = strlen (saux);
-			
-				for (i = 1; i < p.num_prod; i++) {
-					if (strncmp (saux, p.produ[i].nombre, len) == 0) {
-						vaux[i] = i;
-						cont++;
-					}
-				}
-			
-				if (cont != 0) {
-					if (cont == 1) {
-						printf ("\nSe encontro un producto con el nombre especificado:\n");				
-						//Mostrar el producto encontrado
-						for (i = 1; i < p.num_prod; i++) {
-							if (vaux[i] == i) {
-								printf ("\n%d. %s-%s-%d-%d-%d\n", i, p.produ[vaux[i]].nombre, p.produ[vaux[i]].descrip, p.produ[vaux[i]].stock, p.produ[vaux[i]].entrega, p.produ[vaux[i]].importe);
-								op2 = i;
-							}
-						}
-					}
-					else {
-						printf ("\nSe encontraron %d productos con el nombre especificado:\n", cont);
-						//Mostrar los productos encontrados
-						for (i = 1; i < p.num_prod; i++) {
-							if (vaux[i] == i) {
-								printf ("\n%d. %s-%s-%d-%d-%d", i, p.produ[vaux[i]].nombre, p.produ[vaux[i]].descrip, p.produ[vaux[i]].stock, p.produ[vaux[i]].entrega, p.produ[vaux[i]].importe);
-							}
-						}
-					
-						do {
-							//Permitir al usuario seleccionar un producto
-							printf ("\n\nSeleccione el producto que este buscando escribiendo su respectivo indice: ");
-							scanf ("%d", &op2);
-							fflush (stdin);
-							
-							//Verificar si el indice ingresado es valido
-    						if (op2 < 1 || op2 >= p.num_prod || vaux[op2] != op2) {
-        						printf ("Indice invalido. Por favor, seleccione un indice valido\n");
-        						op2 = -1;	//Reiniciar op2 para repetir el bucle
-    						}
-							else {
-        						vaux[op2] = op2;
-    						}
-						}while (op2 == -1);		//Repetir mientras el indice sea invalido	
-					}
-				}
-				else {
-					printf ("No se encontro ningun producto con el nombre especificado, pruebe con un nombre distinto:\n\n");
-				}
-			}while (cont == 0);
+			op2 = buscar_auxnom (p);
 		break;
 		
 		case 2:
-			do {
-				printf ("\nIntroduzca la descripcion del producto que este buscando: ");
-				fgets (saux, 51, stdin);
-				fflush (stdin);
-				terminador_cad (saux);
-				len = strlen (saux);
-			
-				for (i = 1; i < p.num_prod; i++) {
-					if (strncmp (saux, p.produ[i].descrip, len) == 0) {
-						vaux[i] = i;
-						cont++;
-					}
-				}
-			
-				if (cont != 0) {
-					if (cont == 1) {
-						printf ("\nSe encontro un producto con la descripcion especificada:\n");				
-						//Mostrar el producto encontrado
-						for (i = 1; i < p.num_prod; i++) {
-							if (vaux[i] == i) {
-								printf ("\n%d. %s-%s-%d-%d-%d\n", i, p.produ[vaux[i]].nombre, p.produ[vaux[i]].descrip, p.produ[vaux[i]].stock, p.produ[vaux[i]].entrega, p.produ[vaux[i]].importe);
-								op2 = i;
-							}
-						}
-					}
-					else {
-						printf ("\nSe encontraron %d productos con la descripcion especificada:\n", cont);
-						//Mostrar los productos encontrados
-						for (i = 1; i < p.num_prod; i++) {
-							if (vaux[i] == i) {
-								printf ("\n%d. %s-%s-%d-%d-%d", i, p.produ[vaux[i]].nombre, p.produ[vaux[i]].descrip, p.produ[vaux[i]].stock, p.produ[vaux[i]].entrega, p.produ[vaux[i]].importe);
-							}
-						}
-					
-						do {
-							//Permitir al usuario seleccionar un producto
-							printf ("\n\nSeleccione el producto que este buscando escribiendo su respectivo indice: ");
-							scanf ("%d", &op2);
-							fflush (stdin);
-							
-							//Verificar si el indice ingresado es valido
-    						if (op2 < 1 || op2 >= p.num_prod || vaux[op2] != op2) {
-        						printf ("Indice invalido. Por favor, seleccione un indice valido\n");
-        						op2 = -1;	//Reiniciar op2 para repetir el bucle
-    						}
-							else {
-        						vaux[op2] = op2;
-    						}
-						}while (op2 == -1);		//Repetir mientras el indice sea invalido	
-					}
-				}
-				else {
-					printf ("No se encontro ningun producto con la descripcion especificada, pruebe con una descripcion distinta:\n\n");
-				}
-			}while (cont == 0);
+			op2 = buscar_auxdesc (p);
 		break;
 			
 		case 3:
-			do {
-				printf ("\nIntroduzca el stock del producto que este buscando: ");
-				scanf ("%d", &naux);
-				fflush (stdin);
-			
-				for (i = 1; i < p.num_prod; i++) {
-					if (naux == p.produ[i].stock) {
-						vaux[i] = i;
-						cont++;
-					}
-				}
-			
-				if (cont != 0) {
-					if (cont == 1) {
-						printf ("\nSe encontro un producto con el stock especificado:\n");				
-						//Mostrar el producto encontrado
-						for (i = 1; i < p.num_prod; i++) {
-							if (vaux[i] == i) {
-								printf ("\n%d. %s-%s-%d-%d-%d\n", i, p.produ[vaux[i]].nombre, p.produ[vaux[i]].descrip, p.produ[vaux[i]].stock, p.produ[vaux[i]].entrega, p.produ[vaux[i]].importe);
-								op2 = i;
-							}
-						}
-					}
-					else {
-						printf ("\nSe encontraron %d productos con el stock especificado:\n", cont);
-						//Mostrar los productos encontrados
-						for (i = 1; i < p.num_prod; i++) {
-							if (vaux[i] == i) {
-								printf ("\n%d. %s-%s-%d-%d-%d", i, p.produ[vaux[i]].nombre, p.produ[vaux[i]].descrip, p.produ[vaux[i]].stock, p.produ[vaux[i]].entrega, p.produ[vaux[i]].importe);
-							}
-						}
-					
-						do {
-							//Permitir al usuario seleccionar un producto
-							printf ("\n\nSeleccione el producto que este buscando escribiendo su respectivo indice: ");
-							scanf ("%d", &op2);
-							fflush (stdin);
-							
-							//Verificar si el indice ingresado es valido
-    						if (op2 < 1 || op2 >= p.num_prod || vaux[op2] != op2) {
-        						printf ("Indice invalido. Por favor, seleccione un indice valido\n");
-        						op2 = -1;	//Reiniciar op2 para repetir el bucle
-    						}
-							else {
-        						vaux[op2] = op2;
-    						}
-						}while (op2 == -1);		//Repetir mientras el indice sea invalido	
-					}
-				}
-				else {
-					printf ("No se encontro ningun producto con el stock especificado, pruebe con un stock distinto:\n\n");
-				}
-			}while (cont == 0);
+			op2 = buscar_auxstock (p);
 		break;
 			
 		case 4:
-			do {
-				printf ("\nIntroduzca los dias de compromiso de entrega del producto que este buscando: ");
-				scanf ("%d", &naux);
-				fflush (stdin);
-			
-				for (i = 1; i < p.num_prod; i++) {
-					if (naux == p.produ[i].entrega) {
-						vaux[i] = i;
-						cont++;
-					}
-				}
-			
-				if (cont != 0) {
-					if (cont == 1) {
-						printf ("\nSe encontro un producto con los dias de compromiso de entrega especificados:\n");				
-						//Mostrar el producto encontrado
-						for (i = 1; i < p.num_prod; i++) {
-							if (vaux[i] == i) {
-								printf ("\n%d. %s-%s-%d-%d-%d\n", i, p.produ[vaux[i]].nombre, p.produ[vaux[i]].descrip, p.produ[vaux[i]].stock, p.produ[vaux[i]].entrega, p.produ[vaux[i]].importe);
-								op2 = i;
-							}
-						}
-					}
-					else {
-						printf ("\nSe encontraron %d productos con los dias de compromiso de entrega especificados:\n", cont);
-						//Mostrar los productos encontrados
-						for (i = 1; i < p.num_prod; i++) {
-							if (vaux[i] == i) {
-								printf ("\n%d. %s-%s-%d-%d-%d", i, p.produ[vaux[i]].nombre, p.produ[vaux[i]].descrip, p.produ[vaux[i]].stock, p.produ[vaux[i]].entrega, p.produ[vaux[i]].importe);
-							}
-						}
-					
-						do {
-							//Permitir al usuario seleccionar un producto
-							printf ("\n\nSeleccione el producto que este buscando escribiendo su respectivo indice: ");
-							scanf ("%d", &op2);
-							fflush (stdin);
-							
-							//Verificar si el indice ingresado es valido
-    						if (op2 < 1 || op2 >= p.num_prod || vaux[op2] != op2) {
-        						printf ("Indice invalido. Por favor, seleccione un indice valido\n");
-        						op2 = -1;	//Reiniciar op2 para repetir el bucle
-    						}
-							else {
-        						vaux[op2] = op2;
-    						}
-						}while (op2 == -1);		//Repetir mientras el indice sea invalido	
-					}
-				}
-				else {
-					printf ("No se encontro ningun producto con los dias especificados, pruebe con una cantidad de dias distinta:\n\n");
-				}
-			}while (cont == 0);
+			op2 = buscar_auxentrega (p);
 		break;
 		
 		case 5:
-			do {
-				printf ("\nIntroduzca el importe en euros del producto que este buscando: ");
-				scanf ("%d", &naux);
-				fflush (stdin);
-			
-				for (i = 1; i < p.num_prod; i++) {
-					if (naux == p.produ[i].importe) {
-						vaux[i] = i;
-						cont++;
-					}
-				}
-			
-				if (cont != 0) {
-					if (cont == 1) {
-						printf ("\nSe encontro un producto con el importe especificado:\n");				
-						//Mostrar el producto encontrado
-						for (i = 1; i < p.num_prod; i++) {
-							if (vaux[i] == i) {
-								printf ("\n%d. %s-%s-%d-%d-%d\n", i, p.produ[vaux[i]].nombre, p.produ[vaux[i]].descrip, p.produ[vaux[i]].stock, p.produ[vaux[i]].entrega, p.produ[vaux[i]].importe);
-								op2 = i;
-							}
-						}
-					}
-					else {
-						printf ("\nSe encontraron %d productos con el importe especificado:\n", cont);
-						//Mostrar los productos encontrados
-						for (i = 1; i < p.num_prod; i++) {
-							if (vaux[i] == i) {
-								printf ("\n%d. %s-%s-%d-%d-%d", i, p.produ[vaux[i]].nombre, p.produ[vaux[i]].descrip, p.produ[vaux[i]].stock, p.produ[vaux[i]].entrega, p.produ[vaux[i]].importe);
-							}
-						}
-					
-						do {
-							//Permitir al usuario seleccionar un producto
-							printf ("\n\nSeleccione el producto que este buscando escribiendo su respectivo indice: ");
-							scanf ("%d", &op2);
-							fflush (stdin);
-							
-							//Verificar si el indice ingresado es valido
-    						if (op2 < 1 || op2 >= p.num_prod || vaux[op2] != op2) {
-        						printf ("Indice invalido. Por favor, seleccione un indice valido\n");
-        						op2 = -1;	//Reiniciar op2 para repetir el bucle
-    						}
-							else {
-        						vaux[op2] = op2;
-    						}
-						}while (op2 == -1);		//Repetir mientras el indice sea invalido	
-					}
-				}
-				else {
-					printf ("No se encontro ningun producto con el importe especificado, pruebe con un importe distinto:\n\n");
-				}
-			}while (cont == 0);
+			op2 = buscar_auximporte (p);
 		break;
 		
 		case 0:
@@ -1152,7 +1234,7 @@ void listar_productos (produ_vect p) {
 	getchar();
 }
 
-void menu_prod (produ_vect p) {
+void menu_prod (produ_vect p, int gestor) {
 	int op;
 	char respuesta;
 	
@@ -1173,7 +1255,7 @@ void menu_prod (produ_vect p) {
 		
 		switch (op) {
 			case 1:
-				p = agregar_productos (p);
+				p = agregar_productos (p, gestor);
 			break;
 			
 			case 2:
@@ -1359,7 +1441,7 @@ produ_vect cambiar_stock (int id_prod, int num_uds) {
 }
 
 //Funciones para Santi:
-produ_vect modificar_prodgestor (produ_vect p) {
+produ_vect modificar_prodgestor (produ_vect p, int id) {
 	int pos, op;
 	char respuesta;
 	
@@ -1454,11 +1536,11 @@ produ_vect modificar_prodgestor (produ_vect p) {
 	else {
 		printf ("\nSu id de gestor no coincide con el id de producto, volviendo al menu anterior...\n");
 	}
-			
+	
 	return p;
 }
 
-produ_vect eliminar_prodgestor (produ_vect p) {
+produ_vect eliminar_prodgestor (produ_vect p, int id) {
 	int i, pos;
 	char respuesta;
 	
@@ -1515,19 +1597,46 @@ produ_vect eliminar_prodgestor (produ_vect p) {
 	return p;
 }
 
-produ_vect listar_prodgestor (produ_vect p) {
-	int i;
+void listar_prodgestor (produ_vect p, int id) {
+	int i,j,
+		id_cat,
+		id_gest;
+	categ_vect Cat = cargar_categorias();
+	admin_prov_vect adminprov = cargar_adminprov();
+	
 	
 	clear ();
-	Sleep (1000);
-	
-	printf ("---> LISTA DE PRODUCTOS: <---\n\n");
+	printf("+--------------------+\n");
+	printf("| LISTA DE PRODUCTOS |\n");
+	printf("+-----------------+--+-------------------------------------------------+---------------------------+\n");
+	printf("| NOMBRE          | DESCRIPCION                                        | EMPRESA GESTORA           |\n");
+	printf("| STOCK           | CATEGORIA                                          | DIAS DE ENTREGA | IMPORTE |\n");
+	printf("+-----------------+----------------------------------------------------+---------------------------+\n");
 	
 	for (i = 1; i < p.num_prod; i++) {
-		if (p.produ[i].id_gestor == p.produ[i].id_prod) {
-			printf ("Su id coincide con el del producto: %07d-%s-%s-%04d-%04d-%d-%d-%d\n", p.produ[i].id_prod,  p.produ[i].nombre,  p.produ[i].descrip,  p.produ[i].id_categ,  p.produ[i].id_gestor,  p.produ[i].stock,  p.produ[i].entrega,  p.produ[i].importe);
+		for(j=1; j < Cat.num_cat; j++){
+			if(p.produ[i].id_categ == Cat.categ[j].id_categ)
+				id_cat = j;
 		}
-	}
+		for(j=1; j < adminprov.tam; j++){
+			if(p.produ[i].id_gestor == adminprov.usuarios[j].Id_empresa)
+				id_gest = j;
+		}
+		
+		if (p.produ[i].id_gestor == id) {
+			printf ("| %-15s | %-50s | %-25s |\n| %-15d | %-50s | %-15d | %-7d |\n",
+			p.produ[i].nombre,
+			p.produ[i].descrip,
+			adminprov.usuarios[id_gest].Nombre,
+			p.produ[i].stock, 
+			Cat.categ[id_cat].descrip,
 	
-	return p;
+			
+			p.produ[i].entrega, 
+			p.produ[i].importe);
+		}
+		printf("+-----------------+----------------------------------------------------+---------------------------+\n");
+	}
+	printf("Pulse [enter] para volver...");
+	getchar();
 }
