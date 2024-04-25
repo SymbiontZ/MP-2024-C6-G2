@@ -1,0 +1,38 @@
+fecha crear_fechacad(fecha fch_base){
+    fecha fch_cad;                                                                                  |
+    int fch_ok;     //Variable para comprobar la fecha es valida                                    |1 
+      												    |
+    do{                                                                                             |2 
+												    |
+        printf("FECHA ACTUAL: %02d / %02d / %04d\n", fch_base.dia, fch_base.mes, fch_base.anio);    |3
+        printf("Introduzca el dia que caduca: ");                                                   |4
+        fch_cad.dia = input_int();                                                                  |5
+        printf("Introduzca el mes que caduca: ");                                                   |6
+        fch_cad.mes = input_int();                                                                  |7
+        printf("Introduzca el anio que caduca: ");                                                  |8
+        fch_cad.anio = input_int();                                                                 |9
+                                                                                                    |
+        fch_ok = comprobar_fecha(fch_base, fch_cad);                                                |10 
+                                                                                                    |
+        if (fch_ok != 1){                                                                           |11 
+               											    |
+            printf("La fecha indicada no es valida. Vuelva a intentarlo.\n");                       |12 
+                                                                                                    |
+        }                                                                                           |13 
+                                                                                                    |
+    } while (fch_ok != 1);                                                                          |14 
+												    |
+    return fch_cad;                                                                                 |15 
+}
+
+Cálculo de rutas:
+
+	> V(G) = Nº de regiones = 3
+	> V(G) = NA - NN + 2 = 3
+	> V(G) = NNP + 1 = 3
+
+Rutas posibles:
+
+R1: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15
+R2: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
+R3: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15
