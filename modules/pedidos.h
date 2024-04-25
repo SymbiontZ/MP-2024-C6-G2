@@ -91,7 +91,7 @@ void listapedidos_cliente(prod_pedidos, pedidos, int);
 //Cabecera: eliminar_pedidos(prod_pedidos, pedidos, int)
 //Precondicion: estructuras prod_pedidos, pedidos cargadas y se le pasa la posicion del pedido se desea eliminar
 //Postcondicion: elimina el pedido 
-void eliminar_pedidos(prod_pedidos, pedidos);
+pedidos eliminar_pedidos(prod_pedidos, pedidos);
 
 //Cabecera: menu_listadoped_estado()
 //Precondicion

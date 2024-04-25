@@ -581,7 +581,7 @@ void crear_producto_pedido(pedidos p, int product, int id_pedido, prod_pedidos p
     Sleep(2000);
 }
 
-void eliminar_pedidos(prod_pedidos prod_p, pedidos p){
+pedidos eliminar_pedidos(prod_pedidos prod_p, pedidos p){
     int i;
     char resp;
     int pos_ped=busqueda_pedidos(p);
