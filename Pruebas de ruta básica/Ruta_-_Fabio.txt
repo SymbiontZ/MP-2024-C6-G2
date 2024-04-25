@@ -34,5 +34,15 @@ Cálculo de rutas:
 Rutas posibles:
 
 R1: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15
-R2: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
+R2: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15
 R3: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15
+
+Pruebas para cada ruta:
+
+R1: El usuario introduce una fecha adecuada. Se sigue el flujo normalmente y con éxito. 
+R2: Si se entra en la estructura selectiva, se va a dar una nueva iteración obligatoriamente. Esta ruta nunca se va a dar.
+R3: Esta ruta es la que se daría en vez del caso anterior. El usuario introduce una fecha inválida en algún punto del programa, entra en la selectiva y 
+repite el bucle.
+
+Otras pruebas: el usuario introduce una cadena o carácter en alguna de las peticiones (o todas). No ocurre nada dado que la función input_int asegura
+la entrada de un entero. Lo mismo con caracteres vacíos.
