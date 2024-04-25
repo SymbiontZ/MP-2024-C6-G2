@@ -3,7 +3,7 @@
 /*** MANEJO CLIENTES ESTRUCTURA-FICHERO ***/
 
 clients cargar_clientes(){
-    char filename[] = "../data/Clientes.txt";
+    char filename[] = "Clientes.txt";
     char default_user[] = "0000000-userdefault-defaultdir-defaultloc-defaultprov-defaultemail-defpsw-0";    //Usuario por defecto
     int n_clients = 0;                          //Numero de clientes registrados
     int i = 0;                          
@@ -70,7 +70,7 @@ clients cargar_clientes(){
 
 void guardar_clientes(clients C){
     FILE* f_clients;
-    char filename[] = "../data/Clientes.txt";
+    char filename[] = "Clientes.txt";
     int i;
     f_clients = fopen(filename,"w");
     //PROCESO DE GUARDADO DE DATOS DE CADA USUARIO EN FICHERO//
@@ -180,7 +180,7 @@ void menucliente_prod(){
                 buscador_prodnombre();
                 break;
             case 2:
-                buscador_prodidcateg();
+                //buscador_prodidcateg();
                 break;
             case 0:
                 //CASO DE VUELTA AL MENU ANTERIOR
@@ -261,7 +261,7 @@ void menucliente_dev(int pos){
 
             break;
         case 3:
-            listar_devolpend(Dev,pos);
+            //listar_dev_pendientes(Dev);
             break;    
         case 0:
             //CASO DE VUELTA AL MENU ANTERIOR
@@ -288,6 +288,7 @@ int busqueda_cliente(){
     int pos = -2, opt;             //Elijo -2 como pos predeter. ya que -1 es para cancelar la busqueda
     while (pos == -2){    //Solo va a salir del bucle cuando se selecciona la posicion de un cliente valido
         clear();
+        titulo();
         printf("Para poder realizar esta accion tiene que seleccionar un cliente.\n");
         printf("Como quieres buscar\n");
         printf("1. Por nombre.\n");
@@ -409,6 +410,7 @@ int busqueda_clientetipo(clients C, int pos, int tipo){
 void mostrar_clientes(clients C){
     int i;
     clear();
+    titulo();
     printf("+---------------------+\n");
     printf("| LISTADO DE CLIENTES |\n");
     printf("+---------------------+---------------------+-------------------------------+\n");
@@ -454,6 +456,7 @@ clients eliminar_cliente(clients C, int pos){
     int i;
     char resp;      //Variable para responder preguntas si/no.
     clear();
+    titulo();
     printf("Estas seguro de eliminar al usuario [ %s ]? [s/n]: ", C.clients[pos].Nom_cliente);
     
     resp = confirmacion();
@@ -493,6 +496,7 @@ clients gestionar_cliente(clients C, int pos, int mode){
     do{
         //MOSTRAR INFORMACION//
         clear();
+        titulo();
         printf("\n+----------------- INFORMACION PERSONAL -----------------+\n");
         printf("| Nombre: %-47s|\n", C.clients[pos].Nom_cliente);
         printf("| Dir: %-50s|\n", C.clients[pos].Dir_cliente);

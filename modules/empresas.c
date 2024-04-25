@@ -5,6 +5,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <windows.h>
+#include <wchar.h>
 
 #include "complementos.h"
 #include "Productos.h"
@@ -23,10 +24,6 @@ void inicsesion_prov(admin_prov_vect provs, int pos){
 	
 	char validar_contra[16];
 	int i = 3;
-	
-	clear();
-	
-	titulo();
 	
 	do{
 		printf("\nIntroduzca su contrasena: ");
@@ -62,10 +59,6 @@ void inicsesion_transport(transport_vect transports, int pos){
 	
 	char validar_contra[16];
 	int i = 3;
-	
-	clear();
-	
-	titulo();
 	
 	do{
 		printf("\nIntroduzca su contrasena: ");
@@ -111,13 +104,14 @@ void menu_prov(admin_prov_vect provs, int pos){
 		
 		titulo();
 		
-		printf("	#######################\n");
-		printf("	## MENU DE PROVEEDOR ##\n");
-		printf("	#######################\n");
-		
-		printf("\n	EMPRESA: %s\n", provs.usuarios[pos].Nombre);
-		
-		printf("\nBienvenido, %s - ¿Qué desea hacer hoy?\n\n <1> Ver perfil.\n <2> Ver productos.\n <3> Administrar pedidos\n <0> Volver.\n Elija una opción: ", provs.usuarios[pos].email);
+		printf("+-------------------------------+\n");
+		printf("| EMPRESA: %-20s |\n", provs.usuarios[pos].Nombre);
+		printf("+-------------------------------+\n");
+		printf("| <1> Ver perfil.               |\n");
+		printf("| <2> Ver productos.            |\n");
+		printf("| <3> Administrar pedidos       |\n");
+		printf("| <0> Salir.                    |\n");
+		printf("+-------------------------------+\n");
 		if(scanf("%i",&op)!=1){
 			fflush(stdin);
 			printf("\nError: introduzca una entrada válida.");
@@ -150,14 +144,16 @@ void menu_transport(transport_vect transports, int pos){
 		
 		titulo();
 		
-		printf("	###########################\n");
-		printf("	## MENU DE TRANSPORTISTA ##\n");
-		printf("	###########################\n");
+		printf("+-------------------------------+\n");
+		printf("| NOMBRE: %-20s  |\n", transports.transportistas[pos].Nombre);
+		printf("| EMPRESA: %-20s |\n", transports.transportistas[pos].Nom_Emp);
+		printf("+-------------------------------+\n");
+		printf("| <1> Ver perfil.               |\n");
+		printf("| <2> Ver mis repartos.         |\n");
+		printf("| <3> Retornos                  |\n");
+		printf("| <0> Salir.                    |\n");
+		printf("+-------------------------------+\n");
 		
-		printf("\n	NOMBRE: %s\n", transports.transportistas[pos].Nombre);
-		printf("\n	EMPRESA: %s\n", transports.transportistas[pos].Nom_Emp);
-		
-		printf("\nBienvenido, %s - ¿Qué desea hacer hoy?\n\n <1> Ver perfil.\n <2> Ver repartos asignados.\n <3> Retornos.\n <0> Salir.\n Elija una opción: ", transports.transportistas[pos].email);
 		if(scanf("%i",&op)!=1){
 			fflush(stdin);
 			printf("\nError: introduzca una entrada válida.");
@@ -248,7 +244,7 @@ void ver_productos(admin_prov_vect provs, int pos){
 			switch(op){
 				case 1: listar_prodgestor(prods, provs.usuarios[pos].Id_empresa); break;
 				case 2: modificar_prodgestor(prods, provs.usuarios[pos].Id_empresa); break;
-				case 3: agregar_productos(prods); break;
+				case 3: agregar_productos(prods, pos); break;
 				case 4: eliminar_prodgestor(prods, provs.usuarios[pos].Id_empresa); break;
 				case 0: break;
 				default: break;
@@ -2285,7 +2281,7 @@ admin_prov_vect cargar_adminprov(){
 	
 	admin_prov_vect adminprov_sistema;
 	FILE *f_AdminProv;																							// Puntero al fichero a leer.
-	char ruta[] = ".\\data\\AdminProv.txt";																		// Ruta del fichero a leer.
+	char ruta[] = "AdminProv.txt";																		// Ruta del fichero a leer.
 	char linea[LONG_MAX_ADMINPROV];																				// Línea actual del fichero. Longitud máxima de una línea 86 caracteres.
 	char tipo_usuario[14];																						// Cadena auxiliar a convertir.
 	int i = 0, m; 
@@ -2320,8 +2316,7 @@ admin_prov_vect cargar_adminprov(){
 		}
 	}			
 		                                    
-	fclose(f_AdminProv);  
-	Sleep(2000);
+	fclose(f_AdminProv);
 	return adminprov_sistema;                             	                            
 }
 
@@ -2333,7 +2328,7 @@ transport_vect cargar_transportistas(){
 	
 	transport_vect transport_sistema;
 	FILE *Transportistas;																						// Puntero al fichero a leer.
-	char ruta[] = "./data/Transportistas.txt";																	// Ruta del fichero a leer.
+	char ruta[] = "Transportistas.txt";																	// Ruta del fichero a leer.
 	char linea[LONG_MAX_TRANSPORT];																				// Línea actual del fichero. Longitud máxima de una línea 113 caracteres.
 	int i = 0, m;
 
@@ -2380,7 +2375,7 @@ transport_vect cargar_transportistas(){
 void guardar_adminprov(admin_prov_vect usuarios){
 	
 	FILE *AdminProv;																							// Puntero al fichero a leer.
-	char ruta[] = ".\\data\\AdminProv.txt";																		// Ruta del fichero a leer.
+	char ruta[] = "AdminProv.txt";																		// Ruta del fichero a leer.
 	char linea[LONG_MAX_ADMINPROV];																				// Línea actual del fichero. Longitud máxima de una línea 86 caracteres.
 	char aux[14];
 	
@@ -2398,7 +2393,7 @@ void guardar_adminprov(admin_prov_vect usuarios){
 void guardar_transportista(transport_vect transportistas){
 	
 	FILE *Transportistas;																						// Puntero al fichero a leer.
-	char ruta[] = ".\\data\\Transportistas.txt";																// Ruta del fichero a leer.
+	char ruta[] = "Transportistas.txt";																// Ruta del fichero a leer.
 	char linea[LONG_MAX_TRANSPORT];																				// Línea actual del fichero. Longitud máxima de una línea 113 caracteres.
 
 	Transportistas = fopen(ruta, "w");
