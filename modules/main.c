@@ -29,6 +29,7 @@ void inicsesion_email(){
     int verif = 0;                  //Comprueba existe email | 0 -> NO EXISTE / 1 -> EXISTE
     int pos;                         //Guarda la posicion relacionado con email
 
+    printf("--- INICIO DE SESION ---\n");
     //INTRDUCIR CORREO//
     printf("\nIntroduzca el correo: ");
     fgets(cad_email, MAX_EMAIL, stdin);

@@ -111,7 +111,7 @@ void listar_pedidos(pedidos);
 //Cabecera: modificar_pedido(pedidos)
 //Precondicion: la estructura pedidos tiene que estar cargada
 //Postcondicion: modifica un pedido que ha seleccionado el cliente
-pedidos modificar_pedido(pedidos);
+pedidos modificar_pedidos(pedidos);
 
 //Cabecera: busqueda_pedidos(pedidos p)
 //Precondicion: estructura pedidos cargada

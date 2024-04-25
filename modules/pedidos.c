@@ -585,7 +585,6 @@ void eliminar_pedidos(prod_pedidos prod_p, pedidos p){
     int i;
     char resp;
     int pos_ped=busqueda_pedidos(p);
-    prod_pedidos prod_p = cargar_prod_pedidos();
     printf("Estas seguro de elimar el pedido? [s/n]: ");
     resp=confirmacion();
     if(resp =='S' || resp=='s'){

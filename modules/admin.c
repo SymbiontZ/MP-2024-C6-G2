@@ -105,6 +105,7 @@ void menuadmin_cliente(){
     do{
         //MOSTRAR INFORMACION//
         clear();
+        titulo();
         printf("+-----------------------------+\n");
         printf("| QUE DESEA REALIZAR:         |\n");
         printf("+-----------------------------+\n");
@@ -155,6 +156,7 @@ void menuadmin_admin(admin_prov_vect admin){
 
     do{
         clear();
+        titulo();
         printf("+----------------------------+\n");
         printf("| QUE DESEA REALIZAR:        |\n");
         printf("+----------------------------+\n");
@@ -205,6 +207,7 @@ void menuadmin_prov(admin_prov_vect admin){
 
     do{
         clear();
+        titulo();
         printf("+--------------------------------+\n");
         printf("| QUE DESEA REALIZAR:            |\n");
         printf("+--------------------------------+\n");
@@ -275,7 +278,7 @@ void menuadmin_prod(){
                 printf("Seguro que quiere agregar un producto [s/n]: ");
                 resp = confirmacion();
                 if(resp == 'S'|| resp == 's')
-                    agregar_productos(Produ);
+                    Produ = agregar_productos(Produ, 0);
                 break;
             case 3:
                 
@@ -305,6 +308,7 @@ void menuadmin_cat(){
 
     do{
         clear();
+        titulo();
         printf("+---------------------------------+\n");
         printf("| QUE DESEA REALIZAR:             |\n");
         printf("+---------------------------------+\n");
@@ -353,6 +357,7 @@ void menuadmin_ped(){
 
     do{
         clear();
+        titulo();
         printf("+----------------------------------+\n");
         printf("| QUE DESEA REALIZAR:              |\n");
         printf("+----------------------------------+\n");
@@ -389,7 +394,7 @@ void menuadmin_ped(){
                 Sleep(3000);
                 //Ped = eliminar_pedidos(Prod_P, Ped);
             case 5:
-                Ped = modificar_pedido(Ped);
+                Ped = modificar_pedidos(Ped);
                 break;
             case 6:
                 //modificar_asig_transport()
@@ -416,6 +421,7 @@ void menuadmin_transp(){
 
     do{
         clear();
+        titulo();
         printf("+---------------------------------+\n");
         printf("| QUE DESEA REALIZAR:             |\n");
         printf("+---------------------------------+\n");
@@ -476,6 +482,7 @@ void menuadmin_desc(){
 
     do{
         clear();
+        titulo();
         printf("+------------------------------------+\n");
         printf("| QUE DESEA REALIZAR:                |\n");
         printf("+------------------------------------+\n");
@@ -543,6 +550,7 @@ void menuadmin_devol(){
 
     do{
         clear();
+        titulo();
         printf("+---------------------------------+\n");
         printf("| QUE DESEA REALIZAR:             |\n");
         printf("+---------------------------------+\n");
@@ -595,6 +603,7 @@ void menuadmin_devol(){
 void listar_admin(admin_prov_vect admin){
     int i;
     clear();
+    titulo();
     printf("+------------------------------+\n");
     printf("| ADMINS REGISTRADOS           |\n");
     printf("+------------------------------+\n");
@@ -689,6 +698,7 @@ admin_prov_vect eliminar_admin(admin_prov_vect admin, int pos){
     int i;
     char resp;      //Variable para responder preguntas si/no.
     clear();
+    titulo();
     printf("Estas seguro de eliminar al cliente [ %s ]? [s/n]: ", admin.usuarios[pos].email);
     resp = confirmacion();
 
@@ -723,6 +733,7 @@ admin_prov_vect gestionar_admin (admin_prov_vect admin, int pos, int mod){
     do{
         //MOSTRAR INFORMACION//
         clear();
+        titulo();
         printf("+------------ TU INFORMACION ------------+\n");
         printf("| Email: %-31s |\n", admin.usuarios[pos].email);
         printf("+----------------------+-----------------+\n");

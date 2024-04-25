@@ -5,7 +5,7 @@
 #include "empresas.h"
 #include "Productos.h"
 #include "pedidos.h"
-
+#include "clientes.h"
 #include "Descuentos.h"
 
 #include <stdio.h>

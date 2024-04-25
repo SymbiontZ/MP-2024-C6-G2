@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-
+#include "complementos.h"
 #define MAX_DESC 87
 #define MAX_DESCLI 50
 
