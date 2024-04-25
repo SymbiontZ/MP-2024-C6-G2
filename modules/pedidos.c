@@ -12,7 +12,7 @@ pedidos cargar_pedidos(){
     char cad_aux[150]; //cadena auxiliar en la que se guarda cada linea del fichero
     
     FILE * f_ped;
-    f_ped=fopen("../data/Pedidos.txt", "a+"); //abre el fichero Pedidos.txt
+    f_ped=fopen("Pedidos.txt", "a+"); //abre el fichero Pedidos.txt
     if(f_ped==NULL){ //si no existe el fichero o esta vacio lo crea
         printf("ERROR se ha creado fichero");
         Sleep(2000);
@@ -418,7 +418,7 @@ void guardar_pedido(pedidos p){
     int i;
 
     FILE *f_ped;
-    f_ped=fopen("../data/Pedidos.txt", "w");
+    f_ped=fopen("Pedidos.txt", "w");
     if(f_ped==NULL){
         printf("ERROR");
     }
@@ -448,7 +448,7 @@ prod_pedidos cargar_prod_pedidos(){
     char default_prod_ped[]="0-0-0-0/0/0-0-default-0-default-default-0/0/0\n";
     
     FILE * f_prod_ped;
-    f_prod_ped=fopen("../data/ProductosPedidos.txt", "a+");
+    f_prod_ped=fopen("çProductosPedidos.txt", "a+");
     if(f_prod_ped==NULL){
        printf("\nERROR se ha creado el fichero\n");
        Sleep(2000);
@@ -508,7 +508,7 @@ void guardar_productos_pedidos(prod_pedidos prod_p){
     int i;
 
     FILE*f_prod_ped;
-    f_prod_ped=fopen("../data/ProductosPedidos.txt", "w");
+    f_prod_ped=fopen("ProductosPedidos.txt", "w");
     if(f_prod_ped==NULL){
         printf("ERROR");
     }
@@ -659,7 +659,7 @@ devoluciones cargar_devoluciones(){
     char default_dev[]="0-0-0/0/0-default-default-0/0/0-0/0/0\n";
 
     FILE * f_dev;
-    f_dev=fopen("../data/Devoluciones.txt", "a+"); //Abrir fichero
+    f_dev=fopen("Devoluciones.txt", "a+"); //Abrir fichero
     if(f_dev==NULL){
         printf("ERROR se ha creado el fichero");
         Sleep(2000);
@@ -714,7 +714,7 @@ void guardar_devoluciones(devoluciones d){
     int i;
 
     FILE*f_dev;
-    f_dev=fopen("../data/Devoluciones.txt", "w");
+    f_dev=fopen("Devoluciones.txt", "w");
     if(f_dev==NULL){
         printf("ERROR");
     }

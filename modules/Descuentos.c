@@ -10,7 +10,7 @@ Descuentos Cargar_Descuentos(){
 
     Descuentos vector_desc;
 	FILE *f_descuentos;																	// Puntero al fichero
-	char ruta[] = "../data/Descuentos.txt";                                                  						// Ruta del fichero a leer
+	char ruta[] = "Descuentos.txt";                                                  						// Ruta del fichero a leer
 	char linea[MAX_DESC];													                                // Línea a leer
     int i = 0, m;
 
@@ -57,7 +57,7 @@ DescClientes Cargar_DescuentosClientes(){
 
     DescClientes vector_descClts;
 	FILE *f_DescClientes;																	// Puntero al fichero a leer
-	char ruta[] = "../data/DescuentosClientes.txt";                                                  					// Ruta del fichero a leer
+	char ruta[] = "DescuentosClientes.txt";                                                  					// Ruta del fichero a leer
 	char linea[MAX_DESCLI];													                                // Linea a leer
     int i = 0, m;
 
@@ -106,7 +106,7 @@ DescClientes Cargar_DescuentosClientes(){
 void Guardar_Descuentos(Descuentos descuentos){
 
     FILE *f_descuentos;																		// Puntero al fichero a leer
-	char ruta[] = "..\\data\\Descuentos.txt";													// Ruta del fichero a leer
+	char ruta[] = "Descuentos.txt";													// Ruta del fichero a leer
 	char linea[MAX_DESC];																	// Línea actual del fichero
 	char aux[14];
 
@@ -130,7 +130,7 @@ void Guardar_Descuentos(Descuentos descuentos){
 void Guardar_DescuentosClientes(DescClientes descuentosclientes){
 
     FILE *f_DescClientes;																	// Puntero al fichero
-	char ruta[] = "..\\data\\DescuentosClientes.txt";												// Ruta del fichero
+	char ruta[] = "DescuentosClientes.txt";												// Ruta del fichero
 	char linea[MAX_DESCLI];																	// Línea actual del fichero
 	char aux[14];
 

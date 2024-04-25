@@ -8,7 +8,7 @@
 
 Vect_Lock Cargar_Lockers(){
 	
-	char filename[] = "../data/Lockers.txt";
+	char filename[] = "Lockers.txt";
     char default_lock[] = "Lockdef-pobldefault-defaultprov-defaultubica-00000-00000";    //Locker por defecto
     int tam = 0;                          //Numero de lockers registrados
     int i = 0;                          
@@ -71,7 +71,7 @@ Vect_Lock Cargar_Lockers(){
 
 Vect_CompLock Cargar_CompartimentosLockers(){
     
-    char filename[] = "../data/Lockers.txt";
+    char filename[] = "Lockers.txt";
     char default_complock[] = "Lockdef-00000-00000-vacio-00/00/0000-00/00/0000";    //Compartimento por defecto
     int tam = 0;                          //Numero de Compartimentos registrados
     int i = 0;                          
@@ -140,7 +140,7 @@ Vect_CompLock Cargar_CompartimentosLockers(){
 void Guardar_Lockers(Vect_Lock lockers){
 
     FILE *f_lockers;                                                                                                        // Puntero al fichero a leer
-	char ruta[] = "..\\ESIZON-main\\data\\Lockers.txt";                                                                     // Ruta del fichero a leer
+	char ruta[] = "Lockers.txt";                                                                     // Ruta del fichero a leer
 	char linea[MAX_LOCK];                                                                                                   // Línea actual del fichero
 	char aux[14];
 
@@ -167,7 +167,7 @@ void Guardar_Lockers(Vect_Lock lockers){
 void Guardar_CompartimentosLockers(Vect_CompLock compartimentoslockers){
 
     FILE *f_complockers;                                                                                                    // Puntero al fichero a leer
-	char ruta[] = "..\\ESIZON-main\\data\\CompartimentosLockers.txt";                                                       // Ruta del fichero a leer
+	char ruta[] = "CompartimentosLockers.txt";                                                       // Ruta del fichero a leer
 	char linea[MAX_COMPLOCK];                                                                                               // Línea actual del fichero
 	char aux[14];
 

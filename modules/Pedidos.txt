@@ -1,6 +1,0 @@
-0000000-00/00/0000-0000000-default-default-default
-0000001-23/04/2024-0000001-Domicilio-noLocker-nocod
-0000002-23/04/2024-0000001-Domicilio-noLocker-che001
-0000003-23/04/2024-0000002-Locker-pendLock-nocod
-0000004-23/04/2024-0000002-Domicilio-noLocker-nocod
-0000005-23/04/2024-0000002-Locker-pendLock-nocod
