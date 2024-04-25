@@ -1,4 +1,19 @@
-Función: importe_descuento
+//Precondición: Recibe el código del descuento
+//Postcondición: Devuelve el importe del descuento
+
+int importe_descuento(char cod_desc[]){
+1    Descuentos D = Cargar_Descuentos();
+2    int i, importe;
+
+3    for(i=0;i<D.tam;i++){
+4        if(strcmp(cod_desc, D.Desc[i].Id_cod)== 0)
+5            importe = D.Desc[i].Importe;
+6  
+7     }
+
+8    return importe;
+ }
+
 
 Cálculo de rutas (cualquiera de los tres métodos es válido):
 
@@ -13,4 +28,10 @@ Rutas: Buscamos las cinco rutas básicas.
    - R3) 1, 2, 3, 4, 5, 6, 3, 7, 8
 
    
-Hacemos pruebas que cubran todas las rutas.
+Hacemos pruebas que cubran todas las rutas:
+
+	- Ruta 1: No hay descuentos en el fichero. Nunca se dará.
+
+	- Ruta 2: No existe en el fichero el código de descuento que se pasa como parámetro.
+
+	- Ruta 3: Existe en el fichero el código de descuento que se pasa como parámetro.

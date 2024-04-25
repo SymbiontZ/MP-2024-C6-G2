@@ -1029,8 +1029,7 @@ void listar_devoluciones( devoluciones d){
         id_ped,
         id_prod,
         pos;
-    char nom_cliente[21];
-    char nom_prod[16];
+    char nom_cliente[21], nom_prod[16];
     pedidos p = cargar_pedidos();
     prod_pedidos prod_p = cargar_prod_pedidos();
     printf("+--------------------------------------------------------------------------------------+\n");
@@ -1096,7 +1095,7 @@ int buscar_devolucion(devoluciones d){
         printf("introduce el numero n de la devolucion que desea modificar\n");
         pos=input_int();
         return pos;
-    }while(pos<d.lon && pos>0);
+    }while(pos>d.lon && pos<0);
     
 
 }
@@ -1180,7 +1179,8 @@ devoluciones modificar_devolucion(devoluciones d){
 void listar_dev_cliente(int id_cliente, devoluciones d){
     int i,j,k,
         id_ped,
-        id_prod;
+        id_prod,
+        pos;
     char nom_prod[16];
     produ_vect prod = cargar_productos();
     prod_pedidos prod_p = cargar_prod_pedidos();
@@ -1230,6 +1230,10 @@ void listar_dev_cliente(int id_cliente, devoluciones d){
 
         
     }
+    do{
+        printf("introduce el numero <n> de la devolucion: ");
+        pos=input_int();
+    }while(pos>d.lon && pos<0);
 }
 
 void listar_pedidos(pedidos p){
@@ -1270,7 +1274,7 @@ int busqueda_pedidos(pedidos p){
         printf("introduce el numero <n> del pedido que deseas modificar: \n");
         pos=input_int();
         return pos;
-    }while(pos<p.lon && pos>1);
+    }while(pos>p.lon && pos<1);
     
 }
 
@@ -1390,8 +1394,11 @@ void listar_dev_pendientes(devoluciones d){
 devoluciones aceptar_dev(devoluciones d){
     int pos;
     listar_dev_pendientes(d);
-    printf("introduce el numero <n> de la devolucion que deseas aceptar: ");
-    pos=input_int();
+    do{
+        printf("introduce el numero <n> de la devolucion que deseas aceptar: ");
+        pos=input_int();
+    }while(pos>d.lon && pos<0);
+    
 
     strcpy(d.devoluciones[pos].estado, "aceptada");
 
@@ -1404,7 +1411,55 @@ devoluciones aceptar_dev(devoluciones d){
 }
 
 
-//lockers
-//terminar modificar devoluciones
-//marcar aceptada parte administracion ¿en devoluciones?
-    //seleccionar devolucion y automaticamente se pone como aceptada
+void listar_dev_pen_clientes(devoluciones d, int id_cliente){
+    int i,j,k,
+        id_ped,
+        id_prod,
+        pos;
+    char nom_prod[16];
+    produ_vect prod = cargar_productos();
+    prod_pedidos prod_p = cargar_prod_pedidos();
+    pedidos p = cargar_pedidos();
+
+    printf("+--------------------------------------------------------------------------------------+\n");
+    printf("| LISTA DE DEVOLUCIONES                                                                |\n");
+    printf("+--------------------------------------------------------------------------------------+\n");
+    printf("| <n> nombre_producto - estado - fecha aceptacion - fehca caducidad   |\n");
+    printf("+--------------------------------------------------------------------------------------+\n");
+    
+    for(i=1;i<d.lon;i++){
+        for(j=1;j<p.lon;j++){
+            //obtengo la id del pedido a la que pertenece el cliente
+            if(id_cliente==p.pedidos[j].id_cliente && p.pedidos[j].id_pedido==d.devoluciones[i].id_pedido){
+                printf("id cliente del pedido: %d\n", p.pedidos[j].id_cliente);
+                
+                id_ped=p.pedidos[j].id_pedido;
+                printf("id ped: %d\n", id_ped);
+
+                //obtener el nombre del producto de esa devolucion
+                if(d.devoluciones[i].id_pedido==id_ped){
+                    id_prod=d.devoluciones[i].id_prod;
+                    for(k=1;k<prod.num_prod;k++){
+                        if(id_prod==prod.produ[k].id_prod){
+                            strcpy(nom_prod, prod.produ[k].nombre);
+                        }
+                    }
+                }
+
+
+                if(strcmp(d.devoluciones[i].estado, "pendiente")==0){
+                    printf("| <%d>  %s - %d/%d/%d - %d/%d/%d\n", i,
+                                                                nom_prod,
+                                                                d.devoluciones[i].f_aceptacion.dia,
+                                                                d.devoluciones[i].f_aceptacion.mes,
+                                                                d.devoluciones[i].f_aceptacion.anio,
+                                                                d.devoluciones[i].f_caducidad.dia,
+                                                                d.devoluciones[i].f_caducidad.mes,
+                                                                d.devoluciones[i].f_caducidad.anio);
+                }
+            }
+        }
+        
+          
+    }
+}

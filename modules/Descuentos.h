@@ -89,6 +89,8 @@ int desc_activo(char[] );
 
 void marcar_aplicado(int, char[]);
 
+//Precondición: Recibe el código del descuento
+//Postcondición: Devuelve el importe del descuento
 int importe_descuento(char []);
 
 //Precondición: Recibe la estructura Descuentos

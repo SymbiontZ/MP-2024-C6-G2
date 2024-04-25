@@ -203,5 +203,9 @@ devoluciones aceptar_dev(devoluciones);
 //Postcondicion: muestra las devoluciones que estan pendientes
 void listar_dev_pendientes(devoluciones);
 
+//Cabecera: void listar_dev_pen_cliente(devoluciones, int)
+//Precondicion: se le pasa id cliente y estructura devoluciones cargada
+//Postcondicion: muestra la lista de las devoluciones pendientes de un cliente
+void listar_dev_pen_clientes(devoluciones, int);
 
 #endif

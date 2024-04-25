@@ -485,23 +485,23 @@ Vect_CompLock Recogida_Locker(Vect_CompLock cl, int Id_cliente){
 
     int cont = 0, i, j, k, Cod_locker_check, fch;
 
-    fecha fch_comprobar;
+    fecha fch_comprobar;													//Variable fecha de caducidad
     fch_comprobar.dia = cl.CompLock[i].dia_cad;
     fch_comprobar.mes = cl.CompLock[i].mes_cad;
     fch_comprobar.anio = cl.CompLock[i].anio_cad;
 
-    fecha fch_sist;
+    fecha fch_sist;														//Variable fecha del sistema
     fch_sist.dia = dia_sist();
     fch_sist.mes = mes_sist();
     fch_sist.anio = anio_sist();
 
     fch = comprobar_fecha(fch_sist, fch_comprobar);                                                                                 //Se comprueba que la fecha de caducidad no se haya sobrepasado
 
-    pedidos p = cargar_pedidos();                                                                                                   //Se carga la estructuta CompartimentosLockers
+    pedidos p = cargar_pedidos();                                                                                                   //Se carga la estructuta Pedidos y Productos Pedidos
 	prod_pedidos p_p = cargar_prod_pedidos();
 
 	
-    for(i = 0; i<p.lon; i++){
+    for(i = 0; i<p.lon; i++){													//Se buscan coicidencias entre id_cliente, id_pedido, id_locker y cod_locker
     	
     	if(p.pedidos[i].id_cliente == Id_cliente){
     		
@@ -513,7 +513,7 @@ Vect_CompLock Recogida_Locker(Vect_CompLock cl, int Id_cliente){
         					scanf("%d", &Cod_locker_check);
         					if(cl.CompLock[k].Cod_locker == Cod_locker_check){
         						printf("Código correcto \n");
-        						strcpy(cl.CompLock[k].Estado, "vacío");
+        						strcpy(cl.CompLock[k].Estado, "vacío");					//Se actualiza el estado del compartimento
 							}
 						}
 					}
