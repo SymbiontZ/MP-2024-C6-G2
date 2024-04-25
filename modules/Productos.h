@@ -33,117 +33,118 @@ typedef struct {
 }produ_vect;
 
 //---> CATEGORIAS: <---
-//PRECONDICIÓN:
-//POSTCONDICIÓN:
+//PRECONDICIÓN: Ninguna
+//POSTCONDICIÓN: Inicializa una estructura tipo categ_vect con datos almacenados de un fichero
 categ_vect cargar_categorias ();
 
-//PRECONDICIÓN:
-//POSTCONDICIÓN:
+//PRECONDICIÓN: Se le pasa una estructura tipo categ_vect
+//POSTCONDICIÓN: Vuelca datos en el fichero pero no devuelve nada
 void guardar_categorias (categ_vect);
 
-//PRECONDICIÓN:
-//POSTCONDICIÓN:
+//PRECONDICIÓN: Se le pasa una estructura tipo categ_vect ya iniciada
+//POSTCONDICIÓN: Almacena una nueva categoría en la estructura y la guarda en el fichero
 categ_vect agregar_categorias (categ_vect);
 
-//PRECONDICIÓN:
-//POSTCONDICIÓN:
+//PRECONDICIÓN: Se le pasa una estructura tipo categ_vect
+//POSTCONDICIÓN: Devuelve la posición de una categoría en la estructura
 int buscar_categorias (categ_vect);
 
-//PRECONDICIÓN:
-//POSTCONDICIÓN:
+//PRECONDICIÓN: Se le pasa la estructura tipo categ_vect cargada y después recibe la posición de una categoría en la estructura
+//POSTCONDICIÓN: Devuelve la estructura tipo categ_vect actualizada con los nuevos cambios
 categ_vect modificar_categorias (categ_vect);
 
-//PRECONDICIÓN:
-//POSTCONDICIÓN:
+//PRECONDICIÓN: Se le pasa la estructura tipo categ_vect cargada y después recibe la posición de una categoría en la estructura
+//POSTCONDICIÓN: Devuelve la estructura tipo categ_vect actualizada con los nuevos cambios
 categ_vect eliminar_categorias (categ_vect);
 
-//PRECONDICIÓN:
-//POSTCONDICIÓN:
+//PRECONDICIÓN: Se le pasa una estructura tipo categ_vect ya iniciada
+//POSTCONDICIÓN: No devuelve nada
 void listar_categorias (categ_vect);
 
-//PRECONDICIÓN:
-//POSTCONDICIÓN:
+//PRECONDICIÓN: Se le pasa una estructura tipo categ_vect ya iniciada
+//POSTCONDICIÓN: Accedemos a diversas funciones para la creación, modificación y eliminación de categorías
 void menu_categ (categ_vect);
 
+
 //---> PRODUCTOS: <---
-//PRECONDICIÓN:
-//POSTCONDICIÓN:
+//PRECONDICIÓN: Ninguna
+//POSTCONDICIÓN: Inicializa una estructura tipo produ_vect con datos almacenados de un fichero
 produ_vect cargar_productos ();
 
-//PRECONDICIÓN:
-//POSTCONDICIÓN:
+//PRECONDICIÓN: Se le pasa una estructura tipo produ_vect
+//POSTCONDICIÓN: Vuelca datos en el fichero pero no devuelve nada
 void guardar_productos (produ_vect);
 
-//PRECONDICIÓN:
-//POSTCONDICIÓN:
+//PRECONDICIÓN: Se le pasa tanto una estructura tipo produ_vect como una tipo categ_vect, además se le pasa el valor del id del producto que se está creando
+//POSTCONDICIÓN: Devuelve la estructura tipo produ_vect actualizada con los nuevos cambios  
 produ_vect seleccionar_categprod (produ_vect, categ_vect, int);
 
-//PRECONDICIÓN:
-//POSTCONDICIÓN:
+//PRECONDICIÓN: Se le pasa una estructura tipo produ_vect ya iniciada
+//POSTCONDICIÓN: Almacena un nuevo producto en la estructura y lo guarda en el fichero
 produ_vect agregar_productos (produ_vect, int);
 
-//PRECONDICIÓN:
-//POSTCONDICIÓN:
+//PRECONDICIÓN: Se le pasa una estructura tipo produ_vect ya iniciada
+//POSTCONDICIÓN: Devuelve la posición de un producto en la estructura
 int buscar_auxnom (produ_vect);
 
-//PRECONDICIÓN:
-//POSTCONDICIÓN:
+//PRECONDICIÓN: Se le pasa una estructura tipo produ_vect ya iniciada
+//POSTCONDICIÓN: Devuelve la posición de un producto en la estructura
 int buscar_auxdesc (produ_vect);
 
-//PRECONDICIÓN:
-//POSTCONDICIÓN:
+//PRECONDICIÓN: Se le pasa una estructura tipo produ_vect ya iniciada
+//POSTCONDICIÓN: Devuelve la posición de un producto en la estructura
 int buscar_auxstock (produ_vect);
 
-//PRECONDICIÓN:
-//POSTCONDICIÓN:
+//PRECONDICIÓN: Se le pasa una estructura tipo produ_vect ya iniciada
+//POSTCONDICIÓN: Devuelve la posición de un producto en la estructura
 int buscar_auxentrega (produ_vect);
 
-//PRECONDICIÓN:
-//POSTCONDICIÓN:
+//PRECONDICIÓN: Se le pasa una estructura tipo produ_vect ya iniciada
+//POSTCONDICIÓN: Devuelve la posición de un producto en la estructura
 int buscar_auximporte (produ_vect);
 
-//PRECONDICIÓN:
-//POSTCONDICIÓN:
+//PRECONDICIÓN: Se le pasa una estructura tipo produ_vect ya iniciada
+//POSTCONDICIÓN: Devuelve la posición de un producto en la estructura
 int buscar_productos (produ_vect);
 
-//PRECONDICIÓN:
-//POSTCONDICIÓN:
+//PRECONDICIÓN: Se le pasa la estructura tipo produ_vect cargada y después recibe la posición de un producto en la estructura
+//POSTCONDICIÓN: Devuelve la estructura tipo produ_vect actualizada con los nuevos cambios
 produ_vect modificar_productos (produ_vect);
 
-//PRECONDICIÓN:
-//POSTCONDICIÓN:
+//PRECONDICIÓN: Se le pasa la estructura tipo produ_vect cargada y después recibe la posición de un producto en la estructura
+//POSTCONDICIÓN: Devuelve la estructura tipo produ_vect actualizada con los nuevos cambios
 produ_vect eliminar_productos (produ_vect);
 
-//PRECONDICIÓN:
-//POSTCONDICIÓN:
+//PRECONDICIÓN: Se le pasa una estructura tipo produ_vect ya iniciada
+//POSTCONDICIÓN: No devuelve nada
 void listar_productos (produ_vect);
 
-//PRECONDICIÓN:
-//POSTCONDICIÓN:
+//PRECONDICIÓN: Se le pasa una estructura tipo produ_vect ya iniciada y el valor del id del gestor
+//POSTCONDICIÓN: Accedemos a diversas funciones para la creación, modificación y eliminación de productos
 void menu_prod (produ_vect, int);
 
-//PRECONDICIÓN:
-//POSTCONDICIÓN:
+//PRECONDICIÓN: Se le pasa una estructura tipo produ_vect ya iniciada
+//POSTCONDICIÓN: Devuelve la posición de un producto en la estructura
 int buscador_prodnombre ();
 
-//PRECONDICIÓN:
-//POSTCONDICIÓN:
+//PRECONDICIÓN: Se le pasa una estructura tipo produ_vect ya iniciada
+//POSTCONDICIÓN: Devuelve la posición de un producto en la estructura
 int buscador_prodcateg ();
 
-//PRECONDICIÓN:
-//POSTCONDICIÓN:
+//PRECONDICIÓN: Se le pasa el valor tanto del id del producto como del número de unidades que se le quiere asignar ahora a este
+//POSTCONDICIÓN: Devuelve la estructura tipo produ_vect actualizada con los nuevos cambios
 produ_vect cambiar_stock (int, int);
 
-//PRECONDICIÓN:
-//POSTCONDICIÓN:
+//PRECONDICIÓN: Se le pasa una estructura tipo produ_vect ya iniciada y un entero que funciona como id a comparar
+//POSTCONDICIÓN: Devuelve la estructura tipo produ_vect actualizada con los nuevos cambios
 produ_vect modificar_prodgestor (produ_vect, int);
 
-//PRECONDICIÓN:
-//POSTCONDICIÓN:
+//PRECONDICIÓN: Se le pasa una estructura tipo produ_vect ya iniciada y un entero que funciona como id a comparar
+//POSTCONDICIÓN: Devuelve la estructura tipo produ_vect actualizada con los nuevos cambios
 produ_vect eliminar_prodgestor (produ_vect, int);
 
-//PRECONDICIÓN:
-//POSTCONDICIÓN:
+//PRECONDICIÓN: Se le pasa una estructura tipo produ_vect ya iniciada y un entero que funciona como id a comparar
+//POSTCONDICIÓN: No devuelve nada
 void listar_prodgestor (produ_vect, int);
 
 #endif
