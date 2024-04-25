@@ -2,8 +2,9 @@
 #include<stdlib.h>
 
 #include"empresas.h"
-#include"useradmin.h"
+#include"admin.h"
 #include"complementos.h"
+#include"clientes.h"
 
 void inicsesion_email();
 

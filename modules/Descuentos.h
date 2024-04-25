@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "useradmin.h"
+
 
 #define MAX_DESC 87
 #define MAX_DESCLI 50

@@ -1,6 +1,6 @@
 #include<stdio.h>
 #include"pedidos.h"
-#include"useradmin.h"
+#include"clientes.h"
 #include"Descuentos.h"
 
 

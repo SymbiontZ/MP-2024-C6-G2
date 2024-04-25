@@ -2,7 +2,7 @@
 #define LOCKERS_H_INCLUDED
 
 #include "pedidos.h"
-#include "useradmin.h"
+#include "clientes.h"
 #include "complementos.h"
 
 #define MAX_LOCK 79
