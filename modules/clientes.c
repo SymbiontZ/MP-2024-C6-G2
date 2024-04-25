@@ -218,7 +218,7 @@ void menucliente_ped(int pos){
                 listapedidos_cliente(prods_p, p, pos);
                 break;
             case 3:
-
+                Pedido
                 break;
             case 0:
                 
@@ -261,7 +261,7 @@ void menucliente_dev(int pos){
 
             break;
         case 3:
-            //listar_dev_pendientes(Dev);
+            listar_dev_pen_clientes(Dev, pos);
             break;    
         case 0:
             //CASO DE VUELTA AL MENU ANTERIOR

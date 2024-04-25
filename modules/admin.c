@@ -392,12 +392,12 @@ void menuadmin_ped(){
             case 4:
                 printf("Para poder eliminar un pedido es necesario seleccionar el cliente.\n");
                 Sleep(3000);
-                //Ped = eliminar_pedidos(Prod_P, Ped);
+                Ped = eliminar_pedidos(Prod_P, Ped);
             case 5:
                 Ped = modificar_pedidos(Ped);
                 break;
             case 6:
-                //modificar_asig_transport()
+                modificar_asig_transport_admin();
                 break;
             case 7:
 
@@ -582,10 +582,10 @@ void menuadmin_devol(){
                 break;
             case 3:
                 
-                //eliminar_devolucion(,Dev)
+                Dev = eliminar_devolucion(,Dev);
                 break;
             case 4:
-                //modificar_devolucion(Dev)
+                Dev = modificar_devolucion(Dev);
                 break;
             case 5:
                 aceptar_dev(Dev);
